@@ -12,8 +12,10 @@ const modalContador = document.querySelector("#modal-contador");
 const cronometroNumero = document.querySelector("#cronometro-numero");
 const modalCodigo = document.querySelector("#modal-codigo");
 
-const SEGUNDOS_ACTUALIZACION = 30;
+const SEGUNDOS_ACTUALIZACION = 60;
 const SEGUNDOS_REDIRECCION = 5;
+
+const COLORES_CUPON = ["turquesa", "azul", "morado", "coral", "oliva"];
 
 let segundosRestantes = SEGUNDOS_ACTUALIZACION;
 let cargando = false;
@@ -39,10 +41,14 @@ function iconoCompartir() {
   `;
 }
 
-function crearTarjeta(cupon, esPopular = false) {
+function crearTarjeta(cupon, esPopular = false, indice = 0) {
   const articulo = document.createElement("article");
   articulo.className = esPopular ? "cupon popular" : "cupon";
   articulo.dataset.id = String(cupon.id);
+
+  if (!esPopular) {
+    articulo.dataset.color = COLORES_CUPON[indice % COLORES_CUPON.length];
+  }
 
   articulo.innerHTML = `
     <div class="cupon-encabezado">
@@ -154,9 +160,9 @@ async function cargarCupones() {
     if (restoCupones.length > 0) {
       const fragmento = document.createDocumentFragment();
 
-      for (const cupon of restoCupones) {
-        fragmento.appendChild(crearTarjeta(cupon));
-      }
+      restoCupones.forEach((cupon, indice) => {
+        fragmento.appendChild(crearTarjeta(cupon, false, indice));
+      });
 
       cuponesContainer.appendChild(fragmento);
       todosWrapper.hidden = false;
@@ -221,7 +227,6 @@ function cerrarModal() {
   document.body.style.overflow = "";
 }
 
-/* Reinicia completamente la interacción de los cupones. */
 function reiniciarInteraccion() {
   if (timeoutRedireccion) {
     clearTimeout(timeoutRedireccion);
@@ -250,18 +255,11 @@ function ejecutarCuentaRegresiva(cupon, boton, mensaje) {
 
     if (segundos === 0) {
       cerrarModal();
-
       boton.disabled = false;
       boton.textContent = "📋 Copiar y Canjear";
       mensaje.textContent = "";
-
-      /*
-        Reiniciamos la bandera antes de salir. Así, si el navegador
-        conserva la página en memoria, volverá desbloqueada.
-      */
       redireccionEnProceso = false;
       timeoutRedireccion = null;
-
       window.location.assign(cupon.enlace);
       return;
     }
@@ -321,10 +319,7 @@ async function compartirCupon(cupon, tarjeta) {
 
   try {
     if (navigator.share) {
-      await navigator.share({
-        text: textoUnico,
-      });
-
+      await navigator.share({ text: textoUnico });
       mensaje.textContent = "Cupón compartido.";
     } else {
       await copiarTexto(textoUnico);
@@ -363,10 +358,6 @@ setInterval(() => {
   actualizarTextoContador();
 }, 1000);
 
-/*
-  "pageshow" se ejecuta también cuando el usuario vuelve usando el botón Atrás
-  y el navegador restaura la página desde su memoria (bfcache).
-*/
 window.addEventListener("pageshow", (event) => {
   reiniciarInteraccion();
 
