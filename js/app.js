@@ -15,8 +15,20 @@ const modalCodigo = document.querySelector("#modal-codigo");
 const tabTienda = document.querySelector("#tab-tienda");
 const tabBancarios = document.querySelector("#tab-bancarios");
 
+const publicidadWrapper = document.querySelector("#publicidad-wrapper");
+const publicidadCarrusel = document.querySelector("#publicidad-carrusel");
+const publicidadContenido = document.querySelector("#publicidad-contenido");
+const publicidadImagen = document.querySelector("#publicidad-imagen");
+const publicidadTitulo = document.querySelector("#publicidad-titulo");
+const publicidadDescripcion = document.querySelector("#publicidad-descripcion");
+const publicidadEnlace = document.querySelector("#publicidad-enlace");
+const publicidadIndicadores = document.querySelector("#publicidad-indicadores");
+const publicidadAnterior = document.querySelector("#publicidad-anterior");
+const publicidadSiguiente = document.querySelector("#publicidad-siguiente");
+
 const SEGUNDOS_ACTUALIZACION = 60;
 const SEGUNDOS_REDIRECCION = 3;
+const MILISEGUNDOS_PUBLICIDAD = 8000;
 const COLORES = ["turquesa", "azul", "morado", "coral", "oliva"];
 
 let segundosRestantes = SEGUNDOS_ACTUALIZACION;
@@ -26,9 +38,47 @@ let timeoutRedireccion = null;
 let categoriaActiva = "tienda";
 let todosLosCupones = [];
 
+let publicidades = [];
+let publicidadActual = 0;
+let temporizadorPublicidad = null;
+let inicioSwipeX = null;
+
 botonRecargar.addEventListener("click", cargarCupones);
 tabTienda.addEventListener("click", () => cambiarCategoria("tienda"));
 tabBancarios.addEventListener("click", () => cambiarCategoria("bancarios"));
+
+publicidadAnterior.addEventListener("click", () => cambiarPublicidad(-1));
+publicidadSiguiente.addEventListener("click", () => cambiarPublicidad(1));
+
+publicidadCarrusel.addEventListener("mouseenter", detenerRotacionPublicidad);
+publicidadCarrusel.addEventListener("mouseleave", iniciarRotacionPublicidad);
+publicidadCarrusel.addEventListener("focusin", detenerRotacionPublicidad);
+publicidadCarrusel.addEventListener("focusout", iniciarRotacionPublicidad);
+
+publicidadCarrusel.addEventListener("touchstart", (event) => {
+  inicioSwipeX = event.touches[0]?.clientX ?? null;
+}, { passive: true });
+
+publicidadCarrusel.addEventListener("touchend", (event) => {
+  if (inicioSwipeX === null) return;
+
+  const finX = event.changedTouches[0]?.clientX ?? inicioSwipeX;
+  const diferencia = finX - inicioSwipeX;
+
+  if (Math.abs(diferencia) >= 45) {
+    cambiarPublicidad(diferencia > 0 ? -1 : 1);
+  }
+
+  inicioSwipeX = null;
+}, { passive: true });
+
+publicidadEnlace.addEventListener("click", () => {
+  const publicidad = publicidades[publicidadActual];
+
+  if (publicidad) {
+    registrarClicPublicidad(publicidad.id);
+  }
+});
 
 function escaparHtml(valor = "") {
   return String(valor)
@@ -405,6 +455,128 @@ async function compartirCupon(cupon, tarjeta) {
   }
 }
 
+/* Publicidad */
+async function cargarPublicidad() {
+  try {
+    const respuesta = await fetch("/api/publicidad", {
+      headers: {
+        Accept: "application/json",
+      },
+      cache: "no-store",
+    });
+
+    if (!respuesta.ok) {
+      throw new Error("No fue posible consultar la publicidad.");
+    }
+
+    const datos = await respuesta.json();
+    publicidades = Array.isArray(datos) ? datos : [];
+
+    if (publicidades.length === 0) {
+      publicidadWrapper.hidden = true;
+      detenerRotacionPublicidad();
+      return;
+    }
+
+    publicidadActual = 0;
+    publicidadWrapper.hidden = false;
+    crearIndicadoresPublicidad();
+    mostrarPublicidad();
+    iniciarRotacionPublicidad();
+  } catch (error) {
+    console.warn(error);
+    publicidadWrapper.hidden = true;
+  }
+}
+
+function crearIndicadoresPublicidad() {
+  publicidadIndicadores.replaceChildren();
+
+  publicidades.forEach((_, indice) => {
+    const punto = document.createElement("button");
+
+    punto.type = "button";
+    punto.className = "publicidad-punto";
+    punto.setAttribute("aria-label", `Mostrar publicidad ${indice + 1}`);
+
+    punto.addEventListener("click", () => {
+      publicidadActual = indice;
+      mostrarPublicidad();
+      iniciarRotacionPublicidad();
+    });
+
+    publicidadIndicadores.appendChild(punto);
+  });
+}
+
+function mostrarPublicidad() {
+  const publicidad = publicidades[publicidadActual];
+
+  if (!publicidad) return;
+
+  publicidadContenido.style.animation = "none";
+  void publicidadContenido.offsetWidth;
+  publicidadContenido.style.animation = "";
+
+  publicidadImagen.src = publicidad.imagen_url;
+  publicidadImagen.alt = publicidad.titulo || "Publicidad";
+  publicidadTitulo.textContent = publicidad.titulo || "Oferta destacada";
+  publicidadDescripcion.textContent = publicidad.descripcion || "";
+  publicidadEnlace.href = publicidad.enlace;
+
+  [...publicidadIndicadores.children].forEach((punto, indice) => {
+    punto.classList.toggle("activo", indice === publicidadActual);
+  });
+
+  const mostrarControles = publicidades.length > 1;
+
+  publicidadAnterior.hidden = !mostrarControles;
+  publicidadSiguiente.hidden = !mostrarControles;
+  publicidadIndicadores.hidden = !mostrarControles;
+}
+
+function cambiarPublicidad(direccion) {
+  if (publicidades.length <= 1) return;
+
+  publicidadActual =
+    (publicidadActual + direccion + publicidades.length) % publicidades.length;
+
+  mostrarPublicidad();
+  iniciarRotacionPublicidad();
+}
+
+function iniciarRotacionPublicidad() {
+  detenerRotacionPublicidad();
+
+  if (publicidades.length <= 1) return;
+
+  temporizadorPublicidad = window.setInterval(() => {
+    cambiarPublicidad(1);
+  }, MILISEGUNDOS_PUBLICIDAD);
+}
+
+function detenerRotacionPublicidad() {
+  if (temporizadorPublicidad) {
+    clearInterval(temporizadorPublicidad);
+    temporizadorPublicidad = null;
+  }
+}
+
+async function registrarClicPublicidad(id) {
+  try {
+    await fetch("/api/publicidad-clic", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id }),
+      keepalive: true,
+    });
+  } catch (error) {
+    console.warn("No fue posible registrar el clic publicitario.", error);
+  }
+}
+
 setInterval(() => {
   if (
     document.hidden ||
@@ -419,6 +591,7 @@ setInterval(() => {
 
   if (segundosRestantes <= 0) {
     cargarCupones();
+    cargarPublicidad();
     return;
   }
 
@@ -430,13 +603,18 @@ window.addEventListener("pageshow", (event) => {
 
   if (event.persisted) {
     cargarCupones();
+    cargarPublicidad();
   }
 });
 
 document.addEventListener("visibilitychange", () => {
   if (!document.hidden) {
     reiniciarInteraccion();
+    iniciarRotacionPublicidad();
+  } else {
+    detenerRotacionPublicidad();
   }
 });
 
 cargarCupones();
+cargarPublicidad();

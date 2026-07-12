@@ -1,36 +1,47 @@
 :root {
   --fondo: #f5f7f8;
-  --blanco: #fff;
+  --blanco: #ffffff;
   --texto: #17211b;
   --gris: #66736c;
   --borde: #e0e7e4;
+  --turquesa: #0f9f92;
+  --turquesa-oscuro: #08786f;
+  --turquesa-claro: #e8f7f4;
   --whatsapp: #25d366;
-  --whatsapp-oscuro: #128c4a;
-  --anirona: #07952a;
-  --anirona-oscuro: #067420;
   --error: #a12626;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   margin: 0;
+  padding-bottom: 82px;
   font-family: Arial, Helvetica, sans-serif;
   color: var(--texto);
   background:
-    radial-gradient(circle at top left, rgba(60, 130, 246, .05), transparent 28%),
-    radial-gradient(circle at top right, rgba(124, 58, 237, .04), transparent 30%),
+    radial-gradient(circle at top left, rgba(52, 135, 233, 0.05), transparent 27%),
+    radial-gradient(circle at top right, rgba(139, 92, 230, 0.04), transparent 30%),
     var(--fondo);
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
 }
 
 .encabezado {
   padding: 15px 18px 18px;
   text-align: center;
-  background: rgba(255,255,255,.96);
+  background: rgba(255, 255, 255, 0.96);
   border-bottom: 1px solid var(--borde);
 }
 
-/* Se conservan las dimensiones previas del logo */
 .logo {
   display: block;
   width: min(330px, 82vw);
@@ -44,7 +55,7 @@ body {
   gap: 9px;
   padding: 7px 12px;
   margin-bottom: 9px;
-  border: 1px solid rgba(37,211,102,.25);
+  border: 1px solid rgba(37, 211, 102, 0.25);
   border-radius: 999px;
   color: #176a39;
   background: #f1fff6;
@@ -52,9 +63,19 @@ body {
 }
 
 .whatsapp-cabecera strong,
-.whatsapp-cabecera small { display: block; text-align: left; }
-.whatsapp-cabecera strong { font-size: 13px; }
-.whatsapp-cabecera small { color: #52755e; font-size: 11px; }
+.whatsapp-cabecera small {
+  display: block;
+  text-align: left;
+}
+
+.whatsapp-cabecera strong {
+  font-size: 13px;
+}
+
+.whatsapp-cabecera small {
+  color: #52755e;
+  font-size: 11px;
+}
 
 .whatsapp-icono {
   width: 31px;
@@ -66,26 +87,15 @@ body {
   background: var(--whatsapp);
 }
 
-.whatsapp-icono svg { width: 22px; fill: currentColor; }
-.encabezado > p { margin: 0; color: var(--gris); font-size: 14px; }
+.encabezado > p {
+  margin: 0;
+  color: var(--gris);
+  font-size: 14px;
+}
 
 .contenedor {
   width: min(1120px, calc(100% - 28px));
   margin: 20px auto 42px;
-}
-
-.aviso,
-.instruccion-cupones {
-  border-radius: 13px;
-  padding: 12px 14px;
-  font-size: 13px;
-  line-height: 1.45;
-}
-
-.aviso {
-  margin-bottom: 12px;
-  border: 1px solid #ecd96a;
-  background: #fff9d7;
 }
 
 .instruccion-cupones {
@@ -93,12 +103,18 @@ body {
   align-items: center;
   gap: 10px;
   margin-bottom: 19px;
+  padding: 12px 14px;
   border: 1px solid #bfd8f3;
-  background: #eef6ff;
+  border-radius: 13px;
   color: #344b63;
+  background: #eef6ff;
+  font-size: 13px;
+  line-height: 1.45;
 }
 
-.instruccion-cupones p { margin: 0; }
+.instruccion-cupones p {
+  margin: 0;
+}
 
 .titulo-fila {
   display: flex;
@@ -120,7 +136,10 @@ body {
   border-bottom: 1px dashed #b9c9c3;
 }
 
-.titulo-seccion { margin: 0; font-size: 24px; }
+.titulo-seccion {
+  margin: 0;
+  font-size: 24px;
+}
 
 .actualizacion {
   display: flex;
@@ -140,21 +159,46 @@ body {
   cursor: pointer;
 }
 
-.estado-carga { margin: 0 0 13px; color: var(--gris); font-size: 13px; }
-.estado-carga.error { color: var(--error); font-weight: 700; }
+.estado-carga {
+  margin: 0 0 13px;
+  color: var(--gris);
+  font-size: 13px;
+}
 
-.popular-wrapper { margin-bottom: 19px; }
-.popular-titulo { margin-bottom: 11px; }
-.popular-titulo h2 { margin: 0 0 3px; font-size: 21px; }
-.popular-titulo p { margin: 0; color: var(--gris); font-size: 13px; }
-.subtitulo-lista { margin: 0 0 12px; font-size: 19px; }
+.estado-carga.error {
+  color: var(--error);
+  font-weight: 700;
+}
+
+.popular-wrapper {
+  margin-bottom: 19px;
+}
+
+.popular-titulo {
+  margin-bottom: 11px;
+}
+
+.popular-titulo h2 {
+  margin: 0 0 3px;
+  font-size: 21px;
+}
+
+.popular-titulo p {
+  margin: 0;
+  color: var(--gris);
+  font-size: 13px;
+}
+
+.subtitulo-lista {
+  margin: 0 0 12px;
+  font-size: 19px;
+}
 
 .cupones-lista {
   display: grid;
   gap: 12px;
 }
 
-/* Tarjeta horizontal compacta */
 .cupon {
   --tono-1: #0f9f92;
   --tono-2: #08786f;
@@ -167,13 +211,20 @@ body {
   border: 1px solid color-mix(in srgb, var(--tono-1) 22%, white);
   border-radius: 18px;
   background: white;
-  box-shadow: 0 7px 20px rgba(27,44,38,.07);
-  transition: transform .18s ease, box-shadow .18s ease;
+  box-shadow: 0 7px 20px rgba(27, 44, 38, 0.07);
+  animation: aparecer-cupon 0.24s ease-out;
 }
 
-.cupon:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 11px 25px rgba(27,44,38,.1);
+@keyframes aparecer-cupon {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .cupon[data-color="azul"] {
@@ -204,7 +255,7 @@ body {
   --tono-1: #e4ad27;
   --tono-2: #b17c08;
   --tono-suave: #fff7df;
-  border-color: rgba(196,145,22,.28);
+  border-color: rgba(196, 145, 22, 0.28);
 }
 
 .cupon-encabezado {
@@ -213,9 +264,9 @@ body {
   flex-direction: column;
   justify-content: center;
   padding: 18px 20px;
+  overflow: hidden;
   color: white;
   background: linear-gradient(135deg, var(--tono-2), var(--tono-1));
-  overflow: hidden;
 }
 
 .cupon-encabezado::after {
@@ -226,26 +277,37 @@ body {
   top: -65px;
   right: -48px;
   border-radius: 45%;
-  background: rgba(255,255,255,.10);
+  background: rgba(255, 255, 255, 0.1);
   transform: rotate(22deg);
 }
 
 .etiqueta-popular,
 .descuento,
-.subtitulo { position: relative; z-index: 1; }
+.subtitulo {
+  position: relative;
+  z-index: 1;
+}
 
 .etiqueta-popular {
   align-self: flex-start;
   margin-bottom: 7px;
   padding: 4px 8px;
   border-radius: 7px;
-  background: rgba(255,255,255,.2);
+  background: rgba(255, 255, 255, 0.2);
   font-size: 10px;
   font-weight: 800;
 }
 
-.descuento { margin: 0; font-size: 29px; }
-.subtitulo { margin: 3px 0 0; font-size: 12px; font-weight: 700; }
+.descuento {
+  margin: 0;
+  font-size: 29px;
+}
+
+.subtitulo {
+  margin: 3px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+}
 
 .cupon-contenido {
   display: grid;
@@ -270,8 +332,6 @@ body {
   font-size: 13px;
   font-weight: 700;
 }
-
-.acciones-bloque { min-width: 0; }
 
 .acciones-cupon {
   display: grid;
@@ -303,8 +363,16 @@ body {
   background: white;
 }
 
-.boton-compartir svg { width: 20px; height: 20px; fill: currentColor; }
-.boton-canjear:disabled { opacity: .85; cursor: wait; }
+.boton-compartir svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.boton-canjear:disabled {
+  opacity: 0.85;
+  cursor: wait;
+}
 
 .mensaje {
   min-height: 16px;
@@ -340,119 +408,232 @@ body {
   background: #f0f4f8;
   font-size: 27px;
   filter: grayscale(1);
-  opacity: .65;
+  opacity: 0.65;
 }
 
-.sin-cupones h2 { margin: 0 0 7px; font-size: 21px; }
-.sin-cupones p { margin: 0 0 5px; color: var(--gris); }
+.sin-cupones h2 {
+  margin: 0 0 7px;
+  font-size: 21px;
+}
 
-/* Publicidad compacta ANIRONA */
-.anirona-anuncio {
+.sin-cupones p {
+  margin: 0 0 5px;
+  color: var(--gris);
+}
+
+.aviso-inferior {
   position: relative;
-  display: grid;
-  grid-template-columns: 132px 1fr 165px;
-  align-items: center;
-  gap: 17px;
-  margin-top: 22px;
-  padding: 15px 18px;
-  overflow: hidden;
-  border: 1px solid #cfe4d4;
-  border-radius: 18px;
-  background:
-    linear-gradient(115deg, #fff, #f8fff9);
-  box-shadow: 0 7px 20px rgba(7,149,42,.06);
+  margin-top: 24px;
+  padding-top: 20px;
 }
 
-.publicidad-etiqueta {
+.aviso-inferior::before {
+  content: "";
   position: absolute;
-  top: 8px;
-  right: 10px;
-  color: #91a099;
-  font-size: 9px;
+  inset: 0 0 auto;
+  border-top: 2px dashed #bcc9c4;
+}
+
+.aviso-inferior p {
+  margin: 0;
+  padding: 12px 15px;
+  border: 1px solid #ecd96a;
+  border-radius: 13px;
+  background: #fff9d7;
+  color: #4f554f;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+/* Publicidad rotativa */
+.publicidad-wrapper {
+  margin-top: 14px;
+}
+
+.publicidad-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 7px;
+  padding: 0 7px;
+  color: #8a9992;
+  font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: .7px;
+  letter-spacing: 0.7px;
 }
 
-.anirona-producto {
+.publicidad-indicadores {
+  display: flex;
+  gap: 5px;
+}
+
+.publicidad-punto {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #ccd6d2;
+  cursor: pointer;
+}
+
+.publicidad-punto.activo {
+  width: 18px;
+  border-radius: 99px;
+  background: var(--turquesa);
+}
+
+.publicidad-carrusel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #d8e5dd;
+  border-radius: 18px;
+  background: linear-gradient(115deg, #ffffff, #f8fffa);
+  box-shadow: 0 7px 20px rgba(7, 149, 42, 0.06);
+  touch-action: pan-y;
+}
+
+.publicidad-contenido {
+  display: grid;
+  grid-template-columns: minmax(110px, 155px) 1fr;
+  align-items: center;
+  gap: 18px;
+  min-height: 150px;
+  padding: 15px 62px;
+  animation: publicidad-fade 0.3s ease;
+}
+
+@keyframes publicidad-fade {
+  from {
+    opacity: 0.25;
+    transform: translateX(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.publicidad-contenido img {
   display: block;
-  max-width: 118px;
-  max-height: 126px;
   width: 100%;
-  height: auto;
+  height: 120px;
   object-fit: contain;
-  margin: auto;
+  border-radius: 12px;
+  background: white;
 }
 
-.anirona-copy h2 {
-  margin: 0 0 4px;
-  color: #111;
-  font-size: 25px;
-  letter-spacing: .5px;
+.publicidad-copy h2 {
+  margin: 0 0 5px;
+  font-size: 23px;
 }
 
-.anirona-copy p {
-  margin: 0 0 11px;
-  max-width: 520px;
+.publicidad-copy p {
+  margin: 0 0 12px;
+  max-width: 700px;
   color: #4d5d54;
-  line-height: 1.4;
+  line-height: 1.45;
   font-size: 14px;
 }
 
-.anirona-acciones {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-}
-
-.boton-catalogo,
-.boton-whatsapp-anirona {
+.publicidad-boton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 9px 13px;
+  padding: 10px 14px;
   border-radius: 10px;
+  color: white;
+  background: linear-gradient(135deg, #067420, #07952a);
   font-size: 13px;
   font-weight: 800;
   text-decoration: none;
 }
 
-.boton-catalogo {
-  color: white;
-  background: linear-gradient(135deg, var(--anirona-oscuro), var(--anirona));
+.publicidad-flecha {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  width: 38px;
+  height: 48px;
+  border: 0;
+  border-radius: 11px;
+  color: #276441;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 12px rgba(30, 60, 45, 0.13);
+  font-size: 30px;
+  cursor: pointer;
+  transform: translateY(-50%);
 }
 
-.boton-whatsapp-anirona {
-  color: #176a39;
-  border: 1px solid rgba(37,211,102,.28);
-  background: #edfff3;
+.publicidad-flecha-anterior {
+  left: 12px;
 }
 
-.boton-whatsapp-anirona svg {
-  width: 18px;
-  height: 18px;
-  fill: var(--whatsapp-oscuro);
+.publicidad-flecha-siguiente {
+  right: 12px;
 }
 
-.anirona-sello {
-  min-height: 92px;
+/* Navegación inferior */
+.navegacion-inferior {
+  position: fixed;
+  left: 50%;
+  bottom: 10px;
+  z-index: 9000;
+  width: min(460px, calc(100% - 20px));
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 7px;
+  padding: 7px;
+  border: 1px solid rgba(23, 33, 27, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 12px 35px rgba(24, 45, 37, 0.18);
+  backdrop-filter: blur(12px);
+  transform: translateX(-50%);
+}
+
+.tab-inferior {
+  position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 11px;
-  border-radius: 14px;
-  color: #216b38;
-  background: #eff9f1;
-  text-align: center;
+  gap: 7px;
+  min-height: 48px;
+  border: 0;
+  border-radius: 13px;
+  color: #66736c;
+  background: transparent;
+  font-size: 14px;
+  cursor: pointer;
 }
 
-.anirona-sello span { font-size: 26px; }
-.anirona-sello strong { margin-top: 3px; font-size: 14px; }
-.anirona-sello small { margin-top: 2px; color: #5a7662; font-size: 11px; }
+.tab-inferior span {
+  font-size: 19px;
+}
+
+.tab-inferior.activo {
+  color: white;
+  background: linear-gradient(135deg, #08786f, #0f9f92);
+  box-shadow: 0 5px 14px rgba(15, 159, 146, 0.24);
+}
+
+.tab-inferior.activo::after {
+  content: "";
+  position: absolute;
+  left: 30%;
+  right: 30%;
+  bottom: 5px;
+  height: 3px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.9);
+}
 
 /* Modal */
-.modal-redireccion[hidden] { display: none; }
+.modal-redireccion[hidden] {
+  display: none;
+}
 
 .modal-redireccion {
   position: fixed;
@@ -461,22 +642,34 @@ body {
   display: grid;
   place-items: center;
   padding: 20px;
-  background: rgba(11,27,22,.68);
+  background: rgba(11, 27, 22, 0.68);
   backdrop-filter: blur(3px);
 }
 
 .modal-contenido {
-  width: min(430px,100%);
+  width: min(430px, 100%);
   padding: 26px 21px 23px;
   border-radius: 20px;
   background: white;
   text-align: center;
-  box-shadow: 0 22px 60px rgba(0,0,0,.26);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.26);
 }
 
-.modal-icono { margin-bottom: 8px; font-size: 41px; }
-.modal-contenido h2 { margin: 0 0 9px; color: #08786f; }
-.modal-contenido p { margin: 0; color: #47565e; line-height: 1.5; }
+.modal-icono {
+  margin-bottom: 8px;
+  font-size: 41px;
+}
+
+.modal-contenido h2 {
+  margin: 0 0 9px;
+  color: #08786f;
+}
+
+.modal-contenido p {
+  margin: 0;
+  color: #47565e;
+  line-height: 1.5;
+}
 
 .cronometro {
   width: 80px;
@@ -489,7 +682,11 @@ body {
   border-radius: 50%;
 }
 
-.cronometro span { color: #08786f; font-size: 33px; font-weight: 900; }
+.cronometro span {
+  color: #08786f;
+  font-size: 33px;
+  font-weight: 900;
+}
 
 .modal-codigo {
   padding: 9px 11px;
@@ -529,178 +726,72 @@ footer {
     gap: 11px;
   }
 
-  .anirona-anuncio {
-    grid-template-columns: 92px 1fr;
+  .publicidad-contenido {
+    grid-template-columns: 95px 1fr;
     gap: 12px;
-    padding: 14px;
+    min-height: 135px;
+    padding: 14px 48px;
   }
 
-  .anirona-producto {
-    max-width: 85px;
-    max-height: 102px;
+  .publicidad-contenido img {
+    height: 95px;
   }
 
-  .anirona-copy h2 { font-size: 21px; }
-  .anirona-copy p { font-size: 12px; margin-bottom: 9px; }
-  .anirona-sello { display: none; }
+  .publicidad-copy h2 {
+    font-size: 19px;
+  }
+
+  .publicidad-copy p {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    margin-bottom: 9px;
+    font-size: 12px;
+  }
+
+  .publicidad-flecha {
+    width: 31px;
+    height: 43px;
+  }
+
+  .publicidad-flecha-anterior {
+    left: 7px;
+  }
+
+  .publicidad-flecha-siguiente {
+    right: 7px;
+  }
 }
 
 @media (max-width: 430px) {
-  .logo { width: min(290px, 88vw); }
-
-  .whatsapp-cabecera {
-    max-width: 94%;
+  .logo {
+    width: min(290px, 88vw);
   }
 
-  .titulo-seccion { font-size: 21px; }
+  .titulo-seccion {
+    font-size: 21px;
+  }
 
   .datos-cupon {
     grid-template-columns: 1fr;
   }
 
-  .anirona-anuncio {
-    grid-template-columns: 76px 1fr;
-    gap: 10px;
-    border-radius: 15px;
+  .publicidad-contenido {
+    grid-template-columns: 78px 1fr;
+    padding: 12px 39px;
   }
 
-  .anirona-producto {
-    max-width: 72px;
-    max-height: 90px;
+  .publicidad-contenido img {
+    height: 82px;
   }
 
-  .anirona-copy h2 { font-size: 19px; }
-  .anirona-copy p {
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+  .publicidad-copy h2 {
+    font-size: 17px;
   }
 
-  .boton-catalogo,
-  .boton-whatsapp-anirona {
+  .publicidad-boton {
     padding: 8px 10px;
     font-size: 11px;
-  }
-}
-
-
-/* Navegación fija inferior */
-body {
-  padding-bottom: 78px;
-}
-
-.navegacion-inferior {
-  position: fixed;
-  left: 50%;
-  bottom: 12px;
-  z-index: 9000;
-  width: min(460px, calc(100% - 24px));
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 7px;
-  padding: 7px;
-  border: 1px solid rgba(23, 33, 27, 0.12);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 12px 35px rgba(24, 45, 37, 0.18);
-  backdrop-filter: blur(12px);
-  transform: translateX(-50%);
-}
-
-.tab-inferior {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  min-height: 48px;
-  border: 0;
-  border-radius: 13px;
-  color: #66736c;
-  background: transparent;
-  font-size: 14px;
-  cursor: pointer;
-  transition:
-    background 0.15s ease,
-    color 0.15s ease,
-    transform 0.15s ease;
-}
-
-.tab-inferior span {
-  font-size: 19px;
-}
-
-.tab-inferior:hover {
-  background: #f1f6f4;
-}
-
-.tab-inferior.activo {
-  color: white;
-  background: linear-gradient(135deg, #08786f, #0f9f92);
-  box-shadow: 0 5px 14px rgba(15, 159, 146, 0.24);
-}
-
-.tab-inferior:active {
-  transform: scale(0.98);
-}
-
-@media (max-width: 430px) {
-  body {
-    padding-bottom: 84px;
-  }
-
-  .navegacion-inferior {
-    bottom: 8px;
-    width: calc(100% - 16px);
-  }
-
-  .tab-inferior {
-    min-height: 50px;
-  }
-}
-
-
-/* Aviso movido debajo de los cupones */
-.aviso-inferior {
-  position: relative;
-  margin-top: 24px;
-  padding-top: 20px;
-}
-
-.aviso-inferior::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  border-top: 2px dashed #bcc9c4;
-}
-
-.aviso-inferior p {
-  margin: 0;
-  padding: 12px 15px;
-  border: 1px solid #ecd96a;
-  border-radius: 13px;
-  background: #fff9d7;
-  color: #4f554f;
-  text-align: center;
-  font-size: 13px;
-  line-height: 1.45;
-}
-
-/* La publicidad queda un poco más cerca del aviso inferior */
-.aviso-inferior + .anirona-anuncio {
-  margin-top: 14px;
-}
-
-@media (max-width: 430px) {
-  .aviso-inferior {
-    margin-top: 20px;
-    padding-top: 17px;
-  }
-
-  .aviso-inferior p {
-    padding: 11px 12px;
-    font-size: 12px;
   }
 }

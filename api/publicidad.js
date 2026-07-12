@@ -12,21 +12,15 @@ export default async function handler(request, response) {
 
   const key = process.env.SUPABASE_SECRET_KEY;
 
-  if (!url || !key) {
-    return response.status(500).json({
-      error: "Faltan las variables de Supabase.",
-    });
-  }
-
   try {
-    const endpoint = new URL("/rest/v1/cupones", url);
+    const endpoint = new URL("/rest/v1/publicidades", url);
 
     endpoint.searchParams.set(
       "select",
-      "id,titulo,codigo,compra_minima,ahorro_maximo,enlace,clics,activo,categoria"
+      "id,titulo,descripcion,imagen_url,enlace,orden,clics"
     );
     endpoint.searchParams.set("activo", "eq.true");
-    endpoint.searchParams.set("order", "id.asc");
+    endpoint.searchParams.set("order", "orden.asc,id.asc");
 
     const result = await fetch(endpoint, {
       headers: {
@@ -40,7 +34,7 @@ export default async function handler(request, response) {
 
     if (!result.ok) {
       return response.status(502).json({
-        error: "Supabase rechazó la consulta.",
+        error: "No fue posible consultar la publicidad.",
         detalle: text,
       });
     }
@@ -50,7 +44,6 @@ export default async function handler(request, response) {
   } catch (error) {
     return response.status(500).json({
       error: "Error interno del servidor.",
-      detalle: error.message,
     });
   }
 }
