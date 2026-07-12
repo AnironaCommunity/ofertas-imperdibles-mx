@@ -12,7 +12,7 @@
 
   <!-- Se conserva exactamente el mismo archivo de logo -->
   <link rel="icon" href="img/logo.png" />
-  <link rel="stylesheet" href="css/style.css?v=13" />
+  <link rel="stylesheet" href="css/style.css?v=14" />
 </head>
 
 <body>
@@ -47,13 +47,7 @@
   </header>
 
   <main class="contenedor">
-    <div class="aviso">
-      ⚠️ Los cupones pueden agotarse, cambiar o dejar de estar disponibles
-      sin previo aviso. La disponibilidad y las condiciones dependen de
-      Mercado Libre.
-    </div>
-
-    <div class="instruccion-cupones">
+<div class="instruccion-cupones">
       <span aria-hidden="true">📋</span>
       <p>
         Al presionar <strong>Copiar y Canjear</strong>, el código se copiará
@@ -107,6 +101,15 @@
       <h2>No hay cupones disponibles</h2>
       <p>Pronto agregaremos nuevos cupones de descuento.</p>
       <strong>¡Vuelve pronto!</strong>
+    </section>
+
+
+    <section class="aviso-inferior" aria-label="Aviso sobre disponibilidad">
+      <p>
+        ⚠️ Los cupones pueden agotarse, cambiar o dejar de estar disponibles
+        sin previo aviso. La disponibilidad y las condiciones dependen de
+        Mercado Libre.
+      </p>
     </section>
 
     <!-- Publicidad compacta e independiente -->
@@ -200,11 +203,11 @@
 
       <p>
         Serás redireccionado a Mercado Libre en
-        <strong><span id="modal-contador">5</span> segundos</strong>.
+        <strong><span id="modal-contador">3</span> segundos</strong>.
       </p>
 
       <div class="cronometro" aria-hidden="true">
-        <span id="cronometro-numero">5</span>
+        <span id="cronometro-numero">3</span>
       </div>
 
       <p class="modal-codigo">
@@ -213,6 +216,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/app.js?v=13"></script>
+  <script type="module" src="js/app.js?v=14"></script>
 </body>
 </html>

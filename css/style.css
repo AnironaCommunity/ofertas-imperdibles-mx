@@ -658,3 +658,49 @@ body {
     min-height: 50px;
   }
 }
+
+
+/* Aviso movido debajo de los cupones */
+.aviso-inferior {
+  position: relative;
+  margin-top: 24px;
+  padding-top: 20px;
+}
+
+.aviso-inferior::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-top: 2px dashed #bcc9c4;
+}
+
+.aviso-inferior p {
+  margin: 0;
+  padding: 12px 15px;
+  border: 1px solid #ecd96a;
+  border-radius: 13px;
+  background: #fff9d7;
+  color: #4f554f;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+/* La publicidad queda un poco más cerca del aviso inferior */
+.aviso-inferior + .anirona-anuncio {
+  margin-top: 14px;
+}
+
+@media (max-width: 430px) {
+  .aviso-inferior {
+    margin-top: 20px;
+    padding-top: 17px;
+  }
+
+  .aviso-inferior p {
+    padding: 11px 12px;
+    font-size: 12px;
+  }
+}

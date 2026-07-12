@@ -16,7 +16,7 @@ const tabTienda = document.querySelector("#tab-tienda");
 const tabBancarios = document.querySelector("#tab-bancarios");
 
 const SEGUNDOS_ACTUALIZACION = 60;
-const SEGUNDOS_REDIRECCION = 5;
+const SEGUNDOS_REDIRECCION = 3;
 const COLORES = ["turquesa", "azul", "morado", "coral", "oliva"];
 
 let segundosRestantes = SEGUNDOS_ACTUALIZACION;
@@ -27,7 +27,6 @@ let categoriaActiva = "tienda";
 let todosLosCupones = [];
 
 botonRecargar.addEventListener("click", cargarCupones);
-
 tabTienda.addEventListener("click", () => cambiarCategoria("tienda"));
 tabBancarios.addEventListener("click", () => cambiarCategoria("bancarios"));
 
@@ -50,6 +49,7 @@ function iconoCompartir() {
 
 function crearTarjeta(cupon, esPopular = false, indice = 0) {
   const articulo = document.createElement("article");
+
   articulo.className = esPopular ? "cupon popular" : "cupon";
   articulo.dataset.id = String(cupon.id);
 
@@ -112,28 +112,40 @@ function crearTarjeta(cupon, esPopular = false, indice = 0) {
   return articulo;
 }
 
-
 function normalizarCategoria(cupon) {
   const categoria = String(cupon.categoria || "tienda").toLowerCase();
 
-  if (categoria === "bancario" || categoria === "bancarios") {
-    return "bancarios";
-  }
-
-  return "tienda";
+  return categoria === "bancario" || categoria === "bancarios"
+    ? "bancarios"
+    : "tienda";
 }
 
 function cambiarCategoria(categoria) {
   categoriaActiva = categoria;
 
-  tabTienda.classList.toggle("activo", categoria === "tienda");
-  tabBancarios.classList.toggle("activo", categoria === "bancarios");
+  const esTienda = categoria === "tienda";
 
-  tabTienda.setAttribute("aria-pressed", String(categoria === "tienda"));
-  tabBancarios.setAttribute("aria-pressed", String(categoria === "bancarios"));
+  tabTienda.classList.toggle("activo", esTienda);
+  tabBancarios.classList.toggle("activo", !esTienda);
+
+  tabTienda.setAttribute("aria-pressed", String(esTienda));
+  tabBancarios.setAttribute("aria-pressed", String(!esTienda));
 
   renderizarCategoria();
-  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+}
+
+function limpiarVista() {
+  cuponesContainer.replaceChildren();
+  popularContainer.replaceChildren();
+
+  popularWrapper.hidden = true;
+  todosWrapper.hidden = true;
+  sinCupones.hidden = true;
 }
 
 function renderizarCategoria() {
@@ -143,21 +155,22 @@ function renderizarCategoria() {
     .filter((cupon) => normalizarCategoria(cupon) === categoriaActiva)
     .sort((a, b) => Number(b.clics || 0) - Number(a.clics || 0));
 
-  const nombreCategoria =
-    categoriaActiva === "tienda" ? "de tienda" : "bancarios";
+  const esTienda = categoriaActiva === "tienda";
 
-  document.querySelector(".titulo-seccion").textContent =
-    categoriaActiva === "tienda"
-      ? "🎟️ Cupones de tienda"
-      : "💳 Cupones bancarios";
+  document.querySelector(".titulo-seccion").textContent = esTienda
+    ? "🎟️ Cupones de tienda"
+    : "💳 Cupones bancarios";
 
   if (cuponesCategoria.length === 0) {
-    estadoCarga.textContent = "";
-    sinCupones.querySelector("h2").textContent =
-      `No hay cupones ${nombreCategoria} disponibles`;
+    sinCupones.querySelector("h2").textContent = esTienda
+      ? "No hay cupones de tienda disponibles"
+      : "No hay cupones bancarios disponibles";
+
     sinCupones.querySelector("p").textContent =
       "Pronto agregaremos nuevas opciones.";
+
     sinCupones.hidden = false;
+    estadoCarga.textContent = "";
     return;
   }
 
@@ -180,14 +193,6 @@ function renderizarCategoria() {
   estadoCarga.textContent = "";
 }
 
-function limpiarVista() {
-  cuponesContainer.replaceChildren();
-  popularContainer.replaceChildren();
-  popularWrapper.hidden = true;
-  todosWrapper.hidden = true;
-  sinCupones.hidden = true;
-}
-
 function reiniciarContadorActualizacion() {
   segundosRestantes = SEGUNDOS_ACTUALIZACION;
   actualizarTextoContador();
@@ -205,11 +210,12 @@ async function cargarCupones() {
   estadoCarga.className = "estado-carga";
   estadoCarga.textContent = "Cargando cupones...";
   botonRecargar.disabled = true;
-  limpiarVista();
 
   try {
     const respuesta = await fetch("/api/cupones", {
-      headers: { Accept: "application/json" },
+      headers: {
+        Accept: "application/json",
+      },
       cache: "no-store",
     });
 
@@ -219,16 +225,12 @@ async function cargarCupones() {
 
     const cupones = await respuesta.json();
 
-    if (!Array.isArray(cupones) || cupones.length === 0) {
-      estadoCarga.textContent = "";
-      sinCupones.hidden = false;
-      return;
-    }
-
-    todosLosCupones = cupones;
+    todosLosCupones = Array.isArray(cupones) ? cupones : [];
     renderizarCategoria();
   } catch (error) {
     console.error(error);
+    limpiarVista();
+
     estadoCarga.className = "estado-carga error";
     estadoCarga.textContent =
       "No pudimos cargar los cupones. Intenta actualizar la página.";
@@ -244,9 +246,11 @@ async function copiarTexto(texto) {
     await navigator.clipboard.writeText(texto);
   } catch {
     const area = document.createElement("textarea");
+
     area.value = texto;
     area.style.position = "fixed";
     area.style.opacity = "0";
+
     document.body.appendChild(area);
     area.focus();
     area.select();
@@ -274,8 +278,8 @@ async function registrarClic(id) {
 
 function mostrarModal(codigo) {
   modalCodigo.textContent = codigo;
-  modalContador.textContent = "5";
-  cronometroNumero.textContent = "5";
+  modalContador.textContent = String(SEGUNDOS_REDIRECCION);
+  cronometroNumero.textContent = String(SEGUNDOS_REDIRECCION);
   modalRedireccion.hidden = false;
   document.body.style.overflow = "hidden";
 }
@@ -313,11 +317,14 @@ function ejecutarCuentaRegresiva(cupon, boton, mensaje) {
 
     if (segundos === 0) {
       cerrarModal();
+
       boton.disabled = false;
       boton.textContent = "📋 Copiar y Canjear";
       mensaje.textContent = "";
+
       redireccionEnProceso = false;
       timeoutRedireccion = null;
+
       window.location.assign(cupon.enlace);
       return;
     }
@@ -341,6 +348,7 @@ async function copiarYCanjear(cupon, tarjeta) {
   boton.disabled = true;
   boton.textContent = `✅ ${cupon.codigo}`;
   mensaje.textContent = "Cupón copiado correctamente.";
+
   mostrarModal(cupon.codigo);
 
   try {
@@ -367,11 +375,6 @@ async function copiarYCanjear(cupon, tarjeta) {
 async function compartirCupon(cupon, tarjeta) {
   const mensaje = tarjeta.querySelector(".mensaje");
 
-  /*
-    IMPORTANTE:
-    El código del cupón NO se comparte.
-    Así el usuario debe ingresar primero a la oferta para copiarlo.
-  */
   const textoOferta =
     `${cupon.titulo}\n` +
     `Compra mínima: ${cupon.compra_minima || "Consultar"}\n` +
@@ -381,7 +384,10 @@ async function compartirCupon(cupon, tarjeta) {
 
   try {
     if (navigator.share) {
-      await navigator.share({ text: textoOferta });
+      await navigator.share({
+        text: textoOferta,
+      });
+
       mensaje.textContent = "Oferta compartida.";
     } else {
       await copiarTexto(textoOferta);
