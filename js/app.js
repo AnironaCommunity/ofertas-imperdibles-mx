@@ -17,11 +17,10 @@ const SEGUNDOS_REDIRECCION = 5;
 
 let segundosRestantes = SEGUNDOS_ACTUALIZACION;
 let cargando = false;
-let temporizadorModal = null;
+let redireccionEnProceso = false;
+let timeoutRedireccion = null;
 
-botonRecargar.addEventListener("click", () => {
-  cargarCupones();
-});
+botonRecargar.addEventListener("click", cargarCupones);
 
 function escaparHtml(valor = "") {
   return String(valor)
@@ -87,16 +86,13 @@ function crearTarjeta(cupon, esPopular = false) {
     </div>
   `;
 
-  const botonCanjear = articulo.querySelector(".boton-canjear");
-  const botonCompartir = articulo.querySelector(".boton-compartir");
+  articulo
+    .querySelector(".boton-canjear")
+    .addEventListener("click", () => copiarYCanjear(cupon, articulo));
 
-  botonCanjear.addEventListener("click", () => {
-    copiarYCanjear(cupon, articulo);
-  });
-
-  botonCompartir.addEventListener("click", () => {
-    compartirCupon(cupon, articulo);
-  });
+  articulo
+    .querySelector(".boton-compartir")
+    .addEventListener("click", () => compartirCupon(cupon, articulo));
 
   return articulo;
 }
@@ -104,7 +100,6 @@ function crearTarjeta(cupon, esPopular = false) {
 function limpiarVista() {
   cuponesContainer.replaceChildren();
   popularContainer.replaceChildren();
-
   popularWrapper.hidden = true;
   todosWrapper.hidden = true;
   sinCupones.hidden = true;
@@ -121,7 +116,7 @@ function actualizarTextoContador() {
 }
 
 async function cargarCupones() {
-  if (cargando) return;
+  if (cargando || redireccionEnProceso) return;
 
   cargando = true;
   estadoCarga.className = "estado-carga";
@@ -131,9 +126,7 @@ async function cargarCupones() {
 
   try {
     const respuesta = await fetch("/api/cupones", {
-      headers: {
-        Accept: "application/json",
-      },
+      headers: { Accept: "application/json" },
       cache: "no-store",
     });
 
@@ -190,7 +183,6 @@ async function copiarTexto(texto) {
     area.value = texto;
     area.style.position = "fixed";
     area.style.opacity = "0";
-
     document.body.appendChild(area);
     area.focus();
     area.select();
@@ -218,6 +210,8 @@ async function registrarClic(id) {
 
 function mostrarModal(codigo) {
   modalCodigo.textContent = codigo;
+  modalContador.textContent = "5";
+  cronometroNumero.textContent = "5";
   modalRedireccion.hidden = false;
   document.body.style.overflow = "hidden";
 }
@@ -227,86 +221,80 @@ function cerrarModal() {
   document.body.style.overflow = "";
 }
 
-function iniciarCuentaRegresiva(cupon, boton, mensaje, nuevaPestana) {
+function ejecutarCuentaRegresiva(cupon, boton, mensaje) {
   let segundos = SEGUNDOS_REDIRECCION;
 
-  modalContador.textContent = String(segundos);
-  cronometroNumero.textContent = String(segundos);
-  boton.textContent = `✅ ${cupon.codigo}`;
-
-  temporizadorModal = setInterval(() => {
-    segundos -= 1;
-
+  const avanzar = () => {
     modalContador.textContent = String(segundos);
     cronometroNumero.textContent = String(segundos);
 
-    if (segundos <= 0) {
-      clearInterval(temporizadorModal);
-      temporizadorModal = null;
-
+    if (segundos === 0) {
       cerrarModal();
-
-      if (nuevaPestana) {
-        nuevaPestana.location.href = cupon.enlace;
-      } else {
-        window.location.href = cupon.enlace;
-      }
-
       boton.disabled = false;
       boton.textContent = "📋 Copiar y Canjear";
       mensaje.textContent = "";
+
+      /*
+        Esta es la única redirección de todo el flujo.
+        No existe window.open ni otra llamada previa.
+      */
+      window.location.assign(cupon.enlace);
+      return;
     }
-  }, 1000);
+
+    segundos -= 1;
+    timeoutRedireccion = window.setTimeout(avanzar, 1000);
+  };
+
+  avanzar();
 }
 
 async function copiarYCanjear(cupon, tarjeta) {
+  if (redireccionEnProceso) return;
+
+  redireccionEnProceso = true;
+
   const boton = tarjeta.querySelector(".boton-canjear");
   const mensaje = tarjeta.querySelector(".mensaje");
   const numeroClics = tarjeta.querySelector(".numero-clics");
 
-  /*
-    Se abre una pestaña vacía inmediatamente para evitar bloqueos
-    del navegador cuando termine la cuenta regresiva.
-  */
-  const nuevaPestana = window.open("", "_blank");
-
   boton.disabled = true;
-  mensaje.textContent = "Preparando el cupón...";
+  boton.textContent = `✅ ${cupon.codigo}`;
+  mensaje.textContent = "Cupón copiado correctamente.";
+
+  /*
+    La ventana se muestra de inmediato, antes de cualquier await.
+    Así el usuario siempre ve primero el código y el contador.
+  */
+  mostrarModal(cupon.codigo);
 
   try {
     await copiarTexto(cupon.codigo);
 
-    mensaje.textContent = "Cupón copiado correctamente.";
-    mostrarModal(cupon.codigo);
+    /*
+      El registro del clic se realiza en segundo plano y no controla
+      la redirección.
+    */
+    registrarClic(cupon.id)
+      .then((resultado) => {
+        if (Number.isFinite(Number(resultado.clics))) {
+          numeroClics.textContent = String(resultado.clics);
+        }
+      })
+      .catch((error) => {
+        console.warn("El contador no pudo actualizarse:", error);
+      });
 
-    try {
-      const resultado = await Promise.race([
-        registrarClic(cupon.id),
-        new Promise((_, rechazar) => {
-          setTimeout(() => rechazar(new Error("Tiempo agotado")), 1200);
-        }),
-      ]);
-
-      if (Number.isFinite(Number(resultado.clics))) {
-        numeroClics.textContent = String(resultado.clics);
-      }
-    } catch (error) {
-      console.warn("El contador no pudo actualizarse:", error);
-    }
-
-    iniciarCuentaRegresiva(
-      cupon,
-      boton,
-      mensaje,
-      nuevaPestana
-    );
+    ejecutarCuentaRegresiva(cupon, boton, mensaje);
   } catch (error) {
     console.error(error);
 
-    if (nuevaPestana) {
-      nuevaPestana.close();
+    if (timeoutRedireccion) {
+      clearTimeout(timeoutRedireccion);
+      timeoutRedireccion = null;
     }
 
+    redireccionEnProceso = false;
     cerrarModal();
     boton.disabled = false;
     boton.textContent = "📋 Copiar y Canjear";
@@ -317,7 +305,12 @@ async function copiarYCanjear(cupon, tarjeta) {
 async function compartirCupon(cupon, tarjeta) {
   const mensaje = tarjeta.querySelector(".mensaje");
 
-  const texto =
+  /*
+    Se manda un solo campo: text.
+    El enlace aparece exactamente una vez dentro de ese texto.
+    No usamos "url", porque algunas apps lo agregan una segunda vez.
+  */
+  const textoUnico =
     `${cupon.titulo}\n` +
     `Compra mínima: ${cupon.compra_minima || "Consultar"}\n` +
     `Ahorra hasta: ${cupon.ahorro_maximo || "Consultar"}\n` +
@@ -327,14 +320,12 @@ async function compartirCupon(cupon, tarjeta) {
   try {
     if (navigator.share) {
       await navigator.share({
-        title: `${cupon.titulo} | Ofertas Imperdibles MX`,
-        text: texto,
-        url: cupon.enlace,
+        text: textoUnico,
       });
 
       mensaje.textContent = "Cupón compartido.";
     } else {
-      await copiarTexto(texto);
+      await copiarTexto(textoUnico);
       mensaje.textContent =
         "Información del cupón copiada para compartir.";
     }
@@ -351,7 +342,14 @@ async function compartirCupon(cupon, tarjeta) {
 }
 
 setInterval(() => {
-  if (document.hidden || cargando || !modalRedireccion.hidden) return;
+  if (
+    document.hidden ||
+    cargando ||
+    redireccionEnProceso ||
+    !modalRedireccion.hidden
+  ) {
+    return;
+  }
 
   segundosRestantes -= 1;
 
@@ -364,7 +362,11 @@ setInterval(() => {
 }, 1000);
 
 document.addEventListener("visibilitychange", () => {
-  if (!document.hidden && modalRedireccion.hidden) {
+  if (
+    !document.hidden &&
+    !redireccionEnProceso &&
+    modalRedireccion.hidden
+  ) {
     cargarCupones();
   }
 });
