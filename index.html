@@ -32,17 +32,31 @@
       Mercado Libre.
     </div>
 
-    <div class="titulo-fila">
+    <div class="instruccion-cupones">
+      <span class="instruccion-icono" aria-hidden="true">📋</span>
+
+      <p>
+        Al presionar <strong>Copiar y Canjear</strong>, el código del cupón se
+        copiará automáticamente y se abrirá Mercado Libre para que puedas
+        utilizarlo.
+      </p>
+    </div>
+
+    <div class="titulo-fila titulo-con-separador">
       <h1 class="titulo-seccion">🎟️ Cupones disponibles</h1>
 
-      <button
-        id="boton-recargar"
-        class="boton-recargar"
-        type="button"
-        aria-label="Actualizar cupones"
-      >
-        ↻ Actualizar
-      </button>
+      <div class="actualizacion">
+        <span id="contador-actualizacion">Actualización automática en 30 s</span>
+
+        <button
+          id="boton-recargar"
+          class="boton-recargar"
+          type="button"
+          aria-label="Actualizar cupones"
+        >
+          ↻ Actualizar
+        </button>
+      </div>
     </div>
 
     <p id="estado-carga" class="estado-carga" aria-live="polite">
@@ -51,7 +65,7 @@
 
     <!-- CUPÓN MÁS POPULAR -->
     <section id="popular-wrapper" class="popular-wrapper" hidden>
-      <div class="popular-titulo">
+      <div class="popular-titulo titulo-con-separador">
         <div>
           <h2>🏆 Cupón más popular</h2>
           <p>El cupón con más usos se muestra primero.</p>
@@ -63,7 +77,7 @@
 
     <!-- RESTO DE CUPONES -->
     <section id="todos-wrapper" hidden>
-      <h2 class="subtitulo-lista">Todos los cupones</h2>
+      <h2 class="subtitulo-lista titulo-con-separador">Todos los cupones</h2>
 
       <section
         id="cupones"

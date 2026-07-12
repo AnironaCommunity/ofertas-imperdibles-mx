@@ -5,8 +5,17 @@ const todosWrapper = document.querySelector("#todos-wrapper");
 const sinCupones = document.querySelector("#sin-cupones");
 const estadoCarga = document.querySelector("#estado-carga");
 const botonRecargar = document.querySelector("#boton-recargar");
+const contadorActualizacion = document.querySelector("#contador-actualizacion");
 
-botonRecargar.addEventListener("click", cargarCupones);
+const SEGUNDOS_ACTUALIZACION = 30;
+const MILISEGUNDOS_NOMBRE_CUPON = 7000;
+
+let segundosRestantes = SEGUNDOS_ACTUALIZACION;
+let cargando = false;
+
+botonRecargar.addEventListener("click", () => {
+  cargarCupones();
+});
 
 function escaparHtml(valor = "") {
   return String(valor)
@@ -30,17 +39,30 @@ function crearTarjeta(cupon, esPopular = false) {
     </div>
 
     <div class="cupon-contenido">
-      <p class="dato">
-        Compra mínima: ${escaparHtml(cupon.compra_minima || "Consultar")}
-      </p>
+      <div class="datos-cupon">
+        <p class="dato">
+          Compra mínima: ${escaparHtml(cupon.compra_minima || "Consultar")}
+        </p>
 
-      <p class="dato">
-        Ahorra hasta: ${escaparHtml(cupon.ahorro_maximo || "Consultar")}
-      </p>
+        <p class="dato">
+          Ahorra hasta: ${escaparHtml(cupon.ahorro_maximo || "Consultar")}
+        </p>
+      </div>
 
-      <button class="boton-canjear" type="button">
-        📋 Copiar y Canjear
-      </button>
+      <div class="acciones-cupon">
+        <button class="boton-canjear" type="button">
+          📋 Copiar y Canjear
+        </button>
+
+        <button
+          class="boton-compartir"
+          type="button"
+          aria-label="Compartir cupón ${escaparHtml(cupon.codigo)}"
+          title="Compartir cupón"
+        >
+          ↗
+        </button>
+      </div>
 
       <p class="mensaje" aria-live="polite"></p>
 
@@ -51,10 +73,15 @@ function crearTarjeta(cupon, esPopular = false) {
     </div>
   `;
 
-  const boton = articulo.querySelector(".boton-canjear");
+  const botonCanjear = articulo.querySelector(".boton-canjear");
+  const botonCompartir = articulo.querySelector(".boton-compartir");
 
-  boton.addEventListener("click", () => {
+  botonCanjear.addEventListener("click", () => {
     copiarYCanjear(cupon, articulo);
+  });
+
+  botonCompartir.addEventListener("click", () => {
+    compartirCupon(cupon, articulo);
   });
 
   return articulo;
@@ -69,7 +96,20 @@ function limpiarVista() {
   sinCupones.hidden = true;
 }
 
+function reiniciarContadorActualizacion() {
+  segundosRestantes = SEGUNDOS_ACTUALIZACION;
+  actualizarTextoContador();
+}
+
+function actualizarTextoContador() {
+  contadorActualizacion.textContent =
+    `Actualización automática en ${segundosRestantes} s`;
+}
+
 async function cargarCupones() {
+  if (cargando) return;
+
+  cargando = true;
   estadoCarga.className = "estado-carga";
   estadoCarga.textContent = "Cargando cupones...";
   botonRecargar.disabled = true;
@@ -95,7 +135,6 @@ async function cargarCupones() {
       return;
     }
 
-    /* Ordena de mayor a menor según el contador de clics. */
     const cuponesOrdenados = [...cupones].sort(
       (a, b) => Number(b.clics || 0) - Number(a.clics || 0)
     );
@@ -123,7 +162,9 @@ async function cargarCupones() {
     estadoCarga.textContent =
       "No pudimos cargar los cupones. Intenta actualizar la página.";
   } finally {
+    cargando = false;
     botonRecargar.disabled = false;
+    reiniciarContadorActualizacion();
   }
 }
 
@@ -165,16 +206,20 @@ async function copiarYCanjear(cupon, tarjeta) {
   const boton = tarjeta.querySelector(".boton-canjear");
   const mensaje = tarjeta.querySelector(".mensaje");
   const numeroClics = tarjeta.querySelector(".numero-clics");
-  const textoOriginal = boton.textContent;
+  const textoOriginal = "📋 Copiar y Canjear";
+
+  /*
+    Abrimos una pestaña inmediatamente para evitar que el navegador
+    bloquee la redirección después de las operaciones asíncronas.
+  */
+  const nuevaPestana = window.open("", "_blank");
 
   boton.disabled = true;
-  mensaje.textContent = "";
+  boton.textContent = `✅ ${cupon.codigo}`;
+  mensaje.textContent = "Cupón copiado. Abriendo Mercado Libre...";
 
   try {
     await copiarTexto(cupon.codigo);
-
-    boton.textContent = "✅ Cupón copiado";
-    mensaje.textContent = "Abriendo Mercado Libre...";
 
     try {
       const resultado = await Promise.race([
@@ -191,15 +236,86 @@ async function copiarYCanjear(cupon, tarjeta) {
       console.warn("El contador no pudo actualizarse:", error);
     }
 
+    if (nuevaPestana) {
+      nuevaPestana.location.href = cupon.enlace;
+    } else {
+      setTimeout(() => {
+        window.location.href = cupon.enlace;
+      }, 400);
+    }
+
     setTimeout(() => {
-      window.location.href = cupon.enlace;
-    }, 350);
+      boton.disabled = false;
+      boton.textContent = textoOriginal;
+      mensaje.textContent = "";
+    }, MILISEGUNDOS_NOMBRE_CUPON);
   } catch (error) {
     console.error(error);
+
+    if (nuevaPestana) {
+      nuevaPestana.close();
+    }
+
     boton.disabled = false;
     boton.textContent = textoOriginal;
     mensaje.textContent = "No fue posible copiar el cupón.";
   }
 }
+
+async function compartirCupon(cupon, tarjeta) {
+  const mensaje = tarjeta.querySelector(".mensaje");
+
+  const texto =
+    `${cupon.titulo}\n` +
+    `Compra mínima: ${cupon.compra_minima || "Consultar"}\n` +
+    `Ahorra hasta: ${cupon.ahorro_maximo || "Consultar"}\n` +
+    `Cupón: ${cupon.codigo}\n` +
+    `${cupon.enlace}`;
+
+  try {
+    if (navigator.share) {
+      await navigator.share({
+        title: `${cupon.titulo} | Ofertas Imperdibles MX`,
+        text: texto,
+        url: cupon.enlace,
+      });
+
+      mensaje.textContent = "Cupón compartido.";
+    } else {
+      await copiarTexto(texto);
+      mensaje.textContent =
+        "Información del cupón copiada para compartir.";
+    }
+
+    setTimeout(() => {
+      mensaje.textContent = "";
+    }, 4000);
+  } catch (error) {
+    if (error?.name !== "AbortError") {
+      console.error(error);
+      mensaje.textContent = "No fue posible compartir el cupón.";
+    }
+  }
+}
+
+/* Cuenta regresiva y actualización automática cada 30 segundos. */
+setInterval(() => {
+  if (document.hidden || cargando) return;
+
+  segundosRestantes -= 1;
+
+  if (segundosRestantes <= 0) {
+    cargarCupones();
+    return;
+  }
+
+  actualizarTextoContador();
+}, 1000);
+
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) {
+    cargarCupones();
+  }
+});
 
 cargarCupones();
