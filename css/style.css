@@ -154,7 +154,6 @@ a {
   font-weight: 700;
 }
 
-/* CUPÓN MÁS POPULAR */
 .popular-wrapper {
   margin-bottom: 20px;
 }
@@ -284,11 +283,18 @@ a {
 
 .boton-compartir {
   min-width: 46px;
-  padding: 11px 12px;
+  padding: 10px 12px;
   border: 1px solid var(--turquesa);
   background: white;
   color: var(--turquesa-oscuro);
-  font-size: 17px;
+  display: grid;
+  place-items: center;
+}
+
+.boton-compartir svg {
+  width: 21px;
+  height: 21px;
+  fill: currentColor;
 }
 
 .boton-canjear:hover {
@@ -326,7 +332,6 @@ a {
   font-size: 12px;
 }
 
-/* SIN CUPONES */
 .sin-cupones {
   background: var(--blanco);
   border: 1px solid var(--borde);
@@ -363,7 +368,6 @@ a {
   color: #415d7b;
 }
 
-/* SECCIÓN ANIRONA */
 .anirona {
   margin-top: 26px;
   background: var(--blanco);
@@ -439,6 +443,99 @@ a {
 
 .escudo {
   font-size: 18px;
+}
+
+/* MODAL DE REDIRECCIÓN */
+.modal-redireccion[hidden] {
+  display: none;
+}
+
+.modal-redireccion {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(11, 27, 22, 0.68);
+  backdrop-filter: blur(3px);
+}
+
+.modal-contenido {
+  width: min(430px, 100%);
+  background: white;
+  border-radius: 20px;
+  padding: 27px 22px 24px;
+  text-align: center;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.26);
+  animation: aparecer-modal 0.18s ease-out;
+}
+
+.modal-icono {
+  font-size: 42px;
+  margin-bottom: 8px;
+}
+
+.modal-contenido h2 {
+  margin: 0 0 10px;
+  color: var(--turquesa-oscuro);
+  font-size: 25px;
+}
+
+.modal-contenido p {
+  margin: 0;
+  color: #47565e;
+  line-height: 1.5;
+}
+
+.cronometro {
+  width: 82px;
+  height: 82px;
+  margin: 19px auto 15px;
+  border: 6px solid var(--turquesa-claro);
+  border-top-color: var(--turquesa);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  animation: girar-borde 1s linear infinite;
+}
+
+.cronometro span {
+  color: var(--turquesa-oscuro);
+  font-size: 34px;
+  font-weight: 900;
+  animation: cancelar-giro 1s linear infinite;
+}
+
+.modal-codigo {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--turquesa-claro);
+  color: var(--turquesa-oscuro) !important;
+}
+
+@keyframes aparecer-modal {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes girar-borde {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes cancelar-giro {
+  to {
+    transform: rotate(-360deg);
+  }
 }
 
 footer {

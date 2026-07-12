@@ -7,11 +7,17 @@ const estadoCarga = document.querySelector("#estado-carga");
 const botonRecargar = document.querySelector("#boton-recargar");
 const contadorActualizacion = document.querySelector("#contador-actualizacion");
 
+const modalRedireccion = document.querySelector("#modal-redireccion");
+const modalContador = document.querySelector("#modal-contador");
+const cronometroNumero = document.querySelector("#cronometro-numero");
+const modalCodigo = document.querySelector("#modal-codigo");
+
 const SEGUNDOS_ACTUALIZACION = 30;
-const MILISEGUNDOS_NOMBRE_CUPON = 7000;
+const SEGUNDOS_REDIRECCION = 5;
 
 let segundosRestantes = SEGUNDOS_ACTUALIZACION;
 let cargando = false;
+let temporizadorModal = null;
 
 botonRecargar.addEventListener("click", () => {
   cargarCupones();
@@ -24,6 +30,14 @@ function escaparHtml(valor = "") {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function iconoCompartir() {
+  return `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M18 16a3 3 0 0 0-2.39 1.19L8.91 13.7a3.1 3.1 0 0 0 0-3.4l6.7-3.49A3 3 0 1 0 15 5c0 .23.03.45.08.66l-6.7 3.49a3 3 0 1 0 0 5.7l6.7 3.49A3 3 0 1 0 18 16Z"/>
+    </svg>
+  `;
 }
 
 function crearTarjeta(cupon, esPopular = false) {
@@ -60,7 +74,7 @@ function crearTarjeta(cupon, esPopular = false) {
           aria-label="Compartir cupón ${escaparHtml(cupon.codigo)}"
           title="Compartir cupón"
         >
-          ↗
+          ${iconoCompartir()}
         </button>
       </div>
 
@@ -202,24 +216,68 @@ async function registrarClic(id) {
   return respuesta.json();
 }
 
+function mostrarModal(codigo) {
+  modalCodigo.textContent = codigo;
+  modalRedireccion.hidden = false;
+  document.body.style.overflow = "hidden";
+}
+
+function cerrarModal() {
+  modalRedireccion.hidden = true;
+  document.body.style.overflow = "";
+}
+
+function iniciarCuentaRegresiva(cupon, boton, mensaje, nuevaPestana) {
+  let segundos = SEGUNDOS_REDIRECCION;
+
+  modalContador.textContent = String(segundos);
+  cronometroNumero.textContent = String(segundos);
+  boton.textContent = `✅ ${cupon.codigo}`;
+
+  temporizadorModal = setInterval(() => {
+    segundos -= 1;
+
+    modalContador.textContent = String(segundos);
+    cronometroNumero.textContent = String(segundos);
+
+    if (segundos <= 0) {
+      clearInterval(temporizadorModal);
+      temporizadorModal = null;
+
+      cerrarModal();
+
+      if (nuevaPestana) {
+        nuevaPestana.location.href = cupon.enlace;
+      } else {
+        window.location.href = cupon.enlace;
+      }
+
+      boton.disabled = false;
+      boton.textContent = "📋 Copiar y Canjear";
+      mensaje.textContent = "";
+    }
+  }, 1000);
+}
+
 async function copiarYCanjear(cupon, tarjeta) {
   const boton = tarjeta.querySelector(".boton-canjear");
   const mensaje = tarjeta.querySelector(".mensaje");
   const numeroClics = tarjeta.querySelector(".numero-clics");
-  const textoOriginal = "📋 Copiar y Canjear";
 
   /*
-    Abrimos una pestaña inmediatamente para evitar que el navegador
-    bloquee la redirección después de las operaciones asíncronas.
+    Se abre una pestaña vacía inmediatamente para evitar bloqueos
+    del navegador cuando termine la cuenta regresiva.
   */
   const nuevaPestana = window.open("", "_blank");
 
   boton.disabled = true;
-  boton.textContent = `✅ ${cupon.codigo}`;
-  mensaje.textContent = "Cupón copiado. Abriendo Mercado Libre...";
+  mensaje.textContent = "Preparando el cupón...";
 
   try {
     await copiarTexto(cupon.codigo);
+
+    mensaje.textContent = "Cupón copiado correctamente.";
+    mostrarModal(cupon.codigo);
 
     try {
       const resultado = await Promise.race([
@@ -236,19 +294,12 @@ async function copiarYCanjear(cupon, tarjeta) {
       console.warn("El contador no pudo actualizarse:", error);
     }
 
-    if (nuevaPestana) {
-      nuevaPestana.location.href = cupon.enlace;
-    } else {
-      setTimeout(() => {
-        window.location.href = cupon.enlace;
-      }, 400);
-    }
-
-    setTimeout(() => {
-      boton.disabled = false;
-      boton.textContent = textoOriginal;
-      mensaje.textContent = "";
-    }, MILISEGUNDOS_NOMBRE_CUPON);
+    iniciarCuentaRegresiva(
+      cupon,
+      boton,
+      mensaje,
+      nuevaPestana
+    );
   } catch (error) {
     console.error(error);
 
@@ -256,8 +307,9 @@ async function copiarYCanjear(cupon, tarjeta) {
       nuevaPestana.close();
     }
 
+    cerrarModal();
     boton.disabled = false;
-    boton.textContent = textoOriginal;
+    boton.textContent = "📋 Copiar y Canjear";
     mensaje.textContent = "No fue posible copiar el cupón.";
   }
 }
@@ -298,9 +350,8 @@ async function compartirCupon(cupon, tarjeta) {
   }
 }
 
-/* Cuenta regresiva y actualización automática cada 30 segundos. */
 setInterval(() => {
-  if (document.hidden || cargando) return;
+  if (document.hidden || cargando || !modalRedireccion.hidden) return;
 
   segundosRestantes -= 1;
 
@@ -313,7 +364,7 @@ setInterval(() => {
 }, 1000);
 
 document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) {
+  if (!document.hidden && modalRedireccion.hidden) {
     cargarCupones();
   }
 });

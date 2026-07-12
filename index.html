@@ -63,7 +63,6 @@
       Cargando cupones...
     </p>
 
-    <!-- CUPÓN MÁS POPULAR -->
     <section id="popular-wrapper" class="popular-wrapper" hidden>
       <div class="popular-titulo titulo-con-separador">
         <div>
@@ -75,7 +74,6 @@
       <div id="cupon-popular"></div>
     </section>
 
-    <!-- RESTO DE CUPONES -->
     <section id="todos-wrapper" hidden>
       <h2 class="subtitulo-lista titulo-con-separador">Todos los cupones</h2>
 
@@ -86,7 +84,6 @@
       ></section>
     </section>
 
-    <!-- ESTADO SIN CUPONES -->
     <section id="sin-cupones" class="sin-cupones" hidden>
       <div class="sin-cupones-icono" aria-hidden="true">🎟️</div>
       <h2>No hay cupones disponibles</h2>
@@ -94,7 +91,6 @@
       <strong>¡Vuelve pronto!</strong>
     </section>
 
-    <!-- SECCIÓN ANIRONA -->
     <section class="anirona">
       <h2>
         🛠️ ¿Te gusta la <span>herramienta</span>?
@@ -127,6 +123,35 @@
   <footer>
     Página informativa de una comunidad independiente.
   </footer>
+
+  <!-- VENTANA EMERGENTE DE REDIRECCIÓN -->
+  <div
+    id="modal-redireccion"
+    class="modal-redireccion"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-titulo"
+    hidden
+  >
+    <div class="modal-contenido">
+      <div class="modal-icono" aria-hidden="true">✅</div>
+
+      <h2 id="modal-titulo">¡Cupón copiado!</h2>
+
+      <p>
+        Serás redireccionado a Mercado Libre en
+        <strong><span id="modal-contador">5</span> segundos</strong>.
+      </p>
+
+      <div class="cronometro" aria-hidden="true">
+        <span id="cronometro-numero">5</span>
+      </div>
+
+      <p class="modal-codigo">
+        Código: <strong id="modal-codigo"></strong>
+      </p>
+    </div>
+  </div>
 
   <script type="module" src="js/app.js"></script>
 </body>
