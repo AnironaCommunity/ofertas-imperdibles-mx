@@ -47,6 +47,9 @@ const adImageUrl = document.querySelector("#ad-image-url");
 const adTitle = document.querySelector("#ad-title");
 const adDescription = document.querySelector("#ad-description");
 const adLink = document.querySelector("#ad-link");
+const adPricePublished = document.querySelector("#ad-price-published");
+const adPriceCoupon = document.querySelector("#ad-price-coupon");
+const adCouponCode = document.querySelector("#ad-coupon-code");
 const adOrder = document.querySelector("#ad-order");
 const adActive = document.querySelector("#ad-active");
 const adImage = document.querySelector("#ad-image");
@@ -428,6 +431,9 @@ function resetAdForm() {
   adForm.reset();
   adId.value = "";
   adImageUrl.value = "";
+  adPricePublished.value = "";
+  adPriceCoupon.value = "";
+  adCouponCode.value = "";
   adOrder.value = "0";
   adActive.checked = true;
   adPreviewWrapper.hidden = true;
@@ -442,6 +448,9 @@ function editAd(ad) {
   adTitle.value = ad.titulo || "";
   adDescription.value = ad.descripcion || "";
   adLink.value = ad.enlace || "";
+  adPricePublished.value = ad.precio_publicado || "";
+  adPriceCoupon.value = ad.precio_cupon || "";
+  adCouponCode.value = ad.codigo_cupon || "";
   adOrder.value = ad.orden || 0;
   adActive.checked = Boolean(ad.activo);
   adImageUrl.value = ad.imagen_url || "";
@@ -474,6 +483,19 @@ function renderAds() {
       <div class="ad-info">
         <h3>${escapeHtml(ad.titulo)}</h3>
         <p>${escapeHtml(ad.descripcion || "")}</p>
+
+        <div class="precio-admin">
+          ${ad.precio_publicado
+            ? `<span>Publicado: ${escapeHtml(ad.precio_publicado)}</span>`
+            : ""}
+          ${ad.precio_cupon
+            ? `<span class="precio-cupon-admin">Con cupón: ${escapeHtml(ad.precio_cupon)}</span>`
+            : ""}
+          ${ad.codigo_cupon
+            ? `<span>🔒 Cupón configurado</span>`
+            : ""}
+        </div>
+
         <small>
           Orden: ${Number(ad.orden || 0)} ·
           Clics: ${Number(ad.clics || 0)} ·
@@ -579,6 +601,9 @@ async function saveAd(event) {
       titulo: adTitle.value.trim(),
       descripcion: adDescription.value.trim(),
       enlace: adLink.value.trim(),
+      precio_publicado: adPricePublished.value.trim(),
+      precio_cupon: adPriceCoupon.value.trim(),
+      codigo_cupon: adCouponCode.value.trim(),
       imagen_url: imageUrl,
       orden: Number(adOrder.value) || 0,
       activo: adActive.checked,

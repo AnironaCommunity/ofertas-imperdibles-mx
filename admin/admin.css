@@ -377,3 +377,36 @@ th {
     flex: 1;
   }
 }
+
+
+.campo-cupon-oculto {
+  padding: 13px;
+  border: 1px dashed #91b7aa;
+  border-radius: 12px;
+  background: #f4faf8;
+}
+
+.campo-cupon-oculto label {
+  color: #176856;
+}
+
+.precio-admin {
+  display: inline-flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.precio-admin span {
+  padding: 4px 7px;
+  border-radius: 7px;
+  background: #eff6f3;
+  color: #496058;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.precio-admin .precio-cupon-admin {
+  color: #176b38;
+  background: #edf9f0;
+}

@@ -49,7 +49,7 @@ export default async function handler(request, response) {
   try {
     if (request.method === "GET") {
       const data = await requestSupabase(
-        "publicidades?select=id,titulo,descripcion,imagen_url,enlace,activo,orden,clics,fecha_creacion&order=orden.asc,id.asc"
+        "publicidades?select=id,titulo,descripcion,imagen_url,enlace,precio_publicado,precio_cupon,codigo_cupon,activo,orden,clics,fecha_creacion&order=orden.asc,id.asc"
       );
 
       return response.status(200).json(data);
@@ -61,6 +61,9 @@ export default async function handler(request, response) {
         descripcion: String(request.body?.descripcion || "").trim(),
         imagen_url: String(request.body?.imagen_url || "").trim(),
         enlace: String(request.body?.enlace || "").trim(),
+        precio_publicado: String(request.body?.precio_publicado || "").trim(),
+        precio_cupon: String(request.body?.precio_cupon || "").trim(),
+        codigo_cupon: String(request.body?.codigo_cupon || "").trim(),
         activo: request.body?.activo !== false,
         orden: Math.max(0, Number(request.body?.orden) || 0),
         clics: 0,
@@ -99,6 +102,9 @@ export default async function handler(request, response) {
         "descripcion",
         "imagen_url",
         "enlace",
+        "precio_publicado",
+        "precio_cupon",
+        "codigo_cupon",
         "activo",
         "orden",
       ]) {

@@ -8,7 +8,7 @@
   <title>Administrador | Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="../img/logo.png" />
-  <link rel="stylesheet" href="admin.css?v=30" />
+  <link rel="stylesheet" href="admin.css?v=31" />
 </head>
 
 <body>
@@ -319,6 +319,39 @@ https://meli.la/xxxxx"
                 />
               </div>
 
+              <div class="campo">
+                <label for="ad-price-published">Precio publicado</label>
+                <input
+                  id="ad-price-published"
+                  type="text"
+                  placeholder="Ej. $4,407"
+                />
+              </div>
+
+              <div class="campo">
+                <label for="ad-price-coupon">Precio con cupón</label>
+                <input
+                  id="ad-price-coupon"
+                  type="text"
+                  placeholder="Ej. $4,007"
+                />
+              </div>
+
+              <div class="campo campo-completo campo-cupon-oculto">
+                <label for="ad-coupon-code">Cupón aplicable</label>
+                <input
+                  id="ad-coupon-code"
+                  type="text"
+                  placeholder="Ej. APROVECHALO"
+                  autocomplete="off"
+                />
+                <small>
+                  Este código se guarda en la base de datos, pero no se muestra
+                  públicamente. Se copiará cuando el usuario pulse
+                  “Ver en Mercado Libre”.
+                </small>
+              </div>
+
               <div class="campo campo-completo">
                 <label for="ad-image">Foto del producto</label>
                 <input
@@ -377,6 +410,6 @@ https://meli.la/xxxxx"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=30"></script>
+  <script type="module" src="admin.js?v=31"></script>
 </body>
 </html>

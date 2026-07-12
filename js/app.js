@@ -11,6 +11,8 @@ const modalRedireccion = document.querySelector("#modal-redireccion");
 const modalContador = document.querySelector("#modal-contador");
 const cronometroNumero = document.querySelector("#cronometro-numero");
 const modalCodigo = document.querySelector("#modal-codigo");
+const modalCodigoBloque = document.querySelector("#modal-codigo-bloque");
+const modalCuponOculto = document.querySelector("#modal-cupon-oculto");
 
 const tabTienda = document.querySelector("#tab-tienda");
 const tabBancarios = document.querySelector("#tab-bancarios");
@@ -22,6 +24,11 @@ const publicidadImagen = document.querySelector("#publicidad-imagen");
 const publicidadTitulo = document.querySelector("#publicidad-titulo");
 const publicidadDescripcion = document.querySelector("#publicidad-descripcion");
 const publicidadEnlace = document.querySelector("#publicidad-enlace");
+const publicidadPrecioPublicado = document.querySelector("#publicidad-precio-publicado");
+const publicidadPrecioCupon = document.querySelector("#publicidad-precio-cupon");
+const precioPublicadoBloque = document.querySelector("#precio-publicado-bloque");
+const precioCuponBloque = document.querySelector("#precio-cupon-bloque");
+const publicidadAvisoCupon = document.querySelector("#publicidad-aviso-cupon");
 const publicidadIndicadores = document.querySelector("#publicidad-indicadores");
 const publicidadAnterior = document.querySelector("#publicidad-anterior");
 const publicidadSiguiente = document.querySelector("#publicidad-siguiente");
@@ -72,11 +79,13 @@ publicidadCarrusel.addEventListener("touchend", (event) => {
   inicioSwipeX = null;
 }, { passive: true });
 
-publicidadEnlace.addEventListener("click", () => {
+publicidadEnlace.addEventListener("click", (event) => {
+  event.preventDefault();
+
   const publicidad = publicidades[publicidadActual];
 
   if (publicidad) {
-    registrarClicPublicidad(publicidad.id);
+    abrirPublicidad(publicidad);
   }
 });
 
@@ -326,8 +335,11 @@ async function registrarClic(id) {
   return respuesta.json();
 }
 
-function mostrarModal(codigo) {
-  modalCodigo.textContent = codigo;
+function mostrarModal(codigo, mostrarCodigo = true) {
+  modalCodigo.textContent = codigo || "";
+  modalCodigoBloque.hidden = !mostrarCodigo;
+  modalCuponOculto.hidden = mostrarCodigo;
+
   modalContador.textContent = String(SEGUNDOS_REDIRECCION);
   cronometroNumero.textContent = String(SEGUNDOS_REDIRECCION);
   modalRedireccion.hidden = false;
@@ -399,7 +411,8 @@ async function copiarYCanjear(cupon, tarjeta) {
   boton.textContent = `✅ ${cupon.codigo}`;
   mensaje.textContent = "Cupón copiado correctamente.";
 
-  mostrarModal(cupon.codigo);
+  modalRedireccion.querySelector("#modal-titulo").textContent = "¡Cupón copiado!";
+  mostrarModal(cupon.codigo, true);
 
   try {
     await copiarTexto(cupon.codigo);
@@ -524,6 +537,17 @@ function mostrarPublicidad() {
   publicidadDescripcion.textContent = publicidad.descripcion || "";
   publicidadEnlace.href = publicidad.enlace;
 
+  const precioPublicado = String(publicidad.precio_publicado || "").trim();
+  const precioCupon = String(publicidad.precio_cupon || "").trim();
+  const tieneCupon = Boolean(String(publicidad.codigo_cupon || "").trim());
+
+  precioPublicadoBloque.hidden = !precioPublicado;
+  precioCuponBloque.hidden = !precioCupon;
+  publicidadAvisoCupon.hidden = !tieneCupon;
+
+  publicidadPrecioPublicado.textContent = precioPublicado;
+  publicidadPrecioCupon.textContent = precioCupon;
+
   [...publicidadIndicadores.children].forEach((punto, indice) => {
     punto.classList.toggle("activo", indice === publicidadActual);
   });
@@ -559,6 +583,63 @@ function detenerRotacionPublicidad() {
   if (temporizadorPublicidad) {
     clearInterval(temporizadorPublicidad);
     temporizadorPublicidad = null;
+  }
+}
+
+async function abrirPublicidad(publicidad) {
+  if (redireccionEnProceso) return;
+
+  redireccionEnProceso = true;
+  detenerRotacionPublicidad();
+
+  const codigo = String(publicidad.codigo_cupon || "").trim();
+  const enlace = String(publicidad.enlace || "").trim();
+
+  if (!enlace) {
+    redireccionEnProceso = false;
+    return;
+  }
+
+  try {
+    /*
+      El código permanece oculto en la página.
+      Solo se copia al portapapeles cuando existe.
+    */
+    if (codigo) {
+      await copiarTexto(codigo);
+    }
+
+    registrarClicPublicidad(publicidad.id);
+
+    modalRedireccion.querySelector("#modal-titulo").textContent =
+      codigo ? "¡Cupón copiado!" : "Abriendo Mercado Libre";
+
+    mostrarModal("", false);
+
+    let segundos = SEGUNDOS_REDIRECCION;
+
+    const avanzar = () => {
+      modalContador.textContent = String(segundos);
+      cronometroNumero.textContent = String(segundos);
+
+      if (segundos === 0) {
+        cerrarModal();
+        redireccionEnProceso = false;
+        timeoutRedireccion = null;
+        window.location.assign(enlace);
+        return;
+      }
+
+      segundos -= 1;
+      timeoutRedireccion = window.setTimeout(avanzar, 1000);
+    };
+
+    avanzar();
+  } catch (error) {
+    console.error("No fue posible abrir la publicidad.", error);
+    cerrarModal();
+    redireccionEnProceso = false;
+    iniciarRotacionPublicidad();
   }
 }
 

@@ -11,7 +11,7 @@
   <title>Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="img/logo.png" />
-  <link rel="stylesheet" href="css/style.css?v=20" />
+  <link rel="stylesheet" href="css/style.css?v=21" />
 </head>
 
 <body>
@@ -142,12 +142,27 @@
             <h2 id="publicidad-titulo"></h2>
             <p id="publicidad-descripcion"></p>
 
+            <div class="publicidad-precios">
+              <div id="precio-publicado-bloque" class="precio-publicado-bloque" hidden>
+                <span>Precio publicado</span>
+                <strong id="publicidad-precio-publicado"></strong>
+              </div>
+
+              <div id="precio-cupon-bloque" class="precio-cupon-bloque" hidden>
+                <span>Precio con cupón</span>
+                <strong id="publicidad-precio-cupon"></strong>
+              </div>
+            </div>
+
+            <p id="publicidad-aviso-cupon" class="publicidad-aviso-cupon" hidden>
+              📋 Al dar clic en <strong>Ver en Mercado Libre</strong>, el cupón
+              se copiará automáticamente.
+            </p>
+
             <a
               id="publicidad-enlace"
               class="publicidad-boton"
               href="#"
-              target="_blank"
-              rel="noopener noreferrer"
             >
               🛒 Ver en Mercado Libre
             </a>
@@ -215,12 +230,16 @@
         <span id="cronometro-numero">3</span>
       </div>
 
-      <p class="modal-codigo">
+      <p id="modal-codigo-bloque" class="modal-codigo">
         Código: <strong id="modal-codigo"></strong>
+      </p>
+
+      <p id="modal-cupon-oculto" class="modal-cupon-oculto" hidden>
+        El cupón se copió automáticamente.
       </p>
     </div>
   </div>
 
-  <script type="module" src="js/app.js?v=20"></script>
+  <script type="module" src="js/app.js?v=21"></script>
 </body>
 </html>
