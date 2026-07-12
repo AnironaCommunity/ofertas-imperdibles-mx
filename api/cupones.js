@@ -1,7 +1,9 @@
 export default async function handler(request, response) {
   if (request.method !== "GET") {
+    response.setHeader("Allow", "GET");
+
     return response.status(405).json({
-      error: "Método no permitido",
+      error: "Método no permitido.",
     });
   }
 
@@ -10,35 +12,46 @@ export default async function handler(request, response) {
 
   if (!supabaseUrl || !secretKey) {
     return response.status(500).json({
-      error: "Falta configurar Supabase en Vercel.",
+      error: "Faltan las variables de Supabase en Vercel.",
+      urlConfigurada: Boolean(supabaseUrl),
+      llaveConfigurada: Boolean(secretKey),
     });
   }
 
   try {
-    const endpoint =
-      `${supabaseUrl}/rest/v1/cupones` +
-      "?select=id,titulo,codigo,compra_minima,ahorro_maximo,enlace,clics" +
-      "&activo=eq.true" +
-      "&order=id.asc";
-
-    const supabaseResponse = await fetch(endpoint, {
-      headers: {
-        apikey: secretKey,
-        Authorization: `Bearer ${secretKey}`,
-      },
+    const parametros = new URLSearchParams({
+      select:
+        "id,titulo,codigo,compra_minima,ahorro_maximo,enlace,clics,activo",
+      activo: "eq.true",
+      order: "id.asc",
     });
 
-    if (!supabaseResponse.ok) {
-      const detail = await supabaseResponse.text();
+    const resultado = await fetch(
+      `${supabaseUrl.replace(/\/$/, "")}/rest/v1/cupones?${parametros}`,
+      {
+        headers: {
+          apikey: secretKey,
+          Authorization: `Bearer ${secretKey}`,
+          Accept: "application/json",
+        },
+      }
+    );
 
-      console.error("Supabase respondió:", detail);
+    if (!resultado.ok) {
+      const detalle = await resultado.text();
+
+      console.error("Respuesta de Supabase:", detalle);
 
       return response.status(502).json({
-        error: "No fue posible consultar los cupones.",
+        error: "Supabase rechazó la consulta.",
+        status: resultado.status,
+        detalle,
       });
     }
 
-    const cupones = await supabaseResponse.json();
+    const cupones = await resultado.json();
+
+    response.setHeader("Cache-Control", "no-store");
 
     return response.status(200).json(cupones);
   } catch (error) {
@@ -46,6 +59,7 @@ export default async function handler(request, response) {
 
     return response.status(500).json({
       error: "Error interno del servidor.",
+      detalle: error.message,
     });
   }
 }
