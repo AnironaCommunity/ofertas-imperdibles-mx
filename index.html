@@ -3,320 +3,87 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Cupones y ofertas disponibles en Mercado Libre." />
+  <meta
+    name="description"
+    content="Cupones y ofertas disponibles para comprar en Mercado Libre."
+  />
+
   <title>Ofertas Imperdibles MX</title>
+
   <link rel="icon" href="img/logo.png" />
-
-  <style>
-    :root {
-      --fondo: #f4f7f6;
-      --blanco: #ffffff;
-      --texto: #17211b;
-      --gris: #66736c;
-      --turquesa-oscuro: #087f73;
-      --turquesa: #08a99a;
-      --turquesa-claro: #d7f4ef;
-      --turquesa-hover: #079184;
-      --turquesa-borde: #075f59;
-      --amarillo: #ffe600;
-      --amarillo-suave: #fff8cc;
-      --borde: #e1e8e4;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: var(--fondo);
-      color: var(--texto);
-    }
-
-    header {
-      background: var(--blanco);
-      text-align: center;
-      padding: 24px 18px 22px;
-      border-bottom: 1px solid var(--borde);
-    }
-
-    .logo {
-      display: block;
-      width: min(330px, 76vw);
-      height: auto;
-      margin: 0 auto 8px;
-    }
-
-    header h1 {
-      margin: 0 0 7px;
-      font-size: clamp(28px, 7vw, 44px);
-    }
-
-    header p {
-      margin: 0;
-      color: var(--gris);
-      line-height: 1.5;
-    }
-
-    main {
-      width: min(1100px, calc(100% - 28px));
-      margin: 24px auto 50px;
-    }
-
-    .aviso {
-      background: var(--amarillo-suave);
-      border: 1px solid #efdc71;
-      border-radius: 15px;
-      padding: 15px 17px;
-      margin-bottom: 22px;
-      line-height: 1.5;
-      font-size: 14px;
-    }
-
-    .titulo-seccion {
-      margin: 0 0 14px;
-      font-size: 24px;
-    }
-
-    .cupones-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(285px, 1fr));
-      gap: 20px;
-    }
-
-    .cupon {
-      background: var(--blanco);
-      border: 1px solid var(--borde);
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 7px 20px rgba(8, 127, 115, 0.10);
-    }
-
-    .cupon-encabezado {
-      background: linear-gradient(135deg, var(--turquesa-oscuro), var(--turquesa));
-      color: white;
-      padding: 21px 20px 18px;
-    }
-
-    .descuento {
-      margin: 0;
-      font-size: 31px;
-      font-weight: 800;
-    }
-
-    .subtitulo {
-      margin: 5px 0 0;
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .cupon-contenido {
-      padding: 24px 20px 20px;
-    }
-
-    .dato {
-      display: table;
-      margin: 0 0 12px;
-      padding: 8px 11px;
-      border-radius: 9px;
-      background: var(--turquesa-claro);
-      color: #123d38;
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .boton-canjear {
-      width: 100%;
-      margin-top: 4px;
-      padding: 14px;
-      border: 2px dashed var(--turquesa-borde);
-      border-radius: 13px;
-      background: var(--turquesa);
-      color: #ffffff;
-      font-size: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
-    }
-
-    .boton-canjear:hover {
-      background: var(--turquesa-hover);
-      box-shadow: 0 5px 14px rgba(8, 127, 115, 0.20);
-    }
-
-    .boton-canjear:active { transform: scale(0.98); }
-    .boton-canjear:disabled { cursor: wait; opacity: 0.9; }
-
-    .mensaje {
-      min-height: 20px;
-      margin: 10px 0 0;
-      text-align: center;
-      color: var(--turquesa-oscuro);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .anirona {
-      margin-top: 30px;
-      background: var(--blanco);
-      border: 1px solid var(--borde);
-      border-radius: 20px;
-      padding: 25px 22px;
-      box-shadow: 0 7px 20px rgba(23, 33, 27, 0.07);
-      text-align: center;
-    }
-
-    .anirona h2 {
-      margin: 0 0 10px;
-      font-size: 26px;
-    }
-
-    .anirona p {
-      margin: 0 auto 18px;
-      max-width: 680px;
-      color: var(--gris);
-      line-height: 1.55;
-    }
-
-    .boton-anirona {
-      display: inline-block;
-      width: min(100%, 440px);
-      padding: 15px 18px;
-      border-radius: 13px;
-      background: var(--amarillo);
-      color: #2d3277;
-      font-size: 16px;
-      font-weight: 800;
-      text-decoration: none;
-      transition: transform 0.12s ease;
-    }
-
-    .boton-anirona:active { transform: scale(0.98); }
-
-    .nota-anirona {
-      margin-top: 14px !important;
-      font-size: 13px;
-    }
-
-    footer {
-      text-align: center;
-      color: var(--gris);
-      font-size: 13px;
-      line-height: 1.5;
-      padding: 0 18px 30px;
-    }
-
-    @media (max-width: 480px) {
-      header { padding-top: 18px; }
-      .logo { width: min(290px, 86vw); }
-      .cupon-contenido { padding-top: 22px; }
-      .anirona { padding: 22px 17px; }
-    }
-  </style>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body>
-  <header>
-    <img class="logo" src="img/logo.png" alt="Logo Ofertas Imperdibles MX" />
-    <!--<h1>Ofertas Imperdibles MX</h1>-->
+  <header class="encabezado">
+    <img
+      class="logo"
+      src="img/logo.png"
+      alt="Ofertas Imperdibles MX"
+    />
+
     <p>Cupones y descuentos de Mercado Libre en un solo lugar.</p>
   </header>
 
-  <main>
+  <main class="contenedor">
     <div class="aviso">
-      ⚠️ Los cupones pueden agotarse, cambiar o dejar de estar disponibles sin previo aviso.
-      La disponibilidad y las condiciones dependen de Mercado Libre.
+      ⚠️ Los cupones pueden agotarse, cambiar o dejar de estar disponibles
+      sin previo aviso. La disponibilidad y las condiciones dependen de
+      Mercado Libre.
     </div>
 
-    <h2 class="titulo-seccion">🎟️ Cupones disponibles</h2>
+    <div class="titulo-fila">
+      <h1 class="titulo-seccion">🎟️ Cupones disponibles</h1>
 
-    <section class="cupones-grid">
-      <article class="cupon">
-        <div class="cupon-encabezado">
-          <h3 class="descuento">$400</h3>
-          <p class="subtitulo">de descuento</p>
-        </div>
+      <button
+        id="boton-recargar"
+        class="boton-recargar"
+        type="button"
+        aria-label="Actualizar cupones"
+      >
+        ↻ Actualizar
+      </button>
+    </div>
 
-        <div class="cupon-contenido">
-          <p class="dato">Compra mínima: $4,000</p>
-          <p class="dato">Ahorra hasta: $400</p>
+    <p id="estado-carga" class="estado-carga" aria-live="polite">
+      Cargando cupones...
+    </p>
 
-          <button class="boton-canjear" onclick="copiarYCanjear('CUPON400','https://meli.la/TUENLACE',this)">
-            📋 Copiar y Canjear
-          </button>
-
-          <p class="mensaje" aria-live="polite"></p>
-        </div>
-      </article>
-
-      <article class="cupon">
-        <div class="cupon-encabezado">
-          <h3 class="descuento">10% OFF</h3>
-          <p class="subtitulo">de descuento</p>
-        </div>
-
-        <div class="cupon-contenido">
-          <p class="dato">Compra mínima: $1,500</p>
-          <p class="dato">Ahorra hasta: $160</p>
-
-          <button class="boton-canjear" onclick="copiarYCanjear('CUPON10','https://meli.la/TUENLACE2',this)">
-            📋 Copiar y Canjear
-          </button>
-
-          <p class="mensaje" aria-live="polite"></p>
-        </div>
-      </article>
-    </section>
+    <section
+      id="cupones"
+      class="cupones-grid"
+      aria-label="Lista de cupones"
+    ></section>
 
     <section class="anirona">
       <h2>🛠️ ¿Te gusta la herramienta?</h2>
+
       <p>
-        Explora el catálogo de <strong>ANIRONA Official Store</strong> en Mercado Libre
-        y descubre herramientas, accesorios y novedades disponibles.
+        Explora el catálogo de <strong>ANIRONA Official Store</strong> en
+        Mercado Libre y descubre herramientas, accesorios y novedades
+        disponibles.
       </p>
 
-      <a class="boton-anirona" href="https://meli.la/16G5Kgk" target="_blank" rel="noopener noreferrer">
+      <a
+        class="boton-anirona"
+        href="https://meli.la/16G5Kgk"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         🛒 Explorar Anirona Official Store
       </a>
 
       <p class="nota-anirona">
-        Si ya tienes productos en tu carrito, también puedes ingresar desde este botón
-        antes de finalizar tu compra.
+        Si ya tienes productos en tu carrito, también puedes ingresar desde
+        este botón antes de finalizar tu compra.
       </p>
     </section>
   </main>
 
-  <footer></footer>
+  <footer>
+    Página informativa de una comunidad independiente.
+  </footer>
 
-  <script>
-    async function copiarYCanjear(codigo, enlace, boton) {
-      const mensaje = boton.closest(".cupon").querySelector(".mensaje");
-      const textoOriginal = boton.textContent;
-
-      try {
-        await navigator.clipboard.writeText(codigo);
-      } catch (error) {
-        const area = document.createElement("textarea");
-        area.value = codigo;
-        area.style.position = "fixed";
-        area.style.opacity = "0";
-        document.body.appendChild(area);
-        area.focus();
-        area.select();
-        document.execCommand("copy");
-        document.body.removeChild(area);
-      }
-
-      boton.disabled = true;
-      boton.textContent = "✅ Cupón copiado";
-      mensaje.textContent = "Abriendo Mercado Libre...";
-
-      setTimeout(() => { window.location.href = enlace; }, 700);
-      setTimeout(() => {
-        boton.disabled = false;
-        boton.textContent = textoOriginal;
-        mensaje.textContent = "";
-      }, 3000);
-    }
-  </script>
+  <script type="module" src="js/app.js"></script>
 </body>
 </html>
