@@ -221,6 +221,26 @@ function cerrarModal() {
   document.body.style.overflow = "";
 }
 
+/* Reinicia completamente la interacción de los cupones. */
+function reiniciarInteraccion() {
+  if (timeoutRedireccion) {
+    clearTimeout(timeoutRedireccion);
+    timeoutRedireccion = null;
+  }
+
+  redireccionEnProceso = false;
+  cerrarModal();
+
+  document.querySelectorAll(".boton-canjear").forEach((boton) => {
+    boton.disabled = false;
+    boton.textContent = "📋 Copiar y Canjear";
+  });
+
+  document.querySelectorAll(".mensaje").forEach((mensaje) => {
+    mensaje.textContent = "";
+  });
+}
+
 function ejecutarCuentaRegresiva(cupon, boton, mensaje) {
   let segundos = SEGUNDOS_REDIRECCION;
 
@@ -230,14 +250,18 @@ function ejecutarCuentaRegresiva(cupon, boton, mensaje) {
 
     if (segundos === 0) {
       cerrarModal();
+
       boton.disabled = false;
       boton.textContent = "📋 Copiar y Canjear";
       mensaje.textContent = "";
 
       /*
-        Esta es la única redirección de todo el flujo.
-        No existe window.open ni otra llamada previa.
+        Reiniciamos la bandera antes de salir. Así, si el navegador
+        conserva la página en memoria, volverá desbloqueada.
       */
+      redireccionEnProceso = false;
+      timeoutRedireccion = null;
+
       window.location.assign(cupon.enlace);
       return;
     }
@@ -262,19 +286,11 @@ async function copiarYCanjear(cupon, tarjeta) {
   boton.textContent = `✅ ${cupon.codigo}`;
   mensaje.textContent = "Cupón copiado correctamente.";
 
-  /*
-    La ventana se muestra de inmediato, antes de cualquier await.
-    Así el usuario siempre ve primero el código y el contador.
-  */
   mostrarModal(cupon.codigo);
 
   try {
     await copiarTexto(cupon.codigo);
 
-    /*
-      El registro del clic se realiza en segundo plano y no controla
-      la redirección.
-    */
     registrarClic(cupon.id)
       .then((resultado) => {
         if (Number.isFinite(Number(resultado.clics))) {
@@ -288,16 +304,7 @@ async function copiarYCanjear(cupon, tarjeta) {
     ejecutarCuentaRegresiva(cupon, boton, mensaje);
   } catch (error) {
     console.error(error);
-
-    if (timeoutRedireccion) {
-      clearTimeout(timeoutRedireccion);
-      timeoutRedireccion = null;
-    }
-
-    redireccionEnProceso = false;
-    cerrarModal();
-    boton.disabled = false;
-    boton.textContent = "📋 Copiar y Canjear";
+    reiniciarInteraccion();
     mensaje.textContent = "No fue posible copiar el cupón.";
   }
 }
@@ -305,11 +312,6 @@ async function copiarYCanjear(cupon, tarjeta) {
 async function compartirCupon(cupon, tarjeta) {
   const mensaje = tarjeta.querySelector(".mensaje");
 
-  /*
-    Se manda un solo campo: text.
-    El enlace aparece exactamente una vez dentro de ese texto.
-    No usamos "url", porque algunas apps lo agregan una segunda vez.
-  */
   const textoUnico =
     `${cupon.titulo}\n` +
     `Compra mínima: ${cupon.compra_minima || "Consultar"}\n` +
@@ -361,13 +363,21 @@ setInterval(() => {
   actualizarTextoContador();
 }, 1000);
 
-document.addEventListener("visibilitychange", () => {
-  if (
-    !document.hidden &&
-    !redireccionEnProceso &&
-    modalRedireccion.hidden
-  ) {
+/*
+  "pageshow" se ejecuta también cuando el usuario vuelve usando el botón Atrás
+  y el navegador restaura la página desde su memoria (bfcache).
+*/
+window.addEventListener("pageshow", (event) => {
+  reiniciarInteraccion();
+
+  if (event.persisted) {
     cargarCupones();
+  }
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) {
+    reiniciarInteraccion();
   }
 });
 
