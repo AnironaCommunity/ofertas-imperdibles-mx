@@ -14,8 +14,7 @@ const modalCodigo = document.querySelector("#modal-codigo");
 
 const SEGUNDOS_ACTUALIZACION = 60;
 const SEGUNDOS_REDIRECCION = 5;
-
-const COLORES_CUPON = ["turquesa", "azul", "morado", "coral", "oliva"];
+const COLORES = ["turquesa", "azul", "morado", "coral", "oliva"];
 
 let segundosRestantes = SEGUNDOS_ACTUALIZACION;
 let cargando = false;
@@ -47,7 +46,7 @@ function crearTarjeta(cupon, esPopular = false, indice = 0) {
   articulo.dataset.id = String(cupon.id);
 
   if (!esPopular) {
-    articulo.dataset.color = COLORES_CUPON[indice % COLORES_CUPON.length];
+    articulo.dataset.color = COLORES[indice % COLORES.length];
   }
 
   articulo.innerHTML = `
@@ -68,27 +67,29 @@ function crearTarjeta(cupon, esPopular = false, indice = 0) {
         </p>
       </div>
 
-      <div class="acciones-cupon">
-        <button class="boton-canjear" type="button">
-          📋 Copiar y Canjear
-        </button>
+      <div class="acciones-bloque">
+        <div class="acciones-cupon">
+          <button class="boton-canjear" type="button">
+            📋 Copiar y Canjear
+          </button>
 
-        <button
-          class="boton-compartir"
-          type="button"
-          aria-label="Compartir cupón ${escaparHtml(cupon.codigo)}"
-          title="Compartir cupón"
-        >
-          ${iconoCompartir()}
-        </button>
+          <button
+            class="boton-compartir"
+            type="button"
+            aria-label="Compartir oferta"
+            title="Compartir oferta"
+          >
+            ${iconoCompartir()}
+          </button>
+        </div>
+
+        <p class="mensaje" aria-live="polite"></p>
+
+        <p class="contador">
+          🔥 <span class="numero-clics">${Number(cupon.clics || 0)}</span>
+          usos registrados
+        </p>
       </div>
-
-      <p class="mensaje" aria-live="polite"></p>
-
-      <p class="contador">
-        🔥 <span class="numero-clics">${Number(cupon.clics || 0)}</span>
-        usos registrados
-      </p>
     </div>
   `;
 
@@ -283,7 +284,6 @@ async function copiarYCanjear(cupon, tarjeta) {
   boton.disabled = true;
   boton.textContent = `✅ ${cupon.codigo}`;
   mensaje.textContent = "Cupón copiado correctamente.";
-
   mostrarModal(cupon.codigo);
 
   try {
@@ -310,21 +310,25 @@ async function copiarYCanjear(cupon, tarjeta) {
 async function compartirCupon(cupon, tarjeta) {
   const mensaje = tarjeta.querySelector(".mensaje");
 
-  const textoUnico =
+  /*
+    IMPORTANTE:
+    El código del cupón NO se comparte.
+    Así el usuario debe ingresar primero a la oferta para copiarlo.
+  */
+  const textoOferta =
     `${cupon.titulo}\n` +
     `Compra mínima: ${cupon.compra_minima || "Consultar"}\n` +
     `Ahorra hasta: ${cupon.ahorro_maximo || "Consultar"}\n` +
-    `Cupón: ${cupon.codigo}\n` +
+    `Obtén el cupón aquí:\n` +
     `${cupon.enlace}`;
 
   try {
     if (navigator.share) {
-      await navigator.share({ text: textoUnico });
-      mensaje.textContent = "Cupón compartido.";
+      await navigator.share({ text: textoOferta });
+      mensaje.textContent = "Oferta compartida.";
     } else {
-      await copiarTexto(textoUnico);
-      mensaje.textContent =
-        "Información del cupón copiada para compartir.";
+      await copiarTexto(textoOferta);
+      mensaje.textContent = "Información copiada para compartir.";
     }
 
     setTimeout(() => {
@@ -333,7 +337,7 @@ async function compartirCupon(cupon, tarjeta) {
   } catch (error) {
     if (error?.name !== "AbortError") {
       console.error(error);
-      mensaje.textContent = "No fue posible compartir el cupón.";
+      mensaje.textContent = "No fue posible compartir la oferta.";
     }
   }
 }
