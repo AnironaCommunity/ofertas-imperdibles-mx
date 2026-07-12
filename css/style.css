@@ -10,7 +10,10 @@
   --turquesa-hover: #079184;
   --turquesa-borde: #075f59;
 
-  --amarillo: #ffe600;
+  --anirona: #07952a;
+  --anirona-oscuro: #067420;
+  --anirona-claro: #eef9f0;
+
   --amarillo-suave: #fff8cc;
   --borde: #e1e8e4;
   --error: #a12626;
@@ -103,6 +106,53 @@ a {
 .estado-carga.error {
   color: var(--error);
   font-weight: 700;
+}
+
+/* CUPÓN MÁS POPULAR */
+.popular-wrapper {
+  margin-bottom: 24px;
+}
+
+.popular-titulo {
+  margin-bottom: 12px;
+}
+
+.popular-titulo h2 {
+  margin: 0 0 4px;
+  font-size: 22px;
+}
+
+.popular-titulo p {
+  margin: 0;
+  color: var(--gris);
+  font-size: 14px;
+}
+
+.cupon.popular {
+  border: 1px solid #8bd49b;
+  box-shadow: 0 8px 24px rgba(7, 149, 42, 0.14);
+}
+
+.cupon.popular .cupon-encabezado {
+  background: linear-gradient(135deg, var(--anirona-oscuro), var(--anirona));
+}
+
+.etiqueta-popular {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 5px 9px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.subtitulo-lista {
+  margin: 0 0 14px;
+  padding-top: 20px;
+  border-top: 1px solid var(--borde);
+  font-size: 20px;
 }
 
 .cupones-grid {
@@ -203,48 +253,117 @@ a {
   font-size: 13px;
 }
 
+/* SIN CUPONES */
+.sin-cupones {
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+  padding: 38px 20px;
+  text-align: center;
+  box-shadow: 0 7px 20px rgba(23, 33, 27, 0.06);
+}
+
+.sin-cupones-icono {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #f0f4f8;
+  font-size: 30px;
+  filter: grayscale(1);
+  opacity: 0.65;
+}
+
+.sin-cupones h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+.sin-cupones p {
+  margin: 0 0 6px;
+  color: var(--gris);
+}
+
+.sin-cupones strong {
+  color: #415d7b;
+}
+
+/* SECCIÓN ANIRONA */
 .anirona {
   margin-top: 30px;
   background: var(--blanco);
   border: 1px solid var(--borde);
+  border-bottom: 7px solid var(--anirona);
   border-radius: 20px;
-  padding: 25px 22px;
+  padding: 34px 24px 28px;
   box-shadow: 0 7px 20px rgba(23, 33, 27, 0.07);
   text-align: center;
 }
 
 .anirona h2 {
-  margin: 0 0 10px;
-  font-size: 26px;
+  margin: 0 0 18px;
+  font-size: clamp(26px, 5vw, 40px);
 }
 
-.anirona p {
-  margin: 0 auto 18px;
-  max-width: 680px;
-  color: var(--gris);
-  line-height: 1.55;
+.anirona h2 span {
+  color: var(--anirona);
+}
+
+.anirona-descripcion {
+  margin: 0 auto 22px;
+  max-width: 850px;
+  color: #3f4950;
+  line-height: 1.65;
+  font-size: clamp(16px, 2vw, 20px);
+}
+
+.anirona-descripcion strong {
+  color: var(--anirona);
 }
 
 .boton-anirona {
   display: inline-block;
-  width: min(100%, 440px);
-  padding: 15px 18px;
+  width: min(100%, 620px);
+  padding: 17px 20px;
   border-radius: 13px;
-  background: var(--amarillo);
-  color: #2d3277;
-  font-size: 16px;
+  background: linear-gradient(135deg, var(--anirona-oscuro), var(--anirona));
+  color: white;
+  font-size: clamp(16px, 2.5vw, 22px);
   font-weight: 800;
   text-decoration: none;
-  transition: transform 0.12s ease;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.boton-anirona:hover {
+  box-shadow: 0 7px 18px rgba(7, 149, 42, 0.2);
 }
 
 .boton-anirona:active {
   transform: scale(0.98);
 }
 
-.nota-anirona {
-  margin-top: 14px !important;
-  font-size: 13px;
+.anirona-seguridad {
+  margin: 22px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  flex-wrap: wrap;
+  color: #3f4950;
+  line-height: 1.4;
+  font-size: 15px;
+}
+
+.anirona-seguridad strong {
+  color: var(--anirona);
+}
+
+.escudo {
+  font-size: 20px;
 }
 
 footer {
@@ -282,6 +401,10 @@ footer {
   }
 
   .anirona {
-    padding: 22px 17px;
+    padding: 28px 17px 22px;
+  }
+
+  .anirona-seguridad {
+    font-size: 14px;
   }
 }

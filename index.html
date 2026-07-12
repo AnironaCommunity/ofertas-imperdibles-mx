@@ -49,18 +49,47 @@
       Cargando cupones...
     </p>
 
-    <section
-      id="cupones"
-      class="cupones-grid"
-      aria-label="Lista de cupones"
-    ></section>
+    <!-- CUPÓN MÁS POPULAR -->
+    <section id="popular-wrapper" class="popular-wrapper" hidden>
+      <div class="popular-titulo">
+        <div>
+          <h2>🏆 Cupón más popular</h2>
+          <p>El cupón con más usos se muestra primero.</p>
+        </div>
+      </div>
 
+      <div id="cupon-popular"></div>
+    </section>
+
+    <!-- RESTO DE CUPONES -->
+    <section id="todos-wrapper" hidden>
+      <h2 class="subtitulo-lista">Todos los cupones</h2>
+
+      <section
+        id="cupones"
+        class="cupones-grid"
+        aria-label="Lista de cupones"
+      ></section>
+    </section>
+
+    <!-- ESTADO SIN CUPONES -->
+    <section id="sin-cupones" class="sin-cupones" hidden>
+      <div class="sin-cupones-icono" aria-hidden="true">🎟️</div>
+      <h2>No hay cupones disponibles</h2>
+      <p>Pronto agregaremos nuevos cupones de descuento.</p>
+      <strong>¡Vuelve pronto!</strong>
+    </section>
+
+    <!-- SECCIÓN ANIRONA -->
     <section class="anirona">
-      <h2>🛠️ ¿Te gusta la herramienta?</h2>
+      <h2>
+        🛠️ ¿Te gusta la <span>herramienta</span>?
+      </h2>
 
-      <p>
-        Explora el catálogo de <strong>ANIRONA Official Store</strong> en
-        Mercado Libre y descubre herramientas, accesorios y novedades
+      <p class="anirona-descripcion">
+        Explora el catálogo de
+        <strong>ANIRONA Official Store</strong>
+        en Mercado Libre y descubre herramientas, accesorios y novedades
         disponibles.
       </p>
 
@@ -73,9 +102,10 @@
         🛒 Explorar Anirona Official Store
       </a>
 
-      <p class="nota-anirona">
-        Si ya tienes productos en tu carrito, también puedes ingresar desde
-        este botón antes de finalizar tu compra.
+      <p class="anirona-seguridad">
+        <span class="escudo" aria-hidden="true">🛡️</span>
+        <strong>Compra segura:</strong>
+        Productos 100% originales y garantía oficial.
       </p>
     </section>
   </main>

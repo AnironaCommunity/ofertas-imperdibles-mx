@@ -1,4 +1,8 @@
-const contenedor = document.querySelector("#cupones");
+const cuponesContainer = document.querySelector("#cupones");
+const popularContainer = document.querySelector("#cupon-popular");
+const popularWrapper = document.querySelector("#popular-wrapper");
+const todosWrapper = document.querySelector("#todos-wrapper");
+const sinCupones = document.querySelector("#sin-cupones");
 const estadoCarga = document.querySelector("#estado-carga");
 const botonRecargar = document.querySelector("#boton-recargar");
 
@@ -13,13 +17,14 @@ function escaparHtml(valor = "") {
     .replaceAll("'", "&#039;");
 }
 
-function crearTarjeta(cupon) {
+function crearTarjeta(cupon, esPopular = false) {
   const articulo = document.createElement("article");
-  articulo.className = "cupon";
+  articulo.className = esPopular ? "cupon popular" : "cupon";
   articulo.dataset.id = String(cupon.id);
 
   articulo.innerHTML = `
     <div class="cupon-encabezado">
+      ${esPopular ? '<span class="etiqueta-popular">MÁS USADO 🔥</span>' : ""}
       <h2 class="descuento">${escaparHtml(cupon.titulo)}</h2>
       <p class="subtitulo">de descuento</p>
     </div>
@@ -55,11 +60,20 @@ function crearTarjeta(cupon) {
   return articulo;
 }
 
+function limpiarVista() {
+  cuponesContainer.replaceChildren();
+  popularContainer.replaceChildren();
+
+  popularWrapper.hidden = true;
+  todosWrapper.hidden = true;
+  sinCupones.hidden = true;
+}
+
 async function cargarCupones() {
   estadoCarga.className = "estado-carga";
   estadoCarga.textContent = "Cargando cupones...";
-  contenedor.replaceChildren();
   botonRecargar.disabled = true;
+  limpiarVista();
 
   try {
     const respuesta = await fetch("/api/cupones", {
@@ -76,17 +90,32 @@ async function cargarCupones() {
     const cupones = await respuesta.json();
 
     if (!Array.isArray(cupones) || cupones.length === 0) {
-      estadoCarga.textContent = "No hay cupones disponibles por el momento.";
+      estadoCarga.textContent = "";
+      sinCupones.hidden = false;
       return;
     }
 
-    const fragmento = document.createDocumentFragment();
+    /* Ordena de mayor a menor según el contador de clics. */
+    const cuponesOrdenados = [...cupones].sort(
+      (a, b) => Number(b.clics || 0) - Number(a.clics || 0)
+    );
 
-    for (const cupon of cupones) {
-      fragmento.appendChild(crearTarjeta(cupon));
+    const [cuponPopular, ...restoCupones] = cuponesOrdenados;
+
+    popularContainer.appendChild(crearTarjeta(cuponPopular, true));
+    popularWrapper.hidden = false;
+
+    if (restoCupones.length > 0) {
+      const fragmento = document.createDocumentFragment();
+
+      for (const cupon of restoCupones) {
+        fragmento.appendChild(crearTarjeta(cupon));
+      }
+
+      cuponesContainer.appendChild(fragmento);
+      todosWrapper.hidden = false;
     }
 
-    contenedor.appendChild(fragmento);
     estadoCarga.textContent = "";
   } catch (error) {
     console.error(error);
