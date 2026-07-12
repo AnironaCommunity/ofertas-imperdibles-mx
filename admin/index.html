@@ -1,1 +1,249 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Panel de Administración | Ofertas Imperdibles MX</title><link rel="icon" href="../img/logo.png"><link rel="stylesheet" href="admin.css"></head><body><header class="encabezado"><img src="../img/logo.png" alt="Ofertas Imperdibles MX" class="logo"><h1>Panel de Administración</h1><p>Agrega, edita y administra los cupones publicados.</p></header><main class="contenedor"><section id="login-panel" class="panel login-panel"><h2>🔒 Acceso privado</h2><label for="admin-password">Contraseña del administrador</label><input id="admin-password" type="password" autocomplete="current-password" placeholder="Ingresa tu contraseña"><button id="login-button" class="boton-principal" type="button">Entrar al panel</button><p id="login-message" class="mensaje" aria-live="polite"></p></section><section id="admin-panel" class="admin-oculto"><div class="barra-superior"><h2>🎟️ Administrar cupones</h2><div class="acciones-barra"><button id="nuevo-cupon" class="boton-secundario" type="button">+ Nuevo cupón</button><button id="cerrar-sesion" class="boton-salir" type="button">Cerrar sesión</button></div></div><section class="panel formulario-panel"><h3 id="form-title">Agregar cupón</h3><form id="coupon-form"><input id="coupon-id" type="hidden"><div class="form-grid"><div class="campo"><label for="titulo">Título</label><input id="titulo" type="text" placeholder="Ej. 10% OFF" required></div><div class="campo"><label for="codigo">Código</label><input id="codigo" type="text" placeholder="Ej. CUPON10" required></div><div class="campo"><label for="compra-minima">Compra mínima</label><input id="compra-minima" type="text" placeholder="Ej. $500"></div><div class="campo"><label for="ahorro-maximo">Ahorra hasta</label><input id="ahorro-maximo" type="text" placeholder="Ej. $63"></div><div class="campo campo-completo"><label for="enlace">Enlace de Mercado Libre</label><input id="enlace" type="url" placeholder="https://meli.la/..." required></div><label class="switch-row campo-completo"><input id="activo" type="checkbox" checked><span>Publicar cupón como activo</span></label></div><div class="acciones-formulario"><button class="boton-principal" type="submit">Guardar cupón</button><button id="cancelar-edicion" class="boton-secundario" type="button" hidden>Cancelar edición</button></div><p id="form-message" class="mensaje" aria-live="polite"></p></form></section><section class="panel"><div class="lista-cabecera"><h3>Cupones registrados</h3><button id="actualizar-lista" class="boton-secundario" type="button">↻ Actualizar</button></div><p id="list-message" class="mensaje" aria-live="polite"></p><div class="tabla-contenedor"><table><thead><tr><th>Título</th><th>Código</th><th>Compra mínima</th><th>Ahorro</th><th>Clics</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="coupon-list"></tbody></table></div></section></section></main><script type="module" src="admin.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Panel de Administración | Ofertas Imperdibles MX</title>
+
+  <link rel="icon" href="../img/logo.png" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+
+<body>
+  <header class="encabezado">
+    <img src="../img/logo.png" alt="Ofertas Imperdibles MX" class="logo" />
+    <h1>Panel de Administración</h1>
+    <p>Agrega, importa, edita y administra los cupones publicados.</p>
+  </header>
+
+  <main class="contenedor">
+    <section id="login-panel" class="panel login-panel">
+      <h2>🔒 Acceso privado</h2>
+
+      <label for="admin-password">Contraseña del administrador</label>
+      <input
+        id="admin-password"
+        type="password"
+        autocomplete="current-password"
+        placeholder="Ingresa tu contraseña"
+      />
+
+      <button id="login-button" class="boton-principal" type="button">
+        Entrar al panel
+      </button>
+
+      <p id="login-message" class="mensaje" aria-live="polite"></p>
+    </section>
+
+    <section id="admin-panel" class="admin-oculto">
+      <div class="barra-superior">
+        <h2>🎟️ Administrar cupones</h2>
+
+        <div class="acciones-barra">
+          <button id="nuevo-cupon" class="boton-secundario" type="button">
+            + Nuevo cupón
+          </button>
+
+          <button id="mostrar-importador" class="boton-importar" type="button">
+            📥 Importar cupones
+          </button>
+
+          <button id="cerrar-sesion" class="boton-salir" type="button">
+            Cerrar sesión
+          </button>
+        </div>
+      </div>
+
+      <section id="importador-panel" class="panel importador-panel" hidden>
+        <div class="lista-cabecera">
+          <div>
+            <h3>📥 Importar cupones desde texto</h3>
+            <p class="ayuda">
+              Pega varios cupones separados por una línea en blanco.
+            </p>
+          </div>
+
+          <button id="cerrar-importador" class="boton-secundario" type="button">
+            Cerrar
+          </button>
+        </div>
+
+        <textarea
+          id="texto-importacion"
+          rows="16"
+          placeholder="Ejemplo:
+
+10% OFF
+Compra mínima: $500
+Ahorra hasta: $63
+CASILLEGO77
+https://meli.la/xxxxx
+
+$400 OFF
+Compra mínima: $4,000
+Ahorra hasta: $400
+YALLEGO77
+https://meli.la/yyyy"
+        ></textarea>
+
+        <div class="acciones-formulario">
+          <button id="procesar-importacion" class="boton-principal" type="button">
+            Analizar cupones
+          </button>
+
+          <button id="limpiar-importacion" class="boton-secundario" type="button">
+            Limpiar
+          </button>
+        </div>
+
+        <p id="import-message" class="mensaje" aria-live="polite"></p>
+
+        <div id="import-preview" class="import-preview" hidden>
+          <h4>Vista previa</h4>
+
+          <div class="tabla-contenedor">
+            <table>
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th>Código</th>
+                  <th>Compra mínima</th>
+                  <th>Ahorro</th>
+                  <th>Enlace</th>
+                  <th>Resultado</th>
+                </tr>
+              </thead>
+
+              <tbody id="import-list"></tbody>
+            </table>
+          </div>
+
+          <div class="acciones-formulario">
+            <button id="guardar-importacion" class="boton-principal" type="button">
+              Publicar cupones detectados
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel formulario-panel">
+        <h3 id="form-title">Agregar cupón</h3>
+
+        <form id="coupon-form">
+          <input id="coupon-id" type="hidden" />
+
+          <div class="form-grid">
+            <div class="campo">
+              <label for="titulo">Título</label>
+              <input
+                id="titulo"
+                name="titulo"
+                type="text"
+                placeholder="Ej. 10% OFF"
+                required
+              />
+            </div>
+
+            <div class="campo">
+              <label for="codigo">Código</label>
+              <input
+                id="codigo"
+                name="codigo"
+                type="text"
+                placeholder="Ej. CUPON10"
+                required
+              />
+            </div>
+
+            <div class="campo">
+              <label for="compra-minima">Compra mínima</label>
+              <input
+                id="compra-minima"
+                name="compra_minima"
+                type="text"
+                placeholder="Ej. $500"
+              />
+            </div>
+
+            <div class="campo">
+              <label for="ahorro-maximo">Ahorra hasta</label>
+              <input
+                id="ahorro-maximo"
+                name="ahorro_maximo"
+                type="text"
+                placeholder="Ej. $63"
+              />
+            </div>
+
+            <div class="campo campo-completo">
+              <label for="enlace">Enlace de Mercado Libre</label>
+              <input
+                id="enlace"
+                name="enlace"
+                type="url"
+                placeholder="https://meli.la/..."
+                required
+              />
+            </div>
+
+            <label class="switch-row campo-completo">
+              <input id="activo" name="activo" type="checkbox" checked />
+              <span>Publicar cupón como activo</span>
+            </label>
+          </div>
+
+          <div class="acciones-formulario">
+            <button class="boton-principal" type="submit">
+              Guardar cupón
+            </button>
+
+            <button
+              id="cancelar-edicion"
+              class="boton-secundario"
+              type="button"
+              hidden
+            >
+              Cancelar edición
+            </button>
+          </div>
+
+          <p id="form-message" class="mensaje" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="panel">
+        <div class="lista-cabecera">
+          <h3>Cupones registrados</h3>
+
+          <button id="actualizar-lista" class="boton-secundario" type="button">
+            ↻ Actualizar
+          </button>
+        </div>
+
+        <p id="list-message" class="mensaje" aria-live="polite"></p>
+
+        <div class="tabla-contenedor">
+          <table>
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Código</th>
+                <th>Compra mínima</th>
+                <th>Ahorro</th>
+                <th>Clics</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+
+            <tbody id="coupon-list"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
