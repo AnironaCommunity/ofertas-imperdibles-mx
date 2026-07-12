@@ -13,6 +13,7 @@ const minimumInput = document.querySelector("#compra-minima");
 const savingInput = document.querySelector("#ahorro-maximo");
 const linkInput = document.querySelector("#enlace");
 const activeInput = document.querySelector("#activo");
+const categoryInput = document.querySelector("#categoria");
 const formTitle = document.querySelector("#form-title");
 const formMessage = document.querySelector("#form-message");
 const cancelEditButton = document.querySelector("#cancelar-edicion");
@@ -108,6 +109,7 @@ function resetForm() {
   couponForm.reset();
   couponId.value = "";
   activeInput.checked = true;
+  categoryInput.value = "tienda";
   formTitle.textContent = "Agregar cupón";
   cancelEditButton.hidden = true;
   setMessage(formMessage);
@@ -122,6 +124,7 @@ function fillForm(coupon) {
   savingInput.value = coupon.ahorro_maximo || "";
   linkInput.value = coupon.enlace || "";
   activeInput.checked = Boolean(coupon.activo);
+  categoryInput.value = coupon.categoria === "bancarios" ? "bancarios" : "tienda";
 
   formTitle.textContent = `Editar cupón: ${coupon.titulo}`;
   cancelEditButton.hidden = false;
@@ -215,6 +218,7 @@ async function saveCoupon(event) {
     ahorro_maximo: savingInput.value.trim(),
     enlace: linkInput.value.trim(),
     activo: activeInput.checked,
+    categoria: categoryInput.value,
   };
 
   if (!payload.titulo || !payload.codigo || !payload.enlace) {
@@ -395,6 +399,7 @@ function parseBlock(block) {
     ahorro_maximo: savingLine ? extractMoney(savingLine) : "",
     enlace,
     activo: true,
+    categoria: "tienda",
     valid: Boolean(titulo && codigo && enlace),
     result: "",
   };
@@ -447,6 +452,7 @@ function renderImportPreview() {
       savingInput.value = coupon.ahorro_maximo;
       linkInput.value = coupon.enlace;
       activeInput.checked = true;
+  categoryInput.value = "tienda";
 
       importerPanel.hidden = true;
       formTitle.textContent = "Revisar cupón importado";
@@ -518,6 +524,7 @@ async function saveImportedCoupons() {
           ahorro_maximo: coupon.ahorro_maximo,
           enlace: coupon.enlace,
           activo: true,
+          categoria: coupon.categoria || "tienda",
         }),
       });
 

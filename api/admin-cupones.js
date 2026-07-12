@@ -1,1 +1,119 @@
-function authorized(req){return Boolean(process.env.ADMIN_PASSWORD)&&String(req.headers["x-admin-password"]||"")===process.env.ADMIN_PASSWORD}function cfg(){const url=String(process.env.SUPABASE_URL||"").trim().replace(/\/rest\/v1\/?$/i,"").replace(/\/+$/,"");return{url,key:process.env.SUPABASE_SECRET_KEY}}async function sf(path,opt={}){const{url,key}=cfg();const r=await fetch(`${url}/rest/v1/${path}`,{...opt,headers:{apikey:key,Authorization:`Bearer ${key}`,Accept:"application/json","Content-Type":"application/json",...(opt.headers||{})}});const t=await r.text();let d;try{d=t?JSON.parse(t):null}catch{d=t}if(!r.ok)throw new Error("Supabase no pudo completar la operación.");return d}const valid=v=>{try{return["http:","https:"].includes(new URL(v).protocol)}catch{return false}};export default async function handler(req,res){if(!authorized(req))return res.status(401).json({error:"Contraseña de administrador incorrecta."});try{if(req.method==="GET")return res.status(200).json(await sf("cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,enlace,clics,activo&order=id.desc"));if(req.method==="POST"){const p={titulo:String(req.body?.titulo||"").trim(),codigo:String(req.body?.codigo||"").trim(),compra_minima:String(req.body?.compra_minima||"").trim(),ahorro_maximo:String(req.body?.ahorro_maximo||"").trim(),enlace:String(req.body?.enlace||"").trim(),activo:req.body?.activo!==false,clics:0};if(!p.titulo||!p.codigo||!valid(p.enlace))return res.status(400).json({error:"Revisa título, código y enlace."});const d=await sf("cupones",{method:"POST",headers:{Prefer:"return=representation"},body:JSON.stringify(p)});return res.status(201).json(d?.[0]||d)}if(req.method==="PUT"){const id=Number(req.body?.id),p={};for(const f of["titulo","codigo","compra_minima","ahorro_maximo","enlace","activo"])if(Object.hasOwn(req.body||{},f))p[f]=f==="activo"?Boolean(req.body[f]):String(req.body[f]||"").trim();if(p.enlace&&!valid(p.enlace))return res.status(400).json({error:"El enlace no es válido."});const d=await sf(`cupones?id=eq.${id}`,{method:"PATCH",headers:{Prefer:"return=representation"},body:JSON.stringify(p)});return res.status(200).json(d?.[0]||d)}if(req.method==="DELETE"){await sf(`cupones?id=eq.${Number(req.query.id)}`,{method:"DELETE"});return res.status(200).json({ok:true})}return res.status(405).json({error:"Método no permitido."})}catch(e){return res.status(500).json({error:e.message})}}
+function isAuthorized(request) {
+  return Boolean(process.env.ADMIN_PASSWORD) &&
+    String(request.headers["x-admin-password"] || "") === process.env.ADMIN_PASSWORD;
+}
+
+function config() {
+  return {
+    url: String(process.env.SUPABASE_URL || "")
+      .trim()
+      .replace(/^["']|["']$/g, "")
+      .replace(/\/rest\/v1\/?$/i, "")
+      .replace(/\/+$/, ""),
+    key: process.env.SUPABASE_SECRET_KEY,
+  };
+}
+
+async function supabaseFetch(path, options = {}) {
+  const { url, key } = config();
+
+  const result = await fetch(`${url}/rest/v1/${path}`, {
+    ...options,
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
+  });
+
+  const text = await result.text();
+  const data = text ? JSON.parse(text) : null;
+
+  if (!result.ok) {
+    throw new Error("Supabase no pudo completar la operación.");
+  }
+
+  return data;
+}
+
+export default async function handler(request, response) {
+  if (!isAuthorized(request)) {
+    return response.status(401).json({
+      error: "Contraseña de administrador incorrecta.",
+    });
+  }
+
+  try {
+    if (request.method === "GET") {
+      const data = await supabaseFetch(
+        "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,enlace,clics,activo,categoria&order=id.desc"
+      );
+      return response.status(200).json(data);
+    }
+
+    if (request.method === "POST") {
+      const payload = {
+        titulo: String(request.body?.titulo || "").trim(),
+        codigo: String(request.body?.codigo || "").trim(),
+        compra_minima: String(request.body?.compra_minima || "").trim(),
+        ahorro_maximo: String(request.body?.ahorro_maximo || "").trim(),
+        enlace: String(request.body?.enlace || "").trim(),
+        categoria:
+          request.body?.categoria === "bancarios" ? "bancarios" : "tienda",
+        activo: request.body?.activo !== false,
+        clics: 0,
+      };
+
+      const data = await supabaseFetch("cupones", {
+        method: "POST",
+        headers: { Prefer: "return=representation" },
+        body: JSON.stringify(payload),
+      });
+
+      return response.status(201).json(data?.[0] || data);
+    }
+
+    if (request.method === "PUT") {
+      const id = Number(request.body?.id);
+      const payload = {};
+
+      for (const field of [
+        "titulo","codigo","compra_minima","ahorro_maximo","enlace","activo","categoria"
+      ]) {
+        if (Object.hasOwn(request.body || {}, field)) {
+          if (field === "activo") {
+            payload[field] = Boolean(request.body[field]);
+          } else if (field === "categoria") {
+            payload[field] =
+              request.body[field] === "bancarios" ? "bancarios" : "tienda";
+          } else {
+            payload[field] = String(request.body[field] || "").trim();
+          }
+        }
+      }
+
+      const data = await supabaseFetch(`cupones?id=eq.${id}`, {
+        method: "PATCH",
+        headers: { Prefer: "return=representation" },
+        body: JSON.stringify(payload),
+      });
+
+      return response.status(200).json(data?.[0] || data);
+    }
+
+    if (request.method === "DELETE") {
+      const id = Number(request.query?.id);
+      await supabaseFetch(`cupones?id=eq.${id}`, { method: "DELETE" });
+      return response.status(200).json({ ok: true });
+    }
+
+    response.setHeader("Allow", "GET, POST, PUT, DELETE");
+    return response.status(405).json({ error: "Método no permitido." });
+  } catch (error) {
+    return response.status(500).json({
+      error: error.message || "Error interno del servidor.",
+    });
+  }
+}

@@ -12,6 +12,9 @@ const modalContador = document.querySelector("#modal-contador");
 const cronometroNumero = document.querySelector("#cronometro-numero");
 const modalCodigo = document.querySelector("#modal-codigo");
 
+const tabTienda = document.querySelector("#tab-tienda");
+const tabBancarios = document.querySelector("#tab-bancarios");
+
 const SEGUNDOS_ACTUALIZACION = 60;
 const SEGUNDOS_REDIRECCION = 5;
 const COLORES = ["turquesa", "azul", "morado", "coral", "oliva"];
@@ -20,8 +23,13 @@ let segundosRestantes = SEGUNDOS_ACTUALIZACION;
 let cargando = false;
 let redireccionEnProceso = false;
 let timeoutRedireccion = null;
+let categoriaActiva = "tienda";
+let todosLosCupones = [];
 
 botonRecargar.addEventListener("click", cargarCupones);
+
+tabTienda.addEventListener("click", () => cambiarCategoria("tienda"));
+tabBancarios.addEventListener("click", () => cambiarCategoria("bancarios"));
 
 function escaparHtml(valor = "") {
   return String(valor)
@@ -104,6 +112,74 @@ function crearTarjeta(cupon, esPopular = false, indice = 0) {
   return articulo;
 }
 
+
+function normalizarCategoria(cupon) {
+  const categoria = String(cupon.categoria || "tienda").toLowerCase();
+
+  if (categoria === "bancario" || categoria === "bancarios") {
+    return "bancarios";
+  }
+
+  return "tienda";
+}
+
+function cambiarCategoria(categoria) {
+  categoriaActiva = categoria;
+
+  tabTienda.classList.toggle("activo", categoria === "tienda");
+  tabBancarios.classList.toggle("activo", categoria === "bancarios");
+
+  tabTienda.setAttribute("aria-pressed", String(categoria === "tienda"));
+  tabBancarios.setAttribute("aria-pressed", String(categoria === "bancarios"));
+
+  renderizarCategoria();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function renderizarCategoria() {
+  limpiarVista();
+
+  const cuponesCategoria = todosLosCupones
+    .filter((cupon) => normalizarCategoria(cupon) === categoriaActiva)
+    .sort((a, b) => Number(b.clics || 0) - Number(a.clics || 0));
+
+  const nombreCategoria =
+    categoriaActiva === "tienda" ? "de tienda" : "bancarios";
+
+  document.querySelector(".titulo-seccion").textContent =
+    categoriaActiva === "tienda"
+      ? "🎟️ Cupones de tienda"
+      : "💳 Cupones bancarios";
+
+  if (cuponesCategoria.length === 0) {
+    estadoCarga.textContent = "";
+    sinCupones.querySelector("h2").textContent =
+      `No hay cupones ${nombreCategoria} disponibles`;
+    sinCupones.querySelector("p").textContent =
+      "Pronto agregaremos nuevas opciones.";
+    sinCupones.hidden = false;
+    return;
+  }
+
+  const [cuponPopular, ...restoCupones] = cuponesCategoria;
+
+  popularContainer.appendChild(crearTarjeta(cuponPopular, true));
+  popularWrapper.hidden = false;
+
+  if (restoCupones.length > 0) {
+    const fragmento = document.createDocumentFragment();
+
+    restoCupones.forEach((cupon, indice) => {
+      fragmento.appendChild(crearTarjeta(cupon, false, indice));
+    });
+
+    cuponesContainer.appendChild(fragmento);
+    todosWrapper.hidden = false;
+  }
+
+  estadoCarga.textContent = "";
+}
+
 function limpiarVista() {
   cuponesContainer.replaceChildren();
   popularContainer.replaceChildren();
@@ -149,27 +225,8 @@ async function cargarCupones() {
       return;
     }
 
-    const cuponesOrdenados = [...cupones].sort(
-      (a, b) => Number(b.clics || 0) - Number(a.clics || 0)
-    );
-
-    const [cuponPopular, ...restoCupones] = cuponesOrdenados;
-
-    popularContainer.appendChild(crearTarjeta(cuponPopular, true));
-    popularWrapper.hidden = false;
-
-    if (restoCupones.length > 0) {
-      const fragmento = document.createDocumentFragment();
-
-      restoCupones.forEach((cupon, indice) => {
-        fragmento.appendChild(crearTarjeta(cupon, false, indice));
-      });
-
-      cuponesContainer.appendChild(fragmento);
-      todosWrapper.hidden = false;
-    }
-
-    estadoCarga.textContent = "";
+    todosLosCupones = cupones;
+    renderizarCategoria();
   } catch (error) {
     console.error(error);
     estadoCarga.className = "estado-carga error";

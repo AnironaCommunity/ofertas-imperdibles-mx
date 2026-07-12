@@ -12,7 +12,7 @@
 
   <!-- Se conserva exactamente el mismo archivo de logo -->
   <link rel="icon" href="img/logo.png" />
-  <link rel="stylesheet" href="css/style.css?v=12" />
+  <link rel="stylesheet" href="css/style.css?v=13" />
 </head>
 
 <body>
@@ -161,6 +161,31 @@
     Página informativa de una comunidad independiente.
   </footer>
 
+
+  <nav class="navegacion-inferior" aria-label="Categorías de cupones">
+    <button
+      id="tab-tienda"
+      class="tab-inferior activo"
+      type="button"
+      data-categoria="tienda"
+      aria-pressed="true"
+    >
+      <span aria-hidden="true">🏪</span>
+      <strong>Tienda</strong>
+    </button>
+
+    <button
+      id="tab-bancarios"
+      class="tab-inferior"
+      type="button"
+      data-categoria="bancarios"
+      aria-pressed="false"
+    >
+      <span aria-hidden="true">💳</span>
+      <strong>Bancarios</strong>
+    </button>
+  </nav>
+
   <div
     id="modal-redireccion"
     class="modal-redireccion"
@@ -188,6 +213,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/app.js?v=12"></script>
+  <script type="module" src="js/app.js?v=13"></script>
 </body>
 </html>
