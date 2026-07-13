@@ -1,0 +1,19 @@
+OFERTAS IMPERDIBLES MX — V62.1
+
+REEMPLAZA:
+- index.html
+- js/app.js
+- css/base.css
+
+CAMBIOS:
+1. Las nuevas secciones muestran dos tarjetas por fila.
+2. Las tarjetas se hicieron más compactas.
+3. En celular también se mantienen dos tarjetas horizontales por fila.
+4. El botón Compartir conserva exactamente el mismo icono SVG usado en las tarjetas de cupones.
+5. Se conserva el aviso de cupón condicional y el conteo de visitas por clic cada 24 horas.
+
+SQL:
+- No debes ejecutar ningún archivo SQL.
+
+RECOMENDACIÓN:
+Después de subir los archivos, usa Ctrl + F5 para limpiar la caché.

@@ -1209,3 +1209,310 @@ footer {
     grid-template-columns: minmax(0, 1fr) 42px;
   }
 }
+
+
+/* V61.6 — Ajustes de acciones y encabezado */
+.publicidad-cabecera > span {
+  font-weight: 400;
+}
+
+.publicidad-acciones {
+  grid-template-columns: minmax(210px, 1fr) 40px;
+  gap: 5px;
+}
+
+.publicidad-acciones .publicidad-boton {
+  white-space: nowrap;
+  padding-left: 12px;
+  padding-right: 12px;
+  font-size: clamp(11px, 2.9vw, 13px);
+}
+
+.publicidad-acciones .publicidad-compartir {
+  width: 40px;
+  min-width: 40px;
+  padding: 8px;
+}
+
+.oferta-acciones .oferta-compartir {
+  /* Misma apariencia que el botón de OFERTAS DEL DÍA */
+  width: 40px;
+  min-width: 40px;
+  padding: 8px;
+  border-radius: 11px;
+}
+
+@media (max-width: 430px) {
+  .publicidad-acciones {
+    grid-template-columns: minmax(0, 1fr) 38px;
+    gap: 4px;
+  }
+
+  .publicidad-acciones .publicidad-compartir,
+  .oferta-acciones .oferta-compartir {
+    width: 38px;
+    min-width: 38px;
+    padding: 7px;
+  }
+
+  .publicidad-acciones .publicidad-boton {
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 11px;
+    letter-spacing: -0.01em;
+  }
+}
+
+
+/* V61.8 — Compartir unificado en todas las ofertas */
+.oferta-compartir::before {
+  content: none !important;
+  display: none !important;
+}
+
+.oferta-compartir svg,
+.publicidad-compartir svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.oferta-compartir,
+.publicidad-compartir {
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* V62.1 — Tarjetas compactas, dos por fila */
+.ofertas-grid-compacta {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 9px;
+}
+
+.tarjeta-oferta {
+  display: flex !important;
+  flex-direction: column;
+  min-width: 0;
+  border-radius: 13px;
+  box-shadow: 0 3px 11px rgba(20, 45, 32, 0.06);
+}
+
+.oferta-imagen-contenedor {
+  width: 100%;
+  height: auto !important;
+  min-height: 0 !important;
+  aspect-ratio: 1 / 0.72 !important;
+  padding: 6px;
+}
+
+.oferta-imagen {
+  border-radius: 8px;
+}
+
+.oferta-contenido {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  padding: 8px;
+}
+
+.oferta-contenido h3 {
+  display: -webkit-box;
+  overflow: hidden;
+  min-height: 30px;
+  font-size: 12.5px;
+  line-height: 1.2;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.oferta-descripcion {
+  margin-top: 4px;
+  font-size: 10px;
+  line-height: 1.25;
+  -webkit-line-clamp: 2;
+}
+
+.oferta-precios {
+  gap: 4px;
+  margin-top: 7px;
+}
+
+.oferta-precios.con-cupon {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.oferta-precios > div {
+  padding: 5px 6px;
+  border-radius: 8px;
+}
+
+.oferta-precios span {
+  font-size: 7.5px;
+  line-height: 1.15;
+}
+
+.oferta-precios strong {
+  margin-top: 1px;
+  font-size: 11.5px;
+}
+
+.oferta-cupon {
+  margin-top: 6px;
+  font-size: 8.8px;
+  line-height: 1.25;
+}
+
+.oferta-meta {
+  margin-top: 6px;
+}
+
+.oferta-visitas {
+  font-size: 9px;
+}
+
+.oferta-acciones {
+  grid-template-columns: minmax(0, 1fr) 34px !important;
+  gap: 5px;
+  margin-top: auto;
+  padding-top: 7px;
+}
+
+.oferta-ver,
+.oferta-compartir {
+  min-height: 34px;
+  border-radius: 9px;
+}
+
+.oferta-ver {
+  padding: 5px 6px;
+  font-size: 9.2px;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.oferta-acciones .oferta-compartir {
+  display: inline-flex;
+  width: 34px !important;
+  min-width: 34px !important;
+  padding: 7px !important;
+  border-radius: 9px;
+  font-size: 0;
+}
+
+.oferta-acciones .oferta-compartir::before {
+  content: none !important;
+  display: none !important;
+}
+
+.oferta-acciones .oferta-compartir svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.oferta-mensaje {
+  min-height: 10px;
+  margin-top: 3px;
+  font-size: 8px;
+}
+
+@media (max-width: 620px) {
+  .ofertas-grid-compacta {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 7px;
+  }
+
+  .tarjeta-oferta {
+    display: flex !important;
+    grid-template-columns: none !important;
+  }
+
+  .oferta-imagen-contenedor {
+    height: auto !important;
+    min-height: 0 !important;
+    aspect-ratio: 1 / 0.75 !important;
+  }
+
+  .oferta-contenido {
+    padding: 7px;
+  }
+
+  .oferta-contenido h3 {
+    min-height: 28px;
+    font-size: 11.5px;
+  }
+
+  .oferta-descripcion {
+    font-size: 9px;
+  }
+
+  .oferta-precios strong {
+    font-size: 10.5px;
+  }
+
+  .oferta-cupon {
+    font-size: 8px;
+  }
+
+  .oferta-acciones {
+    grid-template-columns: minmax(0, 1fr) 32px !important;
+    gap: 4px;
+  }
+
+  .oferta-ver {
+    min-height: 32px;
+    padding: 4px;
+    font-size: 8.5px;
+  }
+
+  .oferta-acciones .oferta-compartir {
+    width: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px;
+    padding: 6px !important;
+  }
+
+  .oferta-acciones .oferta-compartir svg {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+@media (max-width: 360px) {
+  .ofertas-grid-compacta {
+    gap: 6px;
+  }
+
+  .oferta-contenido {
+    padding: 6px;
+  }
+
+  .oferta-contenido h3 {
+    font-size: 10.8px;
+  }
+
+  .oferta-descripcion {
+    -webkit-line-clamp: 1;
+  }
+
+  .oferta-precios > div {
+    padding: 4px;
+  }
+
+  .oferta-precios span {
+    font-size: 7px;
+  }
+
+  .oferta-precios strong {
+    font-size: 9.8px;
+  }
+
+  .oferta-ver {
+    font-size: 8px;
+  }
+}
