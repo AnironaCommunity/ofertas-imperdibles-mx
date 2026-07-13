@@ -17,6 +17,10 @@ const tabBancarios = document.querySelector("#tab-bancarios");
 
 
 const carruselesPublicidad = [];
+const seccionComunidadAnirona = document.querySelector("#seccion-comunidad-anirona");
+const seccionOfertasAmazon = document.querySelector("#seccion-ofertas-amazon");
+const ofertasComunidadAnirona = document.querySelector("#ofertas-comunidad-anirona");
+const ofertasAmazon = document.querySelector("#ofertas-amazon");
 
 const SEGUNDOS_ACTUALIZACION = 60;
 const SEGUNDOS_REDIRECCION = 3;
@@ -38,9 +42,11 @@ tabTienda.addEventListener("click", () => cambiarCategoria("tienda"));
 tabBancarios.addEventListener("click", () => cambiarCategoria("bancarios"));
 
 document.querySelectorAll(".menu-ofertas a").forEach((enlace) => {
-  enlace.addEventListener("click", () => {
+  enlace.addEventListener("click", (event) => {
     const destino = document.querySelector(enlace.getAttribute("href"));
-    if (destino) destino.hidden = false;
+    if (!destino || destino.hidden) return;
+    event.preventDefault();
+    destino.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 });
 
@@ -811,9 +817,84 @@ function crearControlCarrusel(wrapper) {
 
 function inicializarCarruselesPublicidad() {
   carruselesPublicidad.splice(0);
-  document.querySelectorAll("[data-categoria-publicidad]").forEach((wrapper) => {
+  document.querySelectorAll(".publicidad-wrapper[data-categoria-publicidad]").forEach((wrapper) => {
     carruselesPublicidad.push(crearControlCarrusel(wrapper));
   });
+}
+
+
+function crearTarjetaOferta(publicidad, categoria) {
+  const articulo = document.createElement("article");
+  articulo.className = "tarjeta-oferta";
+
+  const esAmazon = categoria === "ofertas_amazon";
+  const precioPublicado = String(publicidad.precio_publicado || "").trim();
+  const precioCupon = String(publicidad.precio_cupon || "").trim();
+  const codigo = String(publicidad.codigo_cupon || "").trim();
+
+  articulo.innerHTML = `
+    <div class="oferta-imagen-contenedor">
+      <img
+        class="oferta-imagen"
+        src="${escaparHtml(publicidad.imagen_url || "")}" 
+        alt="${escaparHtml(publicidad.titulo || "Oferta")}" 
+        loading="lazy"
+      />
+    </div>
+
+    <div class="oferta-contenido">
+      <h3>${escaparHtml(publicidad.titulo || "Oferta destacada")}</h3>
+      ${publicidad.descripcion ? `<p class="oferta-descripcion">${escaparHtml(publicidad.descripcion)}</p>` : ""}
+
+      <div class="oferta-precios ${precioCupon ? "con-cupon" : ""}">
+        ${precioPublicado ? `<div><span>Precio publicado</span><strong>${escaparHtml(precioPublicado)}</strong></div>` : ""}
+        ${precioCupon ? `<div class="precio-destacado"><span>Precio con cupón</span><strong>${escaparHtml(precioCupon)}</strong></div>` : ""}
+      </div>
+
+      ${codigo ? `<p class="oferta-cupon">🎟️ Cupón: <strong>${escaparHtml(codigo)}</strong></p>` : ""}
+
+      <div class="oferta-acciones">
+        <button class="oferta-ver" type="button">
+          ${esAmazon ? "📦 Ver en Amazon" : "🛒 Ver en Mercado Libre"}
+        </button>
+        <button class="oferta-compartir" type="button" aria-label="Compartir oferta">
+          ↗ Compartir
+        </button>
+      </div>
+      <p class="oferta-mensaje" aria-live="polite"></p>
+    </div>
+  `;
+
+  const mensaje = articulo.querySelector(".oferta-mensaje");
+  articulo.querySelector(".oferta-ver").addEventListener("click", () => abrirPublicidad(publicidad));
+  articulo.querySelector(".oferta-compartir").addEventListener("click", () => {
+    compartirPublicidad(publicidad, { mensaje });
+  });
+
+  const imagen = articulo.querySelector(".oferta-imagen");
+  imagen.addEventListener("error", () => {
+    imagen.closest(".oferta-imagen-contenedor").classList.add("sin-imagen");
+    imagen.remove();
+  }, { once: true });
+
+  return articulo;
+}
+
+function renderizarModuloOfertas(categoria, contenedor, seccion) {
+  const items = todasLasPublicidades.filter((item) =>
+    (item.categoria || "ofertas_dia") === categoria
+  );
+
+  contenedor.replaceChildren();
+  if (!items.length) {
+    seccion.hidden = true;
+    return;
+  }
+
+  items.forEach((item) => {
+    contenedor.appendChild(crearTarjetaOferta(item, categoria));
+  });
+  seccion.hidden = false;
 }
 
 async function cargarPublicidad() {
@@ -826,6 +907,17 @@ async function cargarPublicidad() {
 
     const datos = await respuesta.json();
     todasLasPublicidades = Array.isArray(datos) ? datos : [];
+
+    renderizarModuloOfertas(
+      "comunidad_anirona",
+      ofertasComunidadAnirona,
+      seccionComunidadAnirona
+    );
+    renderizarModuloOfertas(
+      "ofertas_amazon",
+      ofertasAmazon,
+      seccionOfertasAmazon
+    );
 
     for (const control of carruselesPublicidad) {
       control.items = todasLasPublicidades.filter((item) =>
@@ -850,6 +942,8 @@ async function cargarPublicidad() {
       control.wrapper.hidden = true;
       detenerRotacionPublicidad(control);
     });
+    seccionComunidadAnirona.hidden = true;
+    seccionOfertasAmazon.hidden = true;
   }
 }
 

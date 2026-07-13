@@ -29,3 +29,6 @@ Después podrás elegir en el panel de Publicidad si cada producto aparece en:
 - Ofertas del día
 - Comunidad Anirona
 - Ofertas Amazon
+
+
+V61.1: Comunidad Anirona y Ofertas Amazon ahora se muestran como módulos de tarjetas, similares al listado de cupones. OFERTAS DEL DÍA conserva su carrusel.
