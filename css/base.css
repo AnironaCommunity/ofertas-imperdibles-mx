@@ -1750,3 +1750,212 @@ button.oferta-imagen-contenedor:active .oferta-imagen {
     filter: none;
   }
 }
+
+
+/* V62.5 — Tarjeta final para el canal de Comunidad Anirona */
+.tarjeta-canal-anirona {
+  grid-column: 1 / -1;
+  display: grid !important;
+  grid-template-columns: minmax(110px, 180px) minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  min-height: 190px;
+  padding: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(18, 139, 75, .18);
+  background:
+    radial-gradient(circle at 94% 8%, rgba(73, 202, 49, .14), transparent 31%),
+    linear-gradient(135deg, #ffffff 0%, #f5fbf6 100%);
+  box-shadow: 0 8px 24px rgba(27, 79, 49, .08);
+}
+
+.canal-anirona-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 130px;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .82);
+  box-shadow: inset 0 0 0 1px rgba(20, 80, 44, .07);
+}
+
+.canal-anirona-logo img {
+  display: block;
+  width: 100%;
+  max-width: 150px;
+  max-height: 72px;
+  object-fit: contain;
+}
+
+.canal-anirona-contenido {
+  min-width: 0;
+}
+
+.canal-anirona-etiqueta {
+  display: inline-flex;
+  margin-bottom: 5px;
+  color: #168544;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .12em;
+}
+
+.canal-anirona-contenido h3 {
+  min-height: auto;
+  margin: 0;
+  color: #1e3428;
+  font-size: clamp(19px, 3vw, 25px);
+  font-weight: 600;
+  line-height: 1.1;
+  -webkit-line-clamp: initial;
+}
+
+.canal-anirona-contenido > p {
+  max-width: 590px;
+  margin: 8px 0 0;
+  color: #52635a;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.canal-anirona-temas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 11px;
+}
+
+.canal-anirona-temas span {
+  padding: 5px 9px;
+  border: 1px solid rgba(22, 133, 68, .14);
+  border-radius: 999px;
+  color: #42604e;
+  background: rgba(255, 255, 255, .8);
+  font-size: 9.5px;
+  font-weight: 400;
+}
+
+.canal-anirona-boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 42px;
+  margin-top: 13px;
+  padding: 10px 16px;
+  border: 1px solid #159447;
+  border-radius: 11px;
+  color: #fff;
+  background: #159447;
+  box-shadow: 0 6px 15px rgba(21, 148, 71, .19);
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    transform .16s ease,
+    background .16s ease,
+    box-shadow .16s ease;
+}
+
+.canal-anirona-boton svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.canal-anirona-boton:hover,
+.canal-anirona-boton:focus-visible {
+  color: #fff;
+  background: #107d3b;
+  box-shadow: 0 9px 20px rgba(21, 148, 71, .25);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.canal-anirona-boton:active {
+  transform: scale(.98);
+}
+
+.canal-anirona-contenido small {
+  display: block;
+  margin-top: 8px;
+  color: #77857d;
+  font-size: 9px;
+}
+
+@media (max-width: 620px) {
+  .tarjeta-canal-anirona {
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 11px;
+    min-height: 0;
+    padding: 13px;
+    border-radius: 13px;
+  }
+
+  .canal-anirona-logo {
+    min-height: 88px;
+    padding: 8px;
+    border-radius: 12px;
+  }
+
+  .canal-anirona-logo img {
+    max-width: 72px;
+    max-height: 46px;
+  }
+
+  .canal-anirona-etiqueta {
+    font-size: 7.5px;
+  }
+
+  .canal-anirona-contenido h3 {
+    font-size: 16px;
+  }
+
+  .canal-anirona-contenido > p {
+    margin-top: 5px;
+    font-size: 10px;
+    line-height: 1.35;
+  }
+
+  .canal-anirona-temas {
+    display: none;
+  }
+
+  .canal-anirona-boton {
+    min-height: 36px;
+    margin-top: 9px;
+    padding: 8px 10px;
+    border-radius: 9px;
+    font-size: 10px;
+  }
+
+  .canal-anirona-boton svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .canal-anirona-contenido small {
+    font-size: 7.5px;
+  }
+}
+
+@media (max-width: 370px) {
+  .tarjeta-canal-anirona {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .canal-anirona-logo {
+    min-height: 66px;
+  }
+
+  .canal-anirona-contenido > p {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .canal-anirona-boton {
+    width: 100%;
+  }
+}

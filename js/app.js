@@ -991,6 +991,53 @@ function crearTarjetaOferta(publicidad, categoria) {
 }
 
 
+
+function crearTarjetaCanalAnirona() {
+  const articulo = document.createElement("article");
+  articulo.className = "tarjeta-oferta tarjeta-canal-anirona";
+
+  articulo.innerHTML = `
+    <div class="canal-anirona-logo" aria-hidden="true">
+      <img src="img/anirona.png" alt="" loading="lazy" />
+    </div>
+
+    <div class="canal-anirona-contenido">
+      <span class="canal-anirona-etiqueta">COMUNIDAD ANIRONA</span>
+      <h3>¿Te gusta Anirona?</h3>
+
+      <p>
+        Sigue el canal para recibir promociones, cupones, lanzamientos,
+        novedades y recomendaciones.
+      </p>
+
+      <div class="canal-anirona-temas" aria-label="Contenido del canal">
+        <span>Promociones</span>
+        <span>Cupones</span>
+        <span>Lanzamientos</span>
+        <span>Comunidad</span>
+      </div>
+
+      <a
+        class="canal-anirona-boton"
+        href="https://whatsapp.com/channel/0029VbCDDC0CRs1k2wM02q1i"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <svg viewBox="0 0 32 32" aria-hidden="true">
+          <path d="M19.11 17.54c-.23-.12-1.37-.68-1.58-.75-.21-.08-.37-.12-.52.12-.15.23-.6.75-.73.9-.14.15-.27.17-.5.06-.23-.12-.98-.36-1.87-1.16-.69-.62-1.16-1.38-1.3-1.61-.13-.23-.01-.36.1-.47.1-.1.23-.27.35-.4.12-.14.15-.23.23-.39.08-.15.04-.29-.02-.4-.06-.12-.52-1.26-.72-1.72-.19-.46-.38-.39-.52-.4h-.44c-.15 0-.4.06-.61.29-.21.23-.81.79-.81 1.93s.83 2.24.94 2.4c.12.15 1.63 2.49 3.95 3.49.55.24.98.38 1.32.49.55.18 1.05.15 1.45.09.44-.07 1.37-.56 1.56-1.1.19-.54.19-1 .13-1.1-.06-.09-.21-.15-.44-.27Z"/>
+          <path d="M16.04 3C8.85 3 3 8.84 3 16.03c0 2.3.6 4.55 1.74 6.53L3 29l6.63-1.74a13 13 0 0 0 6.4 1.63h.01C23.22 28.89 29 23.05 29 15.86 29 8.68 23.22 3 16.04 3Zm0 23.55h-.01a10.66 10.66 0 0 1-5.44-1.49l-.39-.23-3.93 1.03 1.05-3.83-.25-.39a10.64 10.64 0 1 1 8.97 4.91Z"/>
+        </svg>
+        <span>Seguir canal en WhatsApp</span>
+      </a>
+
+      <small>Únete a la comunidad y no te pierdas las novedades.</small>
+    </div>
+  `;
+
+  return articulo;
+}
+
+
 function publicidadPerteneceASeccion(publicidad, seccion) {
   const secciones = Array.isArray(publicidad?.secciones)
     ? publicidad.secciones
@@ -1005,6 +1052,7 @@ function renderizarModuloOfertas(categoria, contenedor, seccion) {
   );
 
   contenedor.replaceChildren();
+
   if (!items.length) {
     const mensaje = document.createElement("div");
     mensaje.className = "sin-ofertas-categoria";
@@ -1014,12 +1062,15 @@ function renderizarModuloOfertas(categoria, contenedor, seccion) {
       <p>Pronto agregaremos nuevos productos en esta sección.</p>
     `;
     contenedor.appendChild(mensaje);
-    return;
+  } else {
+    items.forEach((item) => {
+      contenedor.appendChild(crearTarjetaOferta(item, categoria));
+    });
   }
 
-  items.forEach((item) => {
-    contenedor.appendChild(crearTarjetaOferta(item, categoria));
-  });
+  if (categoria === "comunidad_anirona") {
+    contenedor.appendChild(crearTarjetaCanalAnirona());
+  }
 }
 
 const DURACION_VISITA_PRODUCTO_MS = 24 * 60 * 60 * 1000;
