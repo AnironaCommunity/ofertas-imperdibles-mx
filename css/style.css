@@ -1556,3 +1556,167 @@ footer {
     font-size: 8px;
   }
 }
+
+
+/* =========================================================
+   V42 — Ajustes finos de compactación y OFERTAS DEL DÍA
+   ========================================================= */
+
+/* 1. Más espacio para el título y botón bien a la derecha */
+.titulo-fila {
+  width: 100%;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.titulo-seccion {
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.actualizacion {
+  justify-self: end;
+  margin-left: 0;
+}
+
+.boton-recargar {
+  flex: 0 0 auto;
+}
+
+/* 2 y 3. Encabezado y tarjeta más compactos */
+.cupon {
+  min-height: 0 !important;
+}
+
+.cupon-encabezado {
+  display: flex;
+  align-items: center;
+  min-height: 58px !important;
+  padding: 11px 14px !important;
+}
+
+.descuento {
+  line-height: 1 !important;
+  margin: 0 !important;
+}
+
+.cupon-contenido {
+  gap: 6px !important;
+  padding: 9px 10px 10px !important;
+}
+
+.cupon-etiquetas {
+  margin: 0 !important;
+}
+
+.descuento-maximo,
+.compra-minima,
+.cupon-usado,
+.mensaje,
+.acciones-secundarias {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.acciones-bloque {
+  margin-top: 5px !important;
+}
+
+.acciones-secundarias {
+  margin-top: 7px !important;
+}
+
+/* 4. Recuperar apariencia tipográfica sobria de PUBLICIDAD */
+.publicidad-cabecera > span {
+  color: #8a9992 !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.7px !important;
+  text-transform: uppercase !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+
+/* 5. Solo tachar el publicado cuando exista precio con cupón */
+.publicidad-precios.sin-precio-cupon .precio-publicado-bloque strong {
+  text-decoration: none !important;
+  color: #27332d !important;
+  font-size: 18px !important;
+}
+
+.publicidad-precios.con-precio-cupon .precio-publicado-bloque strong {
+  text-decoration: line-through !important;
+  text-decoration-thickness: 1px !important;
+}
+
+/* Ajustes móviles */
+@media (max-width: 680px) {
+  .titulo-fila {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    gap: 6px !important;
+  }
+
+  .titulo-seccion {
+    font-size: 17px !important;
+    white-space: normal;
+  }
+
+  .boton-recargar {
+    padding: 6px 7px !important;
+    font-size: 10px !important;
+  }
+
+  .cupon {
+    min-height: 0 !important;
+  }
+
+  .cupon-encabezado {
+    min-height: 52px !important;
+    padding: 9px 10px !important;
+  }
+
+  .descuento {
+    font-size: 21px !important;
+  }
+
+  .cupon-contenido {
+    gap: 5px !important;
+    padding: 8px 8px 9px !important;
+  }
+
+  .descuento-maximo {
+    font-size: 11px !important;
+  }
+
+  .compra-minima {
+    padding: 5px 6px !important;
+  }
+
+  .acciones-bloque {
+    margin-top: 3px !important;
+  }
+
+  .acciones-secundarias {
+    margin-top: 6px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .titulo-seccion {
+    font-size: 16px !important;
+  }
+
+  .boton-recargar {
+    font-size: 9px !important;
+    padding: 5px 6px !important;
+  }
+
+  .cupon-encabezado {
+    min-height: 48px !important;
+  }
+
+  .descuento {
+    font-size: 19px !important;
+  }
+}

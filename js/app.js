@@ -637,6 +637,10 @@ function mostrarPublicidad() {
   precioCuponBloque.hidden = !precioCupon;
   publicidadAvisoCupon.hidden = !mostrarInformacionCupon;
 
+  const contenedorPrecios = document.querySelector(".publicidad-precios");
+  contenedorPrecios.classList.toggle("con-precio-cupon", Boolean(precioCupon));
+  contenedorPrecios.classList.toggle("sin-precio-cupon", !precioCupon);
+
   publicidadPrecioPublicado.textContent = precioPublicado;
   publicidadPrecioCupon.textContent = precioCupon;
 
@@ -685,7 +689,13 @@ async function abrirPublicidad(publicidad) {
 
   const codigo = String(publicidad.codigo_cupon || "").trim();
   const precioCupon = String(publicidad.precio_cupon || "").trim();
-  const debeCopiarCupon = Boolean(codigo && precioCupon);
+
+  /*
+    Solo se copia un código cuando existen:
+    1) Precio con cupón
+    2) Código de cupón
+  */
+  const debeCopiarCupon = Boolean(precioCupon && codigo);
 
   try {
     if (debeCopiarCupon) {
@@ -694,7 +704,6 @@ async function abrirPublicidad(publicidad) {
 
     registrarClicPublicidad(publicidad.id);
 
-    // La publicidad abre directamente, sin ventana emergente.
     window.location.assign(enlace);
   } catch (error) {
     console.warn("No fue posible preparar la publicidad.", error);
