@@ -1965,3 +1965,26 @@ footer {
     height: 4px;
   }
 }
+
+
+/* =========================================================
+   V52 — Contador limpio, sin iconos ni barra
+   ========================================================= */
+
+.estado-programacion {
+  font-weight: 400 !important;
+}
+
+.estado-programacion .estado-linea {
+  margin-bottom: 0 !important;
+  gap: 4px;
+}
+
+.estado-programacion .estado-tiempo {
+  font-weight: 400 !important;
+}
+
+.estado-progreso,
+.estado-progreso-barra {
+  display: none !important;
+}

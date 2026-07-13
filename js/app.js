@@ -262,23 +262,16 @@ function updateCouponTimes() {
       status.hidden = false;
       status.innerHTML = `
         <div class="estado-linea">
-          <span>⏳</span>
           <span>${timeState.label}</span>
           <span class="estado-tiempo">
             ${formatRemaining(timeState.target - Date.now())}
           </span>
         </div>
-        <div class="estado-progreso">
-          <div
-            class="estado-progreso-barra"
-            style="width: 100%"
-          ></div>
-        </div>
       `;
 
       redeemButton.disabled = true;
       redeemButton.classList.add("boton-programado");
-      redeemButton.textContent = "⏳ Disponible pronto";
+      redeemButton.textContent = "Disponible pronto";
       return;
     }
 
@@ -295,27 +288,13 @@ function updateCouponTimes() {
     }
 
     if (timeState.target !== null) {
-      const icon =
-        timeState.state === "ultimos-minutos"
-          ? "🚨"
-          : timeState.state === "finaliza-pronto"
-            ? "⚠️"
-            : "⏳";
-
       status.hidden = false;
       status.innerHTML = `
         <div class="estado-linea">
-          <span>${icon}</span>
           <span>${timeState.label}</span>
           <span class="estado-tiempo">
             ${formatRemaining(timeState.target - Date.now())}
           </span>
-        </div>
-        <div class="estado-progreso">
-          <div
-            class="estado-progreso-barra"
-            style="width: ${couponProgress(timeState)}%"
-          ></div>
         </div>
       `;
     } else {
