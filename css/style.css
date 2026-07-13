@@ -1988,3 +1988,70 @@ footer {
 .estado-progreso-barra {
   display: none !important;
 }
+
+
+/* =========================================================
+   V53 — Tarjetas uniformes con espacios reservados
+   ========================================================= */
+
+/*
+  Reserva permanente para la etiqueta Popular.
+  Cuando no existe, conserva la altura sin mostrar contenido.
+*/
+.cupon-etiquetas {
+  display: flex !important;
+  align-items: center;
+  min-height: 28px !important;
+}
+
+.cupon-etiquetas:empty {
+  display: flex !important;
+}
+
+/*
+  Reserva permanente para “Ya usaste este cupón”.
+  Cuando está oculto conserva el espacio, pero no es visible.
+*/
+.cupon-usado[hidden] {
+  display: flex !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/*
+  La franja de programación siempre se conserva.
+  Sin fecha de fin muestra únicamente la línea punteada.
+*/
+.estado-programacion {
+  display: block !important;
+  min-height: 22px;
+  margin-top: 8px !important;
+  padding-top: 8px !important;
+}
+
+.estado-programacion[hidden],
+.estado-programacion.vacio {
+  display: block !important;
+  visibility: visible;
+  color: transparent !important;
+}
+
+.estado-programacion.vacio .estado-linea {
+  display: none !important;
+}
+
+@media (max-width: 680px) {
+  .cupon-etiquetas {
+    min-height: 24px !important;
+  }
+
+  .cupon-usado {
+    min-height: 30px;
+  }
+
+  .estado-programacion {
+    min-height: 18px;
+    margin-top: 7px !important;
+    padding-top: 7px !important;
+  }
+}

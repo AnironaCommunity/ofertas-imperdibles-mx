@@ -298,7 +298,13 @@ function updateCouponTimes() {
         </div>
       `;
     } else {
-      status.hidden = true;
+      /*
+        Sin fecha de finalización:
+        se conserva la franja y la línea punteada,
+        pero no se muestra ningún texto.
+      */
+      status.hidden = false;
+      status.className = "estado-programacion vacio";
       status.replaceChildren();
     }
   });
