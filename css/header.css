@@ -179,21 +179,3 @@
 .barra-redes-lineal .red-social span{
   font-weight:400!important;
 }
-
-
-/* V60.5 */
-.aviso-cupones,
-.aviso-legal{
-  display:none!important;
-}
-
-.resumen-cupones + *{
-  margin-top:8px!important;
-}
-
-/* Línea punteada más suave */
-.separador-punteado,
-hr.punteado,
-.linea-punteada{
-  border-top:1px dashed #d9dfdc!important;
-}

@@ -886,3 +886,15 @@ footer {
     font-size: 10px !important;
   }
 }
+
+
+/* V60.6 — Aviso inferior eliminado */
+.aviso-inferior {
+  display: none !important;
+}
+
+.publicidad-wrapper {
+  margin-top: 16px !important;
+  padding-top: 14px;
+  border-top: 1px dashed #cbd5d0;
+}

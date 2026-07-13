@@ -1,41 +1,22 @@
-OFERTAS IMPERDIBLES MX — V60.3 CORREGIDA
+OFERTAS IMPERDIBLES MX — V60.6
 
-Esta versión parte directamente de la V60 estabilizada.
+CORRECCIÓN
 
-CAMBIOS APLICADOS
+Se eliminó completamente del index.html el bloque:
 
-1. Fondo blanco detrás del logo.
-2. Se elimina:
-   “Cupones y descuentos de Mercado Libre en un solo lugar”.
-3. El aviso queda así:
-   “Al presionar Copiar y Canjear” en negritas,
-   seguido de:
-   “el código se copiará automáticamente y se abrirá Mercado Libre.”
-4. Se elimina el espacio vacío debajo del logo.
+⚠️ Los cupones pueden agotarse, cambiar o dejar de estar disponibles
+sin previo aviso. La disponibilidad y las condiciones dependen de
+Mercado Libre.
 
-SE CONSERVA
+También se corrigió el espacio que quedaba antes de OFERTAS DEL DÍA.
 
-- OFERTAS DEL DÍA.
-- Descripción de cada publicidad.
-- Precios de publicidad.
-- Publicidad rotativa.
-- Tarjetas de cupones.
-- Popular.
-- Me gusta.
-- Programación automática.
-- Contador de vencimiento.
-- Tienda y Bancarios.
-- Contadores superiores.
-- Administrador completo.
+La separación ahora usa una línea punteada suave de 1 px.
 
 ARCHIVOS A REEMPLAZAR
 
 index.html
-css/header.css
-
-También puedes subir el paquete completo si prefieres asegurar que todo
-corresponda a la misma versión.
+css/base.css
 
 PRUEBA
 
-https://ofertasimperdiblesmx.vercel.app/?v=60.3
+https://ofertasimperdiblesmx.vercel.app/?v=60.6
