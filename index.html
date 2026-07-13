@@ -11,7 +11,7 @@
   <title>Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="img/logo.png" />
-  <link rel="stylesheet" href="css/style.css?v=54" />
+  <link rel="stylesheet" href="css/style.css?v=53" />
 </head>
 
 <body>
@@ -22,7 +22,7 @@
       alt="Ofertas Imperdibles MX"
     />
 
-    <div class="barra-redes barra-redes-lineal" aria-label="Redes sociales">
+    <div class="barra-redes" aria-label="Redes sociales">
       <a
         class="red-social red-whatsapp"
         href="https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n"
@@ -37,8 +37,6 @@
         </span>
         <strong>WhatsApp</strong>
       </a>
-
-      <span class="separador-redes" aria-hidden="true"></span>
 
       <a
         class="red-social red-facebook"
@@ -55,29 +53,31 @@
       </a>
     </div>
 
-    <div class="resumen-cupones" aria-label="Resumen de cupones">
-      <div class="resumen-item resumen-tienda">
-        <span class="resumen-icono" aria-hidden="true">🏷️</span>
-        <span class="resumen-datos">
-          <strong id="contador-tienda">0</strong>
-          <small>Cupones</small>
-        </span>
-      </div>
+    <p>Cupones y descuentos de Mercado Libre en un solo lugar.</p>
+  </header>
 
-      <div class="resumen-item resumen-bancarios">
-        <span class="resumen-icono" aria-hidden="true">🏦</span>
-        <span class="resumen-datos">
-          <strong id="contador-bancarios">0</strong>
-          <small>Bancarios</small>
-        </span>
-      </div>
+  <main class="contenedor">
+    <div class="instruccion-cupones">
+      <span class="icono-informativo" aria-hidden="true">ℹ️</span>
+      <p>
+        Al presionar <strong>Copiar y Canjear</strong>, el código se copiará
+        automáticamente. Después de la cuenta regresiva se abrirá Mercado Libre.
+      </p>
+    </div>
 
-      <div class="resumen-item resumen-copiados">
-        <span class="resumen-icono" aria-hidden="true">↗</span>
-        <span class="resumen-datos">
-          <strong id="contador-copiados">0</strong>
-          <small>Copiados</small>
-        </span>
+    <div class="titulo-fila titulo-con-separador">
+      <h1 class="titulo-seccion">🎟️ Cupones de tienda</h1>
+
+      <div class="actualizacion">
+        <span id="contador-actualizacion" hidden></span>
+
+        <button
+          id="boton-recargar"
+          class="boton-recargar"
+          type="button"
+        >
+          ↻ Actualizar
+        </button>
       </div>
     </div>
 
@@ -241,6 +241,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/app.js?v=54"></script>
+  <script type="module" src="js/app.js?v=53"></script>
 </body>
 </html>
