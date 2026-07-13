@@ -14,7 +14,8 @@ const modalCuponOculto = document.querySelector("#modal-cupon-oculto");
 
 const tabTienda = document.querySelector("#tab-tienda");
 const tabBancarios = document.querySelector("#tab-bancarios");
-
+const vistaCupones = document.querySelector("#vista-cupones");
+const botonesMenuOfertas = document.querySelectorAll(".menu-ofertas [data-vista]");
 
 const carruselesPublicidad = [];
 const seccionComunidadAnirona = document.querySelector("#seccion-comunidad-anirona");
@@ -33,6 +34,7 @@ let cargando = false;
 let redireccionEnProceso = false;
 let timeoutRedireccion = null;
 let categoriaActiva = "tienda";
+let vistaActiva = "cupones";
 let todosLosCupones = [];
 let todasLasPublicidades = [];
 let temporizadorEstados = null;
@@ -41,14 +43,44 @@ botonRecargar.addEventListener("click", cargarCupones);
 tabTienda.addEventListener("click", () => cambiarCategoria("tienda"));
 tabBancarios.addEventListener("click", () => cambiarCategoria("bancarios"));
 
-document.querySelectorAll(".menu-ofertas a").forEach((enlace) => {
-  enlace.addEventListener("click", (event) => {
-    const destino = document.querySelector(enlace.getAttribute("href"));
-    if (!destino || destino.hidden) return;
-    event.preventDefault();
-    destino.scrollIntoView({ behavior: "smooth", block: "start" });
-  });
+botonesMenuOfertas.forEach((boton) => {
+  boton.addEventListener("click", () => cambiarVista(boton.dataset.vista));
 });
+
+function cambiarVista(vista) {
+  vistaActiva = vista;
+
+  const vistas = [
+    [vistaCupones, "cupones"],
+    [seccionComunidadAnirona, "comunidad_anirona"],
+    [seccionOfertasAmazon, "ofertas_amazon"],
+  ];
+
+  vistas.forEach(([seccion, nombre]) => {
+    if (!seccion) return;
+    const activa = nombre === vista;
+    seccion.hidden = !activa;
+    seccion.classList.toggle("vista-activa", activa);
+    seccion.classList.toggle("vista-oculta", !activa);
+  });
+
+  const mostrarCupones = vista === "cupones";
+
+  botonesMenuOfertas.forEach((boton) => {
+    const activo = boton.dataset.vista === vista;
+    boton.classList.toggle("activo", activo);
+    boton.setAttribute("aria-pressed", String(activo));
+  });
+
+  const tiendaActiva = mostrarCupones && categoriaActiva === "tienda";
+  const bancariosActivos = mostrarCupones && categoriaActiva === "bancarios";
+  tabTienda.classList.toggle("activo", tiendaActiva);
+  tabBancarios.classList.toggle("activo", bancariosActivos);
+  tabTienda.setAttribute("aria-pressed", String(tiendaActiva));
+  tabBancarios.setAttribute("aria-pressed", String(bancariosActivos));
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
 function escaparHtml(valor = "") {
   return String(valor)
@@ -405,6 +437,7 @@ function normalizarCategoria(cupon) {
 
 function cambiarCategoria(categoria) {
   categoriaActiva = categoria;
+  cambiarVista("cupones");
 
   const esTienda = categoria === "tienda";
 
@@ -887,14 +920,20 @@ function renderizarModuloOfertas(categoria, contenedor, seccion) {
 
   contenedor.replaceChildren();
   if (!items.length) {
-    seccion.hidden = true;
+    const mensaje = document.createElement("div");
+    mensaje.className = "sin-ofertas-categoria";
+    mensaje.innerHTML = `
+      <div aria-hidden="true">🛍️</div>
+      <h3>No hay ofertas disponibles</h3>
+      <p>Pronto agregaremos nuevos productos en esta sección.</p>
+    `;
+    contenedor.appendChild(mensaje);
     return;
   }
 
   items.forEach((item) => {
     contenedor.appendChild(crearTarjetaOferta(item, categoria));
   });
-  seccion.hidden = false;
 }
 
 async function cargarPublicidad() {
@@ -919,6 +958,8 @@ async function cargarPublicidad() {
       seccionOfertasAmazon
     );
 
+    cambiarVista(vistaActiva);
+
     for (const control of carruselesPublicidad) {
       control.items = todasLasPublicidades.filter((item) =>
         (item.categoria || "ofertas_dia") === control.categoria
@@ -942,8 +983,7 @@ async function cargarPublicidad() {
       control.wrapper.hidden = true;
       detenerRotacionPublicidad(control);
     });
-    seccionComunidadAnirona.hidden = true;
-    seccionOfertasAmazon.hidden = true;
+    cambiarVista(vistaActiva);
   }
 }
 
@@ -1138,5 +1178,6 @@ document.addEventListener("visibilitychange", () => {
 });
 
 inicializarCarruselesPublicidad();
+cambiarVista("cupones");
 cargarCupones();
 cargarPublicidad();

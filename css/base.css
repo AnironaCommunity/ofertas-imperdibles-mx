@@ -1113,3 +1113,14 @@ footer {
 .sin-ofertas-categoria div { font-size: 30px; }
 .sin-ofertas-categoria h3 { margin: 8px 0 4px; color: #25342c; font-size: 16px; }
 .sin-ofertas-categoria p { margin: 0; color: #6b7770; font-size: 13px; }
+
+
+/* V61.3 — control robusto de vistas principales */
+[hidden] { display: none !important; }
+.vista-principal.vista-oculta { display: none !important; }
+.vista-principal.vista-activa { display: block; }
+#vista-cupones.vista-activa,
+#seccion-comunidad-anirona.vista-activa,
+#seccion-ofertas-amazon.vista-activa {
+  margin-top: 0;
+}

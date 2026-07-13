@@ -11,7 +11,7 @@
   <title>Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="img/logo.png" />
-  <link rel="stylesheet" href="css/style.css?v=61.1" />
+  <link rel="stylesheet" href="css/style.css?v=61.3" />
 </head>
 
 <body>
@@ -56,12 +56,13 @@
     </div>
 
     <nav class="menu-ofertas" aria-label="Secciones de ofertas">
-      <a href="#seccion-comunidad-anirona">🛠️ Comunidad Anirona</a>
-      <a href="#seccion-ofertas-amazon">📦 Ofertas Amazon</a>
+      <button type="button" data-vista="comunidad_anirona" aria-pressed="false">🛠️ Comunidad Anirona</button>
+      <button type="button" data-vista="ofertas_amazon" aria-pressed="false">📦 Ofertas Amazon</button>
     </nav>
   </header>
 
   <main class="contenedor">
+    <section id="vista-cupones" class="vista-principal vista-activa">
     <div class="instruccion-cupones">
       <span class="icono-informativo" aria-hidden="true">ℹ️</span>
       <p>
@@ -191,10 +192,11 @@
         </button>
       </div>
     </section>
+    </section>
 
     <section
       id="seccion-comunidad-anirona"
-      class="modulo-ofertas-categoria"
+      class="modulo-ofertas-categoria vista-principal vista-oculta"
       aria-label="Ofertas de Comunidad Anirona"
       hidden
     >
@@ -210,7 +212,7 @@
 
     <section
       id="seccion-ofertas-amazon"
-      class="modulo-ofertas-categoria"
+      class="modulo-ofertas-categoria vista-principal vista-oculta"
       aria-label="Ofertas Amazon"
       hidden
     >
@@ -282,6 +284,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/app.js?v=61.1"></script>
+  <script type="module" src="js/app.js?v=61.3"></script>
 </body>
 </html>

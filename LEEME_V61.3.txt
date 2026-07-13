@@ -1,0 +1,11 @@
+ACTUALIZACIÓN V61.3 — CORRECCIÓN DE CAMBIO DE VISTAS
+
+Reemplaza únicamente:
+- index.html
+- js/app.js
+- css/style.css
+- css/base.css
+
+No requiere SQL.
+
+La corrección impide que Comunidad Anirona y Ofertas Amazon permanezcan visibles al final. Solo una vista puede mostrarse a la vez, igual que Tienda y Bancarios.
