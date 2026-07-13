@@ -1,0 +1,10 @@
+ELIMINA ESTOS DOS ARCHIVOS DEL REPOSITORIO:
+
+api/admin-producto-mercadolibre.js
+api/actualizar-precios.js
+
+Sus funciones ahora están integradas dentro de:
+api/admin-publicidad.js
+
+Es indispensable eliminarlos; si solo reemplazas archivos y no borras esos dos,
+Vercel seguirá contándolos como funciones Serverless separadas.

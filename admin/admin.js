@@ -783,7 +783,7 @@ async function consultMercadoLibreProduct() {
   setMessage(consultProductMessage, "Consultando publicación y cupones activos...");
 
   try {
-    const data = await api("/api/admin-producto-mercadolibre", {
+    const data = await api("/api/admin-publicidad?action=consultar-producto", {
       method: "POST",
       body: JSON.stringify({ enlace: link }),
     });
@@ -830,7 +830,7 @@ async function updateAutomaticPrices() {
   setMessage(adListMessage, "Actualizando productos marcados como automáticos...");
 
   try {
-    const result = await api("/api/actualizar-precios", {
+    const result = await api("/api/admin-publicidad?action=actualizar-precios", {
       method: "POST",
       body: JSON.stringify({}),
     });
