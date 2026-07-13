@@ -11,7 +11,7 @@
   <title>Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="img/logo.png" />
-  <link rel="stylesheet" href="css/style.css?v=61.3" />
+  <link rel="stylesheet" href="css/style.css?v=61.4" />
 </head>
 
 <body>
@@ -56,8 +56,15 @@
     </div>
 
     <nav class="menu-ofertas" aria-label="Secciones de ofertas">
-      <button type="button" data-vista="comunidad_anirona" aria-pressed="false">🛠️ Comunidad Anirona</button>
-      <button type="button" data-vista="ofertas_amazon" aria-pressed="false">📦 Ofertas Amazon</button>
+      <button type="button" data-vista="ofertas_amazon" aria-pressed="false">
+        <span aria-hidden="true">📦</span> Ofertas Amazon
+      </button>
+      <button type="button" data-vista="ofertas_mercado_libre" aria-pressed="false">
+        <span aria-hidden="true">🛒</span> Ofertas Mercado Libre
+      </button>
+      <button type="button" data-vista="comunidad_anirona" aria-pressed="false">
+        <span aria-hidden="true">🛠️</span> Anirona Community
+      </button>
     </nav>
   </header>
 
@@ -104,6 +111,56 @@
       <strong>¡Vuelve pronto!</strong>
     </section>
 
+
+    </section>
+
+    <section
+      id="seccion-ofertas-mercado-libre"
+      class="modulo-ofertas-categoria vista-principal vista-oculta"
+      aria-label="Ofertas Mercado Libre"
+      hidden
+    >
+      <div class="titulo-fila titulo-con-separador">
+        <h2 class="titulo-seccion">🛒 Ofertas Mercado Libre</h2>
+      </div>
+      <div
+        id="ofertas-mercado-libre"
+        class="ofertas-grid-compacta"
+        aria-label="Productos en oferta de Mercado Libre"
+      ></div>
+    </section>
+
+    <section
+      id="seccion-comunidad-anirona"
+      class="modulo-ofertas-categoria vista-principal vista-oculta"
+      aria-label="Ofertas de Anirona Community"
+      hidden
+    >
+      <div class="titulo-fila titulo-con-separador">
+        <h2 class="titulo-seccion">🛠️ Anirona Community</h2>
+      </div>
+      <div
+        id="ofertas-comunidad-anirona"
+        class="ofertas-grid-compacta"
+        aria-label="Productos de Anirona Community"
+      ></div>
+    </section>
+
+    <section
+      id="seccion-ofertas-amazon"
+      class="modulo-ofertas-categoria vista-principal vista-oculta"
+      aria-label="Ofertas Amazon"
+      hidden
+    >
+      <div class="titulo-fila titulo-con-separador">
+        <h2 class="titulo-seccion">📦 Ofertas Amazon</h2>
+      </div>
+      <div
+        id="ofertas-amazon"
+        class="ofertas-grid-compacta"
+        aria-label="Productos en oferta de Amazon"
+      ></div>
+    </section>
 <!-- Publicidad rotativa administrable -->
     <section
       id="publicidad-wrapper"
@@ -192,39 +249,6 @@
         </button>
       </div>
     </section>
-    </section>
-
-    <section
-      id="seccion-comunidad-anirona"
-      class="modulo-ofertas-categoria vista-principal vista-oculta"
-      aria-label="Ofertas de Comunidad Anirona"
-      hidden
-    >
-      <div class="titulo-fila titulo-con-separador">
-        <h2 class="titulo-seccion">🛠️ Comunidad Anirona</h2>
-      </div>
-      <div
-        id="ofertas-comunidad-anirona"
-        class="ofertas-grid-compacta"
-        aria-label="Productos de Comunidad Anirona"
-      ></div>
-    </section>
-
-    <section
-      id="seccion-ofertas-amazon"
-      class="modulo-ofertas-categoria vista-principal vista-oculta"
-      aria-label="Ofertas Amazon"
-      hidden
-    >
-      <div class="titulo-fila titulo-con-separador">
-        <h2 class="titulo-seccion">📦 Ofertas Amazon</h2>
-      </div>
-      <div
-        id="ofertas-amazon"
-        class="ofertas-grid-compacta"
-        aria-label="Productos en oferta de Amazon"
-      ></div>
-    </section>
   </main>
 
   <footer></footer>
@@ -284,6 +308,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/app.js?v=61.3"></script>
+  <script type="module" src="js/app.js?v=61.4"></script>
 </body>
 </html>

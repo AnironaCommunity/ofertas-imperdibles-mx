@@ -20,8 +20,10 @@ const botonesMenuOfertas = document.querySelectorAll(".menu-ofertas [data-vista]
 const carruselesPublicidad = [];
 const seccionComunidadAnirona = document.querySelector("#seccion-comunidad-anirona");
 const seccionOfertasAmazon = document.querySelector("#seccion-ofertas-amazon");
+const seccionOfertasMercadoLibre = document.querySelector("#seccion-ofertas-mercado-libre");
 const ofertasComunidadAnirona = document.querySelector("#ofertas-comunidad-anirona");
 const ofertasAmazon = document.querySelector("#ofertas-amazon");
+const ofertasMercadoLibre = document.querySelector("#ofertas-mercado-libre");
 
 const SEGUNDOS_ACTUALIZACION = 60;
 const SEGUNDOS_REDIRECCION = 3;
@@ -52,8 +54,9 @@ function cambiarVista(vista) {
 
   const vistas = [
     [vistaCupones, "cupones"],
-    [seccionComunidadAnirona, "comunidad_anirona"],
     [seccionOfertasAmazon, "ofertas_amazon"],
+    [seccionOfertasMercadoLibre, "ofertas_mercado_libre"],
+    [seccionComunidadAnirona, "comunidad_anirona"],
   ];
 
   vistas.forEach(([seccion, nombre]) => {
@@ -79,6 +82,7 @@ function cambiarVista(vista) {
   tabTienda.setAttribute("aria-pressed", String(tiendaActiva));
   tabBancarios.setAttribute("aria-pressed", String(bancariosActivos));
 
+  registrarVisitasSeccion(vista);
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -859,6 +863,7 @@ function inicializarCarruselesPublicidad() {
 function crearTarjetaOferta(publicidad, categoria) {
   const articulo = document.createElement("article");
   articulo.className = "tarjeta-oferta";
+  articulo.dataset.publicidadId = String(publicidad.id || "");
 
   const esAmazon = categoria === "ofertas_amazon";
   const precioPublicado = String(publicidad.precio_publicado || "").trim();
@@ -885,6 +890,10 @@ function crearTarjetaOferta(publicidad, categoria) {
       </div>
 
       ${codigo ? `<p class="oferta-cupon">🎟️ Cupón: <strong>${escaparHtml(codigo)}</strong></p>` : ""}
+
+      <div class="oferta-meta">
+        <span class="oferta-visitas" data-visitas-id="${Number(publicidad.id) || 0}">👁️ ${Number(publicidad.visitas) || 0} visitas</span>
+      </div>
 
       <div class="oferta-acciones">
         <button class="oferta-ver" type="button">
@@ -936,6 +945,47 @@ function renderizarModuloOfertas(categoria, contenedor, seccion) {
   });
 }
 
+function claveVisitaPublicidad(id) {
+  return `visita-publicidad-${id}`;
+}
+
+function actualizarVisitasEnPantalla(id, visitas) {
+  document.querySelectorAll(`[data-visitas-id="${id}"]`).forEach((elemento) => {
+    elemento.textContent = `👁️ ${Number(visitas) || 0} visitas`;
+  });
+}
+
+async function registrarVisitaPublicidad(publicidad) {
+  const id = Number(publicidad?.id);
+  if (!Number.isInteger(id) || id <= 0) return;
+  const clave = claveVisitaPublicidad(id);
+  if (sessionStorage.getItem(clave)) return;
+  sessionStorage.setItem(clave, "1");
+
+  try {
+    const respuesta = await fetch("/api/publicidad-visita", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+      keepalive: true,
+    });
+    if (!respuesta.ok) throw new Error("No fue posible registrar la visita.");
+    const datos = await respuesta.json();
+    publicidad.visitas = Number(datos.visitas) || 0;
+    actualizarVisitasEnPantalla(id, publicidad.visitas);
+  } catch (error) {
+    sessionStorage.removeItem(clave);
+    console.warn("No fue posible registrar la visita del producto.", error);
+  }
+}
+
+function registrarVisitasSeccion(vista) {
+  if (!todasLasPublicidades.length || vista === "cupones") return;
+  todasLasPublicidades
+    .filter((item) => (item.categoria || "ofertas_dia") === vista)
+    .forEach(registrarVisitaPublicidad);
+}
+
 async function cargarPublicidad() {
   try {
     const respuesta = await fetch("/api/publicidad", {
@@ -956,6 +1006,11 @@ async function cargarPublicidad() {
       "ofertas_amazon",
       ofertasAmazon,
       seccionOfertasAmazon
+    );
+    renderizarModuloOfertas(
+      "ofertas_mercado_libre",
+      ofertasMercadoLibre,
+      seccionOfertasMercadoLibre
     );
 
     cambiarVista(vistaActiva);

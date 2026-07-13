@@ -110,31 +110,50 @@
   display: flex;
   justify-content: center;
   gap: 8px;
-  width: min(720px, calc(100% - 24px));
-  margin: 9px auto 0;
+  width: min(860px, calc(100% - 24px));
+  margin: 10px auto 0;
+  padding: 2px;
   overflow-x: auto;
   scrollbar-width: none;
 }
 .menu-ofertas::-webkit-scrollbar { display: none; }
-.menu-ofertas a {
+.menu-ofertas button {
   flex: 0 0 auto;
-  padding: 9px 13px;
-  border: 1px solid #d7e5de;
-  border-radius: 999px;
-  color: #315044;
-  background: #fff;
-  box-shadow: 0 3px 10px rgba(24, 60, 43, 0.06);
-  font-size: 13px;
-  font-weight: 800;
-  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 8px 13px;
+  border: 1px solid rgba(33, 78, 61, .12);
+  border-radius: 12px;
+  color: #355047;
+  background: rgba(255, 255, 255, .84);
+  box-shadow: 0 4px 16px rgba(28, 61, 47, .055);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 400;
+  letter-spacing: .01em;
   white-space: nowrap;
+  cursor: pointer;
+  transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
 }
-.menu-ofertas a:hover, .menu-ofertas a:focus-visible {
-  color: #fff;
-  background: linear-gradient(135deg, #08786f, #0f9f92);
+.menu-ofertas button:hover,
+.menu-ofertas button:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(15, 137, 111, .32);
+  background: #fff;
+  box-shadow: 0 7px 20px rgba(28, 61, 47, .09);
   outline: none;
 }
-@media (max-width: 430px) {
-  .menu-ofertas { justify-content: flex-start; padding: 0 2px 3px; }
-  .menu-ofertas a { padding: 8px 11px; font-size: 12px; }
+.menu-ofertas button.activo {
+  color: #0d6655;
+  border-color: rgba(15, 137, 111, .26);
+  background: linear-gradient(180deg, #f7fffc 0%, #ebf8f3 100%);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.8), 0 5px 16px rgba(15, 137, 111, .09);
 }
+.menu-ofertas button span { font-size: 14px; }
+@media (max-width: 600px) {
+  .menu-ofertas { justify-content: flex-start; padding: 2px 12px 4px; width: 100%; }
+  .menu-ofertas button { min-height: 34px; padding: 7px 11px; font-size: 11.5px; }
+}
+

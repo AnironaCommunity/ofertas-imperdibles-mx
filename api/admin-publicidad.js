@@ -49,7 +49,7 @@ export default async function handler(request, response) {
   try {
     if (request.method === "GET") {
       const data = await requestSupabase(
-        "publicidades?select=id,titulo,descripcion,imagen_url,enlace,precio_publicado,precio_cupon,codigo_cupon,categoria,activo,orden,clics,fecha_creacion&order=orden.asc,id.asc"
+        "publicidades?select=id,titulo,descripcion,imagen_url,enlace,precio_publicado,precio_cupon,codigo_cupon,categoria,activo,orden,clics,visitas,fecha_creacion&order=orden.asc,id.asc"
       );
 
       return response.status(200).json(data);
@@ -64,12 +64,13 @@ export default async function handler(request, response) {
         precio_publicado: String(request.body?.precio_publicado || "").trim(),
         precio_cupon: String(request.body?.precio_cupon || "").trim(),
         codigo_cupon: String(request.body?.codigo_cupon || "").trim(),
-        categoria: ["ofertas_dia", "comunidad_anirona", "ofertas_amazon"].includes(request.body?.categoria)
+        categoria: ["ofertas_dia", "ofertas_amazon", "ofertas_mercado_libre", "comunidad_anirona"].includes(request.body?.categoria)
           ? request.body.categoria
           : "ofertas_dia",
         activo: request.body?.activo !== false,
         orden: Math.max(0, Number(request.body?.orden) || 0),
         clics: 0,
+        visitas: 0,
       };
 
       if (!payload.titulo || !payload.imagen_url || !payload.enlace) {
@@ -117,7 +118,7 @@ export default async function handler(request, response) {
         if (field === "activo") {
           payload[field] = Boolean(request.body[field]);
         } else if (field === "categoria") {
-          payload[field] = ["ofertas_dia", "comunidad_anirona", "ofertas_amazon"].includes(request.body[field])
+          payload[field] = ["ofertas_dia", "ofertas_amazon", "ofertas_mercado_libre", "comunidad_anirona"].includes(request.body[field])
             ? request.body[field]
             : "ofertas_dia";
         } else if (field === "orden") {

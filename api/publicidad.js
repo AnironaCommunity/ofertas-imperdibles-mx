@@ -17,7 +17,7 @@ export default async function handler(request, response) {
 
     endpoint.searchParams.set(
       "select",
-      "id,titulo,descripcion,imagen_url,enlace,precio_publicado,precio_cupon,codigo_cupon,categoria,orden,clics"
+      "id,titulo,descripcion,imagen_url,enlace,precio_publicado,precio_cupon,codigo_cupon,categoria,orden,clics,visitas"
     );
     endpoint.searchParams.set("activo", "eq.true");
     endpoint.searchParams.set("order", "orden.asc,id.asc");

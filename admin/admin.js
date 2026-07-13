@@ -640,7 +640,7 @@ function renderAds() {
         </div>
 
         <small>
-          Sección: ${escapeHtml(({ofertas_dia: "Ofertas del día", comunidad_anirona: "Comunidad Anirona", ofertas_amazon: "Ofertas Amazon"})[ad.categoria || "ofertas_dia"])} ·
+          Sección: ${escapeHtml(({ofertas_dia: "Ofertas del día", ofertas_amazon: "Ofertas Amazon", ofertas_mercado_libre: "Ofertas Mercado Libre", comunidad_anirona: "Anirona Community"})[ad.categoria || "ofertas_dia"])} ·
           Orden: ${Number(ad.orden || 0)} ·
           Clics: ${Number(ad.clics || 0)} ·
           ${ad.activo ? "Activa" : "Inactiva"}
