@@ -1720,3 +1720,81 @@ footer {
     font-size: 19px !important;
   }
 }
+
+
+/* =========================================================
+   V43 — Botones Copiar y Canjear alineados
+   ========================================================= */
+
+/*
+  La tarjeta se divide en:
+  - contenido variable en la parte superior
+  - acciones fijas en la parte inferior
+*/
+.cupon {
+  height: 100%;
+}
+
+.cupon-contenido {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100%;
+}
+
+/* Zona variable: etiquetas, descuento, mínimo y estado usado */
+.cupon-etiquetas,
+.descuento-maximo,
+.compra-minima,
+.cupon-usado {
+  flex: 0 0 auto;
+}
+
+/*
+  Este bloque baja automáticamente hasta el fondo.
+  Así el botón queda alineado en todas las tarjetas.
+*/
+.acciones-bloque {
+  margin-top: auto !important;
+  padding-top: 8px;
+}
+
+/*
+  Mantiene una altura mínima equilibrada para la parte variable.
+  Evita que Popular o Ya usaste este cupón cambien la posición del botón.
+*/
+.cupon-contenido::before {
+  content: "";
+  display: block;
+  order: -1;
+  height: 0;
+}
+
+/* Alineación por fila en la cuadrícula */
+.cupones-grid-compacta {
+  align-items: stretch;
+}
+
+.cupones-grid-compacta > .cupon {
+  align-self: stretch;
+}
+
+/* Móvil: conservar alineación sin agrandar demasiado */
+@media (max-width: 680px) {
+  .acciones-bloque {
+    padding-top: 6px;
+  }
+
+  .cupon {
+    height: 100%;
+  }
+
+  .cupon-contenido {
+    min-height: 210px;
+  }
+}
+
+@media (max-width: 390px) {
+  .cupon-contenido {
+    min-height: 202px;
+  }
+}
