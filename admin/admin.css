@@ -454,3 +454,68 @@ th {
 .programacion-detalle strong {
   color: #24372f;
 }
+
+
+/* V61.6 — selección múltiple de secciones */
+.grupo-secciones {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #dce7e2;
+  border-radius: 12px;
+  background: #fbfdfc;
+}
+
+.grupo-secciones legend {
+  padding: 0 6px;
+  color: #243f35;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ayuda-secciones {
+  margin: 0 0 10px;
+  color: #6a7b74;
+  font-size: 12px;
+}
+
+.opciones-secciones {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.opciones-secciones label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 9px 11px;
+  border: 1px solid #dce7e2;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color .16s ease, background .16s ease, transform .16s ease;
+}
+
+.opciones-secciones label:hover {
+  border-color: #8fc8b4;
+  background: #f3fbf7;
+  transform: translateY(-1px);
+}
+
+.opciones-secciones input {
+  width: 17px;
+  height: 17px;
+  accent-color: #168565;
+}
+
+.opciones-secciones span {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+@media (max-width: 620px) {
+  .opciones-secciones {
+    grid-template-columns: 1fr;
+  }
+}
