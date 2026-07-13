@@ -141,7 +141,7 @@ function crearTarjeta(cupon, esPopular = false, indice = 0) {
   articulo.innerHTML = `
     <div class="cupon-encabezado">
       <h2 class="descuento">${escaparHtml(cupon.titulo)}</h2>
-      <p class="subtitulo">off</p>
+      
     </div>
 
     <div class="cupon-contenido">
@@ -301,8 +301,9 @@ function reiniciarContadorActualizacion() {
 }
 
 function actualizarTextoContador() {
-  contadorActualizacion.textContent =
-    `Actualización automática en ${segundosRestantes} s`;
+  if (contadorActualizacion) {
+    contadorActualizacion.textContent = "";
+  }
 }
 
 async function cargarCupones() {
@@ -678,66 +679,26 @@ function detenerRotacionPublicidad() {
 }
 
 async function abrirPublicidad(publicidad) {
-  if (redireccionEnProceso) return;
+  const enlace = String(publicidad.enlace || "").trim();
 
-  redireccionEnProceso = true;
-  detenerRotacionPublicidad();
+  if (!enlace) return;
 
   const codigo = String(publicidad.codigo_cupon || "").trim();
   const precioCupon = String(publicidad.precio_cupon || "").trim();
-  const enlace = String(publicidad.enlace || "").trim();
-
-  if (!enlace) {
-    redireccionEnProceso = false;
-    return;
-  }
+  const debeCopiarCupon = Boolean(codigo && precioCupon);
 
   try {
-    /*
-      Solo copiamos cupón cuando también existe Precio con cupón.
-      Así los productos sin cupón se abren de forma normal.
-    */
-    const debeCopiarCupon = Boolean(codigo && precioCupon);
-
     if (debeCopiarCupon) {
       await copiarTexto(codigo);
     }
 
     registrarClicPublicidad(publicidad.id);
 
-    modalRedireccion.querySelector("#modal-titulo").textContent =
-      debeCopiarCupon ? "¡Cupón copiado!" : "Abriendo Mercado Libre";
-
-    modalCuponOculto.textContent = debeCopiarCupon
-      ? "El cupón se copió automáticamente."
-      : "Serás redireccionado a Mercado Libre.";
-
-    mostrarModal("", false);
-
-    let segundos = SEGUNDOS_REDIRECCION;
-
-    const avanzar = () => {
-      modalContador.textContent = String(segundos);
-      cronometroNumero.textContent = String(segundos);
-
-      if (segundos === 0) {
-        cerrarModal();
-        redireccionEnProceso = false;
-        timeoutRedireccion = null;
-        window.location.assign(enlace);
-        return;
-      }
-
-      segundos -= 1;
-      timeoutRedireccion = window.setTimeout(avanzar, 1000);
-    };
-
-    avanzar();
+    // La publicidad abre directamente, sin ventana emergente.
+    window.location.assign(enlace);
   } catch (error) {
-    console.error("No fue posible abrir la publicidad.", error);
-    cerrarModal();
-    redireccionEnProceso = false;
-    iniciarRotacionPublicidad();
+    console.warn("No fue posible preparar la publicidad.", error);
+    window.location.assign(enlace);
   }
 }
 

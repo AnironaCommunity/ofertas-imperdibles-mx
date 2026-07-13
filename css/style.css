@@ -1299,3 +1299,260 @@ footer {
     min-height: 315px;
   }
 }
+
+
+/* V41 */
+.encabezado {
+  padding: 6px 14px 12px;
+}
+
+.logo {
+  width: min(270px, 72vw);
+  margin: 0 auto 5px;
+  transform: translateY(-2px);
+}
+
+.encabezado > p {
+  margin-top: 5px;
+  font-size: 12px;
+}
+
+.barra-redes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin: 0 auto 4px;
+}
+
+.red-social {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.red-whatsapp {
+  color: #176a39;
+  border: 1px solid rgba(37, 211, 102, 0.24);
+  background: #f1fff6;
+}
+
+.red-facebook {
+  color: #1b5cb6;
+  border: 1px solid rgba(24, 119, 242, 0.22);
+  background: #f2f7ff;
+}
+
+.red-icono {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+}
+
+.red-whatsapp .red-icono {
+  color: white;
+  background: #25d366;
+}
+
+.red-facebook .red-icono {
+  color: white;
+  background: #1877f2;
+}
+
+.red-icono svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+}
+
+.icono-informativo {
+  flex: 0 0 auto;
+  font-size: 18px;
+}
+
+.titulo-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row !important;
+  gap: 10px;
+}
+
+.actualizacion {
+  margin-left: auto;
+}
+
+#contador-actualizacion {
+  display: none !important;
+}
+
+.boton-recargar {
+  padding: 7px 10px;
+  white-space: nowrap;
+}
+
+.cupon-encabezado {
+  min-height: 76px;
+  padding: 15px 16px 12px;
+}
+
+.subtitulo {
+  display: none !important;
+}
+
+.cupon-etiquetas {
+  min-height: 0;
+}
+
+.cupon-etiquetas:empty {
+  display: none;
+}
+
+.cupon-contenido {
+  padding-top: 12px;
+}
+
+.publicidad-cabecera > span {
+  color: #52665e;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.9px;
+}
+
+@media (max-width: 680px) {
+  .cupones-grid-compacta {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px;
+  }
+
+  .cupon {
+    min-height: 286px;
+    border-radius: 15px;
+  }
+
+  .cupon-encabezado {
+    min-height: 66px;
+    padding: 13px 11px 10px;
+  }
+
+  .descuento {
+    font-size: clamp(22px, 7vw, 30px);
+  }
+
+  .cupon-contenido {
+    gap: 7px;
+    padding: 10px 9px 9px;
+  }
+
+  .cupon-etiquetas {
+    min-height: 0;
+  }
+
+  .etiqueta-popular-integrada {
+    padding: 4px 7px;
+    font-size: 10px;
+  }
+
+  .descuento-maximo {
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  .compra-minima {
+    padding: 5px 7px;
+    font-size: 10px;
+  }
+
+  .cupon-usado {
+    padding: 7px;
+    font-size: 10px;
+  }
+
+  .boton-canjear {
+    padding: 10px 6px;
+    border-radius: 12px;
+    font-size: 11px;
+  }
+
+  .boton-like,
+  .boton-compartir {
+    min-width: 31px;
+    min-height: 31px;
+    padding: 5px 6px;
+  }
+
+  .boton-like svg,
+  .boton-compartir svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .estadisticas-cupon {
+    gap: 4px;
+    font-size: 9px;
+  }
+
+  .estadistica-item svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .titulo-seccion {
+    font-size: 19px;
+  }
+
+  .boton-recargar {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+
+  .instruccion-cupones {
+    padding: 9px 10px;
+    font-size: 11px;
+  }
+
+  .red-social {
+    min-height: 31px;
+    padding: 5px 9px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 390px) {
+  .cupones-grid-compacta {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 7px;
+  }
+
+  .cupon {
+    min-height: 278px;
+  }
+
+  .descuento {
+    font-size: 22px;
+  }
+
+  .descuento-maximo {
+    font-size: 11px;
+  }
+
+  .compra-minima {
+    font-size: 9px;
+  }
+
+  .boton-canjear {
+    font-size: 10px;
+  }
+
+  .estadisticas-cupon {
+    font-size: 8px;
+  }
+}
