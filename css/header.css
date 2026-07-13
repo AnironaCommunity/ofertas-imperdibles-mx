@@ -3,6 +3,10 @@
   position: relative;
   overflow: hidden;
   padding: 7px 14px 12px;
+  background:
+    radial-gradient(circle at 20% 12%, rgba(27, 162, 107, 0.11), transparent 32%),
+    radial-gradient(circle at 78% 8%, rgba(37, 99, 235, 0.08), transparent 30%),
+    linear-gradient(135deg, #fbfffc 0%, #f6fbf8 52%, #fbfdff 100%);
 }
 
 
@@ -150,21 +154,22 @@
 }
 
 
-/* V60.2 Restaurar cabecera limpia */
-.encabezado{
-  background:#fff !important;
+/* V60.3 — Cabecera blanca y compacta */
+.encabezado {
+  background: #ffffff !important;
 }
+
 .encabezado::before,
-.encabezado::after{
-  content:none !important;
-  display:none !important;
+.encabezado::after {
+  content: none !important;
+  display: none !important;
 }
-.logo{
-  margin-bottom:0 !important;
+
+/* Evita el espacio que dejó el subtítulo eliminado */
+.logo {
+  margin-bottom: 2px !important;
 }
-.encabezado > p:first-of-type{
-  display:none !important;
-}
-.barra-redes-lineal{
-  margin-top:2px !important;
+
+.barra-redes-lineal {
+  margin-top: 0 !important;
 }

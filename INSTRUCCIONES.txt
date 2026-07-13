@@ -1,59 +1,41 @@
-OFERTAS IMPERDIBLES MX — V60 ESTABILIZADA
+OFERTAS IMPERDIBLES MX — V60.3 CORREGIDA
 
-OBJETIVO
+Esta versión parte directamente de la V60 estabilizada.
 
-Esta versión no cambia intencionalmente el diseño.
-Reorganiza internamente el proyecto para que sea más seguro continuar
-agregando funciones sin perder cambios anteriores.
+CAMBIOS APLICADOS
 
-PASO 1 — GITHUB
+1. Fondo blanco detrás del logo.
+2. Se elimina:
+   “Cupones y descuentos de Mercado Libre en un solo lugar”.
+3. El aviso queda así:
+   “Al presionar Copiar y Canjear” en negritas,
+   seguido de:
+   “el código se copiará automáticamente y se abrirá Mercado Libre.”
+4. Se elimina el espacio vacío debajo del logo.
 
-Sube el contenido completo del ZIP.
+SE CONSERVA
 
-Reemplaza:
+- OFERTAS DEL DÍA.
+- Descripción de cada publicidad.
+- Precios de publicidad.
+- Publicidad rotativa.
+- Tarjetas de cupones.
+- Popular.
+- Me gusta.
+- Programación automática.
+- Contador de vencimiento.
+- Tienda y Bancarios.
+- Contadores superiores.
+- Administrador completo.
+
+ARCHIVOS A REEMPLAZAR
 
 index.html
-css/style.css
-js/app.js
-admin/index.html
-admin/admin.css
-admin/admin.js
-
-Agrega estos nuevos archivos:
-
-css/base.css
-css/coupons.css
-css/schedule.css
 css/header.css
-README.md
 
-Mantén también todos los archivos incluidos en:
+También puedes subir el paquete completo si prefieres asegurar que todo
+corresponda a la misma versión.
 
-api/
-sql/
+PRUEBA
 
-No reemplaces manualmente img/logo.png si ya tienes tu logo correcto.
-
-PASO 2 — COMMIT
-
-Haz Commit changes y espera a que Vercel indique Ready.
-
-PASO 3 — PRUEBA
-
-Página pública:
-
-https://ofertasimperdiblesmx.vercel.app/?v=60
-
-Administrador:
-
-https://ofertasimperdiblesmx.vercel.app/admin/?v=60
-
-IMPORTANTE
-
-Los cuatro archivos CSS deben estar presentes. style.css los carga en este
-orden:
-
-base.css
-coupons.css
-schedule.css
-header.css
+https://ofertasimperdiblesmx.vercel.app/?v=60.3
