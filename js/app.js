@@ -888,7 +888,7 @@ function crearTarjetaOferta(publicidad, categoria) {
         ${precioCupon ? `<div class="precio-destacado"><span>Precio con cupón</span><strong>${escaparHtml(precioCupon)}</strong></div>` : ""}
       </div>
 
-      ${codigo ? `<p class="oferta-cupon">🎟️ Cupón: <strong>${escaparHtml(codigo)}</strong></p>` : ""}
+      ${codigo ? `<p class="oferta-cupon">ℹ️ Al dar clic en <strong>${esAmazon ? "Ver en Amazon" : "Ver en Mercado Libre"}</strong>, el cupón se copiará automáticamente.</p>` : ""}
 
       <div class="oferta-meta">
         <span class="oferta-visitas" data-visitas-id="${Number(publicidad.id) || 0}">👁️ ${Number(publicidad.visitas) || 0} visitas</span>
@@ -1102,15 +1102,16 @@ function mostrarPublicidad(control) {
   control.enlace.textContent = esAmazon ? "📦 Ver en Amazon" : "🛒 Ver en Mercado Libre";
   if (control.avisoCupon) {
     control.avisoCupon.innerHTML = esAmazon
-      ? '📋 Al dar clic en <strong>Ver en Amazon</strong>, el cupón se copiará automáticamente.'
-      : '📋 Al dar clic en <strong>Ver en Mercado Libre</strong>, el cupón se copiará automáticamente.';
+      ? 'ℹ️ Al dar clic en <strong>Ver en Amazon</strong>, el cupón se copiará automáticamente.'
+      : 'ℹ️ Al dar clic en <strong>Ver en Mercado Libre</strong>, el cupón se copiará automáticamente.';
   }
 
   const precioPublicado = String(publicidad.precio_publicado || "").trim();
   const precioCupon = String(publicidad.precio_cupon || "").trim();
+  const codigo = String(publicidad.codigo_cupon || "").trim();
   control.bloquePublicado.hidden = !precioPublicado;
   control.bloqueCupon.hidden = !precioCupon;
-  control.avisoCupon.hidden = !precioCupon;
+  control.avisoCupon.hidden = !codigo;
   const precios = control.wrapper.querySelector(".publicidad-precios");
   precios.classList.toggle("con-precio-cupon", Boolean(precioCupon));
   precios.classList.toggle("sin-precio-cupon", !precioCupon);
@@ -1198,7 +1199,7 @@ async function abrirPublicidad(publicidad) {
   const codigo = String(publicidad.codigo_cupon || "").trim();
   const precioCupon = String(publicidad.precio_cupon || "").trim();
   try {
-    if (precioCupon && codigo) await copiarTexto(codigo);
+    if (codigo) await copiarTexto(codigo);
     registrarVisitaPublicidad(publicidad);
     registrarClicPublicidad(publicidad.id);
     window.location.assign(enlace);
