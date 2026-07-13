@@ -23,7 +23,7 @@ export default async function handler(request, response) {
 
     endpoint.searchParams.set(
       "select",
-      "id,titulo,codigo,compra_minima,ahorro_maximo,enlace,clics,activo,categoria"
+      "id,titulo,codigo,compra_minima,ahorro_maximo,enlace,clics,likes,activo,categoria"
     );
     endpoint.searchParams.set("activo", "eq.true");
     endpoint.searchParams.set("order", "id.asc");

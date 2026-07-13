@@ -1,6 +1,4 @@
 const cuponesContainer = document.querySelector("#cupones");
-const popularContainer = document.querySelector("#cupon-popular");
-const popularWrapper = document.querySelector("#popular-wrapper");
 const todosWrapper = document.querySelector("#todos-wrapper");
 const sinCupones = document.querySelector("#sin-cupones");
 const estadoCarga = document.querySelector("#estado-carga");
@@ -36,6 +34,7 @@ const publicidadSiguiente = document.querySelector("#publicidad-siguiente");
 const SEGUNDOS_ACTUALIZACION = 60;
 const SEGUNDOS_REDIRECCION = 3;
 const MILISEGUNDOS_PUBLICIDAD = 8000;
+const URL_PAGINA = "https://ofertasimperdiblesmx.vercel.app/";
 const COLORES = ["turquesa", "azul", "morado", "coral", "oliva"];
 
 let segundosRestantes = SEGUNDOS_ACTUALIZACION;
@@ -106,32 +105,63 @@ function iconoCompartir() {
   `;
 }
 
+function iconoMeGusta() {
+  return `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M9 21H5a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h4v12Zm2 0V9.38l3.21-5.35A2 2 0 0 1 17.93 5v3h2.38a2.69 2.69 0 0 1 2.62 3.29l-1.38 6A4.69 4.69 0 0 1 16.98 21H11Z"/>
+    </svg>
+  `;
+}
+
+function iconoCopias() {
+  return `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M8 7V5a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3h-2v3a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-8a3 3 0 0 1 3-3h2Zm3 1h3a3 3 0 0 1 3 3v2h2V5h-8v3Zm3 3H6v8h8v-8Z"/>
+    </svg>
+  `;
+}
+
+function claveUsado(id) {
+  return `cupon-usado-${id}`;
+}
+
+function claveLike(id) {
+  return `cupon-like-${id}`;
+}
+
 function crearTarjeta(cupon, esPopular = false, indice = 0) {
   const articulo = document.createElement("article");
+  const yaUsado = localStorage.getItem(claveUsado(cupon.id)) === "1";
+  const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
 
   articulo.className = esPopular ? "cupon popular" : "cupon";
   articulo.dataset.id = String(cupon.id);
-
-  if (!esPopular) {
-    articulo.dataset.color = COLORES[indice % COLORES.length];
-  }
+  articulo.dataset.color = COLORES[indice % COLORES.length];
 
   articulo.innerHTML = `
     <div class="cupon-encabezado">
-      ${esPopular ? '<span class="etiqueta-popular">MÁS USADO 🔥</span>' : ""}
       <h2 class="descuento">${escaparHtml(cupon.titulo)}</h2>
-      <p class="subtitulo">de descuento</p>
+      <p class="subtitulo">off</p>
     </div>
 
     <div class="cupon-contenido">
-      <div class="datos-cupon">
-        <p class="dato">
-          Compra mínima: ${escaparHtml(cupon.compra_minima || "Consultar")}
-        </p>
+      <div class="cupon-etiquetas">
+        ${esPopular
+          ? '<span class="etiqueta-popular-integrada">🔥 Popular</span>'
+          : ""}
+      </div>
 
-        <p class="dato">
-          Ahorra hasta: ${escaparHtml(cupon.ahorro_maximo || "Consultar")}
-        </p>
+      <p class="descuento-maximo">
+        Descuento máximo de
+        <strong>${escaparHtml(cupon.ahorro_maximo || "Consultar")}</strong>
+      </p>
+
+      <p class="compra-minima">
+        Compra mínima: ${escaparHtml(cupon.compra_minima || "Consultar")}
+      </p>
+
+      <div class="cupon-usado" ${yaUsado ? "" : "hidden"}>
+        ✓ Ya usaste este cupón
       </div>
 
       <div class="acciones-bloque">
@@ -139,23 +169,41 @@ function crearTarjeta(cupon, esPopular = false, indice = 0) {
           <button class="boton-canjear" type="button">
             📋 Copiar y Canjear
           </button>
-
-          <button
-            class="boton-compartir"
-            type="button"
-            aria-label="Compartir oferta"
-            title="Compartir oferta"
-          >
-            ${iconoCompartir()}
-          </button>
         </div>
 
         <p class="mensaje" aria-live="polite"></p>
 
-        <p class="contador">
-          🔥 <span class="numero-clics">${Number(cupon.clics || 0)}</span>
-          usos registrados
-        </p>
+        <div class="acciones-secundarias">
+          <button
+            class="boton-like ${yaLeGusta ? "activo" : ""}"
+            type="button"
+            aria-label="Me gusta"
+            title="Me gusta"
+          >
+            ${iconoMeGusta()}
+          </button>
+
+          <button
+            class="boton-compartir"
+            type="button"
+            aria-label="Compartir página"
+            title="Compartir página"
+          >
+            ${iconoCompartir()}
+          </button>
+
+          <div class="estadisticas-cupon">
+            <span class="estadistica-item estadistica-likes">
+              ${iconoMeGusta()}
+              <span class="numero-likes">${Number(cupon.likes || 0)}</span>
+            </span>
+
+            <span class="estadistica-item estadistica-usos">
+              ${iconoCopias()}
+              <span class="numero-clics">${Number(cupon.clics || 0)}</span>
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   `;
@@ -166,7 +214,11 @@ function crearTarjeta(cupon, esPopular = false, indice = 0) {
 
   articulo
     .querySelector(".boton-compartir")
-    .addEventListener("click", () => compartirCupon(cupon, articulo));
+    .addEventListener("click", () => compartirPagina(articulo));
+
+  articulo
+    .querySelector(".boton-like")
+    .addEventListener("click", () => darMeGusta(cupon, articulo));
 
   return articulo;
 }
@@ -200,9 +252,6 @@ function cambiarCategoria(categoria) {
 
 function limpiarVista() {
   cuponesContainer.replaceChildren();
-  popularContainer.replaceChildren();
-
-  popularWrapper.hidden = true;
   todosWrapper.hidden = true;
   sinCupones.hidden = true;
 }
@@ -233,22 +282,16 @@ function renderizarCategoria() {
     return;
   }
 
-  const [cuponPopular, ...restoCupones] = cuponesCategoria;
+  const fragmento = document.createDocumentFragment();
 
-  popularContainer.appendChild(crearTarjeta(cuponPopular, true));
-  popularWrapper.hidden = false;
+  cuponesCategoria.forEach((cupon, indice) => {
+    fragmento.appendChild(
+      crearTarjeta(cupon, indice === 0 && Number(cupon.clics || 0) > 0, indice)
+    );
+  });
 
-  if (restoCupones.length > 0) {
-    const fragmento = document.createDocumentFragment();
-
-    restoCupones.forEach((cupon, indice) => {
-      fragmento.appendChild(crearTarjeta(cupon, false, indice));
-    });
-
-    cuponesContainer.appendChild(fragmento);
-    todosWrapper.hidden = false;
-  }
-
+  cuponesContainer.appendChild(fragmento);
+  todosWrapper.hidden = false;
   estadoCarga.textContent = "";
 }
 
@@ -335,6 +378,49 @@ async function registrarClic(id) {
   return respuesta.json();
 }
 
+async function registrarLike(id, accion) {
+  const respuesta = await fetch("/api/cupon-like", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({ id, accion }),
+  });
+
+  if (!respuesta.ok) {
+    throw new Error("No fue posible registrar el Me gusta.");
+  }
+
+  return respuesta.json();
+}
+
+async function darMeGusta(cupon, tarjeta) {
+  const boton = tarjeta.querySelector(".boton-like");
+  const numero = tarjeta.querySelector(".numero-likes");
+  const activo = boton.classList.contains("activo");
+  const accion = activo ? "quitar" : "agregar";
+
+  boton.disabled = true;
+
+  try {
+    const resultado = await registrarLike(cupon.id, accion);
+
+    boton.classList.toggle("activo", accion === "agregar");
+    numero.textContent = String(resultado.likes);
+
+    if (accion === "agregar") {
+      localStorage.setItem(claveLike(cupon.id), "1");
+    } else {
+      localStorage.removeItem(claveLike(cupon.id));
+    }
+  } catch (error) {
+    console.warn(error);
+  } finally {
+    boton.disabled = false;
+  }
+}
+
 function mostrarModal(codigo, mostrarCodigo = true) {
   modalCodigo.textContent = codigo || "";
   modalCodigoBloque.hidden = !mostrarCodigo;
@@ -406,16 +492,22 @@ async function copiarYCanjear(cupon, tarjeta) {
   const boton = tarjeta.querySelector(".boton-canjear");
   const mensaje = tarjeta.querySelector(".mensaje");
   const numeroClics = tarjeta.querySelector(".numero-clics");
+  const usado = tarjeta.querySelector(".cupon-usado");
 
   boton.disabled = true;
   boton.textContent = `✅ ${cupon.codigo}`;
   mensaje.textContent = "Cupón copiado correctamente.";
 
-  modalRedireccion.querySelector("#modal-titulo").textContent = "¡Cupón copiado!";
+  modalRedireccion.querySelector("#modal-titulo").textContent =
+    "¡Cupón copiado!";
+
   mostrarModal(cupon.codigo, true);
 
   try {
     await copiarTexto(cupon.codigo);
+
+    localStorage.setItem(claveUsado(cupon.id), "1");
+    usado.hidden = false;
 
     registrarClic(cupon.id)
       .then((resultado) => {
@@ -435,35 +527,30 @@ async function copiarYCanjear(cupon, tarjeta) {
   }
 }
 
-async function compartirCupon(cupon, tarjeta) {
+async function compartirPagina(tarjeta) {
   const mensaje = tarjeta.querySelector(".mensaje");
-
-  const textoOferta =
-    `${cupon.titulo}\n` +
-    `Compra mínima: ${cupon.compra_minima || "Consultar"}\n` +
-    `Ahorra hasta: ${cupon.ahorro_maximo || "Consultar"}\n` +
-    `Obtén el cupón aquí:\n` +
-    `${cupon.enlace}`;
+  const texto = `Mira este cupón de descuento publicado en ${URL_PAGINA}`;
 
   try {
     if (navigator.share) {
       await navigator.share({
-        text: textoOferta,
+        text: texto,
+        url: URL_PAGINA,
       });
 
-      mensaje.textContent = "Oferta compartida.";
+      mensaje.textContent = "Página compartida.";
     } else {
-      await copiarTexto(textoOferta);
-      mensaje.textContent = "Información copiada para compartir.";
+      await copiarTexto(texto);
+      mensaje.textContent = "Enlace de la página copiado.";
     }
 
     setTimeout(() => {
       mensaje.textContent = "";
-    }, 4000);
+    }, 3500);
   } catch (error) {
     if (error?.name !== "AbortError") {
       console.error(error);
-      mensaje.textContent = "No fue posible compartir la oferta.";
+      mensaje.textContent = "No fue posible compartir la página.";
     }
   }
 }
@@ -539,11 +626,15 @@ function mostrarPublicidad() {
 
   const precioPublicado = String(publicidad.precio_publicado || "").trim();
   const precioCupon = String(publicidad.precio_cupon || "").trim();
-  const tieneCupon = Boolean(String(publicidad.codigo_cupon || "").trim());
+
+  /*
+    Solo se muestra información de cupón cuando se capturó Precio con cupón.
+  */
+  const mostrarInformacionCupon = Boolean(precioCupon);
 
   precioPublicadoBloque.hidden = !precioPublicado;
   precioCuponBloque.hidden = !precioCupon;
-  publicidadAvisoCupon.hidden = !tieneCupon;
+  publicidadAvisoCupon.hidden = !mostrarInformacionCupon;
 
   publicidadPrecioPublicado.textContent = precioPublicado;
   publicidadPrecioCupon.textContent = precioCupon;
@@ -593,6 +684,7 @@ async function abrirPublicidad(publicidad) {
   detenerRotacionPublicidad();
 
   const codigo = String(publicidad.codigo_cupon || "").trim();
+  const precioCupon = String(publicidad.precio_cupon || "").trim();
   const enlace = String(publicidad.enlace || "").trim();
 
   if (!enlace) {
@@ -602,17 +694,23 @@ async function abrirPublicidad(publicidad) {
 
   try {
     /*
-      El código permanece oculto en la página.
-      Solo se copia al portapapeles cuando existe.
+      Solo copiamos cupón cuando también existe Precio con cupón.
+      Así los productos sin cupón se abren de forma normal.
     */
-    if (codigo) {
+    const debeCopiarCupon = Boolean(codigo && precioCupon);
+
+    if (debeCopiarCupon) {
       await copiarTexto(codigo);
     }
 
     registrarClicPublicidad(publicidad.id);
 
     modalRedireccion.querySelector("#modal-titulo").textContent =
-      codigo ? "¡Cupón copiado!" : "Abriendo Mercado Libre";
+      debeCopiarCupon ? "¡Cupón copiado!" : "Abriendo Mercado Libre";
+
+    modalCuponOculto.textContent = debeCopiarCupon
+      ? "El cupón se copió automáticamente."
+      : "Serás redireccionado a Mercado Libre.";
 
     mostrarModal("", false);
 
