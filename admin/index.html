@@ -8,7 +8,7 @@
   <title>Administrador | Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="../img/logo.png" />
-  <link rel="stylesheet" href="admin.css?v=60" />
+  <link rel="stylesheet" href="admin.css?v=64.0" />
 </head>
 
 <body>
@@ -282,8 +282,8 @@ https://meli.la/xxxxx"
       <section id="seccion-publicidad" class="seccion-admin" hidden>
         <div class="cabecera-seccion">
           <div>
-            <h2>📢 Publicidad rotativa</h2>
-            <p>Sube imágenes y controla el orden de los anuncios.</p>
+            <h2>📢 Productos y publicidad</h2>
+            <p>Consulta publicaciones de Mercado Libre, completa precios y asigna el mejor cupón disponible.</p>
           </div>
 
           <button id="nueva-publicidad" class="boton-secundario" type="button">
@@ -310,15 +310,51 @@ https://meli.la/xxxxx"
               </div>
 
 
-              <div class="campo">
-                <label for="ad-category">Sección donde se mostrará</label>
-                <select id="ad-category" required>
-                  <option value="ofertas_dia">Ofertas del día</option>
-                  <option value="ofertas_amazon">Ofertas Amazon</option>
-                  <option value="ofertas_mercado_libre">Ofertas Mercado Libre</option>
-                  <option value="comunidad_anirona">Anirona Community</option>
-                </select>
-              </div>
+              <fieldset class="campo campo-completo grupo-secciones">
+                <legend>Secciones donde se mostrará</legend>
+                <p class="ayuda-secciones">
+                  Puedes seleccionar una o varias secciones para el mismo producto.
+                </p>
+
+                <div class="opciones-secciones">
+                  <label>
+                    <input
+                      class="ad-section"
+                      type="checkbox"
+                      value="ofertas_dia"
+                      checked
+                    />
+                    <span>Ofertas del día</span>
+                  </label>
+
+                  <label>
+                    <input
+                      class="ad-section"
+                      type="checkbox"
+                      value="ofertas_mercado_libre"
+                    />
+                    <span>Ofertas Mercado Libre</span>
+                  </label>
+
+                  <label>
+                    <input
+                      class="ad-section"
+                      type="checkbox"
+                      value="ofertas_amazon"
+                    />
+                    <span>Ofertas Amazon</span>
+                  </label>
+
+                  <label>
+                    <input
+                      class="ad-section"
+                      type="checkbox"
+                      value="comunidad_anirona"
+                    />
+                    <span>Comunidad Anirona</span>
+                  </label>
+                </div>
+              </fieldset>
 
               <div class="campo">
                 <label for="ad-order">Orden</label>
@@ -347,6 +383,21 @@ https://meli.la/xxxxx"
                   placeholder="https://meli.la/... o https://amzn.to/..."
                   required
                 />
+              </div>
+
+              <div class="campo campo-completo consulta-producto-panel">
+                <button
+                  id="consultar-producto-ml"
+                  class="boton-consulta"
+                  type="button"
+                >
+                  Consultar precio y cupón de Mercado Libre
+                </button>
+                <small>
+                  Completa título, imagen y precio. También recomienda el cupón activo
+                  que genere el mayor ahorro según el precio consultado.
+                </small>
+                <p id="consulta-producto-mensaje" class="mensaje" aria-live="polite"></p>
               </div>
 
               <div class="campo">
@@ -398,9 +449,16 @@ https://meli.la/xxxxx"
                 <img id="ad-preview" src="" alt="Vista previa" />
               </div>
 
+              <input id="ad-ml-item-id" type="hidden" />
+
+              <label class="switch-row campo-completo">
+                <input id="ad-auto-price" type="checkbox" />
+                <span>Actualizar diariamente el precio y el cupón recomendado</span>
+              </label>
+
               <label class="switch-row campo-completo">
                 <input id="ad-active" type="checkbox" checked />
-                <span>Mostrar publicidad en el carrusel</span>
+                <span>Mostrar producto en la página</span>
               </label>
             </div>
 
@@ -427,9 +485,14 @@ https://meli.la/xxxxx"
           <div class="cabecera-panel">
             <h3>Publicidades registradas</h3>
 
-            <button id="actualizar-publicidad" class="boton-secundario" type="button">
-              ↻ Actualizar
-            </button>
+            <div class="acciones-cabecera">
+              <button id="actualizar-precios-auto" class="boton-secundario" type="button">
+                $ Actualizar precios
+              </button>
+              <button id="actualizar-publicidad" class="boton-secundario" type="button">
+                ↻ Actualizar lista
+              </button>
+            </div>
           </div>
 
           <p id="ad-list-message" class="mensaje" aria-live="polite"></p>
@@ -440,6 +503,6 @@ https://meli.la/xxxxx"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=61.0"></script>
+  <script type="module" src="admin.js?v=64.0"></script>
 </body>
 </html>

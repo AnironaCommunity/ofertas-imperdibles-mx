@@ -1,3 +1,16 @@
+const ALLOWED_SECTIONS = [
+  "ofertas_dia",
+  "ofertas_mercado_libre",
+  "ofertas_amazon",
+  "comunidad_anirona",
+];
+
+function normalizeSections(value, fallback = ["ofertas_dia"]) {
+  const values = Array.isArray(value) ? value : [];
+  const unique = [...new Set(values.filter((item) => ALLOWED_SECTIONS.includes(item)))];
+  return unique.length ? unique : fallback;
+}
+
 function authorized(request) {
   return Boolean(process.env.ADMIN_PASSWORD) &&
     String(request.headers["x-admin-password"] || "") ===
@@ -49,7 +62,7 @@ export default async function handler(request, response) {
   try {
     if (request.method === "GET") {
       const data = await requestSupabase(
-        "publicidades?select=id,titulo,descripcion,imagen_url,enlace,precio_publicado,precio_cupon,codigo_cupon,categoria,activo,orden,clics,visitas,fecha_creacion&order=orden.asc,id.asc"
+        "publicidades?select=id,titulo,descripcion,imagen_url,enlace,precio_publicado,precio_cupon,codigo_cupon,categoria,secciones,ml_item_id,actualizar_precio_auto,precio_actualizado_en,activo,orden,clics,visitas,fecha_creacion&order=orden.asc,id.asc"
       );
 
       return response.status(200).json(data);
@@ -64,9 +77,14 @@ export default async function handler(request, response) {
         precio_publicado: String(request.body?.precio_publicado || "").trim(),
         precio_cupon: String(request.body?.precio_cupon || "").trim(),
         codigo_cupon: String(request.body?.codigo_cupon || "").trim(),
-        categoria: ["ofertas_dia", "ofertas_amazon", "ofertas_mercado_libre", "comunidad_anirona"].includes(request.body?.categoria)
-          ? request.body.categoria
-          : "ofertas_dia",
+        ml_item_id: String(request.body?.ml_item_id || "").trim() || null,
+        actualizar_precio_auto: Boolean(request.body?.actualizar_precio_auto),
+        precio_actualizado_en: request.body?.precio_actualizado_en || null,
+        secciones: normalizeSections(request.body?.secciones),
+        categoria: normalizeSections(request.body?.secciones)[0] ||
+          (ALLOWED_SECTIONS.includes(request.body?.categoria)
+            ? request.body.categoria
+            : "ofertas_dia"),
         activo: request.body?.activo !== false,
         orden: Math.max(0, Number(request.body?.orden) || 0),
         clics: 0,
@@ -109,16 +127,23 @@ export default async function handler(request, response) {
         "precio_publicado",
         "precio_cupon",
         "codigo_cupon",
+        "ml_item_id",
+        "actualizar_precio_auto",
+        "precio_actualizado_en",
         "categoria",
+        "secciones",
         "activo",
         "orden",
       ]) {
         if (!Object.hasOwn(request.body || {}, field)) continue;
 
-        if (field === "activo") {
+        if (field === "activo" || field === "actualizar_precio_auto") {
           payload[field] = Boolean(request.body[field]);
+        } else if (field === "secciones") {
+          payload.secciones = normalizeSections(request.body.secciones);
+          payload.categoria = payload.secciones[0];
         } else if (field === "categoria") {
-          payload[field] = ["ofertas_dia", "ofertas_amazon", "ofertas_mercado_libre", "comunidad_anirona"].includes(request.body[field])
+          payload[field] = ALLOWED_SECTIONS.includes(request.body[field])
             ? request.body[field]
             : "ofertas_dia";
         } else if (field === "orden") {

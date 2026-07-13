@@ -48,8 +48,14 @@ const adId = document.querySelector("#ad-id");
 const adImageUrl = document.querySelector("#ad-image-url");
 const adTitle = document.querySelector("#ad-title");
 const adDescription = document.querySelector("#ad-description");
-const adCategory = document.querySelector("#ad-category");
+const adSections = [...document.querySelectorAll(".ad-section")];
 const adLink = document.querySelector("#ad-link");
+const consultProductMl = document.querySelector("#consultar-producto-ml");
+const consultProductMessage = document.querySelector("#consulta-producto-mensaje");
+const adMlItemId = document.querySelector("#ad-ml-item-id");
+const adAutoPrice = document.querySelector("#ad-auto-price");
+const refreshAutomaticPrices = document.querySelector("#actualizar-precios-auto");
+
 const adPricePublished = document.querySelector("#ad-price-published");
 const adPriceCoupon = document.querySelector("#ad-price-coupon");
 const adCouponCode = document.querySelector("#ad-coupon-code");
@@ -567,15 +573,40 @@ async function publishImport() {
   }
 }
 
+function selectedAdSections() {
+  return adSections
+    .filter((input) => input.checked)
+    .map((input) => input.value);
+}
+
+function setSelectedAdSections(values = ["ofertas_dia"]) {
+  const selected = new Set(
+    Array.isArray(values) && values.length ? values : ["ofertas_dia"]
+  );
+
+  for (const input of adSections) {
+    input.checked = selected.has(input.value);
+  }
+}
+
+const AD_SECTION_LABELS = {
+  ofertas_dia: "Ofertas del día",
+  ofertas_mercado_libre: "Ofertas Mercado Libre",
+  ofertas_amazon: "Ofertas Amazon",
+  comunidad_anirona: "Comunidad Anirona",
+};
+
 /* ================= PUBLICIDAD ================= */
 function resetAdForm() {
   adForm.reset();
   adId.value = "";
   adImageUrl.value = "";
+  adMlItemId.value = "";
+  adAutoPrice.checked = false;
   adPricePublished.value = "";
   adPriceCoupon.value = "";
   adCouponCode.value = "";
-  adCategory.value = "ofertas_dia";
+  setSelectedAdSections(["ofertas_dia"]);
   adOrder.value = "0";
   adActive.checked = true;
   adPreviewWrapper.hidden = true;
@@ -590,10 +621,12 @@ function editAd(ad) {
   adTitle.value = ad.titulo || "";
   adDescription.value = ad.descripcion || "";
   adLink.value = ad.enlace || "";
+  adMlItemId.value = ad.ml_item_id || "";
+  adAutoPrice.checked = Boolean(ad.actualizar_precio_auto);
   adPricePublished.value = ad.precio_publicado || "";
   adPriceCoupon.value = ad.precio_cupon || "";
   adCouponCode.value = ad.codigo_cupon || "";
-  adCategory.value = ad.categoria || "ofertas_dia";
+  setSelectedAdSections(ad.secciones || [ad.categoria || "ofertas_dia"]);
   adOrder.value = ad.orden || 0;
   adActive.checked = Boolean(ad.activo);
   adImageUrl.value = ad.imagen_url || "";
@@ -635,12 +668,22 @@ function renderAds() {
             ? `<span class="precio-cupon-admin">Con cupón: ${escapeHtml(ad.precio_cupon)}</span>`
             : ""}
           ${ad.codigo_cupon
-            ? `<span>🔒 Cupón configurado</span>`
+            ? `<span>🔒 Cupón automático configurado</span>`
+            : ""}
+          ${ad.actualizar_precio_auto
+            ? `<span>🔄 Precio automático</span>`
+            : ""}
+          ${ad.precio_actualizado_en
+            ? `<span>Última consulta: ${escapeHtml(new Date(ad.precio_actualizado_en).toLocaleString("es-MX"))}</span>`
             : ""}
         </div>
 
         <small>
-          Sección: ${escapeHtml(({ofertas_dia: "Ofertas del día", ofertas_amazon: "Ofertas Amazon", ofertas_mercado_libre: "Ofertas Mercado Libre", comunidad_anirona: "Anirona Community"})[ad.categoria || "ofertas_dia"])} ·
+          Secciones: ${escapeHtml(
+            (ad.secciones || [ad.categoria || "ofertas_dia"])
+              .map((value) => AD_SECTION_LABELS[value] || value)
+              .join(", ")
+          )} ·
           Orden: ${Number(ad.orden || 0)} ·
           Clics: ${Number(ad.clics || 0)} ·
           ${ad.activo ? "Activa" : "Inactiva"}
@@ -726,6 +769,85 @@ async function uploadAdImage() {
   return result.imagen_url;
 }
 
+
+async function consultMercadoLibreProduct() {
+  const link = adLink.value.trim();
+
+  if (!link) {
+    setMessage(consultProductMessage, "Primero pega el enlace del producto.", true);
+    adLink.focus();
+    return;
+  }
+
+  consultProductMl.disabled = true;
+  setMessage(consultProductMessage, "Consultando publicación y cupones activos...");
+
+  try {
+    const data = await api("/api/admin-producto-mercadolibre", {
+      method: "POST",
+      body: JSON.stringify({ enlace: link }),
+    });
+
+    if (data.titulo && !adTitle.value.trim()) {
+      adTitle.value = data.titulo;
+    }
+
+    if (data.imagen_url) {
+      adImageUrl.value = data.imagen_url;
+      adPreview.src = data.imagen_url;
+      adPreviewWrapper.hidden = false;
+    }
+
+    adMlItemId.value = data.item_id || "";
+    adPricePublished.value = data.precio_publicado || "";
+    adCouponCode.value = data.codigo_cupon || "";
+    adPriceCoupon.value = data.precio_cupon || "";
+
+    if (data.enlace_resuelto) {
+      adLink.value = data.enlace_resuelto;
+    }
+
+    if (data.codigo_cupon) {
+      setMessage(
+        consultProductMessage,
+        `Precio ${data.precio_publicado}. Cupón recomendado: ${data.codigo_cupon} (${data.descuento_estimado} de ahorro).`
+      );
+    } else {
+      setMessage(
+        consultProductMessage,
+        `Precio ${data.precio_publicado}. No se encontró un cupón activo aplicable.`
+      );
+    }
+  } catch (error) {
+    setMessage(consultProductMessage, error.message, true);
+  } finally {
+    consultProductMl.disabled = false;
+  }
+}
+
+async function updateAutomaticPrices() {
+  refreshAutomaticPrices.disabled = true;
+  setMessage(adListMessage, "Actualizando productos marcados como automáticos...");
+
+  try {
+    const result = await api("/api/actualizar-precios", {
+      method: "POST",
+      body: JSON.stringify({}),
+    });
+
+    setMessage(
+      adListMessage,
+      `${result.correctos} productos actualizados. ${result.errores} con error.`
+    );
+
+    await loadAds();
+  } catch (error) {
+    setMessage(adListMessage, error.message, true);
+  } finally {
+    refreshAutomaticPrices.disabled = false;
+  }
+}
+
 async function saveAd(event) {
   event.preventDefault();
 
@@ -741,6 +863,12 @@ async function saveAd(event) {
       throw new Error("Selecciona una foto del producto.");
     }
 
+    const secciones = selectedAdSections();
+
+    if (!secciones.length) {
+      throw new Error("Selecciona por lo menos una sección.");
+    }
+
     const payload = {
       titulo: adTitle.value.trim(),
       descripcion: adDescription.value.trim(),
@@ -748,7 +876,10 @@ async function saveAd(event) {
       precio_publicado: adPricePublished.value.trim(),
       precio_cupon: adPriceCoupon.value.trim(),
       codigo_cupon: adCouponCode.value.trim(),
-      categoria: adCategory.value,
+      ml_item_id: adMlItemId.value.trim(),
+      actualizar_precio_auto: adAutoPrice.checked,
+      secciones,
+      categoria: secciones[0] || "ofertas_dia",
       imagen_url: imageUrl,
       orden: Number(adOrder.value) || 0,
       activo: adActive.checked,
@@ -863,3 +994,7 @@ adImage.addEventListener("change", async () => {
 if (adminPassword) {
   login();
 }
+
+
+consultProductMl?.addEventListener("click", consultMercadoLibreProduct);
+refreshAutomaticPrices?.addEventListener("click", updateAutomaticPrices);
