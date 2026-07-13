@@ -18,6 +18,8 @@ const couponCode = document.querySelector("#coupon-code");
 const couponMinimum = document.querySelector("#coupon-minimum");
 const couponSaving = document.querySelector("#coupon-saving");
 const couponCategory = document.querySelector("#coupon-category");
+const couponStart = document.querySelector("#coupon-start");
+const couponEnd = document.querySelector("#coupon-end");
 const couponLink = document.querySelector("#coupon-link");
 const couponActive = document.querySelector("#coupon-active");
 const couponFormTitle = document.querySelector("#coupon-form-title");
@@ -155,10 +157,130 @@ function escapeHtml(value = "") {
     .replaceAll("'", "&#039;");
 }
 
+const MEXICO_TIME_ZONE = "America/Mexico_City";
+
+function partsInMexico(date) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: MEXICO_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(date);
+
+  return Object.fromEntries(
+    parts
+      .filter((part) => part.type !== "literal")
+      .map((part) => [part.type, part.value])
+  );
+}
+
+function mexicoLocalToIso(value) {
+  if (!value) return null;
+
+  const [datePart, timePart] = value.split("T");
+  const [year, month, day] = datePart.split("-").map(Number);
+  const [hour, minute] = timePart.split(":").map(Number);
+
+  const desiredAsUtc = Date.UTC(
+    year,
+    month - 1,
+    day,
+    hour,
+    minute,
+    0
+  );
+
+  let guess = desiredAsUtc;
+
+  /*
+    Ajuste iterativo para interpretar datetime-local como hora de México,
+    independientemente de la zona horaria del teléfono o computadora.
+  */
+  for (let index = 0; index < 3; index += 1) {
+    const parts = partsInMexico(new Date(guess));
+
+    const representedAsUtc = Date.UTC(
+      Number(parts.year),
+      Number(parts.month) - 1,
+      Number(parts.day),
+      Number(parts.hour),
+      Number(parts.minute),
+      Number(parts.second)
+    );
+
+    guess += desiredAsUtc - representedAsUtc;
+  }
+
+  return new Date(guess).toISOString();
+}
+
+function isoToMexicoLocal(value) {
+  if (!value) return "";
+
+  const parts = partsInMexico(new Date(value));
+
+  return (
+    `${parts.year}-${parts.month}-${parts.day}` +
+    `T${parts.hour}:${parts.minute}`
+  );
+}
+
+function formatMexicoDate(value) {
+  if (!value) return "Sin definir";
+
+  return new Intl.DateTimeFormat("es-MX", {
+    timeZone: MEXICO_TIME_ZONE,
+    dateStyle: "short",
+    timeStyle: "short",
+  }).format(new Date(value));
+}
+
+function couponAutomaticStatus(coupon) {
+  if (!coupon.activo) {
+    return {
+      key: "inactivo",
+      label: "⚪ Inactivo",
+    };
+  }
+
+  const now = Date.now();
+  const start = coupon.fecha_inicio
+    ? new Date(coupon.fecha_inicio).getTime()
+    : null;
+  const end = coupon.fecha_fin
+    ? new Date(coupon.fecha_fin).getTime()
+    : null;
+
+  if (start !== null && start > now) {
+    return {
+      key: "programado",
+      label: "🟡 Programado",
+    };
+  }
+
+  if (end !== null && end <= now) {
+    return {
+      key: "finalizado",
+      label: "🔴 Finalizado",
+    };
+  }
+
+  return {
+    key: "activo",
+    label: "🟢 Activo",
+  };
+}
+
 function resetCouponForm() {
   couponForm.reset();
   couponId.value = "";
   couponCategory.value = "tienda";
+  couponStart.value = "";
+  couponEnd.value = "";
   couponActive.checked = true;
   couponFormTitle.textContent = "Agregar cupón";
   cancelCoupon.hidden = true;
@@ -173,6 +295,8 @@ function editCoupon(coupon) {
   couponSaving.value = coupon.ahorro_maximo || "";
   couponCategory.value =
     coupon.categoria === "bancarios" ? "bancarios" : "tienda";
+  couponStart.value = isoToMexicoLocal(coupon.fecha_inicio);
+  couponEnd.value = isoToMexicoLocal(coupon.fecha_fin);
   couponLink.value = coupon.enlace || "";
   couponActive.checked = Boolean(coupon.activo);
 
@@ -194,12 +318,24 @@ function renderCoupons() {
   for (const coupon of coupons) {
     const row = document.createElement("tr");
 
+    const automaticStatus = couponAutomaticStatus(coupon);
+
     row.innerHTML = `
       <td>${escapeHtml(coupon.titulo)}</td>
       <td>${escapeHtml(coupon.codigo)}</td>
       <td>${coupon.categoria === "bancarios" ? "💳 Bancarios" : "🛒 Tienda"}</td>
       <td>${Number(coupon.clics || 0)}</td>
-      <td>${coupon.activo ? "Activo" : "Inactivo"}</td>
+      <td>
+        <div class="programacion-detalle">
+          <div><strong>Inicio:</strong> ${escapeHtml(formatMexicoDate(coupon.fecha_inicio))}</div>
+          <div><strong>Fin:</strong> ${escapeHtml(formatMexicoDate(coupon.fecha_fin))}</div>
+        </div>
+      </td>
+      <td>
+        <span class="estado-automatico ${automaticStatus.key}">
+          ${automaticStatus.label}
+        </span>
+      </td>
       <td>
         <div class="acciones-tabla">
           <button class="editar" data-action="edit" data-id="${coupon.id}">
@@ -248,6 +384,8 @@ async function saveCoupon(event) {
     compra_minima: couponMinimum.value.trim(),
     ahorro_maximo: couponSaving.value.trim(),
     categoria: couponCategory.value,
+    fecha_inicio: mexicoLocalToIso(couponStart.value),
+    fecha_fin: mexicoLocalToIso(couponEnd.value),
     enlace: couponLink.value.trim(),
     activo: couponActive.checked,
   };
@@ -356,6 +494,8 @@ function parseImportBlock(block) {
     ahorro_maximo: savingLine ? extractMoney(savingLine) : "",
     enlace: link,
     categoria: "tienda",
+    fecha_inicio: null,
+    fecha_fin: null,
     activo: true,
     valid: Boolean(title && code && link),
     result: "",

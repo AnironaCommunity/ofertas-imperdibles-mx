@@ -410,3 +410,47 @@ th {
   color: #176b38;
   background: #edf9f0;
 }
+
+
+/* V50 — Programación de cupones */
+.estado-automatico {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.estado-automatico.activo {
+  color: #126b43;
+  background: #e9f9ef;
+}
+
+.estado-automatico.programado {
+  color: #7b5900;
+  background: #fff6cf;
+}
+
+.estado-automatico.finalizado {
+  color: #9b3928;
+  background: #ffede9;
+}
+
+.estado-automatico.inactivo {
+  color: #626d68;
+  background: #eef1ef;
+}
+
+.programacion-detalle {
+  min-width: 180px;
+  color: #53645c;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.programacion-detalle strong {
+  color: #24372f;
+}

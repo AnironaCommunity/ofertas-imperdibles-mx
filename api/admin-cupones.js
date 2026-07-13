@@ -1,6 +1,7 @@
 function isAuthorized(request) {
   return Boolean(process.env.ADMIN_PASSWORD) &&
-    String(request.headers["x-admin-password"] || "") === process.env.ADMIN_PASSWORD;
+    String(request.headers["x-admin-password"] || "") ===
+      process.env.ADMIN_PASSWORD;
 }
 
 function config() {
@@ -38,6 +39,11 @@ async function supabaseFetch(path, options = {}) {
   return data;
 }
 
+function cleanTimestamp(value) {
+  const text = String(value || "").trim();
+  return text || null;
+}
+
 export default async function handler(request, response) {
   if (!isAuthorized(request)) {
     return response.status(401).json({
@@ -48,8 +54,9 @@ export default async function handler(request, response) {
   try {
     if (request.method === "GET") {
       const data = await supabaseFetch(
-        "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,enlace,clics,activo,categoria&order=id.desc"
+        "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,enlace,clics,likes,activo,categoria,fecha_inicio,fecha_fin&order=id.desc"
       );
+
       return response.status(200).json(data);
     }
 
@@ -61,14 +68,37 @@ export default async function handler(request, response) {
         ahorro_maximo: String(request.body?.ahorro_maximo || "").trim(),
         enlace: String(request.body?.enlace || "").trim(),
         categoria:
-          request.body?.categoria === "bancarios" ? "bancarios" : "tienda",
+          request.body?.categoria === "bancarios"
+            ? "bancarios"
+            : "tienda",
+        fecha_inicio: cleanTimestamp(request.body?.fecha_inicio),
+        fecha_fin: cleanTimestamp(request.body?.fecha_fin),
         activo: request.body?.activo !== false,
         clics: 0,
+        likes: 0,
       };
+
+      if (!payload.titulo || !payload.codigo || !payload.enlace) {
+        return response.status(400).json({
+          error: "Título, código y enlace son obligatorios.",
+        });
+      }
+
+      if (
+        payload.fecha_inicio &&
+        payload.fecha_fin &&
+        new Date(payload.fecha_fin) <= new Date(payload.fecha_inicio)
+      ) {
+        return response.status(400).json({
+          error: "La fecha final debe ser posterior a la fecha inicial.",
+        });
+      }
 
       const data = await supabaseFetch("cupones", {
         method: "POST",
-        headers: { Prefer: "return=representation" },
+        headers: {
+          Prefer: "return=representation",
+        },
         body: JSON.stringify(payload),
       });
 
@@ -80,23 +110,47 @@ export default async function handler(request, response) {
       const payload = {};
 
       for (const field of [
-        "titulo","codigo","compra_minima","ahorro_maximo","enlace","activo","categoria"
+        "titulo",
+        "codigo",
+        "compra_minima",
+        "ahorro_maximo",
+        "enlace",
+        "activo",
+        "categoria",
+        "fecha_inicio",
+        "fecha_fin",
       ]) {
-        if (Object.hasOwn(request.body || {}, field)) {
-          if (field === "activo") {
-            payload[field] = Boolean(request.body[field]);
-          } else if (field === "categoria") {
-            payload[field] =
-              request.body[field] === "bancarios" ? "bancarios" : "tienda";
-          } else {
-            payload[field] = String(request.body[field] || "").trim();
-          }
+        if (!Object.hasOwn(request.body || {}, field)) continue;
+
+        if (field === "activo") {
+          payload[field] = Boolean(request.body[field]);
+        } else if (field === "categoria") {
+          payload[field] =
+            request.body[field] === "bancarios"
+              ? "bancarios"
+              : "tienda";
+        } else if (field === "fecha_inicio" || field === "fecha_fin") {
+          payload[field] = cleanTimestamp(request.body[field]);
+        } else {
+          payload[field] = String(request.body[field] || "").trim();
         }
+      }
+
+      if (
+        payload.fecha_inicio &&
+        payload.fecha_fin &&
+        new Date(payload.fecha_fin) <= new Date(payload.fecha_inicio)
+      ) {
+        return response.status(400).json({
+          error: "La fecha final debe ser posterior a la fecha inicial.",
+        });
       }
 
       const data = await supabaseFetch(`cupones?id=eq.${id}`, {
         method: "PATCH",
-        headers: { Prefer: "return=representation" },
+        headers: {
+          Prefer: "return=representation",
+        },
         body: JSON.stringify(payload),
       });
 
@@ -105,7 +159,11 @@ export default async function handler(request, response) {
 
     if (request.method === "DELETE") {
       const id = Number(request.query?.id);
-      await supabaseFetch(`cupones?id=eq.${id}`, { method: "DELETE" });
+
+      await supabaseFetch(`cupones?id=eq.${id}`, {
+        method: "DELETE",
+      });
+
       return response.status(200).json({ ok: true });
     }
 

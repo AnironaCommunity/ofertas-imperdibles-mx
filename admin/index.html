@@ -8,7 +8,7 @@
   <title>Administrador | Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="../img/logo.png" />
-  <link rel="stylesheet" href="admin.css?v=31" />
+  <link rel="stylesheet" href="admin.css?v=50" />
 </head>
 
 <body>
@@ -194,6 +194,24 @@ https://meli.la/xxxxx"
                 </select>
               </div>
 
+              <div class="campo">
+                <label for="coupon-start">Fecha y hora de inicio</label>
+                <input
+                  id="coupon-start"
+                  type="datetime-local"
+                />
+                <small>Hora de Ciudad de México.</small>
+              </div>
+
+              <div class="campo">
+                <label for="coupon-end">Fecha y hora de fin</label>
+                <input
+                  id="coupon-end"
+                  type="datetime-local"
+                />
+                <small>Hora de Ciudad de México.</small>
+              </div>
+
               <div class="campo campo-completo">
                 <label for="coupon-link">Enlace de Mercado Libre</label>
                 <input
@@ -248,6 +266,7 @@ https://meli.la/xxxxx"
                   <th>Código</th>
                   <th>Categoría</th>
                   <th>Clics</th>
+                  <th>Programación</th>
                   <th>Estado</th>
                   <th>Acciones</th>
                 </tr>
@@ -410,6 +429,6 @@ https://meli.la/xxxxx"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=31"></script>
+  <script type="module" src="admin.js?v=50"></script>
 </body>
 </html>

@@ -48,6 +48,7 @@ let publicidades = [];
 let publicidadActual = 0;
 let temporizadorPublicidad = null;
 let inicioSwipeX = null;
+let temporizadorEstados = null;
 
 botonRecargar.addEventListener("click", cargarCupones);
 tabTienda.addEventListener("click", () => cambiarCategoria("tienda"));
@@ -129,6 +130,148 @@ function claveLike(id) {
   return `cupon-like-${id}`;
 }
 
+function couponTimeState(coupon) {
+  const now = Date.now();
+  const start = coupon.fecha_inicio
+    ? new Date(coupon.fecha_inicio).getTime()
+    : null;
+  const end = coupon.fecha_fin
+    ? new Date(coupon.fecha_fin).getTime()
+    : null;
+
+  if (start !== null && start > now) {
+    return {
+      state: "programado",
+      target: start,
+      label: "Disponible en",
+      enabled: false,
+    };
+  }
+
+  if (end !== null && end <= now) {
+    return {
+      state: "finalizado",
+      target: end,
+      label: "Finalizado",
+      enabled: false,
+    };
+  }
+
+  if (end !== null) {
+    const remaining = end - now;
+
+    return {
+      state:
+        remaining <= 60 * 60 * 1000
+          ? "finaliza-pronto"
+          : "activo",
+      target: end,
+      label: "Finaliza en",
+      enabled: true,
+    };
+  }
+
+  return {
+    state: "activo",
+    target: null,
+    label: "",
+    enabled: true,
+  };
+}
+
+function formatRemaining(milliseconds) {
+  const totalSeconds = Math.max(
+    0,
+    Math.floor(milliseconds / 1000)
+  );
+
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (days > 0) {
+    return `${days}d ${String(hours).padStart(2, "0")}h`;
+  }
+
+  return (
+    `${String(hours).padStart(2, "0")}:` +
+    `${String(minutes).padStart(2, "0")}:` +
+    `${String(seconds).padStart(2, "0")}`
+  );
+}
+
+function updateCouponTimes() {
+  let needsReload = false;
+
+  document.querySelectorAll(".cupon[data-id]").forEach((card) => {
+    const coupon = todosLosCupones.find(
+      (item) => String(item.id) === card.dataset.id
+    );
+
+    if (!coupon) return;
+
+    const timeState = couponTimeState(coupon);
+    const status = card.querySelector(".estado-programacion");
+    const redeemButton = card.querySelector(".boton-canjear");
+
+    status.className =
+      `estado-programacion ${timeState.state}`;
+
+    if (timeState.state === "programado") {
+      status.hidden = false;
+      status.textContent =
+        `⏳ ${timeState.label} ` +
+        formatRemaining(timeState.target - Date.now());
+
+      redeemButton.disabled = true;
+      redeemButton.classList.add("boton-programado");
+      redeemButton.textContent = "⏳ Disponible pronto";
+      return;
+    }
+
+    if (timeState.state === "finalizado") {
+      needsReload = true;
+      return;
+    }
+
+    redeemButton.disabled = false;
+    redeemButton.classList.remove("boton-programado");
+
+    if (!redireccionEnProceso) {
+      redeemButton.textContent = "📋 Copiar y Canjear";
+    }
+
+    if (timeState.target !== null) {
+      status.hidden = false;
+      status.textContent =
+        `${timeState.state === "finaliza-pronto" ? "⚠️" : "⏱️"} ` +
+        `${timeState.label} ` +
+        formatRemaining(timeState.target - Date.now());
+    } else {
+      status.hidden = true;
+      status.textContent = "";
+    }
+  });
+
+  if (needsReload && !cargando && !redireccionEnProceso) {
+    cargarCupones();
+  }
+}
+
+function startCouponTimers() {
+  if (temporizadorEstados) {
+    clearInterval(temporizadorEstados);
+  }
+
+  updateCouponTimes();
+
+  temporizadorEstados = window.setInterval(
+    updateCouponTimes,
+    1000
+  );
+}
+
 function crearTarjeta(cupon, esPopular = false, indice = 0) {
   const articulo = document.createElement("article");
   const yaUsado = localStorage.getItem(claveUsado(cupon.id)) === "1";
@@ -159,6 +302,8 @@ function crearTarjeta(cupon, esPopular = false, indice = 0) {
       <p class="compra-minima">
         Compra mínima: ${escaparHtml(cupon.compra_minima || "Consultar")}
       </p>
+
+      <div class="estado-programacion" hidden></div>
 
       <div class="cupon-usado" ${yaUsado ? "" : "hidden"}>
         ✓ Ya usaste este cupón
@@ -208,9 +353,20 @@ function crearTarjeta(cupon, esPopular = false, indice = 0) {
     </div>
   `;
 
-  articulo
-    .querySelector(".boton-canjear")
-    .addEventListener("click", () => copiarYCanjear(cupon, articulo));
+  const initialTimeState = couponTimeState(cupon);
+  const redeemButton = articulo.querySelector(".boton-canjear");
+
+  if (!initialTimeState.enabled) {
+    redeemButton.disabled = true;
+    redeemButton.classList.add("boton-programado");
+    redeemButton.textContent = "⏳ Disponible pronto";
+  }
+
+  redeemButton.addEventListener("click", () => {
+    if (couponTimeState(cupon).enabled) {
+      copiarYCanjear(cupon, articulo);
+    }
+  });
 
   articulo
     .querySelector(".boton-compartir")
@@ -261,7 +417,23 @@ function renderizarCategoria() {
 
   const cuponesCategoria = todosLosCupones
     .filter((cupon) => normalizarCategoria(cupon) === categoriaActiva)
-    .sort((a, b) => Number(b.clics || 0) - Number(a.clics || 0));
+    .sort((a, b) => {
+      const stateA = couponTimeState(a);
+      const stateB = couponTimeState(b);
+
+      if (stateA.enabled !== stateB.enabled) {
+        return stateA.enabled ? -1 : 1;
+      }
+
+      if (!stateA.enabled && !stateB.enabled) {
+        return (
+          Number(stateA.target || 0) -
+          Number(stateB.target || 0)
+        );
+      }
+
+      return Number(b.clics || 0) - Number(a.clics || 0);
+    });
 
   const esTienda = categoriaActiva === "tienda";
 
@@ -286,13 +458,20 @@ function renderizarCategoria() {
 
   cuponesCategoria.forEach((cupon, indice) => {
     fragmento.appendChild(
-      crearTarjeta(cupon, indice === 0 && Number(cupon.clics || 0) > 0, indice)
+      crearTarjeta(
+        cupon,
+        indice === 0 &&
+          couponTimeState(cupon).enabled &&
+          Number(cupon.clics || 0) > 0,
+        indice
+      )
     );
   });
 
   cuponesContainer.appendChild(fragmento);
   todosWrapper.hidden = false;
   estadoCarga.textContent = "";
+  startCouponTimers();
 }
 
 function reiniciarContadorActualizacion() {
@@ -486,7 +665,7 @@ function ejecutarCuentaRegresiva(cupon, boton, mensaje) {
 }
 
 async function copiarYCanjear(cupon, tarjeta) {
-  if (redireccionEnProceso) return;
+  if (redireccionEnProceso || !couponTimeState(cupon).enabled) return;
 
   redireccionEnProceso = true;
 

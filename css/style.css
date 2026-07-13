@@ -1798,3 +1798,68 @@ footer {
     min-height: 202px;
   }
 }
+
+
+/* =========================================================
+   V50 — Programación automática y estados temporales
+   ========================================================= */
+
+.estado-programacion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 9px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.estado-programacion[hidden] {
+  display: none;
+}
+
+.estado-programacion.programado {
+  color: #795600;
+  border: 1px solid #efd27a;
+  background: #fff8d9;
+}
+
+.estado-programacion.activo {
+  color: #08765f;
+  border: 1px solid #a9dfcf;
+  background: #eefff9;
+}
+
+.estado-programacion.finaliza-pronto {
+  color: #a44322;
+  border: 1px solid #f2b49d;
+  background: #fff1eb;
+}
+
+.boton-canjear:disabled.boton-programado {
+  color: #6c6652;
+  border: 1px solid #ded4a0;
+  background: #f7f2d7;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.fecha-programacion-admin {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+  color: #5c6c65;
+  font-size: 11px;
+}
+
+@media (max-width: 680px) {
+  .estado-programacion {
+    padding: 6px;
+    font-size: 9px;
+  }
+}
