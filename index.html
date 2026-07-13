@@ -11,7 +11,7 @@
   <title>Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="img/logo.png" />
-  <link rel="stylesheet" href="css/style.css?v=60.8" />
+  <link rel="stylesheet" href="css/style.css?v=61.0" />
 </head>
 
 <body>
@@ -54,6 +54,11 @@
         <span>Facebook</span>
       </a>
     </div>
+
+    <nav class="menu-ofertas" aria-label="Secciones de ofertas">
+      <a href="#seccion-comunidad-anirona">🛠️ Comunidad Anirona</a>
+      <a href="#seccion-ofertas-amazon">📦 Ofertas Amazon</a>
+    </nav>
   </header>
 
   <main class="contenedor">
@@ -102,6 +107,7 @@
     <section
       id="publicidad-wrapper"
       class="publicidad-wrapper"
+      data-categoria-publicidad="ofertas_dia"
       aria-label="Publicidad"
       hidden
     >
@@ -153,13 +159,25 @@
               se copiará automáticamente.
             </p>
 
-            <a
-              id="publicidad-enlace"
-              class="publicidad-boton"
-              href="#"
-            >
-              🛒 Ver en Mercado Libre
-            </a>
+            <div class="publicidad-acciones">
+              <a
+                id="publicidad-enlace"
+                class="publicidad-boton"
+                href="#"
+              >
+                🛒 Ver en Mercado Libre
+              </a>
+
+              <button
+                id="publicidad-compartir"
+                class="publicidad-compartir"
+                type="button"
+                aria-label="Compartir oferta"
+              >
+                ↗ Compartir
+              </button>
+            </div>
+            <p id="publicidad-mensaje" class="publicidad-mensaje" aria-live="polite"></p>
           </div>
         </article>
 
@@ -171,6 +189,74 @@
         >
           ›
         </button>
+      </div>
+    </section>
+
+    <section
+      id="seccion-comunidad-anirona"
+      class="publicidad-wrapper seccion-ofertas-categoria"
+      data-categoria-publicidad="comunidad_anirona"
+      aria-label="Ofertas de Comunidad Anirona"
+      hidden
+    >
+      <div class="publicidad-cabecera">
+        <span>COMUNIDAD ANIRONA</span>
+        <div class="publicidad-indicadores" aria-label="Indicadores de ofertas"></div>
+      </div>
+      <div class="publicidad-carrusel" tabindex="0">
+        <button class="publicidad-flecha publicidad-flecha-anterior" type="button" aria-label="Oferta anterior">‹</button>
+        <article class="publicidad-contenido">
+          <img class="publicidad-imagen" src="" alt="" />
+          <div class="publicidad-copy">
+            <h2 class="publicidad-titulo"></h2>
+            <p class="publicidad-descripcion"></p>
+            <div class="publicidad-precios">
+              <div class="precio-publicado-bloque" hidden><span>Precio publicado</span><strong class="publicidad-precio-publicado"></strong></div>
+              <div class="precio-cupon-bloque" hidden><span>Precio con cupón</span><strong class="publicidad-precio-cupon"></strong></div>
+            </div>
+            <p class="publicidad-aviso-cupon" hidden>📋 Al dar clic en <strong>Ver en Mercado Libre</strong>, el cupón se copiará automáticamente.</p>
+            <div class="publicidad-acciones">
+              <a class="publicidad-boton publicidad-enlace" href="#">🛒 Ver en Mercado Libre</a>
+              <button class="publicidad-compartir" type="button" aria-label="Compartir oferta">↗ Compartir</button>
+            </div>
+            <p class="publicidad-mensaje" aria-live="polite"></p>
+          </div>
+        </article>
+        <button class="publicidad-flecha publicidad-flecha-siguiente" type="button" aria-label="Oferta siguiente">›</button>
+      </div>
+    </section>
+
+    <section
+      id="seccion-ofertas-amazon"
+      class="publicidad-wrapper seccion-ofertas-categoria"
+      data-categoria-publicidad="ofertas_amazon"
+      aria-label="Ofertas Amazon"
+      hidden
+    >
+      <div class="publicidad-cabecera">
+        <span>OFERTAS AMAZON</span>
+        <div class="publicidad-indicadores" aria-label="Indicadores de ofertas"></div>
+      </div>
+      <div class="publicidad-carrusel" tabindex="0">
+        <button class="publicidad-flecha publicidad-flecha-anterior" type="button" aria-label="Oferta anterior">‹</button>
+        <article class="publicidad-contenido">
+          <img class="publicidad-imagen" src="" alt="" />
+          <div class="publicidad-copy">
+            <h2 class="publicidad-titulo"></h2>
+            <p class="publicidad-descripcion"></p>
+            <div class="publicidad-precios">
+              <div class="precio-publicado-bloque" hidden><span>Precio publicado</span><strong class="publicidad-precio-publicado"></strong></div>
+              <div class="precio-cupon-bloque" hidden><span>Precio con cupón</span><strong class="publicidad-precio-cupon"></strong></div>
+            </div>
+            <p class="publicidad-aviso-cupon" hidden>📋 Al dar clic en <strong>Ver en Amazon</strong>, el cupón se copiará automáticamente.</p>
+            <div class="publicidad-acciones">
+              <a class="publicidad-boton publicidad-enlace" href="#">📦 Ver en Amazon</a>
+              <button class="publicidad-compartir" type="button" aria-label="Compartir oferta">↗ Compartir</button>
+            </div>
+            <p class="publicidad-mensaje" aria-live="polite"></p>
+          </div>
+        </article>
+        <button class="publicidad-flecha publicidad-flecha-siguiente" type="button" aria-label="Oferta siguiente">›</button>
       </div>
     </section>
   </main>
@@ -232,6 +318,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/app.js?v=60.8"></script>
+  <script type="module" src="js/app.js?v=61.0"></script>
 </body>
 </html>

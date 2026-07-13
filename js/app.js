@@ -16,21 +16,7 @@ const tabTienda = document.querySelector("#tab-tienda");
 const tabBancarios = document.querySelector("#tab-bancarios");
 
 
-const publicidadWrapper = document.querySelector("#publicidad-wrapper");
-const publicidadCarrusel = document.querySelector("#publicidad-carrusel");
-const publicidadContenido = document.querySelector("#publicidad-contenido");
-const publicidadImagen = document.querySelector("#publicidad-imagen");
-const publicidadTitulo = document.querySelector("#publicidad-titulo");
-const publicidadDescripcion = document.querySelector("#publicidad-descripcion");
-const publicidadEnlace = document.querySelector("#publicidad-enlace");
-const publicidadPrecioPublicado = document.querySelector("#publicidad-precio-publicado");
-const publicidadPrecioCupon = document.querySelector("#publicidad-precio-cupon");
-const precioPublicadoBloque = document.querySelector("#precio-publicado-bloque");
-const precioCuponBloque = document.querySelector("#precio-cupon-bloque");
-const publicidadAvisoCupon = document.querySelector("#publicidad-aviso-cupon");
-const publicidadIndicadores = document.querySelector("#publicidad-indicadores");
-const publicidadAnterior = document.querySelector("#publicidad-anterior");
-const publicidadSiguiente = document.querySelector("#publicidad-siguiente");
+const carruselesPublicidad = [];
 
 const SEGUNDOS_ACTUALIZACION = 60;
 const SEGUNDOS_REDIRECCION = 3;
@@ -44,50 +30,18 @@ let redireccionEnProceso = false;
 let timeoutRedireccion = null;
 let categoriaActiva = "tienda";
 let todosLosCupones = [];
-
-let publicidades = [];
-let publicidadActual = 0;
-let temporizadorPublicidad = null;
-let inicioSwipeX = null;
+let todasLasPublicidades = [];
 let temporizadorEstados = null;
 
 botonRecargar.addEventListener("click", cargarCupones);
 tabTienda.addEventListener("click", () => cambiarCategoria("tienda"));
 tabBancarios.addEventListener("click", () => cambiarCategoria("bancarios"));
 
-publicidadAnterior.addEventListener("click", () => cambiarPublicidad(-1));
-publicidadSiguiente.addEventListener("click", () => cambiarPublicidad(1));
-
-publicidadCarrusel.addEventListener("mouseenter", detenerRotacionPublicidad);
-publicidadCarrusel.addEventListener("mouseleave", iniciarRotacionPublicidad);
-publicidadCarrusel.addEventListener("focusin", detenerRotacionPublicidad);
-publicidadCarrusel.addEventListener("focusout", iniciarRotacionPublicidad);
-
-publicidadCarrusel.addEventListener("touchstart", (event) => {
-  inicioSwipeX = event.touches[0]?.clientX ?? null;
-}, { passive: true });
-
-publicidadCarrusel.addEventListener("touchend", (event) => {
-  if (inicioSwipeX === null) return;
-
-  const finX = event.changedTouches[0]?.clientX ?? inicioSwipeX;
-  const diferencia = finX - inicioSwipeX;
-
-  if (Math.abs(diferencia) >= 45) {
-    cambiarPublicidad(diferencia > 0 ? -1 : 1);
-  }
-
-  inicioSwipeX = null;
-}, { passive: true });
-
-publicidadEnlace.addEventListener("click", (event) => {
-  event.preventDefault();
-
-  const publicidad = publicidades[publicidadActual];
-
-  if (publicidad) {
-    abrirPublicidad(publicidad);
-  }
+document.querySelectorAll(".menu-ofertas a").forEach((enlace) => {
+  enlace.addEventListener("click", () => {
+    const destino = document.querySelector(enlace.getAttribute("href"));
+    if (destino) destino.hidden = false;
+  });
 });
 
 function escaparHtml(valor = "") {
@@ -799,154 +753,237 @@ async function compartirPagina(tarjeta) {
   }
 }
 
-/* Publicidad */
+/* Publicidad y secciones de ofertas */
+function crearControlCarrusel(wrapper) {
+  const control = {
+    wrapper,
+    categoria: wrapper.dataset.categoriaPublicidad || "ofertas_dia",
+    items: [],
+    actual: 0,
+    temporizador: null,
+    inicioSwipeX: null,
+    carrusel: wrapper.querySelector(".publicidad-carrusel"),
+    contenido: wrapper.querySelector(".publicidad-contenido"),
+    imagen: wrapper.querySelector("#publicidad-imagen, .publicidad-imagen"),
+    titulo: wrapper.querySelector("#publicidad-titulo, .publicidad-titulo"),
+    descripcion: wrapper.querySelector("#publicidad-descripcion, .publicidad-descripcion"),
+    enlace: wrapper.querySelector("#publicidad-enlace, .publicidad-enlace"),
+    precioPublicado: wrapper.querySelector("#publicidad-precio-publicado, .publicidad-precio-publicado"),
+    precioCupon: wrapper.querySelector("#publicidad-precio-cupon, .publicidad-precio-cupon"),
+    bloquePublicado: wrapper.querySelector("#precio-publicado-bloque, .precio-publicado-bloque"),
+    bloqueCupon: wrapper.querySelector("#precio-cupon-bloque, .precio-cupon-bloque"),
+    avisoCupon: wrapper.querySelector("#publicidad-aviso-cupon, .publicidad-aviso-cupon"),
+    indicadores: wrapper.querySelector("#publicidad-indicadores, .publicidad-indicadores"),
+    anterior: wrapper.querySelector("#publicidad-anterior, .publicidad-flecha-anterior"),
+    siguiente: wrapper.querySelector("#publicidad-siguiente, .publicidad-flecha-siguiente"),
+    compartir: wrapper.querySelector("#publicidad-compartir, .publicidad-compartir"),
+    mensaje: wrapper.querySelector("#publicidad-mensaje, .publicidad-mensaje"),
+  };
+
+  control.anterior?.addEventListener("click", () => cambiarPublicidad(control, -1));
+  control.siguiente?.addEventListener("click", () => cambiarPublicidad(control, 1));
+  control.enlace?.addEventListener("click", (event) => {
+    event.preventDefault();
+    const item = control.items[control.actual];
+    if (item) abrirPublicidad(item);
+  });
+  control.compartir?.addEventListener("click", () => {
+    const item = control.items[control.actual];
+    if (item) compartirPublicidad(item, control);
+  });
+  control.carrusel?.addEventListener("mouseenter", () => detenerRotacionPublicidad(control));
+  control.carrusel?.addEventListener("mouseleave", () => iniciarRotacionPublicidad(control));
+  control.carrusel?.addEventListener("focusin", () => detenerRotacionPublicidad(control));
+  control.carrusel?.addEventListener("focusout", () => iniciarRotacionPublicidad(control));
+  control.carrusel?.addEventListener("touchstart", (event) => {
+    control.inicioSwipeX = event.touches[0]?.clientX ?? null;
+  }, { passive: true });
+  control.carrusel?.addEventListener("touchend", (event) => {
+    if (control.inicioSwipeX === null) return;
+    const finX = event.changedTouches[0]?.clientX ?? control.inicioSwipeX;
+    const diferencia = finX - control.inicioSwipeX;
+    if (Math.abs(diferencia) >= 45) cambiarPublicidad(control, diferencia > 0 ? -1 : 1);
+    control.inicioSwipeX = null;
+  }, { passive: true });
+
+  return control;
+}
+
+function inicializarCarruselesPublicidad() {
+  carruselesPublicidad.splice(0);
+  document.querySelectorAll("[data-categoria-publicidad]").forEach((wrapper) => {
+    carruselesPublicidad.push(crearControlCarrusel(wrapper));
+  });
+}
+
 async function cargarPublicidad() {
   try {
     const respuesta = await fetch("/api/publicidad", {
-      headers: {
-        Accept: "application/json",
-      },
+      headers: { Accept: "application/json" },
       cache: "no-store",
     });
-
-    if (!respuesta.ok) {
-      throw new Error("No fue posible consultar la publicidad.");
-    }
+    if (!respuesta.ok) throw new Error("No fue posible consultar la publicidad.");
 
     const datos = await respuesta.json();
-    publicidades = Array.isArray(datos) ? datos : [];
+    todasLasPublicidades = Array.isArray(datos) ? datos : [];
 
-    if (publicidades.length === 0) {
-      publicidadWrapper.hidden = true;
-      detenerRotacionPublicidad();
-      return;
+    for (const control of carruselesPublicidad) {
+      control.items = todasLasPublicidades.filter((item) =>
+        (item.categoria || "ofertas_dia") === control.categoria
+      );
+      control.actual = 0;
+      detenerRotacionPublicidad(control);
+
+      if (!control.items.length) {
+        control.wrapper.hidden = true;
+        continue;
+      }
+
+      control.wrapper.hidden = false;
+      crearIndicadoresPublicidad(control);
+      mostrarPublicidad(control);
+      iniciarRotacionPublicidad(control);
     }
-
-    publicidadActual = 0;
-    publicidadWrapper.hidden = false;
-    crearIndicadoresPublicidad();
-    mostrarPublicidad();
-    iniciarRotacionPublicidad();
   } catch (error) {
     console.warn(error);
-    publicidadWrapper.hidden = true;
+    carruselesPublicidad.forEach((control) => {
+      control.wrapper.hidden = true;
+      detenerRotacionPublicidad(control);
+    });
   }
 }
 
-function crearIndicadoresPublicidad() {
-  publicidadIndicadores.replaceChildren();
-
-  publicidades.forEach((_, indice) => {
+function crearIndicadoresPublicidad(control) {
+  control.indicadores.replaceChildren();
+  control.items.forEach((_, indice) => {
     const punto = document.createElement("button");
-
     punto.type = "button";
     punto.className = "publicidad-punto";
-    punto.setAttribute("aria-label", `Mostrar publicidad ${indice + 1}`);
-
+    punto.setAttribute("aria-label", `Mostrar oferta ${indice + 1}`);
     punto.addEventListener("click", () => {
-      publicidadActual = indice;
-      mostrarPublicidad();
-      iniciarRotacionPublicidad();
+      control.actual = indice;
+      mostrarPublicidad(control);
+      iniciarRotacionPublicidad(control);
     });
-
-    publicidadIndicadores.appendChild(punto);
+    control.indicadores.appendChild(punto);
   });
 }
 
-function mostrarPublicidad() {
-  const publicidad = publicidades[publicidadActual];
-
+function mostrarPublicidad(control) {
+  const publicidad = control.items[control.actual];
   if (!publicidad) return;
 
-  publicidadContenido.style.animation = "none";
-  void publicidadContenido.offsetWidth;
-  publicidadContenido.style.animation = "";
+  control.contenido.style.animation = "none";
+  void control.contenido.offsetWidth;
+  control.contenido.style.animation = "";
+  control.imagen.src = publicidad.imagen_url;
+  control.imagen.alt = publicidad.titulo || "Oferta";
+  control.titulo.textContent = publicidad.titulo || "Oferta destacada";
+  control.descripcion.textContent = publicidad.descripcion || "";
+  control.enlace.href = publicidad.enlace;
 
-  publicidadImagen.src = publicidad.imagen_url;
-  publicidadImagen.alt = publicidad.titulo || "Publicidad";
-  publicidadTitulo.textContent = publicidad.titulo || "Oferta destacada";
-  publicidadDescripcion.textContent = publicidad.descripcion || "";
-  publicidadEnlace.href = publicidad.enlace;
+  const esAmazon = control.categoria === "ofertas_amazon";
+  control.enlace.textContent = esAmazon ? "📦 Ver en Amazon" : "🛒 Ver en Mercado Libre";
+  if (control.avisoCupon) {
+    control.avisoCupon.innerHTML = esAmazon
+      ? '📋 Al dar clic en <strong>Ver en Amazon</strong>, el cupón se copiará automáticamente.'
+      : '📋 Al dar clic en <strong>Ver en Mercado Libre</strong>, el cupón se copiará automáticamente.';
+  }
 
   const precioPublicado = String(publicidad.precio_publicado || "").trim();
   const precioCupon = String(publicidad.precio_cupon || "").trim();
-
-  /*
-    Solo se muestra información de cupón cuando se capturó Precio con cupón.
-  */
-  const mostrarInformacionCupon = Boolean(precioCupon);
-
-  precioPublicadoBloque.hidden = !precioPublicado;
-  precioCuponBloque.hidden = !precioCupon;
-  publicidadAvisoCupon.hidden = !mostrarInformacionCupon;
-
-  const contenedorPrecios = document.querySelector(".publicidad-precios");
-  contenedorPrecios.classList.toggle("con-precio-cupon", Boolean(precioCupon));
-  contenedorPrecios.classList.toggle("sin-precio-cupon", !precioCupon);
-
-  publicidadPrecioPublicado.textContent = precioPublicado;
-  publicidadPrecioCupon.textContent = precioCupon;
-
-  [...publicidadIndicadores.children].forEach((punto, indice) => {
-    punto.classList.toggle("activo", indice === publicidadActual);
+  control.bloquePublicado.hidden = !precioPublicado;
+  control.bloqueCupon.hidden = !precioCupon;
+  control.avisoCupon.hidden = !precioCupon;
+  const precios = control.wrapper.querySelector(".publicidad-precios");
+  precios.classList.toggle("con-precio-cupon", Boolean(precioCupon));
+  precios.classList.toggle("sin-precio-cupon", !precioCupon);
+  control.precioPublicado.textContent = precioPublicado;
+  control.precioCupon.textContent = precioCupon;
+  [...control.indicadores.children].forEach((punto, indice) => {
+    punto.classList.toggle("activo", indice === control.actual);
   });
-
-  const mostrarControles = publicidades.length > 1;
-
-  publicidadAnterior.hidden = !mostrarControles;
-  publicidadSiguiente.hidden = !mostrarControles;
-  publicidadIndicadores.hidden = !mostrarControles;
+  const mostrarControles = control.items.length > 1;
+  control.anterior.hidden = !mostrarControles;
+  control.siguiente.hidden = !mostrarControles;
+  control.indicadores.hidden = !mostrarControles;
+  control.mensaje.textContent = "";
 }
 
-function cambiarPublicidad(direccion) {
-  if (publicidades.length <= 1) return;
-
-  publicidadActual =
-    (publicidadActual + direccion + publicidades.length) % publicidades.length;
-
-  mostrarPublicidad();
-  iniciarRotacionPublicidad();
+function cambiarPublicidad(control, direccion) {
+  if (control.items.length <= 1) return;
+  control.actual = (control.actual + direccion + control.items.length) % control.items.length;
+  mostrarPublicidad(control);
+  iniciarRotacionPublicidad(control);
 }
 
-function iniciarRotacionPublicidad() {
-  detenerRotacionPublicidad();
-
-  if (publicidades.length <= 1) return;
-
-  temporizadorPublicidad = window.setInterval(() => {
-    cambiarPublicidad(1);
-  }, MILISEGUNDOS_PUBLICIDAD);
+function iniciarRotacionPublicidad(control) {
+  detenerRotacionPublicidad(control);
+  if (control.items.length <= 1) return;
+  control.temporizador = window.setInterval(() => cambiarPublicidad(control, 1), MILISEGUNDOS_PUBLICIDAD);
 }
 
-function detenerRotacionPublicidad() {
-  if (temporizadorPublicidad) {
-    clearInterval(temporizadorPublicidad);
-    temporizadorPublicidad = null;
+function detenerRotacionPublicidad(control) {
+  if (control.temporizador) {
+    clearInterval(control.temporizador);
+    control.temporizador = null;
   }
+}
+
+function textoCompartirPublicidad(publicidad) {
+  const lineas = [publicidad.titulo || "Oferta destacada"];
+  if (publicidad.descripcion) lineas.push(publicidad.descripcion);
+  if (publicidad.precio_publicado) lineas.push(`Precio publicado: ${publicidad.precio_publicado}`);
+  if (publicidad.precio_cupon) lineas.push(`Precio con cupón: ${publicidad.precio_cupon}`);
+  if (publicidad.codigo_cupon) lineas.push(`Cupón: ${publicidad.codigo_cupon}`);
+  if (publicidad.enlace) lineas.push(publicidad.enlace);
+  lineas.push("", `Más ofertas y cupones aquí ${URL_PAGINA}`);
+  return lineas.join("\n");
+}
+
+async function compartirPublicidad(publicidad, control) {
+  const texto = textoCompartirPublicidad(publicidad);
+  try {
+    if (navigator.share) {
+      let archivoImagen = null;
+      try {
+        const respuesta = await fetch(publicidad.imagen_url, { mode: "cors" });
+        if (respuesta.ok) {
+          const blob = await respuesta.blob();
+          const extension = blob.type.split("/")[1] || "jpg";
+          archivoImagen = new File([blob], `oferta.${extension}`, { type: blob.type });
+        }
+      } catch (_) {
+        archivoImagen = null;
+      }
+
+      if (archivoImagen && navigator.canShare?.({ files: [archivoImagen] })) {
+        await navigator.share({ title: publicidad.titulo || "Oferta", text: texto, files: [archivoImagen] });
+      } else {
+        await navigator.share({ title: publicidad.titulo || "Oferta", text: texto, url: publicidad.enlace || URL_PAGINA });
+      }
+      control.mensaje.textContent = "Oferta compartida.";
+    } else {
+      await copiarTexto(texto);
+      control.mensaje.textContent = "Información de la oferta copiada.";
+    }
+  } catch (error) {
+    if (error?.name !== "AbortError") {
+      console.error(error);
+      control.mensaje.textContent = "No fue posible compartir la oferta.";
+    }
+  }
+  setTimeout(() => { control.mensaje.textContent = ""; }, 3500);
 }
 
 async function abrirPublicidad(publicidad) {
   const enlace = String(publicidad.enlace || "").trim();
-
   if (!enlace) return;
-
   const codigo = String(publicidad.codigo_cupon || "").trim();
   const precioCupon = String(publicidad.precio_cupon || "").trim();
-
-  /*
-    Solo se copia un código cuando existen:
-    1) Precio con cupón
-    2) Código de cupón
-  */
-  const debeCopiarCupon = Boolean(precioCupon && codigo);
-
   try {
-    if (debeCopiarCupon) {
-      await copiarTexto(codigo);
-    }
-
+    if (precioCupon && codigo) await copiarTexto(codigo);
     registrarClicPublicidad(publicidad.id);
-
     window.location.assign(enlace);
   } catch (error) {
     console.warn("No fue posible preparar la publicidad.", error);
@@ -958,9 +995,7 @@ async function registrarClicPublicidad(id) {
   try {
     await fetch("/api/publicidad-clic", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id }),
       keepalive: true,
     });
@@ -1002,11 +1037,12 @@ window.addEventListener("pageshow", (event) => {
 document.addEventListener("visibilitychange", () => {
   if (!document.hidden) {
     reiniciarInteraccion();
-    iniciarRotacionPublicidad();
+    carruselesPublicidad.forEach(iniciarRotacionPublicidad);
   } else {
-    detenerRotacionPublicidad();
+    carruselesPublicidad.forEach(detenerRotacionPublicidad);
   }
 });
 
+inicializarCarruselesPublicidad();
 cargarCupones();
 cargarPublicidad();

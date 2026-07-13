@@ -103,3 +103,38 @@
 .barra-redes-lineal .red-social span{
   font-weight:400!important;
 }
+
+
+/* Menú horizontal de secciones de ofertas */
+.menu-ofertas {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  width: min(720px, calc(100% - 24px));
+  margin: 9px auto 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.menu-ofertas::-webkit-scrollbar { display: none; }
+.menu-ofertas a {
+  flex: 0 0 auto;
+  padding: 9px 13px;
+  border: 1px solid #d7e5de;
+  border-radius: 999px;
+  color: #315044;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(24, 60, 43, 0.06);
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.menu-ofertas a:hover, .menu-ofertas a:focus-visible {
+  color: #fff;
+  background: linear-gradient(135deg, #08786f, #0f9f92);
+  outline: none;
+}
+@media (max-width: 430px) {
+  .menu-ofertas { justify-content: flex-start; padding: 0 2px 3px; }
+  .menu-ofertas a { padding: 8px 11px; font-size: 12px; }
+}

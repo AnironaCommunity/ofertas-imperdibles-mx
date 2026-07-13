@@ -213,11 +213,11 @@ https://meli.la/xxxxx"
               </div>
 
               <div class="campo campo-completo">
-                <label for="coupon-link">Enlace de Mercado Libre</label>
+                <label for="coupon-link">Enlace del producto</label>
                 <input
                   id="coupon-link"
                   type="url"
-                  placeholder="https://meli.la/..."
+                  placeholder="https://meli.la/... o https://amzn.to/..."
                   required
                 />
               </div>
@@ -309,6 +309,16 @@ https://meli.la/xxxxx"
                 />
               </div>
 
+
+              <div class="campo">
+                <label for="ad-category">Sección donde se mostrará</label>
+                <select id="ad-category" required>
+                  <option value="ofertas_dia">Ofertas del día</option>
+                  <option value="comunidad_anirona">Comunidad Anirona</option>
+                  <option value="ofertas_amazon">Ofertas Amazon</option>
+                </select>
+              </div>
+
               <div class="campo">
                 <label for="ad-order">Orden</label>
                 <input
@@ -329,11 +339,11 @@ https://meli.la/xxxxx"
               </div>
 
               <div class="campo campo-completo">
-                <label for="ad-link">Enlace de Mercado Libre</label>
+                <label for="ad-link">Enlace del producto</label>
                 <input
                   id="ad-link"
                   type="url"
-                  placeholder="https://meli.la/..."
+                  placeholder="https://meli.la/... o https://amzn.to/..."
                   required
                 />
               </div>
@@ -367,7 +377,7 @@ https://meli.la/xxxxx"
                 <small>
                   Este código se guarda en la base de datos, pero no se muestra
                   públicamente. Se copiará cuando el usuario pulse
-                  “Ver en Mercado Libre”.
+                  “Ver oferta”.
                 </small>
               </div>
 
@@ -429,6 +439,6 @@ https://meli.la/xxxxx"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=60"></script>
+  <script type="module" src="admin.js?v=61.0"></script>
 </body>
 </html>

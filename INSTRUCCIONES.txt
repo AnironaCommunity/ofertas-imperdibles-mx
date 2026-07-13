@@ -20,3 +20,12 @@ css/base.css
 PRUEBA
 
 https://ofertasimperdiblesmx.vercel.app/?v=60.6
+
+IMPORTANTE V61.0
+Antes de publicar esta versión, ejecuta en Supabase el archivo:
+sql/agregar_categorias_publicidad.sql
+
+Después podrás elegir en el panel de Publicidad si cada producto aparece en:
+- Ofertas del día
+- Comunidad Anirona
+- Ofertas Amazon

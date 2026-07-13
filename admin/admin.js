@@ -48,6 +48,7 @@ const adId = document.querySelector("#ad-id");
 const adImageUrl = document.querySelector("#ad-image-url");
 const adTitle = document.querySelector("#ad-title");
 const adDescription = document.querySelector("#ad-description");
+const adCategory = document.querySelector("#ad-category");
 const adLink = document.querySelector("#ad-link");
 const adPricePublished = document.querySelector("#ad-price-published");
 const adPriceCoupon = document.querySelector("#ad-price-coupon");
@@ -574,6 +575,7 @@ function resetAdForm() {
   adPricePublished.value = "";
   adPriceCoupon.value = "";
   adCouponCode.value = "";
+  adCategory.value = "ofertas_dia";
   adOrder.value = "0";
   adActive.checked = true;
   adPreviewWrapper.hidden = true;
@@ -591,6 +593,7 @@ function editAd(ad) {
   adPricePublished.value = ad.precio_publicado || "";
   adPriceCoupon.value = ad.precio_cupon || "";
   adCouponCode.value = ad.codigo_cupon || "";
+  adCategory.value = ad.categoria || "ofertas_dia";
   adOrder.value = ad.orden || 0;
   adActive.checked = Boolean(ad.activo);
   adImageUrl.value = ad.imagen_url || "";
@@ -637,6 +640,7 @@ function renderAds() {
         </div>
 
         <small>
+          Sección: ${escapeHtml(({ofertas_dia: "Ofertas del día", comunidad_anirona: "Comunidad Anirona", ofertas_amazon: "Ofertas Amazon"})[ad.categoria || "ofertas_dia"])} ·
           Orden: ${Number(ad.orden || 0)} ·
           Clics: ${Number(ad.clics || 0)} ·
           ${ad.activo ? "Activa" : "Inactiva"}
@@ -744,6 +748,7 @@ async function saveAd(event) {
       precio_publicado: adPricePublished.value.trim(),
       precio_cupon: adPriceCoupon.value.trim(),
       codigo_cupon: adCouponCode.value.trim(),
+      categoria: adCategory.value,
       imagen_url: imageUrl,
       orden: Number(adOrder.value) || 0,
       activo: adActive.checked,

@@ -44,3 +44,9 @@ Para modificar una sección, edita únicamente su módulo CSS:
 - Publicidad y estructura general: `css/base.css`
 
 No agregues nuevos parches al final de `style.css`.
+
+
+## Actualización V61 — Secciones de ofertas
+1. Ejecuta `sql/agregar_categorias_publicidad.sql` en Supabase antes de desplegar.
+2. En Administración > Publicidad selecciona la sección: Ofertas del día, Comunidad Anirona u Ofertas Amazon.
+3. El botón Compartir incluye título, descripción, precios, cupón, enlace y la liga de la página. En dispositivos compatibles intenta adjuntar también la imagen; si el navegador o el servidor de imagen no lo permite, comparte el texto y el enlace.
