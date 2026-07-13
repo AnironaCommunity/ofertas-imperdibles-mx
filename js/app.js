@@ -921,9 +921,18 @@ function crearTarjetaOferta(publicidad, categoria) {
   return articulo;
 }
 
+
+function publicidadPerteneceASeccion(publicidad, seccion) {
+  const secciones = Array.isArray(publicidad?.secciones)
+    ? publicidad.secciones
+    : [publicidad?.categoria || "ofertas_dia"];
+
+  return secciones.includes(seccion);
+}
+
 function renderizarModuloOfertas(categoria, contenedor, seccion) {
   const items = todasLasPublicidades.filter((item) =>
-    (item.categoria || "ofertas_dia") === categoria
+    publicidadPerteneceASeccion(item, categoria)
   );
 
   contenedor.replaceChildren();
@@ -944,22 +953,44 @@ function renderizarModuloOfertas(categoria, contenedor, seccion) {
   });
 }
 
+const DURACION_VISITA_PRODUCTO_MS = 24 * 60 * 60 * 1000;
+
 function claveVisitaPublicidad(id) {
   return `visita-publicidad-${id}`;
 }
 
+function visitaPublicidadVigente(id) {
+  const clave = claveVisitaPublicidad(id);
+  const registro = Number(localStorage.getItem(clave));
+
+  if (!Number.isFinite(registro) || registro <= 0) {
+    localStorage.removeItem(clave);
+    return false;
+  }
+
+  if (Date.now() - registro >= DURACION_VISITA_PRODUCTO_MS) {
+    localStorage.removeItem(clave);
+    return false;
+  }
+
+  return true;
+}
+
 function actualizarVisitasEnPantalla(id, visitas) {
   document.querySelectorAll(`[data-visitas-id="${id}"]`).forEach((elemento) => {
-    elemento.textContent = `👁️ ${Number(visitas) || 0} visitas`;
+    const total = Number(visitas) || 0;
+    elemento.textContent = `👁️ ${total} ${total === 1 ? "visita" : "visitas"}`;
   });
 }
 
 async function registrarVisitaPublicidad(publicidad) {
   const id = Number(publicidad?.id);
   if (!Number.isInteger(id) || id <= 0) return;
+
+  if (visitaPublicidadVigente(id)) return;
+
   const clave = claveVisitaPublicidad(id);
-  if (sessionStorage.getItem(clave)) return;
-  sessionStorage.setItem(clave, "1");
+  localStorage.setItem(clave, String(Date.now()));
 
   try {
     const respuesta = await fetch("/api/publicidad-visita", {
@@ -968,12 +999,16 @@ async function registrarVisitaPublicidad(publicidad) {
       body: JSON.stringify({ id }),
       keepalive: true,
     });
-    if (!respuesta.ok) throw new Error("No fue posible registrar la visita.");
+
+    if (!respuesta.ok) {
+      throw new Error("No fue posible registrar la visita.");
+    }
+
     const datos = await respuesta.json();
     publicidad.visitas = Number(datos.visitas) || 0;
     actualizarVisitasEnPantalla(id, publicidad.visitas);
   } catch (error) {
-    sessionStorage.removeItem(clave);
+    localStorage.removeItem(clave);
     console.warn("No fue posible registrar la visita del producto.", error);
   }
 }
@@ -1009,7 +1044,7 @@ async function cargarPublicidad() {
 
     for (const control of carruselesPublicidad) {
       control.items = todasLasPublicidades.filter((item) =>
-        (item.categoria || "ofertas_dia") === control.categoria
+        publicidadPerteneceASeccion(item, control.categoria)
       );
       control.actual = 0;
       detenerRotacionPublicidad(control);

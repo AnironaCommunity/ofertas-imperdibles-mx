@@ -1,0 +1,15 @@
+OFERTAS IMPERDIBLES MX — V61.7
+
+REEMPLAZA ÚNICAMENTE:
+- js/app.js
+
+CAMBIO:
+- La visita de cada producto se registra solamente cuando el usuario pulsa
+  “Ver en Mercado Libre” o “Ver en Amazon”.
+- El mismo navegador solo suma una visita por producto cada 24 horas.
+- Después de 24 horas, un nuevo clic en ese producto puede volver a sumar.
+- Otros dispositivos o navegadores cuentan de forma independiente.
+- El contador continúa mostrándose como “1 visita” o “2 visitas”.
+
+SQL:
+- No debes ejecutar ningún archivo SQL.
