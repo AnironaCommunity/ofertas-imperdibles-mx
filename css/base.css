@@ -1993,3 +1993,109 @@ button.oferta-imagen-contenedor:active .oferta-imagen {
 .enlace-logo-inicio .logo {
   display: block;
 }
+
+
+/* V63.3 — Logo centrado y encabezado abstracto suave */
+.encabezado {
+  position: relative;
+  isolation: isolate;
+  padding-top: 12px;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(65, 185, 54, .12), transparent 30%),
+    radial-gradient(circle at 88% 2%, rgba(18, 153, 117, .09), transparent 27%),
+    linear-gradient(135deg, #ffffff 0%, #f7fcf7 54%, #f2faf5 100%) !important;
+}
+
+.encabezado::before,
+.encabezado::after {
+  content: "" !important;
+  position: absolute;
+  z-index: -1;
+  display: block !important;
+  border-radius: 999px;
+  pointer-events: none;
+  filter: blur(1px);
+}
+
+.encabezado::before {
+  width: 240px;
+  height: 72px;
+  top: -38px;
+  left: -70px;
+  border: 1px solid rgba(54, 176, 64, .10);
+  background: rgba(113, 208, 82, .045);
+  transform: rotate(-9deg);
+}
+
+.encabezado::after {
+  width: 210px;
+  height: 78px;
+  top: -35px;
+  right: -58px;
+  border: 1px solid rgba(14, 139, 111, .09);
+  background: rgba(17, 158, 124, .035);
+  transform: rotate(11deg);
+}
+
+.enlace-logo-inicio {
+  position: relative;
+  z-index: 2;
+  display: flex !important;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 5px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+}
+
+.enlace-logo-inicio .logo {
+  display: block;
+  width: min(315px, 78vw);
+  max-height: 92px;
+  margin: 0 auto !important;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 12px rgba(30, 72, 43, .08));
+}
+
+.enlace-logo-inicio:hover,
+.enlace-logo-inicio:focus-visible {
+  transform: scale(1.018);
+}
+
+.barra-redes-lineal {
+  position: relative;
+  z-index: 2;
+}
+
+.menu-ofertas-contenedor {
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 600px) {
+  .encabezado {
+    padding-top: 9px;
+  }
+
+  .enlace-logo-inicio {
+    margin-bottom: 3px;
+  }
+
+  .enlace-logo-inicio .logo {
+    width: min(270px, 76vw);
+    max-height: 78px;
+  }
+
+  .encabezado::before {
+    width: 170px;
+    height: 58px;
+    left: -68px;
+  }
+
+  .encabezado::after {
+    width: 160px;
+    height: 61px;
+    right: -58px;
+  }
+}
