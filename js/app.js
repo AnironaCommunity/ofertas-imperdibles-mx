@@ -15,6 +15,10 @@ const modalCuponOculto = document.querySelector("#modal-cupon-oculto");
 const tabTienda = document.querySelector("#tab-tienda");
 const tabBancarios = document.querySelector("#tab-bancarios");
 
+const contadorTienda = document.querySelector("#contador-tienda");
+const contadorBancarios = document.querySelector("#contador-bancarios");
+const contadorCopiados = document.querySelector("#contador-copiados");
+
 const publicidadWrapper = document.querySelector("#publicidad-wrapper");
 const publicidadCarrusel = document.querySelector("#publicidad-carrusel");
 const publicidadContenido = document.querySelector("#publicidad-contenido");
@@ -467,6 +471,26 @@ function limpiarVista() {
   sinCupones.hidden = true;
 }
 
+function actualizarResumen() {
+  const tienda = todosLosCupones.filter(
+    (cupon) => normalizarCategoria(cupon) === "tienda"
+  );
+
+  const bancarios = todosLosCupones.filter(
+    (cupon) => normalizarCategoria(cupon) === "bancarios"
+  );
+
+  const copiados = todosLosCupones.reduce(
+    (total, cupon) => total + Number(cupon.clics || 0),
+    0
+  );
+
+  contadorTienda.textContent = String(tienda.length);
+  contadorBancarios.textContent = String(bancarios.length);
+  contadorCopiados.textContent =
+    new Intl.NumberFormat("es-MX").format(copiados);
+}
+
 function renderizarCategoria() {
   limpiarVista();
 
@@ -563,6 +587,7 @@ async function cargarCupones() {
     const cupones = await respuesta.json();
 
     todosLosCupones = Array.isArray(cupones) ? cupones : [];
+    actualizarResumen();
     renderizarCategoria();
   } catch (error) {
     console.error(error);
@@ -748,6 +773,15 @@ async function copiarYCanjear(cupon, tarjeta) {
       .then((resultado) => {
         if (Number.isFinite(Number(resultado.clics))) {
           numeroClics.textContent = String(resultado.clics);
+
+          const couponIndex = todosLosCupones.findIndex(
+            (item) => Number(item.id) === Number(cupon.id)
+          );
+
+          if (couponIndex >= 0) {
+            todosLosCupones[couponIndex].clics = Number(resultado.clics);
+            actualizarResumen();
+          }
         }
       })
       .catch((error) => {
