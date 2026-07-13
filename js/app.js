@@ -46,18 +46,117 @@ let todosLosCupones = [];
 let todasLasPublicidades = [];
 let temporizadorEstados = null;
 
+const SECCIONES_URL = {
+  tienda: {
+    vista: "cupones",
+    categoria: "tienda",
+  },
+  bancarios: {
+    vista: "cupones",
+    categoria: "bancarios",
+  },
+  mercadolibre: {
+    vista: "ofertas_mercado_libre",
+  },
+  amazon: {
+    vista: "ofertas_amazon",
+  },
+  anirona: {
+    vista: "comunidad_anirona",
+  },
+};
+
+const VISTA_A_SECCION_URL = {
+  ofertas_mercado_libre: "mercadolibre",
+  ofertas_amazon: "amazon",
+  comunidad_anirona: "anirona",
+};
+
+function obtenerSeccionDesdeUrl() {
+  const parametros = new URLSearchParams(window.location.search);
+  const seccion = String(parametros.get("seccion") || "").toLowerCase().trim();
+
+  return SECCIONES_URL[seccion] ? seccion : "tienda";
+}
+
+function actualizarUrlSeccion(seccion, modo = "push") {
+  if (!SECCIONES_URL[seccion]) return;
+
+  const url = new URL(window.location.href);
+
+  if (seccion === "tienda") {
+    url.searchParams.delete("seccion");
+  } else {
+    url.searchParams.set("seccion", seccion);
+  }
+
+  const estado = { seccion };
+
+  if (modo === "replace") {
+    window.history.replaceState(estado, "", url);
+  } else {
+    window.history.pushState(estado, "", url);
+  }
+}
+
+function activarSeccionDesdeUrl({
+  actualizarHistorial = false,
+  desplazamiento = "auto",
+} = {}) {
+  const seccion = obtenerSeccionDesdeUrl();
+  const configuracion = SECCIONES_URL[seccion];
+
+  if (configuracion.vista === "cupones") {
+    categoriaActiva = configuracion.categoria;
+    cambiarVista("cupones", {
+      actualizarHistorial: false,
+      desplazamiento,
+    });
+    renderizarCategoria();
+  } else {
+    cambiarVista(configuracion.vista, {
+      actualizarHistorial: false,
+      desplazamiento,
+    });
+  }
+
+  const botonActivo = [...botonesMenuOfertas].find(
+    (boton) => boton.dataset.vista === configuracion.vista
+  );
+
+  botonActivo?.scrollIntoView({
+    behavior: desplazamiento === "smooth" ? "smooth" : "auto",
+    block: "nearest",
+    inline: "center",
+  });
+
+  if (actualizarHistorial) {
+    actualizarUrlSeccion(seccion, "replace");
+  }
+}
+
+
 botonRecargar.addEventListener("click", cargarCupones);
-tabTienda.addEventListener("click", () => cambiarCategoria("tienda"));
-tabBancarios.addEventListener("click", () => cambiarCategoria("bancarios"));
+tabTienda.addEventListener("click", () =>
+  cambiarCategoria("tienda", { actualizarHistorial: true })
+);
+tabBancarios.addEventListener("click", () =>
+  cambiarCategoria("bancarios", { actualizarHistorial: true })
+);
 
 botonesMenuOfertas.forEach((boton) => {
   boton.addEventListener("click", () => {
-    cambiarVista(boton.dataset.vista);
+    cambiarVista(boton.dataset.vista, {
+      actualizarHistorial: true,
+      desplazamiento: "smooth",
+    });
+
     boton.scrollIntoView({
       behavior: "smooth",
       block: "nearest",
       inline: "center",
     });
+
     window.setTimeout(actualizarControlesMenuOfertas, 250);
   });
 });
@@ -108,7 +207,13 @@ window.addEventListener("resize", actualizarControlesMenuOfertas);
 window.addEventListener("load", actualizarControlesMenuOfertas);
 requestAnimationFrame(actualizarControlesMenuOfertas);
 
-function cambiarVista(vista) {
+function cambiarVista(
+  vista,
+  {
+    actualizarHistorial = false,
+    desplazamiento = "smooth",
+  } = {}
+) {
   vistaActiva = vista;
 
   const vistas = [
@@ -141,7 +246,21 @@ function cambiarVista(vista) {
   tabTienda.setAttribute("aria-pressed", String(tiendaActiva));
   tabBancarios.setAttribute("aria-pressed", String(bancariosActivos));
 
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  if (actualizarHistorial) {
+    const seccion =
+      vista === "cupones"
+        ? categoriaActiva
+        : VISTA_A_SECCION_URL[vista];
+
+    if (seccion) {
+      actualizarUrlSeccion(seccion);
+    }
+  }
+
+  window.scrollTo({
+    top: 0,
+    behavior: desplazamiento,
+  });
 }
 
 function escaparHtml(valor = "") {
@@ -497,9 +616,19 @@ function normalizarCategoria(cupon) {
     : "tienda";
 }
 
-function cambiarCategoria(categoria) {
+function cambiarCategoria(
+  categoria,
+  {
+    actualizarHistorial = false,
+    desplazamiento = "smooth",
+  } = {}
+) {
   categoriaActiva = categoria;
-  cambiarVista("cupones");
+
+  cambiarVista("cupones", {
+    actualizarHistorial: false,
+    desplazamiento,
+  });
 
   const esTienda = categoria === "tienda";
 
@@ -511,10 +640,9 @@ function cambiarCategoria(categoria) {
 
   renderizarCategoria();
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
+  if (actualizarHistorial) {
+    actualizarUrlSeccion(categoria);
+  }
 }
 
 function limpiarVista() {
@@ -1381,7 +1509,18 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
+
+window.addEventListener("popstate", () => {
+  activarSeccionDesdeUrl({
+    actualizarHistorial: false,
+    desplazamiento: "auto",
+  });
+});
+
 inicializarCarruselesPublicidad();
-cambiarVista("cupones");
+activarSeccionDesdeUrl({
+  actualizarHistorial: true,
+  desplazamiento: "auto",
+});
 cargarCupones();
 cargarPublicidad();
