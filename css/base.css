@@ -1959,3 +1959,37 @@ button.oferta-imagen-contenedor:active .oferta-imagen {
     width: 100%;
   }
 }
+
+
+/* V63.2 — Logo como enlace de inicio */
+.enlace-logo-inicio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform .18s ease,
+    opacity .18s ease,
+    filter .18s ease;
+}
+
+.enlace-logo-inicio:hover,
+.enlace-logo-inicio:focus-visible {
+  transform: scale(1.025);
+  filter: brightness(1.025);
+  outline: none;
+}
+
+.enlace-logo-inicio:focus-visible {
+  box-shadow: 0 0 0 3px rgba(22, 133, 101, .16);
+}
+
+.enlace-logo-inicio:active {
+  transform: scale(.99);
+}
+
+.enlace-logo-inicio .logo {
+  display: block;
+}

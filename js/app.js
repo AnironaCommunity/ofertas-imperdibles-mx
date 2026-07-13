@@ -4,6 +4,7 @@ const sinCupones = document.querySelector("#sin-cupones");
 const estadoCarga = document.querySelector("#estado-carga");
 const botonRecargar = document.querySelector("#boton-recargar");
 const contadorActualizacion = document.querySelector("#contador-actualizacion");
+const enlaceLogoInicio = document.querySelector("#enlace-logo-inicio");
 
 const modalRedireccion = document.querySelector("#modal-redireccion");
 const modalContador = document.querySelector("#modal-contador");
@@ -66,6 +67,20 @@ const SECCIONES_URL = {
   },
 };
 
+const TITULOS_SECCION = {
+  tienda: "Cupones Tienda | Ofertas Imperdibles MX",
+  bancarios: "Cupones Bancarios | Ofertas Imperdibles MX",
+  mercadolibre: "Ofertas Mercado Libre | Ofertas Imperdibles MX",
+  amazon: "Ofertas Amazon | Ofertas Imperdibles MX",
+  anirona: "Comunidad Anirona | Ofertas Imperdibles MX",
+};
+
+function actualizarTituloSeccion(seccion) {
+  document.title =
+    TITULOS_SECCION[seccion] ||
+    "Ofertas Imperdibles MX";
+}
+
 const VISTA_A_SECCION_URL = {
   ofertas_mercado_libre: "mercadolibre",
   ofertas_amazon: "amazon",
@@ -85,6 +100,7 @@ function actualizarUrlSeccion(seccion, modo = "push") {
   const url = new URL(window.location.href);
 
   url.searchParams.set("seccion", seccion);
+  actualizarTituloSeccion(seccion);
 
   const estado = { seccion };
 
@@ -101,6 +117,8 @@ function activarSeccionDesdeUrl({
 } = {}) {
   const seccion = obtenerSeccionDesdeUrl();
   const configuracion = SECCIONES_URL[seccion];
+
+  actualizarTituloSeccion(seccion);
 
   if (configuracion.vista === "cupones") {
     categoriaActiva = configuracion.categoria;
@@ -131,6 +149,20 @@ function activarSeccionDesdeUrl({
   }
 }
 
+
+enlaceLogoInicio?.addEventListener("click", (event) => {
+  event.preventDefault();
+
+  cambiarCategoria("tienda", {
+    actualizarHistorial: true,
+    desplazamiento: "smooth",
+  });
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+});
 
 botonRecargar.addEventListener("click", cargarCupones);
 tabTienda.addEventListener("click", () =>
