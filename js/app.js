@@ -84,11 +84,7 @@ function actualizarUrlSeccion(seccion, modo = "push") {
 
   const url = new URL(window.location.href);
 
-  if (seccion === "tienda") {
-    url.searchParams.delete("seccion");
-  } else {
-    url.searchParams.set("seccion", seccion);
-  }
+  url.searchParams.set("seccion", seccion);
 
   const estado = { seccion };
 
