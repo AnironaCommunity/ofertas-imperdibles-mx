@@ -16,6 +16,11 @@ const tabTienda = document.querySelector("#tab-tienda");
 const tabBancarios = document.querySelector("#tab-bancarios");
 const vistaCupones = document.querySelector("#vista-cupones");
 const botonesMenuOfertas = document.querySelectorAll(".menu-ofertas [data-vista]");
+const menuOfertas = document.querySelector(".menu-ofertas");
+const botonMenuAnterior = document.querySelector("#menu-ofertas-anterior");
+const botonMenuSiguiente = document.querySelector("#menu-ofertas-siguiente");
+const indicadorMenuOfertas = document.querySelector(".menu-ofertas-indicador");
+
 
 const carruselesPublicidad = [];
 const seccionComunidadAnirona = document.querySelector("#seccion-comunidad-anirona");
@@ -46,8 +51,62 @@ tabTienda.addEventListener("click", () => cambiarCategoria("tienda"));
 tabBancarios.addEventListener("click", () => cambiarCategoria("bancarios"));
 
 botonesMenuOfertas.forEach((boton) => {
-  boton.addEventListener("click", () => cambiarVista(boton.dataset.vista));
+  boton.addEventListener("click", () => {
+    cambiarVista(boton.dataset.vista);
+    boton.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center",
+    });
+    window.setTimeout(actualizarControlesMenuOfertas, 250);
+  });
 });
+
+function actualizarControlesMenuOfertas() {
+  if (!menuOfertas) return;
+
+  const tolerancia = 4;
+  const tieneDesbordamiento =
+    menuOfertas.scrollWidth > menuOfertas.clientWidth + tolerancia;
+  const alInicio = menuOfertas.scrollLeft <= tolerancia;
+  const alFinal =
+    menuOfertas.scrollLeft + menuOfertas.clientWidth >=
+    menuOfertas.scrollWidth - tolerancia;
+
+  if (botonMenuAnterior) {
+    botonMenuAnterior.hidden = !tieneDesbordamiento || alInicio;
+  }
+
+  if (botonMenuSiguiente) {
+    botonMenuSiguiente.hidden = !tieneDesbordamiento || alFinal;
+  }
+
+  if (indicadorMenuOfertas) {
+    indicadorMenuOfertas.hidden = !tieneDesbordamiento || !alInicio;
+  }
+
+  menuOfertas.classList.toggle("puede-desplazar-izquierda", tieneDesbordamiento && !alInicio);
+  menuOfertas.classList.toggle("puede-desplazar-derecha", tieneDesbordamiento && !alFinal);
+}
+
+function desplazarMenuOfertas(direccion) {
+  if (!menuOfertas) return;
+
+  const distancia = Math.max(menuOfertas.clientWidth * 0.72, 180);
+  menuOfertas.scrollBy({
+    left: direccion * distancia,
+    behavior: "smooth",
+  });
+}
+
+botonMenuAnterior?.addEventListener("click", () => desplazarMenuOfertas(-1));
+botonMenuSiguiente?.addEventListener("click", () => desplazarMenuOfertas(1));
+menuOfertas?.addEventListener("scroll", actualizarControlesMenuOfertas, {
+  passive: true,
+});
+window.addEventListener("resize", actualizarControlesMenuOfertas);
+window.addEventListener("load", actualizarControlesMenuOfertas);
+requestAnimationFrame(actualizarControlesMenuOfertas);
 
 function cambiarVista(vista) {
   vistaActiva = vista;

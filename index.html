@@ -11,7 +11,7 @@
   <title>Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="img/logo.png" />
-  <link rel="stylesheet" href="css/style.css?v=62.1" />
+  <link rel="stylesheet" href="css/style.css?v=62.2" />
 </head>
 
 <body>
@@ -55,7 +55,18 @@
       </a>
     </div>
 
-    <nav class="menu-ofertas" aria-label="Secciones de ofertas">
+    <div class="menu-ofertas-contenedor">
+      <button
+        id="menu-ofertas-anterior"
+        class="menu-ofertas-flecha menu-ofertas-flecha-anterior"
+        type="button"
+        aria-label="Ver opciones anteriores"
+        hidden
+      >
+        ‹
+      </button>
+
+      <nav class="menu-ofertas" aria-label="Secciones de ofertas">
       <button type="button" data-vista="ofertas_mercado_libre" aria-pressed="false">
         <img class="menu-ofertas-logo logo-mercado-libre" src="img/mercado-libre.png" alt="" aria-hidden="true" />
         <span>Ofertas Mercado Libre</span>
@@ -69,18 +80,25 @@
         <span>Comunidad Anirona</span>
       </button>
     </nav>
+
+      <button
+        id="menu-ofertas-siguiente"
+        class="menu-ofertas-flecha menu-ofertas-flecha-siguiente"
+        type="button"
+        aria-label="Ver más opciones"
+      >
+        ›
+      </button>
+
+      <span class="menu-ofertas-indicador" aria-hidden="true">
+        Desliza para ver más
+      </span>
+    </div>
   </header>
 
   <main class="contenedor">
     <section id="vista-cupones" class="vista-principal vista-activa">
-    <div class="instruccion-cupones">
-      <span class="icono-informativo" aria-hidden="true">ℹ️</span>
-      <p>
-        Al presionar <strong>Copiar y Canjear</strong>, el código se copiará automáticamente y se abrirá Mercado Libre.
-      </p>
-    </div>
-
-    <div class="titulo-fila titulo-con-separador">
+<div class="titulo-fila titulo-con-separador">
       <h1 class="titulo-seccion">🎟️ Cupones de tienda</h1>
 
       <div class="actualizacion">
@@ -314,6 +332,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/app.js?v=62.1"></script>
+  <script type="module" src="js/app.js?v=62.2"></script>
 </body>
 </html>

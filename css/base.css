@@ -1516,3 +1516,170 @@ footer {
     font-size: 8px;
   }
 }
+
+
+/* V62.2 — Se elimina el aviso superior y se mejora la navegación de secciones */
+#vista-cupones > .titulo-fila:first-child {
+  margin-top: 0;
+}
+
+.menu-ofertas-contenedor {
+  position: relative;
+  width: min(930px, 100%);
+  margin: 9px auto 0;
+  padding: 0 34px 18px;
+}
+
+.menu-ofertas-contenedor::before,
+.menu-ofertas-contenedor::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 18px;
+  width: 28px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .18s ease;
+}
+
+.menu-ofertas-contenedor::before {
+  left: 31px;
+  background: linear-gradient(90deg, rgba(255,255,255,.96), rgba(255,255,255,0));
+}
+
+.menu-ofertas-contenedor::after {
+  right: 31px;
+  background: linear-gradient(270deg, rgba(255,255,255,.96), rgba(255,255,255,0));
+}
+
+.menu-ofertas-contenedor:has(.menu-ofertas.puede-desplazar-izquierda)::before {
+  opacity: 1;
+}
+
+.menu-ofertas-contenedor:has(.menu-ofertas.puede-desplazar-derecha)::after {
+  opacity: 1;
+}
+
+.menu-ofertas {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 3px 5px 5px !important;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.menu-ofertas button {
+  scroll-snap-align: center;
+}
+
+.menu-ofertas-flecha {
+  position: absolute;
+  z-index: 4;
+  top: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 29px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid rgba(21, 147, 106, .20);
+  border-radius: 10px;
+  color: #176d57;
+  background: rgba(255, 255, 255, .96);
+  box-shadow: 0 4px 13px rgba(29, 63, 49, .10);
+  font-size: 23px;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    transform .16s ease,
+    border-color .16s ease,
+    box-shadow .16s ease;
+}
+
+.menu-ofertas-flecha:hover,
+.menu-ofertas-flecha:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(21, 147, 106, .42);
+  box-shadow: 0 7px 16px rgba(29, 63, 49, .14);
+  outline: none;
+}
+
+.menu-ofertas-flecha:active {
+  transform: scale(.96);
+}
+
+.menu-ofertas-flecha-anterior {
+  left: 1px;
+}
+
+.menu-ofertas-flecha-siguiente {
+  right: 1px;
+}
+
+.menu-ofertas-flecha[hidden],
+.menu-ofertas-indicador[hidden] {
+  display: none !important;
+}
+
+.menu-ofertas-indicador {
+  position: absolute;
+  left: 50%;
+  bottom: 1px;
+  transform: translateX(-50%);
+  color: #718078;
+  font-size: 9.5px;
+  font-weight: 400;
+  letter-spacing: .015em;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: menu-ofertas-pulso 1.7s ease-in-out infinite;
+}
+
+@keyframes menu-ofertas-pulso {
+  0%, 100% {
+    opacity: .55;
+    transform: translateX(-50%);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(calc(-50% + 4px));
+  }
+}
+
+@media (min-width: 850px) {
+  .menu-ofertas-contenedor {
+    padding-bottom: 4px;
+  }
+
+  .menu-ofertas-indicador {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .menu-ofertas-contenedor {
+    width: 100%;
+    padding-right: 31px;
+    padding-left: 31px;
+  }
+
+  .menu-ofertas-flecha {
+    top: 3px;
+    width: 27px;
+    height: 33px;
+    border-radius: 9px;
+  }
+
+  .menu-ofertas-contenedor::before {
+    left: 28px;
+  }
+
+  .menu-ofertas-contenedor::after {
+    right: 28px;
+  }
+}
