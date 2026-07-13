@@ -929,14 +929,19 @@ function crearTarjetaOferta(publicidad, categoria) {
   const codigo = String(publicidad.codigo_cupon || "").trim();
 
   articulo.innerHTML = `
-    <div class="oferta-imagen-contenedor">
+    <button
+      class="oferta-imagen-contenedor"
+      type="button"
+      aria-label="${escaparHtml(`Abrir ${publicidad.titulo || "oferta"} en ${esAmazon ? "Amazon" : "Mercado Libre"}`)}"
+      title="${esAmazon ? "Ver en Amazon" : "Ver en Mercado Libre"}"
+    >
       <img
         class="oferta-imagen"
         src="${escaparHtml(publicidad.imagen_url || "")}" 
         alt="${escaparHtml(publicidad.titulo || "Oferta")}" 
         loading="lazy"
       />
-    </div>
+    </button>
 
     <div class="oferta-contenido">
       <h3>${escaparHtml(publicidad.titulo || "Oferta destacada")}</h3>
@@ -966,7 +971,12 @@ function crearTarjetaOferta(publicidad, categoria) {
   `;
 
   const mensaje = articulo.querySelector(".oferta-mensaje");
-  articulo.querySelector(".oferta-ver").addEventListener("click", () => abrirPublicidad(publicidad));
+  const botonVer = articulo.querySelector(".oferta-ver");
+  const botonImagen = articulo.querySelector(".oferta-imagen-contenedor");
+
+  botonVer.addEventListener("click", () => abrirPublicidad(publicidad));
+  botonImagen.addEventListener("click", () => abrirPublicidad(publicidad));
+
   articulo.querySelector(".oferta-compartir").addEventListener("click", () => {
     compartirPublicidad(publicidad, { mensaje });
   });

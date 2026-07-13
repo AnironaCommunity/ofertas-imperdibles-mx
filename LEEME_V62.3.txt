@@ -1,0 +1,21 @@
+OFERTAS IMPERDIBLES MX — V62.3
+
+REEMPLAZA:
+- index.html
+- js/app.js
+- css/base.css
+
+CAMBIO:
+- Al pulsar la imagen de un producto en Ofertas Mercado Libre,
+  Ofertas Amazon o Comunidad Anirona, se ejecuta exactamente la misma
+  función que el botón “Ver”.
+- Si existe cupón, se copia automáticamente.
+- Si no existe cupón, no se copia nada.
+- Se registra la visita válida del producto conforme a la regla de 24 horas.
+- Después se abre Mercado Libre o Amazon.
+- La imagen muestra cursor de mano, un zoom ligero y enfoque accesible.
+
+SQL:
+- No debes ejecutar ningún archivo SQL.
+
+Después de subir los archivos, actualiza con Ctrl + F5.

@@ -1683,3 +1683,70 @@ footer {
     right: 28px;
   }
 }
+
+
+/* V62.3 — Imágenes clicables con el mismo comportamiento del botón Ver */
+button.oferta-imagen-contenedor {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  overflow: hidden;
+}
+
+button.oferta-imagen-contenedor::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border: 2px solid transparent;
+  border-radius: inherit;
+  pointer-events: none;
+  transition:
+    border-color .18s ease,
+    background .18s ease;
+}
+
+button.oferta-imagen-contenedor .oferta-imagen {
+  transition:
+    transform .22s ease,
+    filter .22s ease;
+}
+
+button.oferta-imagen-contenedor:hover .oferta-imagen,
+button.oferta-imagen-contenedor:focus-visible .oferta-imagen {
+  transform: scale(1.035);
+  filter: brightness(.98);
+}
+
+button.oferta-imagen-contenedor:hover::before {
+  border-color: rgba(21, 147, 106, .20);
+}
+
+button.oferta-imagen-contenedor:focus-visible {
+  outline: none;
+}
+
+button.oferta-imagen-contenedor:focus-visible::before {
+  border-color: rgba(21, 147, 106, .55);
+  background: rgba(21, 147, 106, .025);
+}
+
+button.oferta-imagen-contenedor:active .oferta-imagen {
+  transform: scale(1.01);
+}
+
+@media (hover: none) {
+  button.oferta-imagen-contenedor:hover .oferta-imagen {
+    transform: none;
+    filter: none;
+  }
+}
