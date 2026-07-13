@@ -8,7 +8,7 @@
   <title>Administrador | Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="../img/logo.png" />
-  <link rel="stylesheet" href="admin.css?v=64.0" />
+  <link rel="stylesheet" href="admin.css?v=61.6" />
 </head>
 
 <body>
@@ -282,8 +282,8 @@ https://meli.la/xxxxx"
       <section id="seccion-publicidad" class="seccion-admin" hidden>
         <div class="cabecera-seccion">
           <div>
-            <h2>📢 Productos y publicidad</h2>
-            <p>Consulta publicaciones de Mercado Libre, completa precios y asigna el mejor cupón disponible.</p>
+            <h2>📢 Publicidad rotativa</h2>
+            <p>Sube imágenes y controla el orden de los anuncios.</p>
           </div>
 
           <button id="nueva-publicidad" class="boton-secundario" type="button">
@@ -385,21 +385,6 @@ https://meli.la/xxxxx"
                 />
               </div>
 
-              <div class="campo campo-completo consulta-producto-panel">
-                <button
-                  id="consultar-producto-ml"
-                  class="boton-consulta"
-                  type="button"
-                >
-                  Consultar precio y cupón de Mercado Libre
-                </button>
-                <small>
-                  Completa título, imagen y precio. También recomienda el cupón activo
-                  que genere el mayor ahorro según el precio consultado.
-                </small>
-                <p id="consulta-producto-mensaje" class="mensaje" aria-live="polite"></p>
-              </div>
-
               <div class="campo">
                 <label for="ad-price-published">Precio publicado</label>
                 <input
@@ -449,16 +434,9 @@ https://meli.la/xxxxx"
                 <img id="ad-preview" src="" alt="Vista previa" />
               </div>
 
-              <input id="ad-ml-item-id" type="hidden" />
-
-              <label class="switch-row campo-completo">
-                <input id="ad-auto-price" type="checkbox" />
-                <span>Actualizar diariamente el precio y el cupón recomendado</span>
-              </label>
-
               <label class="switch-row campo-completo">
                 <input id="ad-active" type="checkbox" checked />
-                <span>Mostrar producto en la página</span>
+                <span>Mostrar publicidad en el carrusel</span>
               </label>
             </div>
 
@@ -485,14 +463,9 @@ https://meli.la/xxxxx"
           <div class="cabecera-panel">
             <h3>Publicidades registradas</h3>
 
-            <div class="acciones-cabecera">
-              <button id="actualizar-precios-auto" class="boton-secundario" type="button">
-                $ Actualizar precios
-              </button>
-              <button id="actualizar-publicidad" class="boton-secundario" type="button">
-                ↻ Actualizar lista
-              </button>
-            </div>
+            <button id="actualizar-publicidad" class="boton-secundario" type="button">
+              ↻ Actualizar
+            </button>
           </div>
 
           <p id="ad-list-message" class="mensaje" aria-live="polite"></p>
@@ -503,6 +476,6 @@ https://meli.la/xxxxx"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=64.0"></script>
+  <script type="module" src="admin.js?v=61.6"></script>
 </body>
 </html>

@@ -519,30 +519,3 @@ th {
     grid-template-columns: 1fr;
   }
 }
-
-
-/* V64.0 — Consulta automática de productos */
-.consulta-producto-panel {
-  padding: 13px;
-  border: 1px solid #cfe7de;
-  border-radius: 12px;
-  background: #f5fbf8;
-}
-
-.boton-consulta {
-  width: 100%;
-  color: #0d6f58;
-  border: 1px solid #8dceb9;
-  background: #eaf8f2;
-  font-weight: 600;
-}
-
-.boton-consulta:hover {
-  background: #dcf3e9;
-}
-
-.acciones-cabecera {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}

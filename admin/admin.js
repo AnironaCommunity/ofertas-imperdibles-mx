@@ -50,12 +50,6 @@ const adTitle = document.querySelector("#ad-title");
 const adDescription = document.querySelector("#ad-description");
 const adSections = [...document.querySelectorAll(".ad-section")];
 const adLink = document.querySelector("#ad-link");
-const consultProductMl = document.querySelector("#consultar-producto-ml");
-const consultProductMessage = document.querySelector("#consulta-producto-mensaje");
-const adMlItemId = document.querySelector("#ad-ml-item-id");
-const adAutoPrice = document.querySelector("#ad-auto-price");
-const refreshAutomaticPrices = document.querySelector("#actualizar-precios-auto");
-
 const adPricePublished = document.querySelector("#ad-price-published");
 const adPriceCoupon = document.querySelector("#ad-price-coupon");
 const adCouponCode = document.querySelector("#ad-coupon-code");
@@ -601,8 +595,6 @@ function resetAdForm() {
   adForm.reset();
   adId.value = "";
   adImageUrl.value = "";
-  adMlItemId.value = "";
-  adAutoPrice.checked = false;
   adPricePublished.value = "";
   adPriceCoupon.value = "";
   adCouponCode.value = "";
@@ -621,8 +613,6 @@ function editAd(ad) {
   adTitle.value = ad.titulo || "";
   adDescription.value = ad.descripcion || "";
   adLink.value = ad.enlace || "";
-  adMlItemId.value = ad.ml_item_id || "";
-  adAutoPrice.checked = Boolean(ad.actualizar_precio_auto);
   adPricePublished.value = ad.precio_publicado || "";
   adPriceCoupon.value = ad.precio_cupon || "";
   adCouponCode.value = ad.codigo_cupon || "";
@@ -668,13 +658,7 @@ function renderAds() {
             ? `<span class="precio-cupon-admin">Con cupón: ${escapeHtml(ad.precio_cupon)}</span>`
             : ""}
           ${ad.codigo_cupon
-            ? `<span>🔒 Cupón automático configurado</span>`
-            : ""}
-          ${ad.actualizar_precio_auto
-            ? `<span>🔄 Precio automático</span>`
-            : ""}
-          ${ad.precio_actualizado_en
-            ? `<span>Última consulta: ${escapeHtml(new Date(ad.precio_actualizado_en).toLocaleString("es-MX"))}</span>`
+            ? `<span>🔒 Cupón configurado</span>`
             : ""}
         </div>
 
@@ -769,85 +753,6 @@ async function uploadAdImage() {
   return result.imagen_url;
 }
 
-
-async function consultMercadoLibreProduct() {
-  const link = adLink.value.trim();
-
-  if (!link) {
-    setMessage(consultProductMessage, "Primero pega el enlace del producto.", true);
-    adLink.focus();
-    return;
-  }
-
-  consultProductMl.disabled = true;
-  setMessage(consultProductMessage, "Consultando publicación y cupones activos...");
-
-  try {
-    const data = await api("/api/admin-publicidad?action=consultar-producto", {
-      method: "POST",
-      body: JSON.stringify({ enlace: link }),
-    });
-
-    if (data.titulo && !adTitle.value.trim()) {
-      adTitle.value = data.titulo;
-    }
-
-    if (data.imagen_url) {
-      adImageUrl.value = data.imagen_url;
-      adPreview.src = data.imagen_url;
-      adPreviewWrapper.hidden = false;
-    }
-
-    adMlItemId.value = data.item_id || "";
-    adPricePublished.value = data.precio_publicado || "";
-    adCouponCode.value = data.codigo_cupon || "";
-    adPriceCoupon.value = data.precio_cupon || "";
-
-    if (data.enlace_resuelto) {
-      adLink.value = data.enlace_resuelto;
-    }
-
-    if (data.codigo_cupon) {
-      setMessage(
-        consultProductMessage,
-        `Precio ${data.precio_publicado}. Cupón recomendado: ${data.codigo_cupon} (${data.descuento_estimado} de ahorro).`
-      );
-    } else {
-      setMessage(
-        consultProductMessage,
-        `Precio ${data.precio_publicado}. No se encontró un cupón activo aplicable.`
-      );
-    }
-  } catch (error) {
-    setMessage(consultProductMessage, error.message, true);
-  } finally {
-    consultProductMl.disabled = false;
-  }
-}
-
-async function updateAutomaticPrices() {
-  refreshAutomaticPrices.disabled = true;
-  setMessage(adListMessage, "Actualizando productos marcados como automáticos...");
-
-  try {
-    const result = await api("/api/admin-publicidad?action=actualizar-precios", {
-      method: "POST",
-      body: JSON.stringify({}),
-    });
-
-    setMessage(
-      adListMessage,
-      `${result.correctos} productos actualizados. ${result.errores} con error.`
-    );
-
-    await loadAds();
-  } catch (error) {
-    setMessage(adListMessage, error.message, true);
-  } finally {
-    refreshAutomaticPrices.disabled = false;
-  }
-}
-
 async function saveAd(event) {
   event.preventDefault();
 
@@ -876,8 +781,6 @@ async function saveAd(event) {
       precio_publicado: adPricePublished.value.trim(),
       precio_cupon: adPriceCoupon.value.trim(),
       codigo_cupon: adCouponCode.value.trim(),
-      ml_item_id: adMlItemId.value.trim(),
-      actualizar_precio_auto: adAutoPrice.checked,
       secciones,
       categoria: secciones[0] || "ofertas_dia",
       imagen_url: imageUrl,
@@ -994,7 +897,3 @@ adImage.addEventListener("change", async () => {
 if (adminPassword) {
   login();
 }
-
-
-consultProductMl?.addEventListener("click", consultMercadoLibreProduct);
-refreshAutomaticPrices?.addEventListener("click", updateAutomaticPrices);
