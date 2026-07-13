@@ -1,0 +1,909 @@
+/* =========================================================
+   V40 — Tarjetas compactas, popular integrado y Me gusta
+   ========================================================= */
+
+.whatsapp-icono svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+.popular-wrapper,
+.popular-titulo,
+.subtitulo-lista {
+  display: none !important;
+}
+
+.cupones-grid-compacta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.cupon {
+  --tono-1: #6858eb;
+  --tono-2: #4e3ddd;
+  --tono-suave: #f1efff;
+
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 350px;
+  overflow: hidden;
+  border: 2px solid color-mix(in srgb, var(--tono-1) 28%, white);
+  border-radius: 22px;
+  background: white;
+  box-shadow: 0 8px 24px rgba(40, 52, 72, 0.08);
+  animation: aparecer-cupon 0.22s ease-out;
+}
+
+.cupon[data-color="azul"] {
+  --tono-1: #3487e9;
+  --tono-2: #2464c3;
+  --tono-suave: #edf5ff;
+}
+
+.cupon[data-color="morado"] {
+  --tono-1: #8b5ce6;
+  --tono-2: #6840be;
+  --tono-suave: #f4efff;
+}
+
+.cupon[data-color="coral"] {
+  --tono-1: #f47763;
+  --tono-2: #ce5745;
+  --tono-suave: #fff0ed;
+}
+
+.cupon[data-color="oliva"] {
+  --tono-1: #78945f;
+  --tono-2: #56723f;
+  --tono-suave: #eff5eb;
+}
+
+.cupon.popular {
+  --tono-1: #6858eb;
+  --tono-2: #4e3ddd;
+  --tono-suave: #f1efff;
+  border-color: #436fd5;
+}
+
+.cupon-encabezado {
+  position: relative;
+  display: block;
+  min-height: 108px;
+  padding: 20px 22px;
+  color: white;
+  background: linear-gradient(135deg, var(--tono-2), var(--tono-1));
+}
+
+.cupon-encabezado::after {
+  content: "";
+  position: absolute;
+  width: 145px;
+  height: 145px;
+  top: -65px;
+  right: -48px;
+  border-radius: 45%;
+  background: rgba(255, 255, 255, 0.09);
+  transform: rotate(22deg);
+}
+
+.descuento {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: clamp(31px, 4vw, 42px);
+  line-height: 1;
+}
+
+.subtitulo {
+  position: relative;
+  z-index: 1;
+  margin: 5px 0 0;
+  font-size: 17px;
+  font-weight: 500;
+  text-transform: lowercase;
+}
+
+.etiqueta-popular {
+  display: none;
+}
+
+.cupon-contenido {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 20px 17px;
+}
+
+.cupon-etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  min-height: 31px;
+}
+
+.etiqueta-popular-integrada {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  padding: 6px 11px;
+  border-radius: 999px;
+  color: white;
+  background: linear-gradient(135deg, #f6a900, #ef8d00);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.descuento-maximo {
+  margin: 0;
+  color: #27332d;
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.descuento-maximo strong {
+  font-weight: 800;
+}
+
+.compra-minima {
+  width: fit-content;
+  margin: 0;
+  padding: 7px 10px;
+  border-radius: 9px;
+  color: #313a35;
+  background: #fff5bf;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.cupon-usado {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 12px;
+  border: 1px solid #9bdcc9;
+  border-radius: 999px;
+  color: #087a63;
+  background: #edfff8;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.cupon-usado[hidden] {
+  display: none;
+}
+
+.acciones-bloque {
+  margin-top: auto;
+}
+
+.acciones-cupon {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 9px;
+}
+
+.boton-canjear {
+  width: 100%;
+  padding: 13px 12px;
+  border: 0;
+  border-radius: 15px;
+  color: #292d2b;
+  background: linear-gradient(135deg, #ffc530, #ffb916);
+  box-shadow: 0 5px 13px rgba(234, 160, 0, 0.19);
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.boton-canjear:hover {
+  filter: brightness(1.02);
+}
+
+.acciones-secundarias {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.boton-like,
+.boton-compartir {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 43px;
+  min-height: 39px;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 999px;
+  background: #f4f7f6;
+  color: #62716a;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.boton-like svg,
+.boton-compartir svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.boton-like.activo {
+  color: white;
+  background: #20b777;
+}
+
+.boton-like.activo svg {
+  fill: white;
+}
+
+.boton-compartir {
+  color: white;
+  background: #25bd75;
+}
+
+.estadisticas-cupon {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-left: auto;
+  color: #6e7c75;
+  font-size: 13px;
+}
+
+.estadistica-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.estadistica-item svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.estadistica-likes {
+  color: #18a777;
+}
+
+.estadistica-usos {
+  color: #4872b9;
+}
+
+.mensaje {
+  min-height: 0;
+  margin: 7px 0 0;
+  font-size: 11px;
+}
+
+/* Publicidad: ocultar correctamente elementos sin cupón */
+.precio-cupon-bloque[hidden],
+.publicidad-aviso-cupon[hidden],
+.precio-publicado-bloque[hidden] {
+  display: none !important;
+}
+
+footer {
+  display: none;
+}
+
+/* Más compacto en general */
+.contenedor {
+  margin-top: 16px;
+}
+
+.instruccion-cupones {
+  margin-bottom: 14px;
+  padding: 10px 13px;
+}
+
+.titulo-fila {
+  margin-bottom: 9px;
+}
+
+.aviso-inferior {
+  margin-top: 18px;
+}
+
+@media (min-width: 1050px) {
+  .cupones-grid-compacta {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .cupon {
+    min-height: 355px;
+  }
+}
+
+@media (max-width: 680px) {
+  .cupones-grid-compacta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .cupon {
+    min-height: 325px;
+    border-radius: 17px;
+  }
+
+  .cupon-encabezado {
+    min-height: 91px;
+    padding: 16px 14px;
+  }
+
+  .descuento {
+    font-size: clamp(25px, 8vw, 34px);
+  }
+
+  .subtitulo {
+    font-size: 14px;
+  }
+
+  .cupon-contenido {
+    gap: 9px;
+    padding: 13px 12px 12px;
+  }
+
+  .etiqueta-popular-integrada {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+
+  .descuento-maximo {
+    font-size: 14px;
+  }
+
+  .compra-minima {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .cupon-usado {
+    padding: 8px 9px;
+    font-size: 11px;
+  }
+
+  .boton-canjear {
+    padding: 11px 8px;
+    font-size: 13px;
+  }
+
+  .acciones-secundarias {
+    gap: 4px;
+  }
+
+  .boton-like,
+  .boton-compartir {
+    min-width: 36px;
+    min-height: 35px;
+    padding: 6px 8px;
+  }
+
+  .estadisticas-cupon {
+    gap: 6px;
+    font-size: 11px;
+  }
+
+  .estadistica-item svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+@media (max-width: 390px) {
+  .cupones-grid-compacta {
+    grid-template-columns: 1fr;
+  }
+
+  .cupon {
+    min-height: 315px;
+  }
+}
+
+
+/* V41 */
+.encabezado {
+  padding: 6px 14px 12px;
+}
+
+.logo {
+  width: min(270px, 72vw);
+  margin: 0 auto 5px;
+  transform: translateY(-2px);
+}
+
+.encabezado > p {
+  margin-top: 5px;
+  font-size: 12px;
+}
+
+.barra-redes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin: 0 auto 4px;
+}
+
+.red-social {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.red-whatsapp {
+  color: #176a39;
+  border: 1px solid rgba(37, 211, 102, 0.24);
+  background: #f1fff6;
+}
+
+.red-facebook {
+  color: #1b5cb6;
+  border: 1px solid rgba(24, 119, 242, 0.22);
+  background: #f2f7ff;
+}
+
+.red-icono {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+}
+
+.red-whatsapp .red-icono {
+  color: white;
+  background: #25d366;
+}
+
+.red-facebook .red-icono {
+  color: white;
+  background: #1877f2;
+}
+
+.red-icono svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+}
+
+.icono-informativo {
+  flex: 0 0 auto;
+  font-size: 18px;
+}
+
+.titulo-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row !important;
+  gap: 10px;
+}
+
+.actualizacion {
+  margin-left: auto;
+}
+
+#contador-actualizacion {
+  display: none !important;
+}
+
+.boton-recargar {
+  padding: 7px 10px;
+  white-space: nowrap;
+}
+
+.cupon-encabezado {
+  min-height: 76px;
+  padding: 15px 16px 12px;
+}
+
+.subtitulo {
+  display: none !important;
+}
+
+.cupon-etiquetas {
+  min-height: 0;
+}
+
+.cupon-etiquetas:empty {
+  display: none;
+}
+
+.cupon-contenido {
+  padding-top: 12px;
+}
+
+.publicidad-cabecera > span {
+  color: #52665e;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.9px;
+}
+
+@media (max-width: 680px) {
+  .cupones-grid-compacta {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px;
+  }
+
+  .cupon {
+    min-height: 286px;
+    border-radius: 15px;
+  }
+
+  .cupon-encabezado {
+    min-height: 66px;
+    padding: 13px 11px 10px;
+  }
+
+  .descuento {
+    font-size: clamp(22px, 7vw, 30px);
+  }
+
+  .cupon-contenido {
+    gap: 7px;
+    padding: 10px 9px 9px;
+  }
+
+  .cupon-etiquetas {
+    min-height: 0;
+  }
+
+  .etiqueta-popular-integrada {
+    padding: 4px 7px;
+    font-size: 10px;
+  }
+
+  .descuento-maximo {
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  .compra-minima {
+    padding: 5px 7px;
+    font-size: 10px;
+  }
+
+  .cupon-usado {
+    padding: 7px;
+    font-size: 10px;
+  }
+
+  .boton-canjear {
+    padding: 10px 6px;
+    border-radius: 12px;
+    font-size: 11px;
+  }
+
+  .boton-like,
+  .boton-compartir {
+    min-width: 31px;
+    min-height: 31px;
+    padding: 5px 6px;
+  }
+
+  .boton-like svg,
+  .boton-compartir svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .estadisticas-cupon {
+    gap: 4px;
+    font-size: 9px;
+  }
+
+  .estadistica-item svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .titulo-seccion {
+    font-size: 19px;
+  }
+
+  .boton-recargar {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+
+  .instruccion-cupones {
+    padding: 9px 10px;
+    font-size: 11px;
+  }
+
+  .red-social {
+    min-height: 31px;
+    padding: 5px 9px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 390px) {
+  .cupones-grid-compacta {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 7px;
+  }
+
+  .cupon {
+    min-height: 278px;
+  }
+
+  .descuento {
+    font-size: 22px;
+  }
+
+  .descuento-maximo {
+    font-size: 11px;
+  }
+
+  .compra-minima {
+    font-size: 9px;
+  }
+
+  .boton-canjear {
+    font-size: 10px;
+  }
+
+  .estadisticas-cupon {
+    font-size: 8px;
+  }
+}
+
+
+/* =========================================================
+   V42 — Ajustes finos de compactación y OFERTAS DEL DÍA
+   ========================================================= */
+
+/* 1. Más espacio para el título y botón bien a la derecha */
+.titulo-fila {
+  width: 100%;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.titulo-seccion {
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.actualizacion {
+  justify-self: end;
+  margin-left: 0;
+}
+
+.boton-recargar {
+  flex: 0 0 auto;
+}
+
+/* 2 y 3. Encabezado y tarjeta más compactos */
+.cupon {
+  min-height: 0 !important;
+}
+
+.cupon-encabezado {
+  display: flex;
+  align-items: center;
+  min-height: 58px !important;
+  padding: 11px 14px !important;
+}
+
+.descuento {
+  line-height: 1 !important;
+  margin: 0 !important;
+}
+
+.cupon-contenido {
+  gap: 6px !important;
+  padding: 9px 10px 10px !important;
+}
+
+.cupon-etiquetas {
+  margin: 0 !important;
+}
+
+.descuento-maximo,
+.compra-minima,
+.cupon-usado,
+.mensaje,
+.acciones-secundarias {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.acciones-bloque {
+  margin-top: 5px !important;
+}
+
+.acciones-secundarias {
+  margin-top: 7px !important;
+}
+
+/* 4. Recuperar apariencia tipográfica sobria de PUBLICIDAD */
+.publicidad-cabecera > span {
+  color: #8a9992 !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.7px !important;
+  text-transform: uppercase !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+
+/* 5. Solo tachar el publicado cuando exista precio con cupón */
+.publicidad-precios.sin-precio-cupon .precio-publicado-bloque strong {
+  text-decoration: none !important;
+  color: #27332d !important;
+  font-size: 18px !important;
+}
+
+.publicidad-precios.con-precio-cupon .precio-publicado-bloque strong {
+  text-decoration: line-through !important;
+  text-decoration-thickness: 1px !important;
+}
+
+/* Ajustes móviles */
+@media (max-width: 680px) {
+  .titulo-fila {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    gap: 6px !important;
+  }
+
+  .titulo-seccion {
+    font-size: 17px !important;
+    white-space: normal;
+  }
+
+  .boton-recargar {
+    padding: 6px 7px !important;
+    font-size: 10px !important;
+  }
+
+  .cupon {
+    min-height: 0 !important;
+  }
+
+  .cupon-encabezado {
+    min-height: 52px !important;
+    padding: 9px 10px !important;
+  }
+
+  .descuento {
+    font-size: 21px !important;
+  }
+
+  .cupon-contenido {
+    gap: 5px !important;
+    padding: 8px 8px 9px !important;
+  }
+
+  .descuento-maximo {
+    font-size: 11px !important;
+  }
+
+  .compra-minima {
+    padding: 5px 6px !important;
+  }
+
+  .acciones-bloque {
+    margin-top: 3px !important;
+  }
+
+  .acciones-secundarias {
+    margin-top: 6px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .titulo-seccion {
+    font-size: 16px !important;
+  }
+
+  .boton-recargar {
+    font-size: 9px !important;
+    padding: 5px 6px !important;
+  }
+
+  .cupon-encabezado {
+    min-height: 48px !important;
+  }
+
+  .descuento {
+    font-size: 19px !important;
+  }
+}
+
+
+/* =========================================================
+   V43 — Botones Copiar y Canjear alineados
+   ========================================================= */
+
+/*
+  La tarjeta se divide en:
+  - contenido variable en la parte superior
+  - acciones fijas en la parte inferior
+*/
+.cupon {
+  height: 100%;
+}
+
+.cupon-contenido {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100%;
+}
+
+/* Zona variable: etiquetas, descuento, mínimo y estado usado */
+.cupon-etiquetas,
+.descuento-maximo,
+.compra-minima,
+.cupon-usado {
+  flex: 0 0 auto;
+}
+
+/*
+  Este bloque baja automáticamente hasta el fondo.
+  Así el botón queda alineado en todas las tarjetas.
+*/
+.acciones-bloque {
+  margin-top: auto !important;
+  padding-top: 8px;
+}
+
+/*
+  Mantiene una altura mínima equilibrada para la parte variable.
+  Evita que Popular o Ya usaste este cupón cambien la posición del botón.
+*/
+.cupon-contenido::before {
+  content: "";
+  display: block;
+  order: -1;
+  height: 0;
+}
+
+/* Alineación por fila en la cuadrícula */
+.cupones-grid-compacta {
+  align-items: stretch;
+}
+
+.cupones-grid-compacta > .cupon {
+  align-self: stretch;
+}
+
+/* Móvil: conservar alineación sin agrandar demasiado */
+@media (max-width: 680px) {
+  .acciones-bloque {
+    padding-top: 6px;
+  }
+
+  .cupon {
+    height: 100%;
+  }
+
+  .cupon-contenido {
+    min-height: 210px;
+  }
+}
+
+@media (max-width: 390px) {
+  .cupon-contenido {
+    min-height: 202px;
+  }
+}

@@ -1,83 +1,46 @@
-# Ofertas Imperdibles MX — Versión 2.0
+# Ofertas Imperdibles MX — V60 estabilizada
 
-Esta versión:
+Esta versión conserva el diseño y las funciones de la versión anterior,
+pero reorganiza los estilos para reducir el riesgo de perder cambios
+cuando se agreguen nuevas funciones.
 
-- Obtiene los cupones desde Supabase.
-- Muestra el contador de usos.
-- Copia el código y abre Mercado Libre con un solo botón.
-- Conserva la sección de ANIRONA Official Store.
-- Mantiene la llave secreta únicamente en Vercel.
+## Estructura principal
 
-## Estructura
+- `index.html`: página pública.
+- `css/style.css`: punto de entrada de estilos.
+- `css/base.css`: estructura general, modal y publicidad.
+- `css/coupons.css`: tarjetas, botones, navegación y diseño móvil.
+- `css/schedule.css`: programación, estados y contador de vencimiento.
+- `css/header.css`: logo, redes sociales y contadores superiores.
+- `js/app.js`: funcionamiento público.
+- `admin/`: panel unificado de administración.
+- `api/`: funciones de Vercel para Supabase.
+- `sql/`: actualizaciones de base de datos.
 
-- `index.html`: estructura de la página.
-- `css/style.css`: colores y diseño.
-- `js/app.js`: carga los cupones y controla los botones.
-- `api/cupones.js`: consulta Supabase desde Vercel.
-- `api/clic.js`: incrementa el contador.
-- `sql/configuracion.sql`: prepara la función del contador.
-- `img/logo.png`: logo de la página.
+## Funciones conservadas
 
-## Antes de publicar
+- Cupones de Tienda y Bancarios.
+- Dos tarjetas por fila en teléfono.
+- Etiqueta Popular.
+- Me gusta y contador.
+- Compartir la página sin revelar el código.
+- Estado “Ya usaste este cupón”.
+- Programación por fecha y hora de Ciudad de México.
+- Activación y finalización automáticas.
+- Franja inferior con tiempo restante.
+- Publicidad rotativa administrable.
+- Precios y cupón oculto en publicidad.
+- Redes sociales.
+- Resumen de Cupones, Bancarios y Copiados.
+- Panel unificado de Cupones y Publicidad.
 
-### 1. Supabase
+## Regla para próximos cambios
 
-En Supabase > SQL Editor, ejecuta el archivo:
+Para modificar una sección, edita únicamente su módulo CSS:
 
-`sql/configuracion.sql`
+- Tarjetas: `css/coupons.css`
+- Programación: `css/schedule.css`
+- Cabecera: `css/header.css`
+- Publicidad y estructura general: `css/base.css`
 
-Debe aparecer:
-
-`Success. No rows returned`
-
-### 2. Vercel
-
-Confirma que existan estas variables:
-
-- `SUPABASE_URL`
-- `SUPABASE_SECRET_KEY`
-
-Deben estar disponibles en Production y Preview.
-
-Nunca coloques `SUPABASE_SECRET_KEY` dentro del HTML, JavaScript del navegador
-o GitHub.
-
-### 3. GitHub
-
-Sube el contenido de esta carpeta al repositorio. Puedes reemplazar los archivos
-existentes o arrastrar todas las carpetas y archivos mediante:
-
-`Add file > Upload files`
-
-Después presiona `Commit changes`.
-
-Vercel detectará el commit y creará un despliegue nuevo automáticamente.
-
-## Pruebas
-
-Cuando Vercel indique `Ready`, abre:
-
-`https://TU-DOMINIO.vercel.app/api/cupones`
-
-Debe aparecer un arreglo JSON con los cupones.
-
-Después abre la página principal y pulsa `Copiar y Canjear`.
-
-## Administrar cupones
-
-En Supabase > Table Editor > cupones:
-
-- Para agregar uno: pulsa `Insert`.
-- Para ocultarlo: cambia `activo` a `false`.
-- Para editarlo: modifica la celda correspondiente.
-- El campo `clics` se actualiza automáticamente.
-
-Campos esperados:
-
-- `titulo`
-- `codigo`
-- `compra_minima`
-- `ahorro_maximo`
-- `enlace`
-- `clics`
-- `activo`
+No agregues nuevos parches al final de `style.css`.
