@@ -1863,3 +1863,105 @@ footer {
     font-size: 9px;
   }
 }
+
+
+/* =========================================================
+   V51 — Franja inferior elegante con cuenta regresiva
+   ========================================================= */
+
+.estado-programacion {
+  order: 99;
+  width: 100%;
+  margin-top: 10px !important;
+  padding: 10px 0 0 !important;
+  border: 0 !important;
+  border-top: 1px dashed #c8d3ce !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #52625a;
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.estado-programacion[hidden] {
+  display: none !important;
+}
+
+.estado-programacion .estado-linea {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 7px;
+  white-space: nowrap;
+}
+
+.estado-programacion .estado-tiempo {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.2px;
+}
+
+.estado-programacion.programado {
+  color: #7b5900;
+}
+
+.estado-programacion.activo {
+  color: #16815d;
+}
+
+.estado-programacion.finaliza-pronto {
+  color: #d06b22;
+}
+
+.estado-programacion.ultimos-minutos {
+  color: #c5382e;
+}
+
+.estado-progreso {
+  width: 100%;
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e8eeeb;
+}
+
+.estado-progreso-barra {
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+  background: #22a875;
+  transform-origin: left center;
+  transition:
+    width 1s linear,
+    background 0.25s ease;
+}
+
+.estado-programacion.programado .estado-progreso-barra {
+  background: #d9a300;
+}
+
+.estado-programacion.finaliza-pronto .estado-progreso-barra {
+  background: #ec8a31;
+}
+
+.estado-programacion.ultimos-minutos .estado-progreso-barra {
+  background: #d94236;
+}
+
+@media (max-width: 680px) {
+  .estado-programacion {
+    margin-top: 8px !important;
+    padding-top: 8px !important;
+    font-size: 10px;
+  }
+
+  .estado-programacion .estado-linea {
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+
+  .estado-progreso {
+    height: 4px;
+  }
+}

@@ -143,6 +143,8 @@ function couponTimeState(coupon) {
     return {
       state: "programado",
       target: start,
+      start,
+      end,
       label: "Disponible en",
       enabled: false,
     };
@@ -152,6 +154,8 @@ function couponTimeState(coupon) {
     return {
       state: "finalizado",
       target: end,
+      start,
+      end,
       label: "Finalizado",
       enabled: false,
     };
@@ -160,13 +164,23 @@ function couponTimeState(coupon) {
   if (end !== null) {
     const remaining = end - now;
 
+    let state = "activo";
+
+    if (remaining <= 10 * 60 * 1000) {
+      state = "ultimos-minutos";
+    } else if (remaining <= 60 * 60 * 1000) {
+      state = "finaliza-pronto";
+    }
+
     return {
-      state:
-        remaining <= 60 * 60 * 1000
-          ? "finaliza-pronto"
-          : "activo",
+      state,
       target: end,
-      label: "Finaliza en",
+      start,
+      end,
+      label:
+        state === "ultimos-minutos"
+          ? "¡Últimos minutos!"
+          : "Termina en",
       enabled: true,
     };
   }
@@ -174,6 +188,8 @@ function couponTimeState(coupon) {
   return {
     state: "activo",
     target: null,
+    start,
+    end,
     label: "",
     enabled: true,
   };
@@ -201,6 +217,30 @@ function formatRemaining(milliseconds) {
   );
 }
 
+function couponProgress(timeState) {
+  const now = Date.now();
+
+  if (
+    timeState.start === null ||
+    timeState.end === null ||
+    timeState.end <= timeState.start
+  ) {
+    return 100;
+  }
+
+  if (timeState.state === "programado") {
+    return 100;
+  }
+
+  const total = timeState.end - timeState.start;
+  const remaining = timeState.end - now;
+
+  return Math.max(
+    0,
+    Math.min(100, (remaining / total) * 100)
+  );
+}
+
 function updateCouponTimes() {
   let needsReload = false;
 
@@ -220,9 +260,21 @@ function updateCouponTimes() {
 
     if (timeState.state === "programado") {
       status.hidden = false;
-      status.textContent =
-        `⏳ ${timeState.label} ` +
-        formatRemaining(timeState.target - Date.now());
+      status.innerHTML = `
+        <div class="estado-linea">
+          <span>⏳</span>
+          <span>${timeState.label}</span>
+          <span class="estado-tiempo">
+            ${formatRemaining(timeState.target - Date.now())}
+          </span>
+        </div>
+        <div class="estado-progreso">
+          <div
+            class="estado-progreso-barra"
+            style="width: 100%"
+          ></div>
+        </div>
+      `;
 
       redeemButton.disabled = true;
       redeemButton.classList.add("boton-programado");
@@ -243,14 +295,32 @@ function updateCouponTimes() {
     }
 
     if (timeState.target !== null) {
+      const icon =
+        timeState.state === "ultimos-minutos"
+          ? "🚨"
+          : timeState.state === "finaliza-pronto"
+            ? "⚠️"
+            : "⏳";
+
       status.hidden = false;
-      status.textContent =
-        `${timeState.state === "finaliza-pronto" ? "⚠️" : "⏱️"} ` +
-        `${timeState.label} ` +
-        formatRemaining(timeState.target - Date.now());
+      status.innerHTML = `
+        <div class="estado-linea">
+          <span>${icon}</span>
+          <span>${timeState.label}</span>
+          <span class="estado-tiempo">
+            ${formatRemaining(timeState.target - Date.now())}
+          </span>
+        </div>
+        <div class="estado-progreso">
+          <div
+            class="estado-progreso-barra"
+            style="width: ${couponProgress(timeState)}%"
+          ></div>
+        </div>
+      `;
     } else {
       status.hidden = true;
-      status.textContent = "";
+      status.replaceChildren();
     }
   });
 
