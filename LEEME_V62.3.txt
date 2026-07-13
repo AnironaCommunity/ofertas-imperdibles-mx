@@ -2,20 +2,23 @@ OFERTAS IMPERDIBLES MX — V62.3
 
 REEMPLAZA:
 - index.html
-- js/app.js
-- css/base.css
 
-CAMBIO:
-- Al pulsar la imagen de un producto en Ofertas Mercado Libre,
-  Ofertas Amazon o Comunidad Anirona, se ejecuta exactamente la misma
-  función que el botón “Ver”.
-- Si existe cupón, se copia automáticamente.
-- Si no existe cupón, no se copia nada.
-- Se registra la visita válida del producto conforme a la regla de 24 horas.
-- Después se abre Mercado Libre o Amazon.
-- La imagen muestra cursor de mano, un zoom ligero y enfoque accesible.
+AGREGA:
+- manifest.webmanifest
+- img/og-image.jpg
+
+CAMBIOS:
+1. Se establece una imagen oficial de vista previa de 1200 × 630 px.
+2. Se agregan etiquetas Open Graph para Facebook, WhatsApp, Messenger y Telegram.
+3. Se agregan etiquetas Twitter Card para vistas previas grandes.
+4. Se mejora el título y la descripción SEO.
+5. Se agrega canonical, theme-color y manifest de la aplicación.
 
 SQL:
 - No debes ejecutar ningún archivo SQL.
 
-Después de subir los archivos, actualiza con Ctrl + F5.
+IMPORTANTE:
+Después de publicar, algunas redes pueden conservar la vista previa anterior en caché.
+En Facebook usa el Depurador de contenido compartido y selecciona "Volver a extraer".
+También puedes probar compartiendo esta variante una vez:
+https://ofertasimperdiblesmx.vercel.app/?v=62.3
