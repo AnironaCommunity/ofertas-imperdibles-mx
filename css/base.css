@@ -1098,3 +1098,18 @@ footer {
   .oferta-compartir { overflow: hidden; width: 39px; padding: 0; font-size: 0; }
   .oferta-compartir::before { content: "↗"; font-size: 18px; }
 }
+
+/* V61.2 — vistas exclusivas de cupones y productos */
+.vista-principal[hidden] { display: none !important; }
+
+.sin-ofertas-categoria {
+  grid-column: 1 / -1;
+  padding: 32px 18px;
+  border: 1px dashed #cdd9d2;
+  border-radius: 14px;
+  text-align: center;
+  background: #fff;
+}
+.sin-ofertas-categoria div { font-size: 30px; }
+.sin-ofertas-categoria h3 { margin: 8px 0 4px; color: #25342c; font-size: 16px; }
+.sin-ofertas-categoria p { margin: 0; color: #6b7770; font-size: 13px; }
