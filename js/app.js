@@ -82,7 +82,6 @@ function cambiarVista(vista) {
   tabTienda.setAttribute("aria-pressed", String(tiendaActiva));
   tabBancarios.setAttribute("aria-pressed", String(bancariosActivos));
 
-  registrarVisitasSeccion(vista);
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -899,8 +898,8 @@ function crearTarjetaOferta(publicidad, categoria) {
         <button class="oferta-ver" type="button">
           ${esAmazon ? "📦 Ver en Amazon" : "🛒 Ver en Mercado Libre"}
         </button>
-        <button class="oferta-compartir" type="button" aria-label="Compartir oferta">
-          ↗ Compartir
+        <button class="boton-compartir oferta-compartir" type="button" aria-label="Compartir oferta" title="Compartir">
+          ${iconoCompartir()}
         </button>
       </div>
       <p class="oferta-mensaje" aria-live="polite"></p>
@@ -977,13 +976,6 @@ async function registrarVisitaPublicidad(publicidad) {
     sessionStorage.removeItem(clave);
     console.warn("No fue posible registrar la visita del producto.", error);
   }
-}
-
-function registrarVisitasSeccion(vista) {
-  if (!todasLasPublicidades.length || vista === "cupones") return;
-  todasLasPublicidades
-    .filter((item) => (item.categoria || "ofertas_dia") === vista)
-    .forEach(registrarVisitaPublicidad);
 }
 
 async function cargarPublicidad() {
@@ -1172,6 +1164,7 @@ async function abrirPublicidad(publicidad) {
   const precioCupon = String(publicidad.precio_cupon || "").trim();
   try {
     if (precioCupon && codigo) await copiarTexto(codigo);
+    registrarVisitaPublicidad(publicidad);
     registrarClicPublicidad(publicidad.id);
     window.location.assign(enlace);
   } catch (error) {

@@ -105,55 +105,120 @@
 }
 
 
-/* Menú horizontal de secciones de ofertas */
+/* Menú horizontal de secciones de ofertas — V61.5 */
 .menu-ofertas {
   display: flex;
   justify-content: center;
-  gap: 8px;
-  width: min(860px, calc(100% - 24px));
+  gap: 9px;
+  width: min(900px, calc(100% - 24px));
   margin: 10px auto 0;
-  padding: 2px;
+  padding: 3px;
   overflow-x: auto;
   scrollbar-width: none;
 }
 .menu-ofertas::-webkit-scrollbar { display: none; }
+
 .menu-ofertas button {
+  position: relative;
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  min-height: 36px;
-  padding: 8px 13px;
-  border: 1px solid rgba(33, 78, 61, .12);
-  border-radius: 12px;
-  color: #355047;
-  background: rgba(255, 255, 255, .84);
-  box-shadow: 0 4px 16px rgba(28, 61, 47, .055);
+  justify-content: center;
+  gap: 8px;
+  min-height: 39px;
+  padding: 8px 14px;
+  border: 1px solid rgba(37, 63, 54, .12);
+  border-radius: 13px;
+  color: #3f514a;
+  background: rgba(255, 255, 255, .92);
+  box-shadow: 0 3px 12px rgba(28, 61, 47, .055);
   font: inherit;
   font-size: 12.5px;
   font-weight: 400;
-  letter-spacing: .01em;
+  letter-spacing: .005em;
   white-space: nowrap;
   cursor: pointer;
-  transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+  overflow: hidden;
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    color .18s ease,
+    background .18s ease,
+    box-shadow .18s ease;
 }
+
+.menu-ofertas button::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: #15936a;
+  transform: translateX(-50%);
+  transition: width .2s ease;
+}
+
 .menu-ofertas button:hover,
 .menu-ofertas button:focus-visible {
-  transform: translateY(-1px);
-  border-color: rgba(15, 137, 111, .32);
+  transform: translateY(-2px);
+  border-color: rgba(21, 147, 106, .30);
+  color: #185f4b;
   background: #fff;
-  box-shadow: 0 7px 20px rgba(28, 61, 47, .09);
+  box-shadow: 0 8px 20px rgba(28, 61, 47, .10);
   outline: none;
 }
+
+.menu-ofertas button:hover::after,
+.menu-ofertas button:focus-visible::after,
+.menu-ofertas button.activo::after {
+  width: calc(100% - 26px);
+}
+
+.menu-ofertas button:active {
+  transform: translateY(0) scale(.98);
+  box-shadow: 0 3px 9px rgba(28, 61, 47, .08);
+}
+
 .menu-ofertas button.activo {
   color: #0d6655;
-  border-color: rgba(15, 137, 111, .26);
-  background: linear-gradient(180deg, #f7fffc 0%, #ebf8f3 100%);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.8), 0 5px 16px rgba(15, 137, 111, .09);
+  border-color: rgba(21, 147, 106, .28);
+  background: linear-gradient(180deg, #ffffff 0%, #edf9f4 100%);
+  box-shadow: 0 6px 18px rgba(21, 147, 106, .10);
 }
-.menu-ofertas button span { font-size: 14px; }
+
+.menu-ofertas-logo {
+  display: block;
+  width: auto;
+  height: 17px;
+  max-width: 31px;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+.menu-ofertas-logo.logo-amazon { height: 15px; max-width: 34px; }
+.menu-ofertas-logo.logo-anirona { height: 16px; max-width: 35px; }
+
 @media (max-width: 600px) {
-  .menu-ofertas { justify-content: flex-start; padding: 2px 12px 4px; width: 100%; }
-  .menu-ofertas button { min-height: 34px; padding: 7px 11px; font-size: 11.5px; }
+  .menu-ofertas {
+    justify-content: flex-start;
+    width: 100%;
+    padding: 3px 12px 5px;
+  }
+
+  .menu-ofertas button {
+    min-height: 36px;
+    padding: 7px 11px;
+    font-size: 11.5px;
+  }
+
+  .menu-ofertas-logo {
+    height: 15px;
+    max-width: 28px;
+  }
+
+  .menu-ofertas-logo.logo-amazon { height: 13px; max-width: 30px; }
+  .menu-ofertas-logo.logo-anirona { height: 14px; max-width: 31px; }
 }
 

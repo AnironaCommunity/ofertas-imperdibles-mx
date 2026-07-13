@@ -1,0 +1,24 @@
+OFERTAS IMPERDIBLES MX — V61.5
+
+Reemplaza únicamente:
+- index.html
+- js/app.js
+- css/base.css
+- css/header.css
+
+Agrega la carpeta:
+- img/
+  - mercado-libre.png
+  - amazon.png
+  - anirona.png
+
+CAMBIOS:
+1. Orden: Ofertas Mercado Libre | Ofertas Amazon | Comunidad Anirona.
+2. Las visitas se registran únicamente al pulsar “Ver en Mercado Libre” o “Ver en Amazon”.
+3. Se restauró el efecto hover/clic del menú.
+4. Se sustituyeron emojis por logos pequeños.
+5. El botón Compartir usa el mismo icono y estilo que las tarjetas de cupones.
+6. OFERTAS DEL DÍA permanece visible al cambiar de sección.
+
+SQL:
+- No debes ejecutar ningún archivo SQL para esta actualización.

@@ -1139,3 +1139,73 @@ footer {
   font-size: 10.5px;
   font-weight: 400;
 }
+
+
+/* V61.5 — Logos, compartir uniforme y acciones */
+.titulo-seccion-con-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.titulo-seccion-con-logo img {
+  display: block;
+  width: auto;
+  height: 22px;
+  max-width: 54px;
+  object-fit: contain;
+}
+
+.publicidad-acciones {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 45px;
+  align-items: stretch;
+  gap: 7px;
+}
+
+.publicidad-acciones .publicidad-boton {
+  min-width: 0;
+}
+
+.publicidad-acciones .publicidad-compartir,
+.oferta-acciones .oferta-compartir {
+  width: 45px;
+  min-width: 45px;
+  min-height: 39px;
+  padding: 9px;
+  border-radius: 11px;
+  font-size: 0;
+  font-weight: 400;
+}
+
+.publicidad-acciones .publicidad-compartir svg,
+.oferta-acciones .oferta-compartir svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.oferta-acciones {
+  grid-template-columns: minmax(0, 1fr) 45px;
+}
+
+@media (max-width: 430px) {
+  .titulo-seccion-con-logo img {
+    height: 19px;
+    max-width: 47px;
+  }
+
+  .publicidad-acciones {
+    grid-template-columns: minmax(0, 1fr) 42px;
+  }
+
+  .publicidad-acciones .publicidad-compartir,
+  .oferta-acciones .oferta-compartir {
+    width: 42px;
+    min-width: 42px;
+  }
+
+  .oferta-acciones {
+    grid-template-columns: minmax(0, 1fr) 42px;
+  }
+}
