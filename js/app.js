@@ -153,15 +153,12 @@ function activarSeccionDesdeUrl({
 enlaceLogoInicio?.addEventListener("click", (event) => {
   event.preventDefault();
 
-  cambiarCategoria("tienda", {
-    actualizarHistorial: true,
-    desplazamiento: "smooth",
-  });
+  const inicio = new URL(window.location.origin);
+  inicio.pathname = "/";
+  inicio.search = "";
+  inicio.hash = "";
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
+  window.location.replace(inicio.toString());
 });
 
 botonRecargar.addEventListener("click", cargarCupones);
@@ -1546,9 +1543,14 @@ window.addEventListener("popstate", () => {
 });
 
 inicializarCarruselesPublicidad();
+
+const urlInicialTieneSeccion =
+  new URLSearchParams(window.location.search).has("seccion");
+
 activarSeccionDesdeUrl({
-  actualizarHistorial: true,
+  actualizarHistorial: urlInicialTieneSeccion,
   desplazamiento: "auto",
 });
+
 cargarCupones();
 cargarPublicidad();
