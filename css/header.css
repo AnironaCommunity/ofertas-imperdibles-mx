@@ -148,3 +148,23 @@
     font-size: 8px;
   }
 }
+
+
+/* V60.2 Restaurar cabecera limpia */
+.encabezado{
+  background:#fff !important;
+}
+.encabezado::before,
+.encabezado::after{
+  content:none !important;
+  display:none !important;
+}
+.logo{
+  margin-bottom:0 !important;
+}
+.encabezado > p:first-of-type{
+  display:none !important;
+}
+.barra-redes-lineal{
+  margin-top:2px !important;
+}
