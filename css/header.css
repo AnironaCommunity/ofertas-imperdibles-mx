@@ -173,3 +173,9 @@
 .barra-redes-lineal {
   margin-top: 0 !important;
 }
+
+
+/* V60.4 */
+.barra-redes-lineal .red-social span{
+  font-weight:400!important;
+}
