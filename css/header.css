@@ -1,4 +1,4 @@
-/* V54 corregida — solo cabecera, redes y contadores */
+/* Cabecera y redes */
 .encabezado {
   position: relative;
   overflow: hidden;
@@ -13,7 +13,6 @@
 
 .logo,
 .barra-redes,
-.resumen-cupones,
 .encabezado > p {
   position: relative;
   z-index: 1;
@@ -67,56 +66,6 @@
   background: #c9d1cd;
 }
 
-.resumen-cupones {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 7px;
-  width: min(510px, 100%);
-  margin: 8px auto 3px;
-  padding-top: 8px;
-  border-top: 1px dashed #cbd5d0;
-}
-
-.resumen-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-width: 0;
-  padding: 8px 9px;
-  border: 1px solid rgba(67, 86, 77, 0.1);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.82);
-  box-shadow: 0 4px 12px rgba(33, 50, 42, 0.05);
-}
-
-.resumen-icono {
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  font-size: 20px;
-}
-
-.resumen-datos {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  align-items: flex-start;
-  line-height: 1;
-}
-
-.resumen-datos strong {
-  font-size: 21px;
-  font-variant-numeric: tabular-nums;
-}
-
-.resumen-datos small {
-  margin-top: 3px;
-  color: #68756f;
-  font-size: 10px;
-  white-space: nowrap;
-}
 
 @media (max-width: 480px) {
   .encabezado {
@@ -125,31 +74,6 @@
 
   .logo {
     width: min(225px, 65vw);
-  }
-
-  .resumen-cupones {
-    gap: 5px;
-    margin-top: 6px;
-    padding-top: 7px;
-  }
-
-  .resumen-item {
-    gap: 5px;
-    padding: 7px 5px;
-  }
-
-  .resumen-icono {
-    width: 24px;
-    height: 24px;
-    font-size: 16px;
-  }
-
-  .resumen-datos strong {
-    font-size: 17px;
-  }
-
-  .resumen-datos small {
-    font-size: 8px;
   }
 }
 

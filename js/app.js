@@ -15,9 +15,6 @@ const modalCuponOculto = document.querySelector("#modal-cupon-oculto");
 const tabTienda = document.querySelector("#tab-tienda");
 const tabBancarios = document.querySelector("#tab-bancarios");
 
-const contadorTienda = document.querySelector("#contador-tienda");
-const contadorBancarios = document.querySelector("#contador-bancarios");
-const contadorCopiados = document.querySelector("#contador-copiados");
 
 const publicidadWrapper = document.querySelector("#publicidad-wrapper");
 const publicidadCarrusel = document.querySelector("#publicidad-carrusel");
@@ -471,28 +468,6 @@ function limpiarVista() {
   sinCupones.hidden = true;
 }
 
-function actualizarResumen() {
-  if (!contadorTienda || !contadorBancarios || !contadorCopiados) return;
-
-  const tienda = todosLosCupones.filter(
-    (cupon) => normalizarCategoria(cupon) === "tienda"
-  );
-
-  const bancarios = todosLosCupones.filter(
-    (cupon) => normalizarCategoria(cupon) === "bancarios"
-  );
-
-  const copiados = todosLosCupones.reduce(
-    (total, cupon) => total + Number(cupon.clics || 0),
-    0
-  );
-
-  contadorTienda.textContent = String(tienda.length);
-  contadorBancarios.textContent = String(bancarios.length);
-  contadorCopiados.textContent =
-    new Intl.NumberFormat("es-MX").format(copiados);
-}
-
 function renderizarCategoria() {
   limpiarVista();
 
@@ -589,7 +564,6 @@ async function cargarCupones() {
     const cupones = await respuesta.json();
 
     todosLosCupones = Array.isArray(cupones) ? cupones : [];
-    actualizarResumen();
     renderizarCategoria();
   } catch (error) {
     console.error(error);
@@ -782,7 +756,6 @@ async function copiarYCanjear(cupon, tarjeta) {
 
           if (couponIndex >= 0) {
             todosLosCupones[couponIndex].clics = Number(resultado.clics);
-            actualizarResumen();
           }
         }
       })
