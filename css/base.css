@@ -2619,23 +2619,18 @@ button.oferta-imagen-contenedor:active .oferta-imagen {
 }
 
 
-/* V63.9.2 - Compactar ayuda sin afectar otras secciones */
-.ayuda-cupones{
-  margin:0 0 6px !important;
+/* V63.9.3 — Eliminar el espacio real antes de “¿Cómo usar los cupones?”
+   El espacio provenía del padding inferior del encabezado y del margen
+   superior del contenedor principal, no del módulo de ayuda. */
+.encabezado {
+  padding-bottom: 0 !important;
 }
-.ayuda-cupones-toggle{
-  min-height:34px !important;
-  padding:4px 12px !important;
+
+.encabezado + .contenedor {
+  margin-top: 4px !important;
 }
-.ayuda-cupones-contenido{
-  margin:0 !important;
-}
-.ayuda-cupones-interior{
-  padding:0 14px 10px !important;
-}
-.ayuda-cupones-interior h2{
-  margin:0 0 8px !important;
-}
-.ayuda-cupones-pasos{
-  gap:4px !important;
+
+/* Conserva una separación mínima, sin pegar visualmente ambos módulos. */
+#vista-cupones > .ayuda-cupones:first-child {
+  margin-top: 0 !important;
 }
