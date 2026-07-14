@@ -293,13 +293,84 @@ function desplazarMenuOfertas(direccion) {
   });
 }
 
+const CLAVE_RECORRIDO_SECCIONES =
+  "ofertas-imperdibles-recorrido-secciones-v1";
+
+let temporizadorRecorridoSecciones = null;
+let recorridoSeccionesActivo = false;
+
+function cancelarRecorridoSecciones() {
+  if (!recorridoSeccionesActivo) return;
+
+  recorridoSeccionesActivo = false;
+
+  if (temporizadorRecorridoSecciones) {
+    window.clearTimeout(temporizadorRecorridoSecciones);
+    temporizadorRecorridoSecciones = null;
+  }
+}
+
+function iniciarRecorridoSecciones() {
+  if (!menuOfertas) return;
+
+  const yaSeMostro =
+    localStorage.getItem(CLAVE_RECORRIDO_SECCIONES) === "1";
+
+  const tieneDesbordamiento =
+    menuOfertas.scrollWidth > menuOfertas.clientWidth + 4;
+
+  if (yaSeMostro || !tieneDesbordamiento) {
+    return;
+  }
+
+  localStorage.setItem(CLAVE_RECORRIDO_SECCIONES, "1");
+  recorridoSeccionesActivo = true;
+
+  const posicionInicial = menuOfertas.scrollLeft;
+  const posicionFinal =
+    menuOfertas.scrollWidth - menuOfertas.clientWidth;
+
+  temporizadorRecorridoSecciones = window.setTimeout(() => {
+    if (!recorridoSeccionesActivo) return;
+
+    menuOfertas.scrollTo({
+      left: posicionFinal,
+      behavior: "smooth",
+    });
+
+    temporizadorRecorridoSecciones = window.setTimeout(() => {
+      if (!recorridoSeccionesActivo) return;
+
+      menuOfertas.scrollTo({
+        left: posicionInicial,
+        behavior: "smooth",
+      });
+
+      temporizadorRecorridoSecciones = window.setTimeout(() => {
+        recorridoSeccionesActivo = false;
+        actualizarControlesMenuOfertas();
+      }, 900);
+    }, 1250);
+  }, 700);
+}
+
+for (const evento of ["pointerdown", "touchstart", "wheel"]) {
+  menuOfertas?.addEventListener(evento, cancelarRecorridoSecciones, {
+    passive: true,
+  });
+}
+
+
 botonMenuAnterior?.addEventListener("click", () => desplazarMenuOfertas(-1));
 botonMenuSiguiente?.addEventListener("click", () => desplazarMenuOfertas(1));
 menuOfertas?.addEventListener("scroll", actualizarControlesMenuOfertas, {
   passive: true,
 });
 window.addEventListener("resize", actualizarControlesMenuOfertas);
-window.addEventListener("load", actualizarControlesMenuOfertas);
+window.addEventListener("load", () => {
+  actualizarControlesMenuOfertas();
+  window.setTimeout(iniciarRecorridoSecciones, 250);
+});
 requestAnimationFrame(actualizarControlesMenuOfertas);
 
 function cambiarVista(
