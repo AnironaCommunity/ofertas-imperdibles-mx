@@ -2617,3 +2617,25 @@ button.oferta-imagen-contenedor:active .oferta-imagen {
     min-height: 29px !important;
   }
 }
+
+
+/* V63.9.2 - Compactar ayuda sin afectar otras secciones */
+.ayuda-cupones{
+  margin:0 0 6px !important;
+}
+.ayuda-cupones-toggle{
+  min-height:34px !important;
+  padding:4px 12px !important;
+}
+.ayuda-cupones-contenido{
+  margin:0 !important;
+}
+.ayuda-cupones-interior{
+  padding:0 14px 10px !important;
+}
+.ayuda-cupones-interior h2{
+  margin:0 0 8px !important;
+}
+.ayuda-cupones-pasos{
+  gap:4px !important;
+}
