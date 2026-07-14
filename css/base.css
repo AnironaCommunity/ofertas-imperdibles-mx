@@ -2126,3 +2126,39 @@ button.oferta-imagen-contenedor:active .oferta-imagen {
   margin-right: auto !important;
   margin-left: auto !important;
 }
+
+
+/* V63.5 — Logo restaurado y centrado */
+.enlace-logo-inicio {
+  display: flex !important;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 4px !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.enlace-logo-inicio .logo {
+  display: block;
+  width: min(320px, 80vw);
+  max-height: 96px;
+  margin: 0 auto !important;
+  object-fit: contain;
+}
+
+.encabezado {
+  background: #ffffff !important;
+}
+
+.encabezado::before,
+.encabezado::after {
+  content: none !important;
+  display: none !important;
+}
+
+@media (max-width: 600px) {
+  .enlace-logo-inicio .logo {
+    width: min(275px, 78vw);
+    max-height: 82px;
+  }
+}
