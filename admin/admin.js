@@ -62,19 +62,6 @@ const recalculateBulkPrices = document.querySelector(
   "#recalcular-precios-masivos"
 );
 const saveBulkPrices = document.querySelector("#guardar-precios-masivos");
-const syncMercadoLibrePrices = document.querySelector(
-  "#sincronizar-precios-mercado-libre"
-);
-const syncMercadoLibreProgress = document.querySelector(
-  "#sincronizacion-ml-progreso"
-);
-const syncMercadoLibreAdvance = document.querySelector(
-  "#sincronizacion-ml-avance"
-);
-const syncMercadoLibreText = document.querySelector(
-  "#sincronizacion-ml-texto"
-);
-
 
 const adOrder = document.querySelector("#ad-order");
 const adActive = document.querySelector("#ad-active");
@@ -874,149 +861,6 @@ function recalculateAllBulkPrices() {
   );
 }
 
-
-function isMercadoLibreLink(link) {
-  try {
-    const hostname = new URL(String(link || "")).hostname.toLowerCase();
-
-    return (
-      hostname === "meli.la" ||
-      hostname.endsWith(".mercadolibre.com.mx") ||
-      hostname === "mercadolibre.com.mx"
-    );
-  } catch {
-    return false;
-  }
-}
-
-function updateMercadoLibreProgress(current, total, text) {
-  const percentage = total > 0
-    ? Math.round((current / total) * 100)
-    : 0;
-
-  syncMercadoLibreAdvance.style.width = `${percentage}%`;
-  syncMercadoLibreText.textContent =
-    text || `${current} de ${total} productos`;
-}
-
-async function syncAllMercadoLibrePrices() {
-  const products = ads.filter(
-    (ad) => isMercadoLibreLink(ad.enlace)
-  );
-
-  if (!products.length) {
-    setMessage(
-      bulkPricesMessage,
-      "No se encontraron productos con enlaces de Mercado Libre.",
-      true
-    );
-    return;
-  }
-
-  const confirmation = window.confirm(
-    `Se consultarán ${products.length} productos en Mercado Libre y se ` +
-    "guardarán automáticamente sus nuevos precios y cupones. ¿Continuar?"
-  );
-
-  if (!confirmation) return;
-
-  syncMercadoLibrePrices.disabled = true;
-  saveBulkPrices.disabled = true;
-  recalculateBulkPrices.disabled = true;
-  syncMercadoLibreProgress.hidden = false;
-
-  let correct = 0;
-  let errors = 0;
-  const errorDetails = [];
-
-  updateMercadoLibreProgress(
-    0,
-    products.length,
-    `Preparando ${products.length} productos…`
-  );
-
-  for (let index = 0; index < products.length; index += 1) {
-    const product = products[index];
-
-    updateMercadoLibreProgress(
-      index,
-      products.length,
-      `Consultando: ${product.titulo}`
-    );
-
-    try {
-      const result = await api(
-        "/api/admin-publicidad?action=consultar-precio-mercado-libre",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            enlace: product.enlace,
-          }),
-        }
-      );
-
-      const price = Number(result.precio);
-
-      if (!Number.isFinite(price) || price <= 0) {
-        throw new Error("Precio no válido.");
-      }
-
-      const recommendation = findBestCoupon(price);
-
-      await api("/api/admin-publicidad", {
-        method: "PUT",
-        body: JSON.stringify({
-          id: product.id,
-          precio_publicado: formatMoney(price),
-          codigo_cupon: recommendation?.coupon.codigo || "",
-          precio_cupon: recommendation
-            ? formatMoney(recommendation.finalPrice)
-            : "",
-        }),
-      });
-
-      correct += 1;
-    } catch (error) {
-      errors += 1;
-      errorDetails.push(
-        `${product.titulo}: ${error.message}`
-      );
-    }
-
-    updateMercadoLibreProgress(
-      index + 1,
-      products.length,
-      `${index + 1} de ${products.length} productos procesados`
-    );
-  }
-
-  await loadAds();
-
-  syncMercadoLibrePrices.disabled = false;
-  saveBulkPrices.disabled = false;
-  recalculateBulkPrices.disabled = false;
-
-  setMessage(
-    bulkPricesMessage,
-    `${correct} productos actualizados desde Mercado Libre.` +
-      (errors
-        ? ` ${errors} no pudieron actualizarse.`
-        : ""),
-    errors > 0
-  );
-
-  if (errorDetails.length) {
-    console.warn(
-      "Productos que no pudieron sincronizarse:",
-      errorDetails
-    );
-  }
-
-  window.setTimeout(() => {
-    syncMercadoLibreProgress.hidden = true;
-  }, 3500);
-}
-
 async function saveAllBulkPrices() {
   const rows = [...bulkPricesList.querySelectorAll("tr[data-id]")];
 
@@ -1407,11 +1251,6 @@ bulkPricesList.addEventListener("input", (event) => {
 
 recalculateBulkPrices.addEventListener("click", recalculateAllBulkPrices);
 saveBulkPrices.addEventListener("click", saveAllBulkPrices);
-syncMercadoLibrePrices.addEventListener(
-  "click",
-  syncAllMercadoLibrePrices
-);
-
 
 adImage.addEventListener("change", async () => {
   const file = adImage.files[0];
