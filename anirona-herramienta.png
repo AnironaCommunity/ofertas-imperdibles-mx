@@ -1,0 +1,585 @@
+:root {
+  --fondo: #f5f7f8;
+  --blanco: #fff;
+  --texto: #17211b;
+  --gris: #66736c;
+  --borde: #e0e7e4;
+  --whatsapp: #25d366;
+  --whatsapp-oscuro: #128c4a;
+  --anirona: #07952a;
+  --anirona-oscuro: #067420;
+  --error: #a12626;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--texto);
+  background:
+    radial-gradient(circle at top left, rgba(60, 130, 246, .05), transparent 28%),
+    radial-gradient(circle at top right, rgba(124, 58, 237, .04), transparent 30%),
+    var(--fondo);
+}
+
+.encabezado {
+  padding: 15px 18px 18px;
+  text-align: center;
+  background: rgba(255,255,255,.96);
+  border-bottom: 1px solid var(--borde);
+}
+
+/* Se conservan las dimensiones previas del logo */
+.logo {
+  display: block;
+  width: min(330px, 82vw);
+  height: auto;
+  margin: 0 auto 9px;
+}
+
+.whatsapp-cabecera {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 12px;
+  margin-bottom: 9px;
+  border: 1px solid rgba(37,211,102,.25);
+  border-radius: 999px;
+  color: #176a39;
+  background: #f1fff6;
+  text-decoration: none;
+}
+
+.whatsapp-cabecera strong,
+.whatsapp-cabecera small { display: block; text-align: left; }
+.whatsapp-cabecera strong { font-size: 13px; }
+.whatsapp-cabecera small { color: #52755e; font-size: 11px; }
+
+.whatsapp-icono {
+  width: 31px;
+  height: 31px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: white;
+  background: var(--whatsapp);
+}
+
+.whatsapp-icono svg { width: 22px; fill: currentColor; }
+.encabezado > p { margin: 0; color: var(--gris); font-size: 14px; }
+
+.contenedor {
+  width: min(1120px, calc(100% - 28px));
+  margin: 20px auto 42px;
+}
+
+.aviso,
+.instruccion-cupones {
+  border-radius: 13px;
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.aviso {
+  margin-bottom: 12px;
+  border: 1px solid #ecd96a;
+  background: #fff9d7;
+}
+
+.instruccion-cupones {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 19px;
+  border: 1px solid #bfd8f3;
+  background: #eef6ff;
+  color: #344b63;
+}
+
+.instruccion-cupones p { margin: 0; }
+
+.titulo-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 11px;
+}
+
+.titulo-con-separador {
+  position: relative;
+  padding-bottom: 11px;
+}
+
+.titulo-con-separador::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  border-bottom: 1px dashed #b9c9c3;
+}
+
+.titulo-seccion { margin: 0; font-size: 24px; }
+
+.actualizacion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--gris);
+  font-size: 12px;
+}
+
+.boton-recargar {
+  padding: 8px 11px;
+  border: 1px solid var(--borde);
+  border-radius: 9px;
+  color: #267261;
+  background: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.estado-carga { margin: 0 0 13px; color: var(--gris); font-size: 13px; }
+.estado-carga.error { color: var(--error); font-weight: 700; }
+
+.popular-wrapper { margin-bottom: 19px; }
+.popular-titulo { margin-bottom: 11px; }
+.popular-titulo h2 { margin: 0 0 3px; font-size: 21px; }
+.popular-titulo p { margin: 0; color: var(--gris); font-size: 13px; }
+.subtitulo-lista { margin: 0 0 12px; font-size: 19px; }
+
+.cupones-lista {
+  display: grid;
+  gap: 12px;
+}
+
+/* Tarjeta horizontal compacta */
+.cupon {
+  --tono-1: #0f9f92;
+  --tono-2: #08786f;
+  --tono-suave: #e8f7f4;
+
+  display: grid;
+  grid-template-columns: minmax(190px, 28%) 1fr;
+  overflow: hidden;
+  min-height: 138px;
+  border: 1px solid color-mix(in srgb, var(--tono-1) 22%, white);
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 7px 20px rgba(27,44,38,.07);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.cupon:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 11px 25px rgba(27,44,38,.1);
+}
+
+.cupon[data-color="azul"] {
+  --tono-1: #3487e9;
+  --tono-2: #2464c3;
+  --tono-suave: #edf5ff;
+}
+
+.cupon[data-color="morado"] {
+  --tono-1: #8b5ce6;
+  --tono-2: #6840be;
+  --tono-suave: #f4efff;
+}
+
+.cupon[data-color="coral"] {
+  --tono-1: #f47763;
+  --tono-2: #ce5745;
+  --tono-suave: #fff0ed;
+}
+
+.cupon[data-color="oliva"] {
+  --tono-1: #78945f;
+  --tono-2: #56723f;
+  --tono-suave: #eff5eb;
+}
+
+.cupon.popular {
+  --tono-1: #e4ad27;
+  --tono-2: #b17c08;
+  --tono-suave: #fff7df;
+  border-color: rgba(196,145,22,.28);
+}
+
+.cupon-encabezado {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 18px 20px;
+  color: white;
+  background: linear-gradient(135deg, var(--tono-2), var(--tono-1));
+  overflow: hidden;
+}
+
+.cupon-encabezado::after {
+  content: "";
+  position: absolute;
+  width: 145px;
+  height: 145px;
+  top: -65px;
+  right: -48px;
+  border-radius: 45%;
+  background: rgba(255,255,255,.10);
+  transform: rotate(22deg);
+}
+
+.etiqueta-popular,
+.descuento,
+.subtitulo { position: relative; z-index: 1; }
+
+.etiqueta-popular {
+  align-self: flex-start;
+  margin-bottom: 7px;
+  padding: 4px 8px;
+  border-radius: 7px;
+  background: rgba(255,255,255,.2);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.descuento { margin: 0; font-size: 29px; }
+.subtitulo { margin: 3px 0 0; font-size: 12px; font-weight: 700; }
+
+.cupon-contenido {
+  display: grid;
+  grid-template-columns: 1fr minmax(195px, 31%);
+  align-items: center;
+  gap: 15px;
+  padding: 15px 17px;
+}
+
+.datos-cupon {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(120px, 1fr));
+  gap: 9px;
+}
+
+.dato {
+  margin: 0;
+  padding: 10px 11px;
+  border-radius: 10px;
+  color: #34413b;
+  background: var(--tono-suave);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.acciones-bloque { min-width: 0; }
+
+.acciones-cupon {
+  display: grid;
+  grid-template-columns: 1fr 45px;
+  gap: 7px;
+}
+
+.boton-canjear,
+.boton-compartir {
+  border-radius: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.boton-canjear {
+  padding: 12px 9px;
+  border: 1px solid var(--tono-2);
+  color: white;
+  background: linear-gradient(135deg, var(--tono-2), var(--tono-1));
+  font-size: 14px;
+}
+
+.boton-compartir {
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--tono-1) 55%, white);
+  color: var(--tono-2);
+  background: white;
+}
+
+.boton-compartir svg { width: 20px; height: 20px; fill: currentColor; }
+.boton-canjear:disabled { opacity: .85; cursor: wait; }
+
+.mensaje {
+  min-height: 16px;
+  margin: 6px 0 0;
+  text-align: center;
+  color: var(--tono-2);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.contador {
+  margin: 2px 0 0;
+  text-align: center;
+  color: var(--gris);
+  font-size: 11px;
+}
+
+.sin-cupones {
+  padding: 32px 18px;
+  text-align: center;
+  border: 1px solid var(--borde);
+  border-radius: 17px;
+  background: white;
+}
+
+.sin-cupones-icono {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 13px;
+  border-radius: 50%;
+  background: #f0f4f8;
+  font-size: 27px;
+  filter: grayscale(1);
+  opacity: .65;
+}
+
+.sin-cupones h2 { margin: 0 0 7px; font-size: 21px; }
+.sin-cupones p { margin: 0 0 5px; color: var(--gris); }
+
+/* Publicidad compacta ANIRONA */
+.anirona-anuncio {
+  position: relative;
+  display: grid;
+  grid-template-columns: 132px 1fr 165px;
+  align-items: center;
+  gap: 17px;
+  margin-top: 22px;
+  padding: 15px 18px;
+  overflow: hidden;
+  border: 1px solid #cfe4d4;
+  border-radius: 18px;
+  background:
+    linear-gradient(115deg, #fff, #f8fff9);
+  box-shadow: 0 7px 20px rgba(7,149,42,.06);
+}
+
+.publicidad-etiqueta {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  color: #91a099;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: .7px;
+}
+
+.anirona-producto {
+  display: block;
+  max-width: 118px;
+  max-height: 126px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  margin: auto;
+}
+
+.anirona-copy h2 {
+  margin: 0 0 4px;
+  color: #111;
+  font-size: 25px;
+  letter-spacing: .5px;
+}
+
+.anirona-copy p {
+  margin: 0 0 11px;
+  max-width: 520px;
+  color: #4d5d54;
+  line-height: 1.4;
+  font-size: 14px;
+}
+
+.anirona-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.boton-catalogo,
+.boton-whatsapp-anirona {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 13px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.boton-catalogo {
+  color: white;
+  background: linear-gradient(135deg, var(--anirona-oscuro), var(--anirona));
+}
+
+.boton-whatsapp-anirona {
+  color: #176a39;
+  border: 1px solid rgba(37,211,102,.28);
+  background: #edfff3;
+}
+
+.boton-whatsapp-anirona svg {
+  width: 18px;
+  height: 18px;
+  fill: var(--whatsapp-oscuro);
+}
+
+.anirona-sello {
+  min-height: 92px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 11px;
+  border-radius: 14px;
+  color: #216b38;
+  background: #eff9f1;
+  text-align: center;
+}
+
+.anirona-sello span { font-size: 26px; }
+.anirona-sello strong { margin-top: 3px; font-size: 14px; }
+.anirona-sello small { margin-top: 2px; color: #5a7662; font-size: 11px; }
+
+/* Modal */
+.modal-redireccion[hidden] { display: none; }
+
+.modal-redireccion {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(11,27,22,.68);
+  backdrop-filter: blur(3px);
+}
+
+.modal-contenido {
+  width: min(430px,100%);
+  padding: 26px 21px 23px;
+  border-radius: 20px;
+  background: white;
+  text-align: center;
+  box-shadow: 0 22px 60px rgba(0,0,0,.26);
+}
+
+.modal-icono { margin-bottom: 8px; font-size: 41px; }
+.modal-contenido h2 { margin: 0 0 9px; color: #08786f; }
+.modal-contenido p { margin: 0; color: #47565e; line-height: 1.5; }
+
+.cronometro {
+  width: 80px;
+  height: 80px;
+  display: grid;
+  place-items: center;
+  margin: 18px auto 14px;
+  border: 6px solid #e2f5f1;
+  border-top-color: #0f9f92;
+  border-radius: 50%;
+}
+
+.cronometro span { color: #08786f; font-size: 33px; font-weight: 900; }
+
+.modal-codigo {
+  padding: 9px 11px;
+  border-radius: 9px;
+  color: #08786f !important;
+  background: #e2f5f1;
+}
+
+footer {
+  padding: 0 18px 27px;
+  color: var(--gris);
+  text-align: center;
+  font-size: 12px;
+}
+
+@media (max-width: 760px) {
+  .titulo-fila {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .actualizacion {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .cupon {
+    grid-template-columns: 1fr;
+  }
+
+  .cupon-encabezado {
+    min-height: 108px;
+  }
+
+  .cupon-contenido {
+    grid-template-columns: 1fr;
+    gap: 11px;
+  }
+
+  .anirona-anuncio {
+    grid-template-columns: 92px 1fr;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .anirona-producto {
+    max-width: 85px;
+    max-height: 102px;
+  }
+
+  .anirona-copy h2 { font-size: 21px; }
+  .anirona-copy p { font-size: 12px; margin-bottom: 9px; }
+  .anirona-sello { display: none; }
+}
+
+@media (max-width: 430px) {
+  .logo { width: min(290px, 88vw); }
+
+  .whatsapp-cabecera {
+    max-width: 94%;
+  }
+
+  .titulo-seccion { font-size: 21px; }
+
+  .datos-cupon {
+    grid-template-columns: 1fr;
+  }
+
+  .anirona-anuncio {
+    grid-template-columns: 76px 1fr;
+    gap: 10px;
+    border-radius: 15px;
+  }
+
+  .anirona-producto {
+    max-width: 72px;
+    max-height: 90px;
+  }
+
+  .anirona-copy h2 { font-size: 19px; }
+  .anirona-copy p {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .boton-catalogo,
+  .boton-whatsapp-anirona {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+}
