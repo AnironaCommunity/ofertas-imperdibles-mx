@@ -676,7 +676,8 @@ function fechaPublicacionCupon(cupon) {
     cupon?.fecha_creacion ||
     cupon?.created_at ||
     cupon?.fecha_publicacion ||
-    cupon?.fecha_alta;
+    cupon?.fecha_alta ||
+    cupon?.fecha_inicio;
 
   if (!valor) return null;
 
@@ -693,20 +694,26 @@ function esCuponNuevo(cupon) {
   return antiguedad >= 0 && antiguedad < UNA_HORA_MS;
 }
 
-function obtenerEstadoDestacadoCupon(cupon, idTop) {
+function obtenerEstadoDestacadoCupon(
+  cupon,
+  idTop,
+  idPopular
+) {
   if (esCuponNuevo(cupon)) {
     return "nuevo";
   }
 
   if (
     idTop !== null &&
-    Number(cupon.id) === Number(idTop) &&
-    Number(cupon.clics || 0) > 0
+    Number(cupon.id) === Number(idTop)
   ) {
     return "top";
   }
 
-  if (Number(cupon.clics || 0) >= MIN_CLICS_POPULAR) {
+  if (
+    idPopular !== null &&
+    Number(cupon.id) === Number(idPopular)
+  ) {
     return "popular";
   }
 
@@ -921,18 +928,35 @@ function renderizarCategoria() {
     (cupon) => couponTimeState(cupon).enabled
   );
 
-  const cuponTop = [...cuponesActivos]
+  const cuponesClasificables = [...cuponesActivos]
+    .filter((cupon) => !esCuponNuevo(cupon))
     .filter((cupon) => Number(cupon.clics || 0) > 0)
     .sort(
       (a, b) =>
         Number(b.clics || 0) - Number(a.clics || 0)
-    )[0];
+    );
+
+  const cuponTop = cuponesClasificables[0] || null;
+
+  const cuponPopular =
+    cuponesClasificables.find(
+      (cupon) =>
+        Number(cupon.id) !== Number(cuponTop?.id) &&
+        Number(cupon.clics || 0) >= MIN_CLICS_POPULAR
+    ) || null;
 
   const idTop = cuponTop ? Number(cuponTop.id) : null;
+  const idPopular = cuponPopular
+    ? Number(cuponPopular.id)
+    : null;
 
   cuponesCategoria.forEach((cupon, indice) => {
     const estadoDestacado = couponTimeState(cupon).enabled
-      ? obtenerEstadoDestacadoCupon(cupon, idTop)
+      ? obtenerEstadoDestacadoCupon(
+          cupon,
+          idTop,
+          idPopular
+        )
       : "";
 
     fragmento.appendChild(
