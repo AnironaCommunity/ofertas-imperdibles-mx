@@ -22,6 +22,7 @@ const couponStart = document.querySelector("#coupon-start");
 const couponEnd = document.querySelector("#coupon-end");
 const couponLink = document.querySelector("#coupon-link");
 const couponActive = document.querySelector("#coupon-active");
+const couponPublishNew = document.querySelector("#coupon-publish-new");
 const couponFormTitle = document.querySelector("#coupon-form-title");
 const couponFormMessage = document.querySelector("#coupon-form-message");
 const cancelCoupon = document.querySelector("#cancelar-cupon");
@@ -293,6 +294,7 @@ function resetCouponForm() {
   couponStart.value = "";
   couponEnd.value = "";
   couponActive.checked = true;
+  couponPublishNew.checked = true;
   couponFormTitle.textContent = "Agregar cupón";
   cancelCoupon.hidden = true;
   setMessage(couponFormMessage);
@@ -310,6 +312,7 @@ function editCoupon(coupon) {
   couponEnd.value = isoToMexicoLocal(coupon.fecha_fin);
   couponLink.value = coupon.enlace || "";
   couponActive.checked = Boolean(coupon.activo);
+  couponPublishNew.checked = false;
 
   couponFormTitle.textContent = `Editar cupón: ${coupon.titulo}`;
   cancelCoupon.hidden = false;
@@ -399,6 +402,7 @@ async function saveCoupon(event) {
     fecha_fin: mexicoLocalToIso(couponEnd.value),
     enlace: couponLink.value.trim(),
     activo: couponActive.checked,
+    publicar_como_nuevo: couponPublishNew.checked,
   };
 
   submit.disabled = true;

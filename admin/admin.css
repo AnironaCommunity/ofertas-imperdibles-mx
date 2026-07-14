@@ -852,3 +852,16 @@ table td {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* V65.2 — Restaurar opción Publicar como Nuevo */
+.switch-nuevo-cupon {
+  border: 1px solid rgba(21, 184, 132, .18);
+  border-radius: 10px;
+  padding: 9px 11px;
+  background: rgba(236, 251, 245, .72);
+}
+
+.switch-nuevo-cupon strong {
+  color: #09865f;
+}
