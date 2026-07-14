@@ -1,86 +1,68 @@
+function supabaseConfig() {
+  return {
+    url: String(process.env.SUPABASE_URL || "")
+      .trim()
+      .replace(/^["']|["']$/g, "")
+      .replace(/\/rest\/v1\/?$/i, "")
+      .replace(/\/+$/, ""),
+    key:
+      process.env.SUPABASE_SECRET_KEY ||
+      process.env.SUPABASE_SERVICE_ROLE_KEY ||
+      process.env.SUPABASE_ANON_KEY,
+  };
+}
+
+async function requestSupabase(path) {
+  const { url, key } = supabaseConfig();
+
+  if (!url || !key) {
+    throw new Error("Faltan variables de conexión con Supabase.");
+  }
+
+  const result = await fetch(`${url}/rest/v1/${path}`, {
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      Accept: "application/json",
+    },
+  });
+
+  const text = await result.text();
+  const data = text ? JSON.parse(text) : null;
+
+  if (!result.ok) {
+    throw new Error(
+      data?.message ||
+      data?.error ||
+      "No fue posible consultar los cupones."
+    );
+  }
+
+  return data;
+}
+
 export default async function handler(request, response) {
   if (request.method !== "GET") {
     response.setHeader("Allow", "GET");
-    return response.status(405).json({ error: "Método no permitido." });
-  }
-
-  const url = String(process.env.SUPABASE_URL || "")
-    .trim()
-    .replace(/^["']|["']$/g, "")
-    .replace(/\/rest\/v1\/?$/i, "")
-    .replace(/\/+$/, "");
-
-  const key = process.env.SUPABASE_SECRET_KEY;
-
-  if (!url || !key) {
-    return response.status(500).json({
-      error: "Faltan las variables de Supabase.",
+    return response.status(405).json({
+      error: "Método no permitido.",
     });
   }
 
   try {
-    const endpoint = new URL("/rest/v1/cupones", url);
-
-    endpoint.searchParams.set(
-      "select",
-      "id,titulo,codigo,compra_minima,ahorro_maximo,enlace,clics,likes,activo,categoria,fecha_inicio,fecha_fin"
+    const data = await requestSupabase(
+      "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,categoria,enlace,activo,likes,clics,fecha_inicio,fecha_fin,fecha_creacion,fecha_publicacion&order=id.desc"
     );
-    endpoint.searchParams.set("activo", "eq.true");
-    endpoint.searchParams.set("order", "id.asc");
 
-    const result = await fetch(endpoint, {
-      headers: {
-        apikey: key,
-        Authorization: `Bearer ${key}`,
-        Accept: "application/json",
-      },
-    });
+    response.setHeader(
+      "Cache-Control",
+      "public, max-age=0, s-maxage=15, stale-while-revalidate=30"
+    );
 
-    const text = await result.text();
-
-    if (!result.ok) {
-      return response.status(502).json({
-        error: "Supabase rechazó la consulta.",
-        detalle: text,
-      });
-    }
-
-    const now = Date.now();
-    const previewLimit = now + 24 * 60 * 60 * 1000;
-    const rows = JSON.parse(text);
-
-    /*
-      Se muestran:
-      - cupones activos actualmente;
-      - cupones programados que comienzan durante las próximas 24 horas.
-      Los finalizados se excluyen automáticamente.
-    */
-    const coupons = rows.filter((coupon) => {
-      const start = coupon.fecha_inicio
-        ? new Date(coupon.fecha_inicio).getTime()
-        : null;
-
-      const end = coupon.fecha_fin
-        ? new Date(coupon.fecha_fin).getTime()
-        : null;
-
-      if (end !== null && end <= now) {
-        return false;
-      }
-
-      if (start !== null && start > previewLimit) {
-        return false;
-      }
-
-      return true;
-    });
-
-    response.setHeader("Cache-Control", "no-store");
-    return response.status(200).json(coupons);
+    return response.status(200).json(data);
   } catch (error) {
     return response.status(500).json({
-      error: "Error interno del servidor.",
-      detalle: error.message,
+      error: error.message || "Error interno del servidor.",
     });
   }
 }

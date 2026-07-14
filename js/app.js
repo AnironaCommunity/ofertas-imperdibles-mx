@@ -673,11 +673,10 @@ const MIN_CLICS_POPULAR = 2;
 
 function fechaPublicacionCupon(cupon) {
   const valor =
+    cupon?.fecha_publicacion ||
     cupon?.fecha_creacion ||
     cupon?.created_at ||
-    cupon?.fecha_publicacion ||
-    cupon?.fecha_alta ||
-    cupon?.fecha_inicio;
+    cupon?.fecha_alta;
 
   if (!valor) return null;
 

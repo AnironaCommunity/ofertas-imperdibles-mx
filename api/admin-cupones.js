@@ -1,22 +1,28 @@
-function isAuthorized(request) {
+function authorized(request) {
   return Boolean(process.env.ADMIN_PASSWORD) &&
     String(request.headers["x-admin-password"] || "") ===
       process.env.ADMIN_PASSWORD;
 }
 
-function config() {
+function supabaseConfig() {
   return {
     url: String(process.env.SUPABASE_URL || "")
       .trim()
       .replace(/^["']|["']$/g, "")
       .replace(/\/rest\/v1\/?$/i, "")
       .replace(/\/+$/, ""),
-    key: process.env.SUPABASE_SECRET_KEY,
+    key:
+      process.env.SUPABASE_SECRET_KEY ||
+      process.env.SUPABASE_SERVICE_ROLE_KEY,
   };
 }
 
-async function supabaseFetch(path, options = {}) {
-  const { url, key } = config();
+async function requestSupabase(path, options = {}) {
+  const { url, key } = supabaseConfig();
+
+  if (!url || !key) {
+    throw new Error("Faltan variables de conexión con Supabase.");
+  }
 
   const result = await fetch(`${url}/rest/v1/${path}`, {
     ...options,
@@ -33,19 +39,26 @@ async function supabaseFetch(path, options = {}) {
   const data = text ? JSON.parse(text) : null;
 
   if (!result.ok) {
-    throw new Error("Supabase no pudo completar la operación.");
+    throw new Error(
+      data?.message ||
+      data?.error ||
+      "Supabase no pudo completar la operación."
+    );
   }
 
   return data;
 }
 
-function cleanTimestamp(value) {
-  const text = String(value || "").trim();
-  return text || null;
+function cleanText(value) {
+  return String(value || "").trim();
+}
+
+function normalizeCategory(value) {
+  return value === "bancarios" ? "bancarios" : "tienda";
 }
 
 export default async function handler(request, response) {
-  if (!isAuthorized(request)) {
+  if (!authorized(request)) {
     return response.status(401).json({
       error: "Contraseña de administrador incorrecta.",
     });
@@ -53,29 +66,31 @@ export default async function handler(request, response) {
 
   try {
     if (request.method === "GET") {
-      const data = await supabaseFetch(
-        "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,enlace,clics,likes,activo,categoria,fecha_inicio,fecha_fin&order=id.desc"
+      const data = await requestSupabase(
+        "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,categoria,enlace,activo,likes,clics,fecha_inicio,fecha_fin,fecha_creacion,fecha_publicacion&order=id.desc"
       );
 
+      response.setHeader("Cache-Control", "no-store");
       return response.status(200).json(data);
     }
 
     if (request.method === "POST") {
+      const publicarComoNuevo =
+        request.body?.publicar_como_nuevo !== false;
+
       const payload = {
-        titulo: String(request.body?.titulo || "").trim(),
-        codigo: String(request.body?.codigo || "").trim(),
-        compra_minima: String(request.body?.compra_minima || "").trim(),
-        ahorro_maximo: String(request.body?.ahorro_maximo || "").trim(),
-        enlace: String(request.body?.enlace || "").trim(),
-        categoria:
-          request.body?.categoria === "bancarios"
-            ? "bancarios"
-            : "tienda",
-        fecha_inicio: cleanTimestamp(request.body?.fecha_inicio),
-        fecha_fin: cleanTimestamp(request.body?.fecha_fin),
+        titulo: cleanText(request.body?.titulo),
+        codigo: cleanText(request.body?.codigo),
+        compra_minima: cleanText(request.body?.compra_minima),
+        ahorro_maximo: cleanText(request.body?.ahorro_maximo),
+        categoria: normalizeCategory(request.body?.categoria),
+        enlace: cleanText(request.body?.enlace),
         activo: request.body?.activo !== false,
-        clics: 0,
-        likes: 0,
+        fecha_inicio: request.body?.fecha_inicio || null,
+        fecha_fin: request.body?.fecha_fin || null,
+        fecha_publicacion: publicarComoNuevo
+          ? new Date().toISOString()
+          : null,
       };
 
       if (!payload.titulo || !payload.codigo || !payload.enlace) {
@@ -84,17 +99,7 @@ export default async function handler(request, response) {
         });
       }
 
-      if (
-        payload.fecha_inicio &&
-        payload.fecha_fin &&
-        new Date(payload.fecha_fin) <= new Date(payload.fecha_inicio)
-      ) {
-        return response.status(400).json({
-          error: "La fecha final debe ser posterior a la fecha inicial.",
-        });
-      }
-
-      const data = await supabaseFetch("cupones", {
+      const data = await requestSupabase("cupones", {
         method: "POST",
         headers: {
           Prefer: "return=representation",
@@ -107,6 +112,13 @@ export default async function handler(request, response) {
 
     if (request.method === "PUT") {
       const id = Number(request.body?.id);
+
+      if (!Number.isInteger(id) || id <= 0) {
+        return response.status(400).json({
+          error: "ID de cupón no válido.",
+        });
+      }
+
       const payload = {};
 
       for (const field of [
@@ -115,38 +127,33 @@ export default async function handler(request, response) {
         "compra_minima",
         "ahorro_maximo",
         "enlace",
-        "activo",
-        "categoria",
-        "fecha_inicio",
-        "fecha_fin",
       ]) {
-        if (!Object.hasOwn(request.body || {}, field)) continue;
-
-        if (field === "activo") {
-          payload[field] = Boolean(request.body[field]);
-        } else if (field === "categoria") {
-          payload[field] =
-            request.body[field] === "bancarios"
-              ? "bancarios"
-              : "tienda";
-        } else if (field === "fecha_inicio" || field === "fecha_fin") {
-          payload[field] = cleanTimestamp(request.body[field]);
-        } else {
-          payload[field] = String(request.body[field] || "").trim();
+        if (Object.hasOwn(request.body || {}, field)) {
+          payload[field] = cleanText(request.body[field]);
         }
       }
 
-      if (
-        payload.fecha_inicio &&
-        payload.fecha_fin &&
-        new Date(payload.fecha_fin) <= new Date(payload.fecha_inicio)
-      ) {
-        return response.status(400).json({
-          error: "La fecha final debe ser posterior a la fecha inicial.",
-        });
+      if (Object.hasOwn(request.body || {}, "categoria")) {
+        payload.categoria = normalizeCategory(request.body.categoria);
       }
 
-      const data = await supabaseFetch(`cupones?id=eq.${id}`, {
+      if (Object.hasOwn(request.body || {}, "activo")) {
+        payload.activo = Boolean(request.body.activo);
+      }
+
+      if (Object.hasOwn(request.body || {}, "fecha_inicio")) {
+        payload.fecha_inicio = request.body.fecha_inicio || null;
+      }
+
+      if (Object.hasOwn(request.body || {}, "fecha_fin")) {
+        payload.fecha_fin = request.body.fecha_fin || null;
+      }
+
+      if (request.body?.publicar_como_nuevo === true) {
+        payload.fecha_publicacion = new Date().toISOString();
+      }
+
+      const data = await requestSupabase(`cupones?id=eq.${id}`, {
         method: "PATCH",
         headers: {
           Prefer: "return=representation",
@@ -160,7 +167,13 @@ export default async function handler(request, response) {
     if (request.method === "DELETE") {
       const id = Number(request.query?.id);
 
-      await supabaseFetch(`cupones?id=eq.${id}`, {
+      if (!Number.isInteger(id) || id <= 0) {
+        return response.status(400).json({
+          error: "ID de cupón no válido.",
+        });
+      }
+
+      await requestSupabase(`cupones?id=eq.${id}`, {
         method: "DELETE",
       });
 
@@ -168,7 +181,9 @@ export default async function handler(request, response) {
     }
 
     response.setHeader("Allow", "GET, POST, PUT, DELETE");
-    return response.status(405).json({ error: "Método no permitido." });
+    return response.status(405).json({
+      error: "Método no permitido.",
+    });
   } catch (error) {
     return response.status(500).json({
       error: error.message || "Error interno del servidor.",
