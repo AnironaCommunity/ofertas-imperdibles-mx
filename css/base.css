@@ -2516,104 +2516,118 @@ button.oferta-imagen-contenedor:active .oferta-imagen {
 }
 
 
-/* V63.9.1 — Alineación del menú y ayuda de cupones más compacta */
-
-/* Alinear el inicio de las secciones con el contenido principal */
+/* V63.10 — Flechas externas sin desplazar el menú */
 .menu-ofertas-contenedor {
+  width: min(930px, calc(100% - 68px));
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 0 !important;
   padding-left: 0 !important;
-  padding-right: 30px !important;
 }
 
 .menu-ofertas {
-  margin-left: 0 !important;
-  padding-left: 0 !important;
-  scroll-padding-left: 0 !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding-right: 5px !important;
+  padding-left: 5px !important;
 }
 
-.menu-ofertas button:first-child {
-  margin-left: 0 !important;
+/* Las flechas permanecen a los lados, no arriba ni abajo */
+.menu-ofertas-flecha-anterior {
+  left: -34px !important;
 }
 
-/* Ajustar degradado y flecha izquierda para la nueva alineación */
+.menu-ofertas-flecha-siguiente {
+  right: -34px !important;
+}
+
+/* El degradado comienza en el borde real del menú */
 .menu-ofertas-contenedor::before {
   left: 0 !important;
 }
 
-.menu-ofertas-flecha-anterior {
-  left: 0 !important;
-}
-
-/* Compactar la barra plegable sin cambiar textos ni funcionalidad */
-.ayuda-cupones {
-  margin-top: 0 !important;
-  margin-bottom: 7px !important;
-}
-
-.ayuda-cupones-toggle {
-  min-height: 36px !important;
-  padding-top: 6px !important;
-  padding-bottom: 6px !important;
-}
-
-.ayuda-cupones-interior {
-  padding-top: 0 !important;
-  padding-bottom: 9px !important;
-}
-
-.ayuda-cupones-pasos {
-  gap: 4px !important;
-}
-
-.ayuda-cupones-pasos li {
-  min-height: 0 !important;
-  padding-top: 4px !important;
-  padding-bottom: 4px !important;
-}
-
-.ayuda-cupones-tip {
-  margin-top: 6px !important;
-  padding-top: 6px !important;
-  padding-bottom: 6px !important;
-}
-
-.ayuda-cupones-entendido {
-  margin-top: 7px !important;
-  min-height: 30px !important;
-  padding-top: 5px !important;
-  padding-bottom: 5px !important;
+.menu-ofertas-contenedor::after {
+  right: 0 !important;
 }
 
 @media (max-width: 600px) {
   .menu-ofertas-contenedor {
+    width: calc(100% - 62px);
+    padding-right: 0 !important;
     padding-left: 0 !important;
-    padding-right: 28px !important;
   }
 
-  .ayuda-cupones {
-    margin-bottom: 6px !important;
+  .menu-ofertas-flecha-anterior {
+    left: -30px !important;
   }
 
-  .ayuda-cupones-toggle {
-    min-height: 34px !important;
-    padding-top: 5px !important;
-    padding-bottom: 5px !important;
+  .menu-ofertas-flecha-siguiente {
+    right: -30px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .menu-ofertas-contenedor {
+    width: calc(100% - 56px);
   }
 
-  .ayuda-cupones-interior {
-    padding-top: 0 !important;
-    padding-bottom: 8px !important;
+  .menu-ofertas-flecha {
+    width: 25px;
   }
 
-  .ayuda-cupones-pasos {
-    gap: 3px !important;
+  .menu-ofertas-flecha-anterior {
+    left: -27px !important;
   }
 
-  .ayuda-cupones-tip {
-    margin-top: 5px !important;
+  .menu-ofertas-flecha-siguiente {
+    right: -27px !important;
+  }
+}
+
+
+/* V63.10.1 - Compactar "¿Cómo usar los cupones?" */
+.ayuda-cupones{
+  margin:0 0 6px !important;
+}
+
+.ayuda-cupones-toggle{
+  min-height:36px !important;
+  padding:6px 12px !important;
+}
+
+.ayuda-cupones-interior{
+  padding:0 12px 10px !important;
+}
+
+.ayuda-cupones-pasos{
+  gap:4px !important;
+}
+
+.ayuda-cupones-pasos li{
+  min-height:auto !important;
+  padding:5px 8px 5px 34px !important;
+}
+
+.ayuda-cupones-tip{
+  margin-top:6px !important;
+  padding:6px 9px !important;
+}
+
+.ayuda-cupones-entendido{
+  margin-top:8px !important;
+}
+
+@media (max-width:600px){
+  .ayuda-cupones{
+    margin-bottom:5px !important;
   }
 
-  .ayuda-cupones-entendido {
-    margin-top: 6px !important;
-    min-height: 29px !important;
+  .ayuda-cupones-toggle{
+    min-height:34px !important;
+    padding:5px 10px !important;
+  }
+
+  .ayuda-cupones-interior{
+    padding:0 10px 8px !important;
   }
 }
