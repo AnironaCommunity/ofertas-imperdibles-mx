@@ -869,15 +869,32 @@ async function saveAllBulkPrices() {
       recalculateBulkPriceRow(row);
 
       const input = row.querySelector(".precio-masivo-input");
-      const original = parseMoney(input.dataset.original);
-      const current = parseMoney(input.value);
+      const originalPrice = parseMoney(input.dataset.original);
+      const currentPrice = parseMoney(input.value);
 
-      if (current === original) return null;
+      const product = ads.find(
+        (item) => Number(item.id) === Number(row.dataset.id)
+      );
+
+      const originalCoupon = String(product?.codigo_cupon || "").trim();
+      const originalFinalPrice = parseMoney(product?.precio_cupon);
+
+      const calculatedCoupon = String(row.dataset.coupon || "").trim();
+      const calculatedFinalPrice = parseMoney(row.dataset.finalPrice);
+
+      const priceChanged = currentPrice !== originalPrice;
+      const couponChanged = calculatedCoupon !== originalCoupon;
+      const finalPriceChanged =
+        calculatedFinalPrice !== originalFinalPrice;
+
+      if (!priceChanged && !couponChanged && !finalPriceChanged) {
+        return null;
+      }
 
       return {
         id: Number(row.dataset.id),
         precio_publicado: row.dataset.price,
-        codigo_cupon: row.dataset.coupon,
+        codigo_cupon: calculatedCoupon,
         precio_cupon: row.dataset.finalPrice,
         row,
       };
@@ -885,7 +902,7 @@ async function saveAllBulkPrices() {
     .filter(Boolean);
 
   if (!changes.length) {
-    setMessage(bulkPricesMessage, "No hay cambios de precio para guardar.");
+    setMessage(bulkPricesMessage, "No hay cambios de precio o cupón para guardar.");
     return;
   }
 
