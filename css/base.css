@@ -2514,3 +2514,72 @@ button.oferta-imagen-contenedor:active .oferta-imagen {
     font-size: 9.2px;
   }
 }
+
+
+/* V63.10 — Flechas externas sin desplazar el menú */
+.menu-ofertas-contenedor {
+  width: min(930px, calc(100% - 68px));
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+
+.menu-ofertas {
+  width: 100% !important;
+  margin: 0 !important;
+  padding-right: 5px !important;
+  padding-left: 5px !important;
+}
+
+/* Las flechas permanecen a los lados, no arriba ni abajo */
+.menu-ofertas-flecha-anterior {
+  left: -34px !important;
+}
+
+.menu-ofertas-flecha-siguiente {
+  right: -34px !important;
+}
+
+/* El degradado comienza en el borde real del menú */
+.menu-ofertas-contenedor::before {
+  left: 0 !important;
+}
+
+.menu-ofertas-contenedor::after {
+  right: 0 !important;
+}
+
+@media (max-width: 600px) {
+  .menu-ofertas-contenedor {
+    width: calc(100% - 62px);
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  .menu-ofertas-flecha-anterior {
+    left: -30px !important;
+  }
+
+  .menu-ofertas-flecha-siguiente {
+    right: -30px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .menu-ofertas-contenedor {
+    width: calc(100% - 56px);
+  }
+
+  .menu-ofertas-flecha {
+    width: 25px;
+  }
+
+  .menu-ofertas-flecha-anterior {
+    left: -27px !important;
+  }
+
+  .menu-ofertas-flecha-siguiente {
+    right: -27px !important;
+  }
+}

@@ -293,9 +293,6 @@ function desplazarMenuOfertas(direccion) {
   });
 }
 
-const CLAVE_RECORRIDO_SECCIONES =
-  "ofertas-imperdibles-recorrido-secciones-v1";
-
 let temporizadorRecorridoSecciones = null;
 let recorridoSeccionesActivo = false;
 
@@ -313,17 +310,13 @@ function cancelarRecorridoSecciones() {
 function iniciarRecorridoSecciones() {
   if (!menuOfertas) return;
 
-  const yaSeMostro =
-    localStorage.getItem(CLAVE_RECORRIDO_SECCIONES) === "1";
-
   const tieneDesbordamiento =
     menuOfertas.scrollWidth > menuOfertas.clientWidth + 4;
 
-  if (yaSeMostro || !tieneDesbordamiento) {
+  if (!tieneDesbordamiento) {
     return;
   }
 
-  localStorage.setItem(CLAVE_RECORRIDO_SECCIONES, "1");
   recorridoSeccionesActivo = true;
 
   const posicionInicial = menuOfertas.scrollLeft;
