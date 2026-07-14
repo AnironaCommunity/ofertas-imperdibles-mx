@@ -389,7 +389,12 @@ function iniciarRecorridoSecciones() {
 
   recorridoSeccionesActivo = true;
 
-  const posicionInicial = menuOfertas.scrollLeft;
+  /*
+    El recorrido siempre debe regresar al inicio real del menú.
+    No usamos scrollLeft como posición inicial porque el navegador puede
+    haber centrado previamente la sección activa y dejar un desplazamiento.
+  */
+  const posicionInicial = 0;
   const posicionFinal =
     menuOfertas.scrollWidth - menuOfertas.clientWidth;
 
@@ -410,9 +415,18 @@ function iniciarRecorridoSecciones() {
       });
 
       temporizadorRecorridoSecciones = window.setTimeout(() => {
+        /*
+          Asegura la posición exacta después de terminar el desplazamiento
+          suave, evitando que quede unos píxeles recorrido hacia la derecha.
+        */
+        menuOfertas.scrollTo({
+          left: 0,
+          behavior: "auto",
+        });
+
         recorridoSeccionesActivo = false;
         actualizarControlesMenuOfertas();
-      }, 900);
+      }, 950);
     }, 1250);
   }, 700);
 }
