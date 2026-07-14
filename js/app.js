@@ -4,6 +4,12 @@ const sinCupones = document.querySelector("#sin-cupones");
 const estadoCarga = document.querySelector("#estado-carga");
 const botonRecargar = document.querySelector("#boton-recargar");
 const contadorActualizacion = document.querySelector("#contador-actualizacion");
+const ayudaCupones = document.querySelector("#ayuda-cupones");
+const ayudaCuponesToggle = document.querySelector("#ayuda-cupones-toggle");
+const ayudaCuponesContenido = document.querySelector("#ayuda-cupones-contenido");
+const ayudaCuponesFlecha = document.querySelector("#ayuda-cupones-flecha");
+const ayudaCuponesEntendido = document.querySelector("#ayuda-cupones-entendido");
+
 const enlaceLogoInicio = document.querySelector("#enlace-logo-inicio");
 
 const modalRedireccion = document.querySelector("#modal-redireccion");
@@ -30,6 +36,70 @@ const seccionOfertasMercadoLibre = document.querySelector("#seccion-ofertas-merc
 const ofertasComunidadAnirona = document.querySelector("#ofertas-comunidad-anirona");
 const ofertasAmazon = document.querySelector("#ofertas-amazon");
 const ofertasMercadoLibre = document.querySelector("#ofertas-mercado-libre");
+
+
+const CLAVE_AYUDA_CUPONES_VISTA =
+  "ofertas-imperdibles-ayuda-cupones-vista";
+
+function establecerEstadoAyudaCupones(abierta, { animar = true } = {}) {
+  if (!ayudaCupones || !ayudaCuponesToggle || !ayudaCuponesContenido || !ayudaCuponesFlecha) return;
+
+  ayudaCupones.classList.toggle("abierta", abierta);
+  ayudaCuponesToggle.setAttribute("aria-expanded", String(abierta));
+  ayudaCuponesFlecha.textContent = abierta ? "▲" : "▼";
+
+  if (!animar) {
+    ayudaCuponesContenido.hidden = !abierta;
+    ayudaCuponesContenido.style.maxHeight = abierta
+      ? `${ayudaCuponesContenido.scrollHeight}px`
+      : "0px";
+    return;
+  }
+
+  if (abierta) {
+    ayudaCuponesContenido.hidden = false;
+    requestAnimationFrame(() => {
+      ayudaCuponesContenido.style.maxHeight =
+        `${ayudaCuponesContenido.scrollHeight}px`;
+    });
+  } else {
+    ayudaCuponesContenido.style.maxHeight =
+      `${ayudaCuponesContenido.scrollHeight}px`;
+    requestAnimationFrame(() => {
+      ayudaCuponesContenido.style.maxHeight = "0px";
+    });
+    window.setTimeout(() => {
+      if (!ayudaCupones.classList.contains("abierta")) {
+        ayudaCuponesContenido.hidden = true;
+      }
+    }, 260);
+  }
+}
+
+function inicializarAyudaCupones() {
+  if (!ayudaCupones) return;
+  const yaFueVista =
+    localStorage.getItem(CLAVE_AYUDA_CUPONES_VISTA) === "1";
+  establecerEstadoAyudaCupones(!yaFueVista, { animar: false });
+}
+
+ayudaCuponesToggle?.addEventListener("click", () => {
+  const abierta =
+    ayudaCuponesToggle.getAttribute("aria-expanded") === "true";
+  establecerEstadoAyudaCupones(!abierta);
+});
+
+ayudaCuponesEntendido?.addEventListener("click", () => {
+  localStorage.setItem(CLAVE_AYUDA_CUPONES_VISTA, "1");
+  establecerEstadoAyudaCupones(false);
+});
+
+window.addEventListener("resize", () => {
+  if (ayudaCupones?.classList.contains("abierta") && !ayudaCuponesContenido?.hidden) {
+    ayudaCuponesContenido.style.maxHeight =
+      `${ayudaCuponesContenido.scrollHeight}px`;
+  }
+});
 
 const SEGUNDOS_ACTUALIZACION = 60;
 const SEGUNDOS_REDIRECCION = 3;
@@ -1542,6 +1612,7 @@ window.addEventListener("popstate", () => {
   });
 });
 
+inicializarAyudaCupones();
 inicializarCarruselesPublicidad();
 
 const urlInicialTieneSeccion =

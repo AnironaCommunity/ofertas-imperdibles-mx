@@ -47,7 +47,7 @@
   <link rel="icon" href="img/logo.png" />
   <link rel="apple-touch-icon" href="img/logo.png" />
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="stylesheet" href="css/style.css?v=63.7" />
+  <link rel="stylesheet" href="css/style.css?v=63.8.1" />
 </head>
 
 <body>
@@ -142,7 +142,34 @@
 
   <main class="contenedor">
     <section id="vista-cupones" class="vista-principal vista-activa">
-<div class="titulo-fila titulo-con-separador">
+<section id="ayuda-cupones" class="ayuda-cupones" aria-labelledby="ayuda-cupones-titulo">
+      <button id="ayuda-cupones-toggle" class="ayuda-cupones-toggle" type="button"
+        aria-expanded="false" aria-controls="ayuda-cupones-contenido">
+        <span class="ayuda-cupones-toggle-texto">
+          <span class="ayuda-cupones-icono" aria-hidden="true">💡</span>
+          <span id="ayuda-cupones-titulo">¿Cómo usar los cupones?</span>
+        </span>
+        <span id="ayuda-cupones-flecha" class="ayuda-cupones-flecha" aria-hidden="true">▼</span>
+      </button>
+
+      <div id="ayuda-cupones-contenido" class="ayuda-cupones-contenido" hidden>
+        <div class="ayuda-cupones-interior">
+          <h2>¿Cómo ahorrar con nuestros cupones?</h2>
+          <ol class="ayuda-cupones-pasos">
+            <li>Elige el cupón que quieras.</li>
+            <li>Da clic en <strong>📋 Copiar y Canjear</strong>.</li>
+            <li>El código se copiará automáticamente.</li>
+            <li>Serás redireccionado a Mercado Libre.</li>
+            <li>Al momento de pagar, pega el cupón en el apartado de <strong>Cupones</strong> y listo.</li>
+          </ol>
+          <button id="ayuda-cupones-entendido" class="ayuda-cupones-entendido" type="button">
+            ✓ Entendido
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <div class="titulo-fila titulo-con-separador">
       <h1 class="titulo-seccion">🎟️ Cupones de tienda</h1>
 
       <div class="actualizacion">
@@ -376,6 +403,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/app.js?v=63.5"></script>
+  <script type="module" src="js/app.js?v=63.8.1"></script>
 </body>
 </html>
