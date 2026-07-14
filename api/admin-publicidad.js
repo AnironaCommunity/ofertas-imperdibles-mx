@@ -6,9 +6,40 @@ const ALLOWED_SECTIONS = [
 ];
 
 function normalizeSections(value, fallback = ["ofertas_dia"]) {
-  const values = Array.isArray(value) ? value : [];
-  const unique = [...new Set(values.filter((item) => ALLOWED_SECTIONS.includes(item)))];
-  return unique.length ? unique : fallback;
+  let values = [];
+
+  if (Array.isArray(value)) {
+    values = value;
+  } else if (typeof value === "string") {
+    const text = value.trim();
+
+    if (text) {
+      try {
+        const parsed = JSON.parse(text);
+        values = Array.isArray(parsed) ? parsed : [];
+      } catch {
+        values = text
+          .replace(/^\{|\}$/g, "")
+          .split(",")
+          .map((item) => item.trim().replace(/^"|"$/g, ""))
+          .filter(Boolean);
+      }
+    }
+  }
+
+  const unique = [...new Set(
+    values
+      .map((item) => String(item || "").trim())
+      .filter((item) => ALLOWED_SECTIONS.includes(item))
+  )];
+
+  const fallbackValues = Array.isArray(fallback)
+    ? fallback
+    : [fallback];
+
+  return unique.length
+    ? unique
+    : fallbackValues.filter((item) => ALLOWED_SECTIONS.includes(item));
 }
 
 function authorized(request) {
@@ -69,6 +100,11 @@ export default async function handler(request, response) {
     }
 
     if (request.method === "POST") {
+      const secciones = normalizeSections(
+        request.body?.secciones,
+        [request.body?.categoria || "ofertas_dia"]
+      );
+
       const payload = {
         titulo: String(request.body?.titulo || "").trim(),
         descripcion: String(request.body?.descripcion || "").trim(),
@@ -77,11 +113,8 @@ export default async function handler(request, response) {
         precio_publicado: String(request.body?.precio_publicado || "").trim(),
         precio_cupon: String(request.body?.precio_cupon || "").trim(),
         codigo_cupon: String(request.body?.codigo_cupon || "").trim(),
-        secciones: normalizeSections(request.body?.secciones),
-        categoria: normalizeSections(request.body?.secciones)[0] ||
-          (ALLOWED_SECTIONS.includes(request.body?.categoria)
-            ? request.body.categoria
-            : "ofertas_dia"),
+        secciones,
+        categoria: secciones[0] || "ofertas_dia",
         activo: request.body?.activo !== false,
         orden: Math.max(0, Number(request.body?.orden) || 0),
         clics: 0,
@@ -134,8 +167,12 @@ export default async function handler(request, response) {
         if (field === "activo") {
           payload[field] = Boolean(request.body[field]);
         } else if (field === "secciones") {
-          payload.secciones = normalizeSections(request.body.secciones);
-          payload.categoria = payload.secciones[0];
+          payload.secciones = normalizeSections(
+            request.body.secciones,
+            [request.body?.categoria || "ofertas_dia"]
+          );
+          payload.categoria =
+            payload.secciones[0] || "ofertas_dia";
         } else if (field === "categoria") {
           payload[field] = ALLOWED_SECTIONS.includes(request.body[field])
             ? request.body[field]

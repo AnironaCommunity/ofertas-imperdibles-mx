@@ -17,7 +17,7 @@ export default async function handler(request, response) {
 
     endpoint.searchParams.set(
       "select",
-      "id,titulo,descripcion,imagen_url,enlace,precio_publicado,precio_cupon,codigo_cupon,categoria,orden,clics,visitas"
+      "id,titulo,descripcion,imagen_url,enlace,precio_publicado,precio_cupon,codigo_cupon,categoria,secciones,orden,clics,visitas"
     );
     endpoint.searchParams.set("activo", "eq.true");
     endpoint.searchParams.set("order", "orden.asc,id.asc");
@@ -39,8 +39,44 @@ export default async function handler(request, response) {
       });
     }
 
+    const datos = JSON.parse(text);
+
+    const normalizados = Array.isArray(datos)
+      ? datos.map((item) => {
+          let secciones = item?.secciones;
+
+          if (!Array.isArray(secciones)) {
+            if (typeof secciones === "string") {
+              try {
+                const parsed = JSON.parse(secciones);
+                secciones = Array.isArray(parsed) ? parsed : [];
+              } catch {
+                secciones = secciones
+                  .replace(/^\{|\}$/g, "")
+                  .split(",")
+                  .map((value) =>
+                    value.trim().replace(/^"|"$/g, "")
+                  )
+                  .filter(Boolean);
+              }
+            } else {
+              secciones = [];
+            }
+          }
+
+          if (!secciones.length) {
+            secciones = [item?.categoria || "ofertas_dia"];
+          }
+
+          return {
+            ...item,
+            secciones,
+          };
+        })
+      : [];
+
     response.setHeader("Cache-Control", "no-store");
-    return response.status(200).json(JSON.parse(text));
+    return response.status(200).json(normalizados);
   } catch (error) {
     return response.status(500).json({
       error: "Error interno del servidor.",

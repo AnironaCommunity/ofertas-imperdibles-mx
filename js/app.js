@@ -1505,10 +1505,56 @@ function crearTarjetaCanalAnirona() {
 }
 
 
+
+function normalizarSeccionesPublicidad(valor, categoria = "ofertas_dia") {
+  let valores = [];
+
+  if (Array.isArray(valor)) {
+    valores = valor;
+  } else if (typeof valor === "string") {
+    const texto = valor.trim();
+
+    if (texto) {
+      try {
+        const parsed = JSON.parse(texto);
+        valores = Array.isArray(parsed) ? parsed : [];
+      } catch {
+        valores = texto
+          .replace(/^\{|\}$/g, "")
+          .split(",")
+          .map((item) =>
+            item.trim().replace(/^"|"$/g, "")
+          )
+          .filter(Boolean);
+      }
+    }
+  }
+
+  const permitidas = new Set([
+    "ofertas_dia",
+    "ofertas_mercado_libre",
+    "ofertas_amazon",
+    "comunidad_anirona",
+  ]);
+
+  const unicas = [...new Set(
+    valores
+      .map((item) => String(item || "").trim())
+      .filter((item) => permitidas.has(item))
+  )];
+
+  const categoriaNormalizada = permitidas.has(categoria)
+    ? categoria
+    : "ofertas_dia";
+
+  return unicas.length ? unicas : [categoriaNormalizada];
+}
+
 function publicidadPerteneceASeccion(publicidad, seccion) {
-  const secciones = Array.isArray(publicidad?.secciones)
-    ? publicidad.secciones
-    : [publicidad?.categoria || "ofertas_dia"];
+  const secciones = normalizarSeccionesPublicidad(
+    publicidad?.secciones,
+    publicidad?.categoria
+  );
 
   return secciones.includes(seccion);
 }

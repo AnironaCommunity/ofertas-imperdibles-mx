@@ -22,7 +22,6 @@ const couponStart = document.querySelector("#coupon-start");
 const couponEnd = document.querySelector("#coupon-end");
 const couponLink = document.querySelector("#coupon-link");
 const couponActive = document.querySelector("#coupon-active");
-const couponPublishNew = document.querySelector("#coupon-publish-new");
 const couponFormTitle = document.querySelector("#coupon-form-title");
 const couponFormMessage = document.querySelector("#coupon-form-message");
 const cancelCoupon = document.querySelector("#cancelar-cupon");
@@ -41,7 +40,6 @@ const clearImport = document.querySelector("#limpiar-importacion");
 const saveImport = document.querySelector("#guardar-importacion");
 const importMessage = document.querySelector("#import-message");
 const importPreview = document.querySelector("#import-preview");
-const importPublishNew = document.querySelector("#import-publish-new");
 const importList = document.querySelector("#import-list");
 
 /* Publicidad */
@@ -295,7 +293,6 @@ function resetCouponForm() {
   couponStart.value = "";
   couponEnd.value = "";
   couponActive.checked = true;
-  couponPublishNew.checked = true;
   couponFormTitle.textContent = "Agregar cupón";
   cancelCoupon.hidden = true;
   setMessage(couponFormMessage);
@@ -313,7 +310,6 @@ function editCoupon(coupon) {
   couponEnd.value = isoToMexicoLocal(coupon.fecha_fin);
   couponLink.value = coupon.enlace || "";
   couponActive.checked = Boolean(coupon.activo);
-  couponPublishNew.checked = false;
 
   couponFormTitle.textContent = `Editar cupón: ${coupon.titulo}`;
   cancelCoupon.hidden = false;
@@ -403,7 +399,6 @@ async function saveCoupon(event) {
     fecha_fin: mexicoLocalToIso(couponEnd.value),
     enlace: couponLink.value.trim(),
     activo: couponActive.checked,
-    publicar_como_nuevo: couponPublishNew.checked,
   };
 
   submit.disabled = true;
@@ -566,15 +561,11 @@ async function publishImport() {
     for (const coupon of validCoupons) {
       await api("/api/admin-cupones", {
         method: "POST",
-        body: JSON.stringify({
-          ...coupon,
-          publicar_como_nuevo: importPublishNew.checked,
-        }),
+        body: JSON.stringify(coupon),
       });
     }
 
     importText.value = "";
-    importPublishNew.checked = true;
     detectedCoupons = [];
     importPreview.hidden = true;
     setMessage(importMessage, `${validCoupons.length} cupones publicados.`);
@@ -586,15 +577,63 @@ async function publishImport() {
   }
 }
 
+
+function normalizarSeccionesPublicidad(valor, categoria = "ofertas_dia") {
+  let valores = [];
+
+  if (Array.isArray(valor)) {
+    valores = valor;
+  } else if (typeof valor === "string") {
+    const texto = valor.trim();
+
+    if (texto) {
+      try {
+        const parsed = JSON.parse(texto);
+        valores = Array.isArray(parsed) ? parsed : [];
+      } catch {
+        valores = texto
+          .replace(/^\{|\}$/g, "")
+          .split(",")
+          .map((item) =>
+            item.trim().replace(/^"|"$/g, "")
+          )
+          .filter(Boolean);
+      }
+    }
+  }
+
+  const permitidas = new Set([
+    "ofertas_dia",
+    "ofertas_mercado_libre",
+    "ofertas_amazon",
+    "comunidad_anirona",
+  ]);
+
+  const unicas = [...new Set(
+    valores
+      .map((item) => String(item || "").trim())
+      .filter((item) => permitidas.has(item))
+  )];
+
+  const categoriaNormalizada = permitidas.has(categoria)
+    ? categoria
+    : "ofertas_dia";
+
+  return unicas.length ? unicas : [categoriaNormalizada];
+}
+
 function selectedAdSections() {
   return adSections
     .filter((input) => input.checked)
     .map((input) => input.value);
 }
 
-function setSelectedAdSections(values = ["ofertas_dia"]) {
+function setSelectedAdSections(
+  values = ["ofertas_dia"],
+  categoria = "ofertas_dia"
+) {
   const selected = new Set(
-    Array.isArray(values) && values.length ? values : ["ofertas_dia"]
+    normalizarSeccionesPublicidad(values, categoria)
   );
 
   for (const input of adSections) {
@@ -792,7 +831,7 @@ function renderBulkPrices() {
 
         <small class="producto-secciones">
           ${escapeHtml(
-            (ad.secciones || [ad.categoria || "ofertas_dia"])
+            normalizarSeccionesPublicidad(ad.secciones, ad.categoria)
               .map((value) => AD_SECTION_LABELS[value] || value)
               .join(", ")
           )}
@@ -988,7 +1027,7 @@ function editAd(ad) {
   adPriceCoupon.value = ad.precio_cupon || "";
   adCouponCode.value = ad.codigo_cupon || "";
   applyBestCouponToAdForm();
-  setSelectedAdSections(ad.secciones || [ad.categoria || "ofertas_dia"]);
+  setSelectedAdSections(ad.secciones, ad.categoria);
   adOrder.value = ad.orden || 0;
   adActive.checked = Boolean(ad.activo);
   adImageUrl.value = ad.imagen_url || "";
@@ -1036,7 +1075,7 @@ function renderAds() {
 
         <small>
           Secciones: ${escapeHtml(
-            (ad.secciones || [ad.categoria || "ofertas_dia"])
+            normalizarSeccionesPublicidad(ad.secciones, ad.categoria)
               .map((value) => AD_SECTION_LABELS[value] || value)
               .join(", ")
           )} ·
@@ -1155,7 +1194,7 @@ async function saveAd(event) {
       precio_publicado: adPricePublished.value.trim(),
       precio_cupon: adPriceCoupon.value.trim(),
       codigo_cupon: adCouponCode.value.trim(),
-      secciones,
+      secciones: [...secciones],
       categoria: secciones[0] || "ofertas_dia",
       imagen_url: imageUrl,
       orden: Number(adOrder.value) || 0,
