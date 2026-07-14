@@ -8,7 +8,7 @@
   <title>Administrador | Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="../img/logo.png" />
-  <link rel="stylesheet" href="admin.css?v=64.0" />
+  <link rel="stylesheet" href="admin.css?v=64.2" />
 </head>
 
 <body>
@@ -475,6 +475,14 @@ https://meli.la/xxxxx"
 
             <div class="acciones-cabecera-masiva">
               <button
+                id="sincronizar-precios-mercado-libre"
+                class="boton-sincronizar-ml"
+                type="button"
+              >
+                Actualizar desde Mercado Libre
+              </button>
+
+              <button
                 id="recalcular-precios-masivos"
                 class="boton-secundario"
                 type="button"
@@ -497,6 +505,21 @@ https://meli.la/xxxxx"
             class="mensaje"
             aria-live="polite"
           ></p>
+
+          <div
+            id="sincronizacion-ml-progreso"
+            class="sincronizacion-ml-progreso"
+            hidden
+            aria-live="polite"
+          >
+            <div class="sincronizacion-ml-barra">
+              <span id="sincronizacion-ml-avance"></span>
+            </div>
+
+            <span id="sincronizacion-ml-texto">
+              Preparando actualización…
+            </span>
+          </div>
 
           <div class="tabla-contenedor tabla-precios-masivos">
             <table>
@@ -532,6 +555,6 @@ https://meli.la/xxxxx"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=64.0"></script>
+  <script type="module" src="admin.js?v=64.2"></script>
 </body>
 </html>
