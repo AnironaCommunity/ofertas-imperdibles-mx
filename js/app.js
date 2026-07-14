@@ -982,8 +982,18 @@ async function cargarCupones() {
   if (cargando || redireccionEnProceso) return;
 
   cargando = true;
-  estadoCarga.className = "estado-carga";
-  estadoCarga.textContent = "Cargando cupones...";
+
+  const esCargaInicial =
+    !todosLosCupones.length &&
+    !cuponesContainer.querySelector(".cupon[data-id]");
+
+  if (esCargaInicial) {
+    estadoCarga.className = "estado-carga";
+    estadoCarga.textContent = "Cargando cupones...";
+  } else {
+    estadoCarga.textContent = "";
+  }
+
   botonRecargar.disabled = true;
 
   try {
@@ -1004,11 +1014,15 @@ async function cargarCupones() {
     renderizarCategoria();
   } catch (error) {
     console.error(error);
-    limpiarVista();
 
-    estadoCarga.className = "estado-carga error";
-    estadoCarga.textContent =
-      "No pudimos cargar los cupones. Intenta actualizar la página.";
+    if (!todosLosCupones.length) {
+      limpiarVista();
+      estadoCarga.className = "estado-carga error";
+      estadoCarga.textContent =
+        "No pudimos cargar los cupones. Intenta actualizar la página.";
+    } else {
+      estadoCarga.textContent = "";
+    }
   } finally {
     cargando = false;
     botonRecargar.disabled = false;

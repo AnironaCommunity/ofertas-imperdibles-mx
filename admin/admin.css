@@ -675,3 +675,9 @@ th {
 .switch-nuevo-cupon strong {
   color: #09865f;
 }
+
+
+/* V64.9 — Opción Nuevo en el importador */
+.importador-nuevo {
+  margin: 12px 0;
+}
