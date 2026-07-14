@@ -2372,3 +2372,121 @@ button.oferta-imagen-contenedor:active .oferta-imagen {
     font-size: 12.5px;
   }
 }
+
+
+/* V63.8 — Ayuda plegable para cupones */
+.ayuda-cupones {
+  width: 100%;
+  margin: 0 0 12px;
+  overflow: hidden;
+  border: 1px solid rgba(114, 137, 52, .17);
+  border-radius: 13px;
+  background: linear-gradient(135deg, rgba(255,253,239,.98), rgba(247,251,239,.98));
+  box-shadow: 0 3px 12px rgba(76,91,41,.055);
+}
+.ayuda-cupones-toggle {
+  display: flex;
+  width: 100%;
+  min-height: 43px;
+  padding: 9px 13px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 0;
+  color: #4f5e3f;
+  background: transparent;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 400;
+  cursor: pointer;
+}
+.ayuda-cupones-toggle:hover,
+.ayuda-cupones-toggle:focus-visible {
+  background: rgba(244,248,228,.72);
+  outline: none;
+}
+.ayuda-cupones-toggle-texto {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.ayuda-cupones-icono { font-size: 16px; }
+.ayuda-cupones-flecha { color: #809064; font-size: 10px; }
+.ayuda-cupones-contenido {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .25s ease;
+}
+.ayuda-cupones-interior {
+  padding: 2px 14px 14px;
+  border-top: 1px solid rgba(114,137,52,.12);
+}
+.ayuda-cupones-interior h2 {
+  margin: 12px 0 9px;
+  color: #35462f;
+  font-size: 13px;
+  font-weight: 600;
+}
+.ayuda-cupones-pasos {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: pasos;
+}
+.ayuda-cupones-pasos li {
+  position: relative;
+  padding: 6px 8px 6px 36px;
+  border-radius: 8px;
+  color: #586456;
+  background: rgba(255,255,255,.72);
+  font-size: 10.5px;
+  line-height: 1.35;
+  counter-increment: pasos;
+}
+.ayuda-cupones-pasos li::before {
+  content: counter(pasos);
+  position: absolute;
+  top: 5px;
+  left: 7px;
+  display: inline-flex;
+  width: 21px;
+  height: 21px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(135deg, #7da15f, #9bbd72);
+  font-size: 9px;
+  font-weight: 600;
+}
+.ayuda-cupones-entendido {
+  display: block;
+  min-width: 112px;
+  min-height: 34px;
+  margin: 11px 0 0 auto;
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 9px;
+  color: #fff;
+  background: linear-gradient(135deg, #668d57, #85a96b);
+  font: inherit;
+  font-size: 10.5px;
+  cursor: pointer;
+}
+.ayuda-cupones-entendido:hover,
+.ayuda-cupones-entendido:focus-visible {
+  background: linear-gradient(135deg, #587e4c, #789c5f);
+  outline: none;
+}
+@media (max-width: 600px) {
+  .ayuda-cupones { margin-bottom: 9px; border-radius: 11px; }
+  .ayuda-cupones-toggle { min-height: 40px; padding: 8px 11px; font-size: 11.5px; }
+  .ayuda-cupones-interior { padding: 2px 10px 11px; }
+  .ayuda-cupones-interior h2 { font-size: 12px; }
+  .ayuda-cupones-pasos { gap: 5px; }
+  .ayuda-cupones-pasos li { padding: 5px 7px 5px 33px; font-size: 9.5px; }
+  .ayuda-cupones-pasos li::before { top: 4px; left: 6px; width: 20px; height: 20px; }
+  .ayuda-cupones-entendido { min-height: 32px; font-size: 10px; }
+}
