@@ -41,6 +41,7 @@ const clearImport = document.querySelector("#limpiar-importacion");
 const saveImport = document.querySelector("#guardar-importacion");
 const importMessage = document.querySelector("#import-message");
 const importPreview = document.querySelector("#import-preview");
+const importPublishNew = document.querySelector("#import-publish-new");
 const importList = document.querySelector("#import-list");
 
 /* Publicidad */
@@ -565,11 +566,15 @@ async function publishImport() {
     for (const coupon of validCoupons) {
       await api("/api/admin-cupones", {
         method: "POST",
-        body: JSON.stringify(coupon),
+        body: JSON.stringify({
+          ...coupon,
+          publicar_como_nuevo: importPublishNew.checked,
+        }),
       });
     }
 
     importText.value = "";
+    importPublishNew.checked = true;
     detectedCoupons = [];
     importPreview.hidden = true;
     setMessage(importMessage, `${validCoupons.length} cupones publicados.`);

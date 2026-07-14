@@ -854,7 +854,7 @@ table td {
 }
 
 
-/* V65.2 — Restaurar opción Publicar como Nuevo */
+/* V66.0 — Controles Nuevo preservados en el administrador moderno */
 .switch-nuevo-cupon {
   border: 1px solid rgba(21, 184, 132, .18);
   border-radius: 10px;
@@ -864,4 +864,8 @@ table td {
 
 .switch-nuevo-cupon strong {
   color: #09865f;
+}
+
+.importador-nuevo {
+  margin: 10px 0;
 }

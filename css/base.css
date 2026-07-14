@@ -2743,3 +2743,40 @@ button.oferta-imagen-contenedor:active .oferta-imagen {
     height: 18px;
   }
 }
+
+
+/* V66.0 — Ajuste definitivo del espacio sobre “¿Cómo usar los cupones?” */
+.encabezado {
+  padding-bottom: 0 !important;
+}
+
+.menu-ofertas-contenedor {
+  margin-bottom: 0 !important;
+}
+
+.menu-ofertas-indicador {
+  bottom: 0 !important;
+}
+
+.contenedor {
+  margin-top: 4px !important;
+}
+
+#vista-cupones {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+#vista-cupones > .ayuda-cupones:first-child {
+  margin-top: 0 !important;
+}
+
+@media (max-width: 600px) {
+  .encabezado {
+    padding-bottom: 0 !important;
+  }
+
+  .contenedor {
+    margin-top: 3px !important;
+  }
+}
