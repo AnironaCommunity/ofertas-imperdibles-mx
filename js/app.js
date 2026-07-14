@@ -582,8 +582,6 @@ function couponProgress(timeState) {
 }
 
 function updateCouponTimes() {
-  let needsReload = false;
-
   document.querySelectorAll(".cupon[data-id]").forEach((card) => {
     const coupon = todosLosCupones.find(
       (item) => String(item.id) === card.dataset.id
@@ -616,7 +614,13 @@ function updateCouponTimes() {
     }
 
     if (timeState.state === "finalizado") {
-      needsReload = true;
+      card.remove();
+
+      if (!cuponesContainer.querySelector(".cupon[data-id]")) {
+        todosWrapper.hidden = true;
+        sinCupones.hidden = false;
+      }
+
       return;
     }
 
@@ -649,9 +653,6 @@ function updateCouponTimes() {
     }
   });
 
-  if (needsReload && !cargando && !redireccionEnProceso) {
-    cargarCupones();
-  }
 }
 
 function startCouponTimers() {
@@ -672,11 +673,7 @@ const UNA_HORA_MS = 60 * 60 * 1000;
 const MIN_CLICS_POPULAR = 2;
 
 function fechaPublicacionCupon(cupon) {
-  const valor =
-    cupon?.fecha_publicacion ||
-    cupon?.fecha_creacion ||
-    cupon?.created_at ||
-    cupon?.fecha_alta;
+  const valor = cupon?.fecha_publicacion;
 
   if (!valor) return null;
 
@@ -884,6 +881,7 @@ function renderizarCategoria() {
 
   const cuponesCategoria = todosLosCupones
     .filter((cupon) => normalizarCategoria(cupon) === categoriaActiva)
+    .filter((cupon) => couponTimeState(cupon).state !== "finalizado")
     .sort((a, b) => {
       const stateA = couponTimeState(a);
       const stateB = couponTimeState(b);
