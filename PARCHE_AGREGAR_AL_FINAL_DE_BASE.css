@@ -1,0 +1,40 @@
+/* =========================================================
+   PARCHE V63.9.2
+   Agregar AL FINAL de css/base.css
+   Base: ofertas_imperdibles_v63.9.1_alineacion_y_ayuda_compacta
+   ========================================================= */
+
+/* Reduce el espacio entre 'Desliza para ver más'
+   y '¿Cómo usar los cupones?' */
+.indicacion-deslizar,
+.texto-deslizar,
+.scroll-hint{
+    margin-bottom:6px !important;
+    padding-bottom:0 !important;
+}
+
+/* Compacta el módulo de ayuda */
+.ayuda-cupones{
+    margin-top:4px !important;
+    margin-bottom:6px !important;
+}
+
+.ayuda-cupones-toggle{
+    min-height:34px !important;
+    padding:5px 12px !important;
+}
+
+.ayuda-cupones-interior{
+    padding-top:0 !important;
+    padding-bottom:8px !important;
+}
+
+/* Reduce el espacio antes del título Cupones */
+.ayuda-cupones + .titulo-fila{
+    margin-top:2px !important;
+    padding-top:0 !important;
+}
+
+.titulo-fila{
+    margin-bottom:8px !important;
+}
