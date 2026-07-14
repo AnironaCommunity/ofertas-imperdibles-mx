@@ -27,6 +27,16 @@ const menuOfertas = document.querySelector(".menu-ofertas");
 const botonMenuAnterior = document.querySelector("#menu-ofertas-anterior");
 const botonMenuSiguiente = document.querySelector("#menu-ofertas-siguiente");
 const indicadorMenuOfertas = document.querySelector(".menu-ofertas-indicador");
+const contadorCuponesTienda = document.querySelector(
+  "#contador-cupones-tienda"
+);
+const contadorOfertasMercadoLibre = document.querySelector(
+  "#contador-ofertas-mercado-libre"
+);
+const contadorOfertasAmazon = document.querySelector(
+  "#contador-ofertas-amazon"
+);
+
 
 
 const carruselesPublicidad = [];
@@ -144,6 +154,66 @@ const TITULOS_SECCION = {
   amazon: "Ofertas Amazon | Ofertas Imperdibles MX",
   anirona: "Comunidad Anirona | Ofertas Imperdibles MX",
 };
+
+
+function mostrarCantidadSeccion(elemento, cantidad, tipo) {
+  if (!elemento) return;
+
+  const total = Math.max(0, Number(cantidad) || 0);
+  const singular = tipo === "cupón" ? "cupón" : "producto";
+  const plural = tipo === "cupón" ? "cupones" : "productos";
+
+  elemento.textContent = total > 99 ? "99+" : String(total);
+  elemento.hidden = false;
+  elemento.setAttribute(
+    "aria-label",
+    `${total} ${total === 1 ? singular : plural}`
+  );
+  elemento.title =
+    `${total} ${total === 1 ? singular : plural}`;
+}
+
+function actualizarContadoresSecciones() {
+  const cantidadTienda = todosLosCupones.filter(
+    (cupon) =>
+      normalizarCategoria(cupon) === "tienda" &&
+      couponTimeState(cupon).state !== "finalizado"
+  ).length;
+
+  const cantidadMercadoLibre = todasLasPublicidades.filter(
+    (publicidad) =>
+      publicidad?.activo !== false &&
+      publicidadPerteneceASeccion(
+        publicidad,
+        "ofertas_mercado_libre"
+      )
+  ).length;
+
+  const cantidadAmazon = todasLasPublicidades.filter(
+    (publicidad) =>
+      publicidad?.activo !== false &&
+      publicidadPerteneceASeccion(
+        publicidad,
+        "ofertas_amazon"
+      )
+  ).length;
+
+  mostrarCantidadSeccion(
+    contadorCuponesTienda,
+    cantidadTienda,
+    "cupón"
+  );
+  mostrarCantidadSeccion(
+    contadorOfertasMercadoLibre,
+    cantidadMercadoLibre,
+    "producto"
+  );
+  mostrarCantidadSeccion(
+    contadorOfertasAmazon,
+    cantidadAmazon,
+    "producto"
+  );
+}
 
 function actualizarTituloSeccion(seccion) {
   document.title =
@@ -1012,6 +1082,7 @@ async function cargarCupones() {
 
     todosLosCupones = Array.isArray(cupones) ? cupones : [];
     renderizarCategoria();
+    actualizarContadoresSecciones();
   } catch (error) {
     console.error(error);
 
@@ -1539,6 +1610,7 @@ async function cargarPublicidad() {
 
     const datos = await respuesta.json();
     todasLasPublicidades = Array.isArray(datos) ? datos : [];
+    actualizarContadoresSecciones();
 
     renderizarModuloOfertas(
       "comunidad_anirona",

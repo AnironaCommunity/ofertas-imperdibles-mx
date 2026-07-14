@@ -2683,3 +2683,63 @@ button.oferta-imagen-contenedor:active .oferta-imagen {
     font-size: 8px;
   }
 }
+
+
+/* V65.0 — Contadores tipo notificación en las secciones */
+.contador-seccion {
+  display: inline-flex;
+  flex: 0 0 auto;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, .95);
+  border-radius: 999px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #ef6b57, #e84e67);
+  box-shadow: 0 3px 8px rgba(145, 45, 58, .22);
+  font-size: 8.5px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.contador-seccion[hidden] {
+  display: none !important;
+}
+
+.menu-ofertas button .contador-seccion {
+  margin-left: 1px;
+}
+
+.menu-ofertas button.activo .contador-seccion {
+  border-color: rgba(255, 255, 255, .92);
+  background: linear-gradient(135deg, #ff8a64, #f15d75);
+}
+
+.contador-seccion-inferior {
+  margin-left: 2px;
+}
+
+.tab-inferior .contador-seccion {
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  font-size: 8px;
+}
+
+@media (max-width: 600px) {
+  .contador-seccion {
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-width: 1.5px;
+    font-size: 7.5px;
+  }
+
+  .tab-inferior .contador-seccion {
+    min-width: 18px;
+    height: 18px;
+  }
+}

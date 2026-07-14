@@ -47,7 +47,7 @@
   <link rel="icon" href="img/logo.png" />
   <link rel="apple-touch-icon" href="img/logo.png" />
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="stylesheet" href="css/style.css?v=64.5" />
+  <link rel="stylesheet" href="css/style.css?v=65.0" />
 </head>
 
 <body>
@@ -114,10 +114,22 @@
       <button type="button" data-vista="ofertas_mercado_libre" aria-pressed="false">
         <img class="menu-ofertas-logo logo-mercado-libre" src="img/mercado-libre.png" alt="" aria-hidden="true" />
         <span>Ofertas Mercado Libre</span>
+        <span
+          id="contador-ofertas-mercado-libre"
+          class="contador-seccion"
+          aria-label="0 productos"
+          hidden
+        >0</span>
       </button>
       <button type="button" data-vista="ofertas_amazon" aria-pressed="false">
         <img class="menu-ofertas-logo logo-amazon" src="img/amazon.png" alt="" aria-hidden="true" />
         <span>Ofertas Amazon</span>
+        <span
+          id="contador-ofertas-amazon"
+          class="contador-seccion"
+          aria-label="0 productos"
+          hidden
+        >0</span>
       </button>
       <button type="button" data-vista="comunidad_anirona" aria-pressed="false">
         <img class="menu-ofertas-logo logo-anirona" src="img/anirona.png" alt="" aria-hidden="true" />
@@ -380,6 +392,12 @@
     >
       <span aria-hidden="true">🛒</span>
       <strong>Tienda</strong>
+      <span
+        id="contador-cupones-tienda"
+        class="contador-seccion contador-seccion-inferior"
+        aria-label="0 cupones"
+        hidden
+      >0</span>
     </button>
 
     <button
@@ -425,6 +443,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/app.js?v=64.9"></script>
+  <script type="module" src="js/app.js?v=65.0"></script>
 </body>
 </html>
