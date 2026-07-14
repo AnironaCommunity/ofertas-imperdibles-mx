@@ -2619,18 +2619,67 @@ button.oferta-imagen-contenedor:active .oferta-imagen {
 }
 
 
-/* V63.9.3 — Eliminar el espacio real antes de “¿Cómo usar los cupones?”
-   El espacio provenía del padding inferior del encabezado y del margen
-   superior del contenedor principal, no del módulo de ayuda. */
-.encabezado {
-  padding-bottom: 0 !important;
+/* V64.5 — Etiquetas Nuevo, Popular y Top */
+.cupon-etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 22px;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
 }
 
-.encabezado + .contenedor {
-  margin-top: 4px !important;
+.etiqueta-cupon {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 20px;
+  padding: 3px 8px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 3px 8px rgba(29, 45, 38, .10);
 }
 
-/* Conserva una separación mínima, sin pegar visualmente ambos módulos. */
-#vista-cupones > .ayuda-cupones:first-child {
-  margin-top: 0 !important;
+.etiqueta-nuevo {
+  color: #ffffff;
+  background: linear-gradient(135deg, #08b984, #22c99a);
+}
+
+.etiqueta-top {
+  color: #ffffff;
+  background: linear-gradient(135deg, #7c4fe7, #a36bf2);
+}
+
+.etiqueta-popular-integrada {
+  color: #ffffff;
+  background: linear-gradient(135deg, #f08a32, #f5aa42);
+}
+
+.cupon-nuevo {
+  border-color: rgba(21, 184, 132, .25);
+}
+
+.cupon-top {
+  border-color: rgba(127, 79, 231, .25);
+}
+
+.cupon-popular {
+  border-color: rgba(240, 138, 50, .25);
+}
+
+@media (max-width: 600px) {
+  .cupon-etiquetas {
+    min-height: 19px;
+    margin-bottom: 4px;
+  }
+
+  .etiqueta-cupon {
+    min-height: 18px;
+    padding: 3px 7px;
+    font-size: 8px;
+  }
 }

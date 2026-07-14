@@ -293,6 +293,9 @@ function desplazarMenuOfertas(direccion) {
   });
 }
 
+const CLAVE_RECORRIDO_SECCIONES =
+  "ofertas-imperdibles-recorrido-secciones-v1";
+
 let temporizadorRecorridoSecciones = null;
 let recorridoSeccionesActivo = false;
 
@@ -310,13 +313,17 @@ function cancelarRecorridoSecciones() {
 function iniciarRecorridoSecciones() {
   if (!menuOfertas) return;
 
+  const yaSeMostro =
+    localStorage.getItem(CLAVE_RECORRIDO_SECCIONES) === "1";
+
   const tieneDesbordamiento =
     menuOfertas.scrollWidth > menuOfertas.clientWidth + 4;
 
-  if (!tieneDesbordamiento) {
+  if (yaSeMostro || !tieneDesbordamiento) {
     return;
   }
 
+  localStorage.setItem(CLAVE_RECORRIDO_SECCIONES, "1");
   recorridoSeccionesActivo = true;
 
   const posicionInicial = menuOfertas.scrollLeft;
@@ -660,12 +667,70 @@ function startCouponTimers() {
   );
 }
 
-function crearTarjeta(cupon, esPopular = false, indice = 0) {
+
+const UNA_HORA_MS = 60 * 60 * 1000;
+const MIN_CLICS_POPULAR = 2;
+
+function fechaPublicacionCupon(cupon) {
+  const valor =
+    cupon?.fecha_creacion ||
+    cupon?.created_at ||
+    cupon?.fecha_publicacion ||
+    cupon?.fecha_alta;
+
+  if (!valor) return null;
+
+  const fecha = new Date(valor);
+  return Number.isNaN(fecha.getTime()) ? null : fecha;
+}
+
+function esCuponNuevo(cupon) {
+  const fecha = fechaPublicacionCupon(cupon);
+  if (!fecha) return false;
+
+  const antiguedad = Date.now() - fecha.getTime();
+
+  return antiguedad >= 0 && antiguedad < UNA_HORA_MS;
+}
+
+function obtenerEstadoDestacadoCupon(cupon, idTop) {
+  if (esCuponNuevo(cupon)) {
+    return "nuevo";
+  }
+
+  if (
+    idTop !== null &&
+    Number(cupon.id) === Number(idTop) &&
+    Number(cupon.clics || 0) > 0
+  ) {
+    return "top";
+  }
+
+  if (Number(cupon.clics || 0) >= MIN_CLICS_POPULAR) {
+    return "popular";
+  }
+
+  return "";
+}
+
+function htmlEtiquetaCupon(estado) {
+  const etiquetas = {
+    nuevo: '<span class="etiqueta-cupon etiqueta-nuevo">✨ Nuevo</span>',
+    top: '<span class="etiqueta-cupon etiqueta-top">🏆 Top</span>',
+    popular: '<span class="etiqueta-cupon etiqueta-popular-integrada">🔥 Popular</span>',
+  };
+
+  return etiquetas[estado] || "";
+}
+
+function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
   const articulo = document.createElement("article");
   const yaUsado = localStorage.getItem(claveUsado(cupon.id)) === "1";
   const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
 
-  articulo.className = esPopular ? "cupon popular" : "cupon";
+  articulo.className = estadoDestacado
+    ? `cupon cupon-${estadoDestacado}`
+    : "cupon";
   articulo.dataset.id = String(cupon.id);
   articulo.dataset.color = COLORES[indice % COLORES.length];
 
@@ -677,9 +742,7 @@ function crearTarjeta(cupon, esPopular = false, indice = 0) {
 
     <div class="cupon-contenido">
       <div class="cupon-etiquetas">
-        ${esPopular
-          ? '<span class="etiqueta-popular-integrada">🔥 Popular</span>'
-          : ""}
+        ${htmlEtiquetaCupon(estadoDestacado)}
       </div>
 
       <p class="descuento-maximo">
@@ -854,15 +917,26 @@ function renderizarCategoria() {
 
   const fragmento = document.createDocumentFragment();
 
+  const cuponesActivos = cuponesCategoria.filter(
+    (cupon) => couponTimeState(cupon).enabled
+  );
+
+  const cuponTop = [...cuponesActivos]
+    .filter((cupon) => Number(cupon.clics || 0) > 0)
+    .sort(
+      (a, b) =>
+        Number(b.clics || 0) - Number(a.clics || 0)
+    )[0];
+
+  const idTop = cuponTop ? Number(cuponTop.id) : null;
+
   cuponesCategoria.forEach((cupon, indice) => {
+    const estadoDestacado = couponTimeState(cupon).enabled
+      ? obtenerEstadoDestacadoCupon(cupon, idTop)
+      : "";
+
     fragmento.appendChild(
-      crearTarjeta(
-        cupon,
-        indice === 0 &&
-          couponTimeState(cupon).enabled &&
-          Number(cupon.clics || 0) > 0,
-        indice
-      )
+      crearTarjeta(cupon, estadoDestacado, indice)
     );
   });
 
