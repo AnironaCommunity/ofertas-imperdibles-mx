@@ -53,6 +53,16 @@ const adLink = document.querySelector("#ad-link");
 const adPricePublished = document.querySelector("#ad-price-published");
 const adPriceCoupon = document.querySelector("#ad-price-coupon");
 const adCouponCode = document.querySelector("#ad-coupon-code");
+const adCouponRecommendation = document.querySelector(
+  "#ad-coupon-recommendation"
+);
+const bulkPricesList = document.querySelector("#precios-masivos-lista");
+const bulkPricesMessage = document.querySelector("#precios-masivos-mensaje");
+const recalculateBulkPrices = document.querySelector(
+  "#recalcular-precios-masivos"
+);
+const saveBulkPrices = document.querySelector("#guardar-precios-masivos");
+
 const adOrder = document.querySelector("#ad-order");
 const adActive = document.querySelector("#ad-active");
 const adImage = document.querySelector("#ad-image");
@@ -590,6 +600,327 @@ const AD_SECTION_LABELS = {
   comunidad_anirona: "Comunidad Anirona",
 };
 
+
+/* ================= CÁLCULO AUTOMÁTICO DE CUPONES ================= */
+function parseMoney(value) {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+
+  let text = String(value || "")
+    .trim()
+    .replace(/\s+/g, "")
+    .replace(/MXN/gi, "")
+    .replace(/\$/g, "");
+
+  if (!text) return 0;
+
+  if (text.includes(",") && text.includes(".")) {
+    text = text.replace(/,/g, "");
+  } else if (text.includes(",")) {
+    const decimals = text.split(",").pop();
+    text = decimals.length <= 2
+      ? text.replace(",", ".")
+      : text.replace(/,/g, "");
+  } else if (text.includes(".")) {
+    const parts = text.split(".");
+    const last = parts.at(-1);
+
+    if (parts.length > 2 || (last.length === 3 && parts[0].length <= 3)) {
+      text = text.replace(/\./g, "");
+    }
+  }
+
+  const number = Number(text.replace(/[^\d.-]/g, ""));
+  return Number.isFinite(number) ? Math.max(0, number) : 0;
+}
+
+function formatMoney(value) {
+  const number = Number(value) || 0;
+
+  return new Intl.NumberFormat("es-MX", {
+    style: "currency",
+    currency: "MXN",
+    minimumFractionDigits: Number.isInteger(number) ? 0 : 2,
+    maximumFractionDigits: 2,
+  }).format(number);
+}
+
+function activeStoreCoupons() {
+  const now = Date.now();
+
+  return coupons.filter((coupon) => {
+    if (!coupon.activo || coupon.categoria !== "tienda") return false;
+
+    const start = coupon.fecha_inicio
+      ? new Date(coupon.fecha_inicio).getTime()
+      : null;
+    const end = coupon.fecha_fin
+      ? new Date(coupon.fecha_fin).getTime()
+      : null;
+
+    if (start !== null && Number.isFinite(start) && start > now) return false;
+    if (end !== null && Number.isFinite(end) && end <= now) return false;
+
+    return Boolean(String(coupon.codigo || "").trim());
+  });
+}
+
+function calculateCouponDiscount(coupon, productPrice) {
+  const minimum = parseMoney(coupon.compra_minima);
+  if (productPrice <= 0 || productPrice < minimum) return null;
+
+  const title = String(coupon.titulo || "").toUpperCase();
+  const maximum = parseMoney(coupon.ahorro_maximo);
+  const percentMatch = title.match(/(\d+(?:[.,]\d+)?)\s*%/);
+  const fixedMatch = title.match(/\$?\s*([\d,.]+)\s*(?:OFF|DE DESCUENTO)/i);
+
+  let discount = 0;
+
+  if (percentMatch) {
+    const percentage = Number(percentMatch[1].replace(",", "."));
+    discount = productPrice * (percentage / 100);
+    if (maximum > 0) discount = Math.min(discount, maximum);
+  } else if (fixedMatch) {
+    discount = parseMoney(fixedMatch[1]);
+    if (maximum > 0) discount = Math.min(discount, maximum);
+  } else if (maximum > 0) {
+    discount = maximum;
+  }
+
+  discount = Math.min(Math.max(discount, 0), productPrice);
+  if (discount <= 0) return null;
+
+  return {
+    coupon,
+    discount,
+    finalPrice: productPrice - discount,
+    minimum,
+  };
+}
+
+function findBestCoupon(productPrice) {
+  return activeStoreCoupons()
+    .map((coupon) => calculateCouponDiscount(coupon, productPrice))
+    .filter(Boolean)
+    .sort((a, b) => {
+      if (b.discount !== a.discount) return b.discount - a.discount;
+      return b.minimum - a.minimum;
+    })[0] || null;
+}
+
+function applyBestCouponToAdForm({ showMessage = true } = {}) {
+  const price = parseMoney(adPricePublished.value);
+  const recommendation = findBestCoupon(price);
+
+  if (!price) {
+    adPriceCoupon.value = "";
+    adCouponCode.value = "";
+
+    if (showMessage) {
+      adCouponRecommendation.textContent =
+        "Escribe el precio publicado para calcular el mejor cupón.";
+      adCouponRecommendation.className = "recomendacion-cupon";
+    }
+
+    return null;
+  }
+
+  if (!recommendation) {
+    adPriceCoupon.value = "";
+    adCouponCode.value = "";
+
+    if (showMessage) {
+      adCouponRecommendation.textContent =
+        "No existe un cupón activo y vigente que aplique a este precio.";
+      adCouponRecommendation.className =
+        "recomendacion-cupon sin-cupon";
+    }
+
+    return null;
+  }
+
+  adCouponCode.value = recommendation.coupon.codigo;
+  adPriceCoupon.value = formatMoney(recommendation.finalPrice);
+
+  if (showMessage) {
+    adCouponRecommendation.textContent =
+      `${recommendation.coupon.codigo}: ahorro estimado de ` +
+      `${formatMoney(recommendation.discount)}.`;
+    adCouponRecommendation.className =
+      "recomendacion-cupon con-cupon";
+  }
+
+  return recommendation;
+}
+
+function renderBulkPrices() {
+  bulkPricesList.replaceChildren();
+
+  if (!ads.length) {
+    bulkPricesList.innerHTML =
+      '<tr><td colspan="5">No hay productos registrados.</td></tr>';
+    return;
+  }
+
+  for (const ad of ads) {
+    const currentPrice = parseMoney(ad.precio_publicado);
+    const recommendation = findBestCoupon(currentPrice);
+    const row = document.createElement("tr");
+
+    row.dataset.id = String(ad.id);
+    row.innerHTML = `
+      <td>
+        <strong>${escapeHtml(ad.titulo)}</strong>
+        <small class="producto-secciones">
+          ${escapeHtml(
+            (ad.secciones || [ad.categoria || "ofertas_dia"])
+              .map((value) => AD_SECTION_LABELS[value] || value)
+              .join(", ")
+          )}
+        </small>
+      </td>
+      <td>${currentPrice ? escapeHtml(formatMoney(currentPrice)) : "Sin precio"}</td>
+      <td>
+        <input
+          class="precio-masivo-input"
+          type="text"
+          inputmode="decimal"
+          value="${escapeHtml(ad.precio_publicado || "")}"
+          data-original="${escapeHtml(ad.precio_publicado || "")}"
+          aria-label="Nuevo precio de ${escapeHtml(ad.titulo)}"
+          placeholder="$0"
+        />
+      </td>
+      <td class="cupon-masivo">
+        ${recommendation
+          ? `<strong>${escapeHtml(recommendation.coupon.codigo)}</strong>
+             <small>Ahorra ${escapeHtml(formatMoney(recommendation.discount))}</small>`
+          : `<span>Sin cupón aplicable</span>`}
+      </td>
+      <td class="precio-final-masivo">
+        ${recommendation
+          ? escapeHtml(formatMoney(recommendation.finalPrice))
+          : "—"}
+      </td>
+    `;
+
+    bulkPricesList.appendChild(row);
+  }
+}
+
+function recalculateBulkPriceRow(row) {
+  const input = row.querySelector(".precio-masivo-input");
+  const couponCell = row.querySelector(".cupon-masivo");
+  const finalCell = row.querySelector(".precio-final-masivo");
+  const price = parseMoney(input.value);
+  const recommendation = findBestCoupon(price);
+
+  row.dataset.price = price ? formatMoney(price) : "";
+  row.dataset.coupon = recommendation?.coupon.codigo || "";
+  row.dataset.finalPrice = recommendation
+    ? formatMoney(recommendation.finalPrice)
+    : "";
+
+  if (!price) {
+    couponCell.innerHTML = "<span>Ingresa un precio</span>";
+    finalCell.textContent = "—";
+    return;
+  }
+
+  if (!recommendation) {
+    couponCell.innerHTML = "<span>Sin cupón aplicable</span>";
+    finalCell.textContent = "—";
+    return;
+  }
+
+  couponCell.innerHTML = `
+    <strong>${escapeHtml(recommendation.coupon.codigo)}</strong>
+    <small>Ahorra ${escapeHtml(formatMoney(recommendation.discount))}</small>
+  `;
+  finalCell.textContent = formatMoney(recommendation.finalPrice);
+}
+
+function recalculateAllBulkPrices() {
+  bulkPricesList
+    .querySelectorAll("tr[data-id]")
+    .forEach(recalculateBulkPriceRow);
+
+  setMessage(
+    bulkPricesMessage,
+    "Cálculos actualizados. Revisa los resultados antes de guardar."
+  );
+}
+
+async function saveAllBulkPrices() {
+  const rows = [...bulkPricesList.querySelectorAll("tr[data-id]")];
+
+  const changes = rows
+    .map((row) => {
+      recalculateBulkPriceRow(row);
+
+      const input = row.querySelector(".precio-masivo-input");
+      const original = parseMoney(input.dataset.original);
+      const current = parseMoney(input.value);
+
+      if (current === original) return null;
+
+      return {
+        id: Number(row.dataset.id),
+        precio_publicado: row.dataset.price,
+        codigo_cupon: row.dataset.coupon,
+        precio_cupon: row.dataset.finalPrice,
+        row,
+      };
+    })
+    .filter(Boolean);
+
+  if (!changes.length) {
+    setMessage(bulkPricesMessage, "No hay cambios de precio para guardar.");
+    return;
+  }
+
+  saveBulkPrices.disabled = true;
+  recalculateBulkPrices.disabled = true;
+  setMessage(
+    bulkPricesMessage,
+    `Actualizando ${changes.length} productos...`
+  );
+
+  const results = await Promise.allSettled(
+    changes.map((change) =>
+      api("/api/admin-publicidad", {
+        method: "PUT",
+        body: JSON.stringify({
+          id: change.id,
+          precio_publicado: change.precio_publicado,
+          codigo_cupon: change.codigo_cupon,
+          precio_cupon: change.precio_cupon,
+        }),
+      })
+    )
+  );
+
+  const correct = results.filter(
+    (result) => result.status === "fulfilled"
+  ).length;
+  const errors = results.length - correct;
+
+  if (correct) {
+    await loadAds();
+  }
+
+  setMessage(
+    bulkPricesMessage,
+    `${correct} productos actualizados.` +
+      (errors ? ` ${errors} no pudieron guardarse.` : ""),
+    errors > 0
+  );
+
+  saveBulkPrices.disabled = false;
+  recalculateBulkPrices.disabled = false;
+}
+
+let adPriceTimer = null;
+
 /* ================= PUBLICIDAD ================= */
 function resetAdForm() {
   adForm.reset();
@@ -606,6 +937,9 @@ function resetAdForm() {
   adFormTitle.textContent = "Agregar publicidad";
   cancelAd.hidden = true;
   setMessage(adFormMessage);
+  adCouponRecommendation.textContent =
+    "Escribe el precio publicado para calcular el mejor cupón.";
+  adCouponRecommendation.className = "recomendacion-cupon";
 }
 
 function editAd(ad) {
@@ -616,6 +950,7 @@ function editAd(ad) {
   adPricePublished.value = ad.precio_publicado || "";
   adPriceCoupon.value = ad.precio_cupon || "";
   adCouponCode.value = ad.codigo_cupon || "";
+  applyBestCouponToAdForm();
   setSelectedAdSections(ad.secciones || [ad.categoria || "ofertas_dia"]);
   adOrder.value = ad.orden || 0;
   adActive.checked = Boolean(ad.activo);
@@ -700,6 +1035,7 @@ async function loadAds() {
   try {
     ads = await api("/api/admin-publicidad");
     renderAds();
+    renderBulkPrices();
     setMessage(adListMessage, `${ads.length} publicidades registradas.`);
   } catch (error) {
     setMessage(adListMessage, error.message, true);
@@ -762,6 +1098,7 @@ async function saveAd(event) {
   setMessage(adFormMessage, "Guardando publicidad...");
 
   try {
+    applyBestCouponToAdForm();
     const imageUrl = await uploadAdImage();
 
     if (!imageUrl) {
@@ -882,6 +1219,27 @@ adList.addEventListener("click", handleAdList);
 refreshAds.addEventListener("click", loadAds);
 newAd.addEventListener("click", resetAdForm);
 cancelAd.addEventListener("click", resetAdForm);
+
+adPricePublished.addEventListener("input", () => {
+  window.clearTimeout(adPriceTimer);
+  adPriceTimer = window.setTimeout(() => {
+    applyBestCouponToAdForm();
+  }, 300);
+});
+
+adPricePublished.addEventListener("change", () => {
+  applyBestCouponToAdForm();
+});
+
+bulkPricesList.addEventListener("input", (event) => {
+  const input = event.target.closest(".precio-masivo-input");
+  if (!input) return;
+  const row = input.closest("tr[data-id]");
+  if (row) recalculateBulkPriceRow(row);
+});
+
+recalculateBulkPrices.addEventListener("click", recalculateAllBulkPrices);
+saveBulkPrices.addEventListener("click", saveAllBulkPrices);
 
 adImage.addEventListener("change", async () => {
   const file = adImage.files[0];

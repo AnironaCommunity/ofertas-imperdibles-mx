@@ -8,7 +8,7 @@
   <title>Administrador | Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="../img/logo.png" />
-  <link rel="stylesheet" href="admin.css?v=61.6" />
+  <link rel="stylesheet" href="admin.css?v=64.0" />
 </head>
 
 <body>
@@ -408,14 +408,18 @@ https://meli.la/xxxxx"
                 <input
                   id="ad-coupon-code"
                   type="text"
-                  placeholder="Ej. APROVECHALO"
+                  placeholder="Se asignará automáticamente"
                   autocomplete="off"
                 />
                 <small>
-                  Este código se guarda en la base de datos, pero no se muestra
-                  públicamente. Se copiará cuando el usuario pulse
-                  “Ver oferta”.
+                  Al escribir el precio publicado, el sistema buscará únicamente
+                  entre los cupones de Tienda que estén activos y vigentes.
                 </small>
+                <div
+                  id="ad-coupon-recommendation"
+                  class="recomendacion-cupon"
+                  aria-live="polite"
+                ></div>
               </div>
 
               <div class="campo campo-completo">
@@ -459,6 +463,58 @@ https://meli.la/xxxxx"
           </form>
         </section>
 
+        <section class="panel panel-precios-masivos">
+          <div class="cabecera-panel">
+            <div>
+              <h3>Actualización masiva de precios</h3>
+              <p class="descripcion-panel">
+                Escribe los precios actuales. El mejor cupón activo y el precio
+                final se calcularán automáticamente antes de guardar.
+              </p>
+            </div>
+
+            <div class="acciones-cabecera-masiva">
+              <button
+                id="recalcular-precios-masivos"
+                class="boton-secundario"
+                type="button"
+              >
+                Recalcular
+              </button>
+
+              <button
+                id="guardar-precios-masivos"
+                class="boton-principal"
+                type="button"
+              >
+                Actualizar productos
+              </button>
+            </div>
+          </div>
+
+          <p
+            id="precios-masivos-mensaje"
+            class="mensaje"
+            aria-live="polite"
+          ></p>
+
+          <div class="tabla-contenedor tabla-precios-masivos">
+            <table>
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Precio actual</th>
+                  <th>Nuevo precio</th>
+                  <th>Cupón recomendado</th>
+                  <th>Precio con cupón</th>
+                </tr>
+              </thead>
+
+              <tbody id="precios-masivos-lista"></tbody>
+            </table>
+          </div>
+        </section>
+
         <section class="panel">
           <div class="cabecera-panel">
             <h3>Publicidades registradas</h3>
@@ -476,6 +532,6 @@ https://meli.la/xxxxx"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=61.6"></script>
+  <script type="module" src="admin.js?v=64.0"></script>
 </body>
 </html>
