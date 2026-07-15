@@ -3009,3 +3009,54 @@ button.oferta-imagen-contenedor:active .oferta-imagen {
     border-width: 1.5px;
   }
 }
+
+
+/* V67.3 — Logo cuadrado a la izquierda del título del cupón */
+.cupon-encabezado {
+  flex-direction: row !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.cupon-logo {
+  width: 40px !important;
+  height: 40px !important;
+  flex: 0 0 40px !important;
+  padding: 4px !important;
+  border: 1px solid rgba(255, 255, 255, .72) !important;
+  border-radius: 9px !important;
+  background: rgba(255, 255, 255, .96) !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  box-sizing: border-box !important;
+  box-shadow: 0 3px 9px rgba(23, 44, 62, .14) !important;
+}
+
+.cupon-encabezado .descuento {
+  margin: 0 !important;
+  min-width: 0;
+  text-align: left !important;
+  line-height: 1.1;
+}
+
+/* El título del producto en OFERTAS DEL DÍA usa letra normal */
+#publicidad-titulo,
+.publicidad-titulo {
+  font-weight: 400 !important;
+  text-transform: none !important;
+}
+
+@media (max-width: 600px) {
+  .cupon-encabezado {
+    gap: 7px !important;
+  }
+
+  .cupon-logo {
+    width: 32px !important;
+    height: 32px !important;
+    flex-basis: 32px !important;
+    padding: 3px !important;
+    border-radius: 7px !important;
+  }
+}
