@@ -1766,12 +1766,14 @@ function mostrarPublicidad(control) {
   control.descripcion.textContent = publicidad.descripcion || "";
   control.enlace.href = publicidad.enlace;
 
-  const esAmazon = control.categoria === "ofertas_amazon";
-  control.enlace.textContent = esAmazon ? "📦 Ver en Amazon" : "🛒 Ver en Mercado Libre";
+  const plataforma = datosPlataformaPublicidad(publicidad);
+
+  control.enlace.textContent = plataforma.textoBoton;
+
   if (control.avisoCupon) {
-    control.avisoCupon.innerHTML = esAmazon
-      ? 'ℹ️ Al dar clic en <strong>Ver en Amazon</strong>, el cupón se copiará automáticamente.'
-      : 'ℹ️ Al dar clic en <strong>Ver en Mercado Libre</strong>, el cupón se copiará automáticamente.';
+    control.avisoCupon.innerHTML =
+      `ℹ️ Al dar clic en <strong>Ver en ${plataforma.nombre}</strong>, ` +
+      "el cupón se copiará automáticamente.";
   }
 
   const precioPublicado = String(publicidad.precio_publicado || "").trim();
