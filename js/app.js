@@ -1533,6 +1533,52 @@ function crearTarjetaCanalAnirona() {
 
       <small>Únete a la comunidad y no te pierdas las novedades.</small>
     </div>
+
+    <nav
+      class="canal-anirona-accesos"
+      aria-label="Enlaces oficiales de compra Anirona"
+    >
+      <span class="canal-anirona-accesos-titulo">También puedes explorar</span>
+
+      <a
+        href="https://meli.la/16G5Kgk"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span class="canal-anirona-acceso-icono" aria-hidden="true">🛒</span>
+        <span>
+          <strong>Tienda Oficial Anirona</strong>
+          <small>Comprar en Mercado Libre</small>
+        </span>
+        <span class="canal-anirona-acceso-flecha" aria-hidden="true">›</span>
+      </a>
+
+      <a
+        href="https://meli.la/1j1zyj5"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span class="canal-anirona-acceso-icono" aria-hidden="true">⚡</span>
+        <span>
+          <strong>Línea Promax</strong>
+          <small>Explorar productos Promax</small>
+        </span>
+        <span class="canal-anirona-acceso-flecha" aria-hidden="true">›</span>
+      </a>
+
+      <a
+        href="https://a.co/d/0e124iT6"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span class="canal-anirona-acceso-icono" aria-hidden="true">📦</span>
+        <span>
+          <strong>Anirona en Amazon</strong>
+          <small>Ver catálogo disponible</small>
+        </span>
+        <span class="canal-anirona-acceso-flecha" aria-hidden="true">›</span>
+      </a>
+    </nav>
   `;
 
   return articulo;

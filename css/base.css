@@ -2780,3 +2780,194 @@ button.oferta-imagen-contenedor:active .oferta-imagen {
     margin-top: 3px !important;
   }
 }
+
+
+/* V66.6 — Accesos de compra dentro de Comunidad Anirona */
+.tarjeta-canal-anirona {
+  grid-template-columns:
+    minmax(110px, 180px)
+    minmax(270px, 1fr)
+    minmax(250px, 360px);
+}
+
+.canal-anirona-accesos {
+  display: grid;
+  gap: 7px;
+  align-self: stretch;
+  padding: 12px;
+  border: 1px solid rgba(22, 133, 68, .10);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .66);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .55);
+}
+
+.canal-anirona-accesos-titulo {
+  padding: 1px 3px 3px;
+  color: #718078;
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.canal-anirona-accesos a {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) 15px;
+  min-height: 47px;
+  padding: 7px 8px;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(26, 103, 57, .10);
+  border-radius: 10px;
+  color: #294538;
+  background: rgba(255, 255, 255, .86);
+  text-decoration: none;
+  transition:
+    border-color .16s ease,
+    background .16s ease,
+    box-shadow .16s ease,
+    transform .16s ease;
+}
+
+.canal-anirona-accesos a:hover,
+.canal-anirona-accesos a:focus-visible {
+  border-color: rgba(22, 133, 68, .28);
+  background: #ffffff;
+  box-shadow: 0 5px 13px rgba(28, 92, 52, .08);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.canal-anirona-acceso-icono {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: #edf8f0;
+  font-size: 13px;
+}
+
+.canal-anirona-accesos a > span:nth-child(2) {
+  min-width: 0;
+}
+
+.canal-anirona-accesos strong,
+.canal-anirona-accesos small {
+  display: block;
+}
+
+.canal-anirona-accesos strong {
+  overflow: hidden;
+  color: #294538;
+  font-size: 10px;
+  font-weight: 550;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.canal-anirona-accesos small {
+  margin-top: 2px;
+  color: #78877f;
+  font-size: 8px;
+  line-height: 1.2;
+}
+
+.canal-anirona-acceso-flecha {
+  color: #72a083;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+@media (max-width: 900px) {
+  .tarjeta-canal-anirona {
+    grid-template-columns: 100px minmax(0, 1fr);
+  }
+
+  .canal-anirona-accesos {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding: 9px;
+  }
+
+  .canal-anirona-accesos-titulo {
+    grid-column: 1 / -1;
+  }
+
+  .canal-anirona-accesos a {
+    grid-template-columns: 24px minmax(0, 1fr);
+    min-height: 43px;
+    padding: 6px 7px;
+  }
+
+  .canal-anirona-acceso-icono {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+  }
+
+  .canal-anirona-acceso-flecha {
+    display: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .tarjeta-canal-anirona {
+    grid-template-columns: 70px minmax(0, 1fr);
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .canal-anirona-accesos {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    margin-top: 1px;
+    padding: 7px;
+    border-radius: 11px;
+  }
+
+  .canal-anirona-accesos-titulo {
+    padding: 1px 3px 2px;
+    font-size: 7.5px;
+  }
+
+  .canal-anirona-accesos a {
+    grid-template-columns: 26px minmax(0, 1fr) 12px;
+    min-height: 39px;
+    padding: 5px 7px;
+    border-radius: 9px;
+  }
+
+  .canal-anirona-acceso-icono {
+    width: 26px;
+    height: 26px;
+    font-size: 11px;
+  }
+
+  .canal-anirona-accesos strong {
+    font-size: 9px;
+  }
+
+  .canal-anirona-accesos small {
+    font-size: 7.5px;
+  }
+
+  .canal-anirona-acceso-flecha {
+    display: inline;
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 370px) {
+  .tarjeta-canal-anirona {
+    grid-template-columns: 1fr;
+  }
+
+  .canal-anirona-accesos a {
+    text-align: left;
+  }
+}
