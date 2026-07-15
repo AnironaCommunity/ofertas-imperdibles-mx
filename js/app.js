@@ -36,12 +36,6 @@ const contadorOfertasMercadoLibre = document.querySelector(
 const contadorOfertasAmazon = document.querySelector(
   "#contador-ofertas-amazon"
 );
-const contadorComunidadAnirona = document.querySelector(
-  "#contador-comunidad-anirona"
-);
-const contadorCuponesBancarios = document.querySelector(
-  "#contador-cupones-bancarios"
-);
 
 
 
@@ -204,21 +198,6 @@ function actualizarContadoresSecciones() {
       )
   ).length;
 
-  const cantidadComunidadAnirona = todasLasPublicidades.filter(
-    (publicidad) =>
-      publicidad?.activo !== false &&
-      publicidadPerteneceASeccion(
-        publicidad,
-        "comunidad_anirona"
-      )
-  ).length;
-
-  const cantidadBancarios = todosLosCupones.filter(
-    (cupon) =>
-      normalizarCategoria(cupon) === "bancarios" &&
-      couponTimeState(cupon).state !== "finalizado"
-  ).length;
-
   mostrarCantidadSeccion(
     contadorCuponesTienda,
     cantidadTienda,
@@ -233,16 +212,6 @@ function actualizarContadoresSecciones() {
     contadorOfertasAmazon,
     cantidadAmazon,
     "producto"
-  );
-  mostrarCantidadSeccion(
-    contadorComunidadAnirona,
-    cantidadComunidadAnirona,
-    "producto"
-  );
-  mostrarCantidadSeccion(
-    contadorCuponesBancarios,
-    cantidadBancarios,
-    "cupón"
   );
 }
 
@@ -732,7 +701,7 @@ function updateCouponTimes() {
     redeemButton.classList.remove("boton-programado");
 
     if (!redireccionEnProceso) {
-      redeemButton.textContent = "⧉ Copiar y Canjear";
+      redeemButton.textContent = "📋 Copiar y Canjear";
     }
 
     if (timeState.target !== null) {
@@ -843,18 +812,8 @@ function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
 
   articulo.innerHTML = `
     <div class="cupon-encabezado">
-      ${
-        cupon.imagen_url
-          ? `<img
-              class="cupon-logo"
-              src="${escaparHtml(cupon.imagen_url)}"
-              alt=""
-              loading="lazy"
-            />`
-          : ""
-      }
-
       <h2 class="descuento">${escaparHtml(cupon.titulo)}</h2>
+      
     </div>
 
     <div class="cupon-contenido">
@@ -880,7 +839,7 @@ function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
       <div class="acciones-bloque">
         <div class="acciones-cupon">
           <button class="boton-canjear" type="button">
-            ⧉ Copiar y Canjear
+            📋 Copiar y Canjear
           </button>
         </div>
 
@@ -1250,7 +1209,7 @@ function reiniciarInteraccion() {
 
   document.querySelectorAll(".boton-canjear").forEach((boton) => {
     boton.disabled = false;
-    boton.textContent = "⧉ Copiar y Canjear";
+    boton.textContent = "📋 Copiar y Canjear";
   });
 
   document.querySelectorAll(".mensaje").forEach((mensaje) => {
@@ -1269,7 +1228,7 @@ function ejecutarCuentaRegresiva(cupon, boton, mensaje) {
       cerrarModal();
 
       boton.disabled = false;
-      boton.textContent = "⧉ Copiar y Canjear";
+      boton.textContent = "📋 Copiar y Canjear";
       mensaje.textContent = "";
 
       redireccionEnProceso = false;
@@ -1574,6 +1533,52 @@ function crearTarjetaCanalAnirona() {
 
       <small>Únete a la comunidad y no te pierdas las novedades.</small>
     </div>
+
+    <nav
+      class="canal-anirona-accesos"
+      aria-label="Enlaces oficiales de compra Anirona"
+    >
+      <span class="canal-anirona-accesos-titulo">También puedes explorar</span>
+
+      <a
+        href="https://meli.la/16G5Kgk"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span class="canal-anirona-acceso-icono" aria-hidden="true">🛒</span>
+        <span>
+          <strong>Tienda Oficial Anirona</strong>
+          <small>Comprar en Mercado Libre</small>
+        </span>
+        <span class="canal-anirona-acceso-flecha" aria-hidden="true">›</span>
+      </a>
+
+      <a
+        href="https://meli.la/1j1zyj5"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span class="canal-anirona-acceso-icono" aria-hidden="true">⚡</span>
+        <span>
+          <strong>Línea Promax</strong>
+          <small>Explorar productos Promax</small>
+        </span>
+        <span class="canal-anirona-acceso-flecha" aria-hidden="true">›</span>
+      </a>
+
+      <a
+        href="https://a.co/d/0e124iT6"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span class="canal-anirona-acceso-icono" aria-hidden="true">📦</span>
+        <span>
+          <strong>Anirona en Amazon</strong>
+          <small>Ver catálogo disponible</small>
+        </span>
+        <span class="canal-anirona-acceso-flecha" aria-hidden="true">›</span>
+      </a>
+    </nav>
   `;
 
   return articulo;
