@@ -116,6 +116,36 @@ function setMessage(element, text = "", isError = false) {
   element.classList.toggle("error", isError);
 }
 
+function readableError(error, fallback = "No fue posible completar la operación.") {
+  if (!error) return fallback;
+
+  if (typeof error === "string") return error;
+
+  if (error instanceof Error && typeof error.message === "string") {
+    return error.message;
+  }
+
+  if (typeof error.message === "string") return error.message;
+  if (typeof error.error === "string") return error.error;
+  if (typeof error.details === "string") return error.details;
+  if (typeof error.hint === "string") return error.hint;
+
+  if (error.error && typeof error.error === "object") {
+    return readableError(error.error, fallback);
+  }
+
+  if (error.message && typeof error.message === "object") {
+    return readableError(error.message, fallback);
+  }
+
+  try {
+    const serialized = JSON.stringify(error);
+    return serialized && serialized !== "{}" ? serialized : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 async function api(url, options = {}) {
   const headers = new Headers(options.headers || {});
 
@@ -135,7 +165,12 @@ async function api(url, options = {}) {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(data.error || "No fue posible completar la operación.");
+    throw new Error(
+      readableError(
+        data,
+        `Error ${response.status}: no fue posible completar la operación.`
+      )
+    );
   }
 
   return data;
@@ -1375,7 +1410,7 @@ function updateHeroAdminPreview() {
 
 async function loadHeroConfig() {
   try {
-    const config = await api("/api/admin-hero-config");
+    const config = await api("/api/admin-cupones?action=hero-config");
 
     heroImageUrl.value = config.imagen_url || "";
     heroColorStart.value = config.color_inicio || "#e9cdff";
@@ -1387,24 +1422,22 @@ async function loadHeroConfig() {
     updateHeroAdminPreview();
     setMessage(heroConfigMessage);
   } catch (error) {
-    setMessage(heroConfigMessage, error.message, true);
+    setMessage(heroConfigMessage, readableError(error), true);
   }
 }
 
 async function uploadHeroImage() {
   const file = heroImage.files[0];
-  if (!file) return heroImageUrl.value;
 
-  const dataUrl = await optimizeImage(file);
-  const result = await api("/api/admin-publicidad-imagen", {
-    method: "POST",
-    body: JSON.stringify({
-      data_url: dataUrl,
-      nombre: `hero-${file.name}`,
-    }),
-  });
+  if (!file) {
+    return heroImageUrl.value;
+  }
 
-  return result.imagen_url;
+  if (!file.type.startsWith("image/")) {
+    throw new Error("Selecciona una imagen válida.");
+  }
+
+  return await optimizeImage(file);
 }
 
 async function saveHeroConfig(event) {
@@ -1416,7 +1449,7 @@ async function saveHeroConfig(event) {
   try {
     const imageUrl = await uploadHeroImage();
 
-    await api("/api/admin-hero-config", {
+    const savedConfig = await api("/api/admin-cupones?action=hero-config", {
       method: "PUT",
       body: JSON.stringify({
         imagen_url: imageUrl || "",
@@ -1425,14 +1458,14 @@ async function saveHeroConfig(event) {
       }),
     });
 
-    heroImageUrl.value = imageUrl || "";
+    heroImageUrl.value = savedConfig.imagen_url || imageUrl || "";
     heroImage.value = "";
-    heroPreview.src = imageUrl || "";
-    heroPreviewWrapper.hidden = !imageUrl;
+    heroPreview.src = heroImageUrl.value;
+    heroPreviewWrapper.hidden = !heroImageUrl.value;
     updateHeroAdminPreview();
     setMessage(heroConfigMessage, "Cambios guardados correctamente.");
   } catch (error) {
-    setMessage(heroConfigMessage, error.message, true);
+    setMessage(heroConfigMessage, readableError(error), true);
   } finally {
     submit.disabled = false;
   }

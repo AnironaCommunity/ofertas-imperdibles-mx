@@ -39,11 +39,16 @@ async function requestSupabase(path, options = {}) {
   const data = text ? JSON.parse(text) : null;
 
   if (!result.ok) {
-    throw new Error(
-      data?.message ||
-      data?.error ||
-      "Supabase no pudo completar la operación."
-    );
+    const message =
+      typeof data?.message === "string"
+        ? data.message
+        : typeof data?.error === "string"
+          ? data.error
+          : typeof data?.details === "string"
+            ? data.details
+            : "Supabase no pudo completar la operación.";
+
+    throw new Error(message);
   }
 
   return data;
@@ -65,6 +70,63 @@ export default async function handler(request, response) {
   }
 
   try {
+    if (request.query?.action === "hero-config") {
+      if (request.method === "GET") {
+        const config = await requestSupabase(
+          "configuracion_web?select=imagen_url,color_inicio,color_fin&id=eq.hero_redes&limit=1"
+        );
+
+        response.setHeader("Cache-Control", "no-store");
+
+        return response.status(200).json(
+          config?.[0] || {
+            imagen_url: "",
+            color_inicio: "#e9cdff",
+            color_fin: "#fae8fa",
+          }
+        );
+      }
+
+      if (request.method === "PUT") {
+        const cleanColor = (value, fallback) => {
+          const color = String(value || "").trim();
+          return /^#[0-9a-f]{6}$/i.test(color) ? color : fallback;
+        };
+
+        const payload = {
+          id: "hero_redes",
+          imagen_url: cleanText(request.body?.imagen_url),
+          color_inicio: cleanColor(
+            request.body?.color_inicio,
+            "#e9cdff"
+          ),
+          color_fin: cleanColor(
+            request.body?.color_fin,
+            "#fae8fa"
+          ),
+          actualizado_en: new Date().toISOString(),
+        };
+
+        const data = await requestSupabase(
+          "configuracion_web?on_conflict=id",
+          {
+            method: "POST",
+            headers: {
+              Prefer: "resolution=merge-duplicates,return=representation",
+            },
+            body: JSON.stringify(payload),
+          }
+        );
+
+        return response.status(200).json(data?.[0] || payload);
+      }
+
+      response.setHeader("Allow", "GET, PUT");
+      return response.status(405).json({
+        error: "Método no permitido para la configuración de la barra.",
+      });
+    }
+
     if (request.method === "GET") {
       const data = await requestSupabase(
         "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,categoria,enlace,activo,likes,clics,fecha_inicio,fecha_fin,fecha_creacion,fecha_publicacion,imagen_url&order=id.desc"

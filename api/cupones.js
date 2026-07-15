@@ -50,6 +50,22 @@ export default async function handler(request, response) {
   }
 
   try {
+    if (request.query?.action === "hero-config") {
+      const config = await requestSupabase(
+        "configuracion_web?select=imagen_url,color_inicio,color_fin&id=eq.hero_redes&limit=1"
+      );
+
+      response.setHeader("Cache-Control", "no-store");
+
+      return response.status(200).json(
+        config?.[0] || {
+          imagen_url: "",
+          color_inicio: "#e9cdff",
+          color_fin: "#fae8fa",
+        }
+      );
+    }
+
     const data = await requestSupabase(
       "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,categoria,enlace,activo,likes,clics,fecha_inicio,fecha_fin,fecha_creacion,fecha_publicacion,imagen_url&order=id.desc"
     );

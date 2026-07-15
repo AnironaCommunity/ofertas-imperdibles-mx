@@ -3,7 +3,7 @@
   if (!hero) return;
 
   try {
-    const response = await fetch("/api/hero-config", {
+    const response = await fetch("/api/cupones?action=hero-config", {
       headers: { Accept: "application/json" },
       cache: "no-store",
     });
