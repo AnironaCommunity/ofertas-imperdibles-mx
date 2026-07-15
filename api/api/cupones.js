@@ -1,61 +1,84 @@
+function supabaseConfig() {
+  return {
+    url: String(process.env.SUPABASE_URL || "")
+      .trim()
+      .replace(/^["']|["']$/g, "")
+      .replace(/\/rest\/v1\/?$/i, "")
+      .replace(/\/+$/, ""),
+    key:
+      process.env.SUPABASE_SECRET_KEY ||
+      process.env.SUPABASE_SERVICE_ROLE_KEY ||
+      process.env.SUPABASE_ANON_KEY,
+  };
+}
+
+async function requestSupabase(path) {
+  const { url, key } = supabaseConfig();
+
+  if (!url || !key) {
+    throw new Error("Faltan variables de conexión con Supabase.");
+  }
+
+  const result = await fetch(`${url}/rest/v1/${path}`, {
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      Accept: "application/json",
+    },
+  });
+
+  const text = await result.text();
+  const data = text ? JSON.parse(text) : null;
+
+  if (!result.ok) {
+    throw new Error(
+      data?.message ||
+      data?.error ||
+      "No fue posible consultar los cupones."
+    );
+  }
+
+  return data;
+}
+
 export default async function handler(request, response) {
   if (request.method !== "GET") {
     response.setHeader("Allow", "GET");
-
     return response.status(405).json({
       error: "Método no permitido.",
     });
   }
 
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const secretKey = process.env.SUPABASE_SECRET_KEY;
-
-  if (!supabaseUrl || !secretKey) {
-    return response.status(500).json({
-      error: "Falta configurar Supabase en Vercel.",
-    });
-  }
-
   try {
-    const parametros = new URLSearchParams({
-      select:
-        "id,titulo,codigo,compra_minima,ahorro_maximo,enlace,clics",
-      activo: "eq.true",
-      order: "id.asc",
-    });
+    if (request.query?.action === "hero-config") {
+      const config = await requestSupabase(
+        "configuracion_web?select=imagen_url,color_inicio,color_fin&id=eq.hero_redes&limit=1"
+      );
 
-    const resultado = await fetch(
-      `${supabaseUrl}/rest/v1/cupones?${parametros.toString()}`,
-      {
-        headers: {
-          apikey: secretKey,
-          Accept: "application/json",
-        },
-      }
-    );
+      response.setHeader("Cache-Control", "no-store");
 
-    if (!resultado.ok) {
-      const detalle = await resultado.text();
-      console.error("Error de Supabase:", detalle);
-
-      return response.status(502).json({
-        error: "No fue posible consultar los cupones.",
-      });
+      return response.status(200).json(
+        config?.[0] || {
+          imagen_url: "",
+          color_inicio: "#e9cdff",
+          color_fin: "#fae8fa",
+        }
+      );
     }
 
-    const cupones = await resultado.json();
+    const data = await requestSupabase(
+      "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,categoria,enlace,activo,likes,clics,fecha_inicio,fecha_fin,fecha_creacion,fecha_publicacion,imagen_url&order=id.desc"
+    );
 
     response.setHeader(
       "Cache-Control",
-      "no-store, max-age=0, must-revalidate"
+      "public, max-age=0, s-maxage=15, stale-while-revalidate=30"
     );
 
-    return response.status(200).json(cupones);
+    return response.status(200).json(data);
   } catch (error) {
-    console.error("Error consultando cupones:", error);
-
     return response.status(500).json({
-      error: "Error interno del servidor.",
+      error: error.message || "Error interno del servidor.",
     });
   }
 }
