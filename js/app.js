@@ -732,7 +732,7 @@ function updateCouponTimes() {
     redeemButton.classList.remove("boton-programado");
 
     if (!redireccionEnProceso) {
-      redeemButton.textContent = "📋 Copiar y Canjear";
+      redeemButton.textContent = "⧉ Copiar y Canjear";
     }
 
     if (timeState.target !== null) {
@@ -880,7 +880,7 @@ function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
       <div class="acciones-bloque">
         <div class="acciones-cupon">
           <button class="boton-canjear" type="button">
-            📋 Copiar y Canjear
+            ⧉ Copiar y Canjear
           </button>
         </div>
 
@@ -1250,7 +1250,7 @@ function reiniciarInteraccion() {
 
   document.querySelectorAll(".boton-canjear").forEach((boton) => {
     boton.disabled = false;
-    boton.textContent = "📋 Copiar y Canjear";
+    boton.textContent = "⧉ Copiar y Canjear";
   });
 
   document.querySelectorAll(".mensaje").forEach((mensaje) => {
@@ -1269,7 +1269,7 @@ function ejecutarCuentaRegresiva(cupon, boton, mensaje) {
       cerrarModal();
 
       boton.disabled = false;
-      boton.textContent = "📋 Copiar y Canjear";
+      boton.textContent = "⧉ Copiar y Canjear";
       mensaje.textContent = "";
 
       redireccionEnProceso = false;
