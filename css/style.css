@@ -11,7 +11,9 @@
   No cambies este orden: conserva la cascada visual del proyecto.
 */
 
-@import url("./base.css?v=67.4.2");
+@import url("./base.css?v=67.4.1");
 @import url("./coupons.css?v=60");
 @import url("./schedule.css?v=60");
 @import url("./header.css?v=60");
+
+@import url("./v67-5-ajustes-cupones.css?v=67.5");
