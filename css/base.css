@@ -2971,3 +2971,167 @@ button.oferta-imagen-contenedor:active .oferta-imagen {
     text-align: left;
   }
 }
+
+
+/* V66.7 — Botones principales de WhatsApp y Facebook */
+.barra-redes-acciones {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  width: min(560px, calc(100% - 24px));
+  gap: 5px;
+  margin: 4px auto 10px;
+}
+
+.barra-redes-botones {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.red-accion {
+  display: flex;
+  min-height: 46px;
+  padding: 8px 12px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  color: #ffffff;
+  text-decoration: none;
+  box-shadow: 0 6px 15px rgba(42, 72, 59, .13);
+  transition:
+    transform .16s ease,
+    box-shadow .16s ease,
+    filter .16s ease;
+}
+
+.red-accion:hover,
+.red-accion:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(42, 72, 59, .18);
+  filter: saturate(1.05);
+  outline: none;
+}
+
+.red-accion:active {
+  transform: scale(.985);
+}
+
+.red-accion-whatsapp {
+  background: linear-gradient(135deg, #159b50, #26bd69);
+}
+
+.red-accion-facebook {
+  background: linear-gradient(135deg, #1767c8, #2f86e8);
+}
+
+.red-accion-icono {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .17);
+}
+
+.red-accion-icono svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.red-accion-textos {
+  display: grid;
+  min-width: 0;
+  gap: 1px;
+  text-align: left;
+}
+
+.red-accion-textos strong,
+.red-accion-textos small {
+  display: block;
+}
+
+.red-accion-textos strong {
+  overflow: hidden;
+  font-size: 10.5px;
+  font-weight: 650;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.red-accion-textos small {
+  color: rgba(255, 255, 255, .82);
+  font-size: 7.5px;
+  line-height: 1.2;
+}
+
+.barra-redes-mensaje {
+  margin: 0;
+  color: #79877f;
+  font-size: 8.5px;
+  line-height: 1.25;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .barra-redes-acciones {
+    width: min(100%, calc(100% - 18px));
+    margin-top: 3px;
+    margin-bottom: 8px;
+  }
+
+  .barra-redes-botones {
+    gap: 6px;
+  }
+
+  .red-accion {
+    min-height: 40px;
+    padding: 6px 8px;
+    gap: 6px;
+    border-radius: 10px;
+  }
+
+  .red-accion-icono {
+    width: 25px;
+    height: 25px;
+  }
+
+  .red-accion-icono svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .red-accion-textos strong {
+    font-size: 8.5px;
+  }
+
+  .red-accion-textos small {
+    display: none;
+  }
+
+  .barra-redes-mensaje {
+    font-size: 7.5px;
+  }
+}
+
+@media (max-width: 370px) {
+  .barra-redes-botones {
+    grid-template-columns: 1fr;
+  }
+
+  .red-accion {
+    justify-content: flex-start;
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .red-accion-textos strong {
+    font-size: 9px;
+  }
+}
