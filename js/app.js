@@ -36,6 +36,12 @@ const contadorOfertasMercadoLibre = document.querySelector(
 const contadorOfertasAmazon = document.querySelector(
   "#contador-ofertas-amazon"
 );
+const contadorComunidadAnirona = document.querySelector(
+  "#contador-comunidad-anirona"
+);
+const contadorCuponesBancarios = document.querySelector(
+  "#contador-cupones-bancarios"
+);
 
 
 
@@ -198,6 +204,21 @@ function actualizarContadoresSecciones() {
       )
   ).length;
 
+  const cantidadComunidadAnirona = todasLasPublicidades.filter(
+    (publicidad) =>
+      publicidad?.activo !== false &&
+      publicidadPerteneceASeccion(
+        publicidad,
+        "comunidad_anirona"
+      )
+  ).length;
+
+  const cantidadBancarios = todosLosCupones.filter(
+    (cupon) =>
+      normalizarCategoria(cupon) === "bancarios" &&
+      couponTimeState(cupon).state !== "finalizado"
+  ).length;
+
   mostrarCantidadSeccion(
     contadorCuponesTienda,
     cantidadTienda,
@@ -212,6 +233,16 @@ function actualizarContadoresSecciones() {
     contadorOfertasAmazon,
     cantidadAmazon,
     "producto"
+  );
+  mostrarCantidadSeccion(
+    contadorComunidadAnirona,
+    cantidadComunidadAnirona,
+    "producto"
+  );
+  mostrarCantidadSeccion(
+    contadorCuponesBancarios,
+    cantidadBancarios,
+    "cupón"
   );
 }
 
@@ -812,8 +843,18 @@ function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
 
   articulo.innerHTML = `
     <div class="cupon-encabezado">
+      ${
+        cupon.imagen_url
+          ? `<img
+              class="cupon-logo"
+              src="${escaparHtml(cupon.imagen_url)}"
+              alt=""
+              loading="lazy"
+            />`
+          : ""
+      }
+
       <h2 class="descuento">${escaparHtml(cupon.titulo)}</h2>
-      
     </div>
 
     <div class="cupon-contenido">
