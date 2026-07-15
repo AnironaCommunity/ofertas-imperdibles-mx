@@ -907,3 +907,33 @@ footer {
     min-height: 202px;
   }
 }
+
+
+/* Conserva la imagen opcional agregada hoy */
+.cupon-encabezado {
+  gap: 8px;
+}
+
+.cupon-logo {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  padding: 2px;
+  border: 1px solid rgba(255, 255, 255, .82);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .95);
+  object-fit: contain;
+  object-position: center;
+  box-sizing: border-box;
+}
+
+@media (max-width: 680px) {
+  .cupon-logo {
+    width: 30px;
+    height: 30px;
+    flex-basis: 30px;
+  }
+}
