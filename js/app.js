@@ -843,8 +843,18 @@ function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
 
   articulo.innerHTML = `
     <div class="cupon-encabezado">
+      ${
+        cupon.imagen_url
+          ? `<img
+              class="cupon-logo"
+              src="${escaparHtml(cupon.imagen_url)}"
+              alt=""
+              loading="lazy"
+            />`
+          : ""
+      }
+
       <h2 class="descuento">${escaparHtml(cupon.titulo)}</h2>
-      
     </div>
 
     <div class="cupon-contenido">
