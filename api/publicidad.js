@@ -17,7 +17,7 @@ export default async function handler(request, response) {
 
     endpoint.searchParams.set(
       "select",
-      "id,titulo,descripcion,imagen_url,enlace,precio_publicado,precio_cupon,codigo_cupon,categoria,secciones,orden,clics,visitas"
+      "id,titulo,descripcion,imagen_url,enlace,precio_publicado,precio_cupon,codigo_cupon,plataforma,categoria,secciones,orden,clics,visitas"
     );
     endpoint.searchParams.set("activo", "eq.true");
     endpoint.searchParams.set("order", "orden.asc,id.asc");
@@ -68,8 +68,16 @@ export default async function handler(request, response) {
             secciones = [item?.categoria || "ofertas_dia"];
           }
 
+          const link = String(item?.enlace || "").toLowerCase();
+
           return {
             ...item,
+            plataforma:
+              item?.plataforma === "amazon" ||
+              link.includes("amazon.") ||
+              link.includes("a.co/")
+                ? "amazon"
+                : "mercadolibre",
             secciones,
           };
         })

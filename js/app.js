@@ -415,10 +415,6 @@ function iniciarRecorridoSecciones() {
       });
 
       temporizadorRecorridoSecciones = window.setTimeout(() => {
-        /*
-          Asegura la posición exacta después de terminar el desplazamiento
-          suave, evitando que quede unos píxeles recorrido hacia la derecha.
-        */
         menuOfertas.scrollTo({
           left: 0,
           behavior: "auto",
@@ -426,8 +422,8 @@ function iniciarRecorridoSecciones() {
 
         recorridoSeccionesActivo = false;
         actualizarControlesMenuOfertas();
-      }, 950);
-    }, 1250);
+      }, 850);
+    }, 820);
   }, 700);
 }
 
@@ -1392,12 +1388,43 @@ function inicializarCarruselesPublicidad() {
 }
 
 
+
+function obtenerPlataformaPublicidad(publicidad) {
+  const plataforma = String(publicidad?.plataforma || "")
+    .trim()
+    .toLowerCase();
+
+  if (plataforma === "amazon") return "amazon";
+  if (plataforma === "mercadolibre") return "mercadolibre";
+
+  const enlace = String(publicidad?.enlace || "").toLowerCase();
+
+  return enlace.includes("amazon.") ||
+    enlace.includes("a.co/")
+    ? "amazon"
+    : "mercadolibre";
+}
+
+function datosPlataformaPublicidad(publicidad) {
+  const plataforma = obtenerPlataformaPublicidad(publicidad);
+
+  return plataforma === "amazon"
+    ? {
+        nombre: "Amazon",
+        textoBoton: "📦 Ver en Amazon",
+      }
+    : {
+        nombre: "Mercado Libre",
+        textoBoton: "🛒 Ver en Mercado Libre",
+      };
+}
+
 function crearTarjetaOferta(publicidad, categoria) {
   const articulo = document.createElement("article");
   articulo.className = "tarjeta-oferta";
   articulo.dataset.publicidadId = String(publicidad.id || "");
 
-  const esAmazon = categoria === "ofertas_amazon";
+  const plataforma = datosPlataformaPublicidad(publicidad);
   const precioPublicado = String(publicidad.precio_publicado || "").trim();
   const precioCupon = String(publicidad.precio_cupon || "").trim();
   const codigo = String(publicidad.codigo_cupon || "").trim();
@@ -1406,8 +1433,8 @@ function crearTarjetaOferta(publicidad, categoria) {
     <button
       class="oferta-imagen-contenedor"
       type="button"
-      aria-label="${escaparHtml(`Abrir ${publicidad.titulo || "oferta"} en ${esAmazon ? "Amazon" : "Mercado Libre"}`)}"
-      title="${esAmazon ? "Ver en Amazon" : "Ver en Mercado Libre"}"
+      aria-label="${escaparHtml(`Abrir ${publicidad.titulo || "oferta"} en ${plataforma.nombre}`)}"
+      title="${`Ver en ${plataforma.nombre}`}"
     >
       <img
         class="oferta-imagen"
@@ -1426,7 +1453,7 @@ function crearTarjetaOferta(publicidad, categoria) {
         ${precioCupon ? `<div class="precio-destacado"><span>Precio con cupón</span><strong>${escaparHtml(precioCupon)}</strong></div>` : ""}
       </div>
 
-      ${codigo ? `<p class="oferta-cupon">ℹ️ Al dar clic en <strong>${esAmazon ? "Ver en Amazon" : "Ver en Mercado Libre"}</strong>, el cupón se copiará automáticamente.</p>` : ""}
+      ${codigo ? `<p class="oferta-cupon">ℹ️ Al dar clic en <strong>${`Ver en ${plataforma.nombre}`}</strong>, el cupón se copiará automáticamente.</p>` : ""}
 
       <div class="oferta-meta">
         <span class="oferta-visitas" data-visitas-id="${Number(publicidad.id) || 0}">👁️ ${Number(publicidad.visitas) || 0} visitas</span>
@@ -1434,7 +1461,7 @@ function crearTarjetaOferta(publicidad, categoria) {
 
       <div class="oferta-acciones">
         <button class="oferta-ver" type="button">
-          ${esAmazon ? "📦 Ver en Amazon" : "🛒 Ver en Mercado Libre"}
+          ${plataforma.textoBoton}
         </button>
         <button class="boton-compartir oferta-compartir" type="button" aria-label="Compartir oferta" title="Compartir">
           ${iconoCompartir()}

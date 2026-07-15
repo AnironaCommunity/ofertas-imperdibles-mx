@@ -51,6 +51,9 @@ const adImageUrl = document.querySelector("#ad-image-url");
 const adTitle = document.querySelector("#ad-title");
 const adDescription = document.querySelector("#ad-description");
 const adSections = [...document.querySelectorAll(".ad-section")];
+const adPlatforms = [
+  ...document.querySelectorAll('input[name="ad-platform"]'),
+];
 const adLink = document.querySelector("#ad-link");
 const adPricePublished = document.querySelector("#ad-price-published");
 const adPriceCoupon = document.querySelector("#ad-price-coupon");
@@ -631,6 +634,31 @@ function normalizarSeccionesPublicidad(valor, categoria = "ofertas_dia") {
   return unicas.length ? unicas : [categoriaNormalizada];
 }
 
+
+function selectedAdPlatform() {
+  return (
+    adPlatforms.find((input) => input.checked)?.value ||
+    "mercadolibre"
+  );
+}
+
+function setSelectedAdPlatform(value, link = "") {
+  let platform = String(value || "").trim().toLowerCase();
+
+  if (!["mercadolibre", "amazon"].includes(platform)) {
+    const normalizedLink = String(link || "").toLowerCase();
+    platform =
+      normalizedLink.includes("amazon.") ||
+      normalizedLink.includes("a.co/")
+        ? "amazon"
+        : "mercadolibre";
+  }
+
+  for (const input of adPlatforms) {
+    input.checked = input.value === platform;
+  }
+}
+
 function selectedAdSections() {
   return adSections
     .filter((input) => input.checked)
@@ -1015,6 +1043,7 @@ function resetAdForm() {
   adPriceCoupon.value = "";
   adCouponCode.value = "";
   setSelectedAdSections(["ofertas_dia"]);
+  setSelectedAdPlatform("mercadolibre");
   adOrder.value = "0";
   adActive.checked = true;
   adPreviewWrapper.hidden = true;
@@ -1037,6 +1066,7 @@ function editAd(ad) {
   adCouponCode.value = ad.codigo_cupon || "";
   applyBestCouponToAdForm();
   setSelectedAdSections(ad.secciones, ad.categoria);
+  setSelectedAdPlatform(ad.plataforma, ad.enlace);
   adOrder.value = ad.orden || 0;
   adActive.checked = Boolean(ad.activo);
   adImageUrl.value = ad.imagen_url || "";
@@ -1203,6 +1233,7 @@ async function saveAd(event) {
       precio_publicado: adPricePublished.value.trim(),
       precio_cupon: adPriceCoupon.value.trim(),
       codigo_cupon: adCouponCode.value.trim(),
+      plataforma: selectedAdPlatform(),
       secciones: [...secciones],
       categoria: secciones[0] || "ofertas_dia",
       imagen_url: imageUrl,
