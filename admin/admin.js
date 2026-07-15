@@ -7,8 +7,22 @@ const logoutButton = document.querySelector("#cerrar-sesion");
 
 const tabCoupons = document.querySelector("#tab-cupones");
 const tabAds = document.querySelector("#tab-publicidad");
+const tabAppearance = document.querySelector("#tab-apariencia");
 const couponsSection = document.querySelector("#seccion-cupones");
 const adsSection = document.querySelector("#seccion-publicidad");
+const appearanceSection = document.querySelector("#seccion-apariencia");
+
+const heroConfigForm = document.querySelector("#hero-config-form");
+const heroImage = document.querySelector("#hero-image");
+const heroImageUrl = document.querySelector("#hero-image-url");
+const heroPreviewWrapper = document.querySelector("#hero-preview-wrapper");
+const heroPreview = document.querySelector("#hero-preview");
+const heroRemoveImage = document.querySelector("#hero-remove-image");
+const heroColorStart = document.querySelector("#hero-color-start");
+const heroColorEnd = document.querySelector("#hero-color-end");
+const heroAdminPreview = document.querySelector("#hero-admin-preview");
+const heroAdminPreviewImage = document.querySelector("#hero-admin-preview-image");
+const heroConfigMessage = document.querySelector("#hero-config-message");
 
 /* Cupones */
 const couponForm = document.querySelector("#coupon-form");
@@ -166,12 +180,18 @@ function logout() {
 
 function showSection(section) {
   const isCoupons = section === "cupones";
+  const isAds = section === "publicidad";
+  const isAppearance = section === "apariencia";
 
   tabCoupons.classList.toggle("activo", isCoupons);
-  tabAds.classList.toggle("activo", !isCoupons);
+  tabAds.classList.toggle("activo", isAds);
+  tabAppearance.classList.toggle("activo", isAppearance);
 
   couponsSection.hidden = !isCoupons;
-  adsSection.hidden = isCoupons;
+  adsSection.hidden = !isAds;
+  appearanceSection.hidden = !isAppearance;
+
+  if (isAppearance) loadHeroConfig();
 }
 
 /* ================= CUPONES ================= */
@@ -1339,6 +1359,85 @@ async function handleAdList(event) {
   }
 }
 
+
+/* ================= APARIENCIA ================= */
+function updateHeroAdminPreview() {
+  heroAdminPreview.style.background =
+    `linear-gradient(135deg, ${heroColorStart.value}, ${heroColorEnd.value})`;
+
+  const image =
+    heroImage.files[0]
+      ? heroPreview.src
+      : heroImageUrl.value || "../img/logo-ofertas-transparente.png?v=63.6";
+
+  heroAdminPreviewImage.src = image;
+}
+
+async function loadHeroConfig() {
+  try {
+    const config = await api("/api/admin-hero-config");
+
+    heroImageUrl.value = config.imagen_url || "";
+    heroColorStart.value = config.color_inicio || "#e9cdff";
+    heroColorEnd.value = config.color_fin || "#fae8fa";
+
+    heroPreview.src = config.imagen_url || "";
+    heroPreviewWrapper.hidden = !config.imagen_url;
+
+    updateHeroAdminPreview();
+    setMessage(heroConfigMessage);
+  } catch (error) {
+    setMessage(heroConfigMessage, error.message, true);
+  }
+}
+
+async function uploadHeroImage() {
+  const file = heroImage.files[0];
+  if (!file) return heroImageUrl.value;
+
+  const dataUrl = await optimizeImage(file);
+  const result = await api("/api/admin-publicidad-imagen", {
+    method: "POST",
+    body: JSON.stringify({
+      data_url: dataUrl,
+      nombre: `hero-${file.name}`,
+    }),
+  });
+
+  return result.imagen_url;
+}
+
+async function saveHeroConfig(event) {
+  event.preventDefault();
+  const submit = heroConfigForm.querySelector('button[type="submit"]');
+  submit.disabled = true;
+  setMessage(heroConfigMessage, "Guardando cambios...");
+
+  try {
+    const imageUrl = await uploadHeroImage();
+
+    await api("/api/admin-hero-config", {
+      method: "PUT",
+      body: JSON.stringify({
+        imagen_url: imageUrl || "",
+        color_inicio: heroColorStart.value,
+        color_fin: heroColorEnd.value,
+      }),
+    });
+
+    heroImageUrl.value = imageUrl || "";
+    heroImage.value = "";
+    heroPreview.src = imageUrl || "";
+    heroPreviewWrapper.hidden = !imageUrl;
+    updateHeroAdminPreview();
+    setMessage(heroConfigMessage, "Cambios guardados correctamente.");
+  } catch (error) {
+    setMessage(heroConfigMessage, error.message, true);
+  } finally {
+    submit.disabled = false;
+  }
+}
+
 /* Eventos */
 loginButton.addEventListener("click", login);
 passwordInput.addEventListener("keydown", (event) => {
@@ -1348,6 +1447,7 @@ passwordInput.addEventListener("keydown", (event) => {
 logoutButton.addEventListener("click", logout);
 tabCoupons.addEventListener("click", () => showSection("cupones"));
 tabAds.addEventListener("click", () => showSection("publicidad"));
+tabAppearance.addEventListener("click", () => showSection("apariencia"));
 
 couponForm.addEventListener("submit", saveCoupon);
 couponList.addEventListener("click", handleCouponList);
@@ -1416,6 +1516,29 @@ bulkPricesList.addEventListener("input", (event) => {
 
 recalculateBulkPrices.addEventListener("click", recalculateAllBulkPrices);
 saveBulkPrices.addEventListener("click", saveAllBulkPrices);
+
+heroConfigForm.addEventListener("submit", saveHeroConfig);
+
+heroColorStart.addEventListener("input", updateHeroAdminPreview);
+heroColorEnd.addEventListener("input", updateHeroAdminPreview);
+
+heroImage.addEventListener("change", () => {
+  const file = heroImage.files[0];
+  if (!file) return;
+
+  const objectUrl = URL.createObjectURL(file);
+  heroPreview.src = objectUrl;
+  heroPreviewWrapper.hidden = false;
+  updateHeroAdminPreview();
+});
+
+heroRemoveImage.addEventListener("click", () => {
+  heroImage.value = "";
+  heroImageUrl.value = "";
+  heroPreview.src = "";
+  heroPreviewWrapper.hidden = true;
+  updateHeroAdminPreview();
+});
 
 adImage.addEventListener("change", async () => {
   const file = adImage.files[0];

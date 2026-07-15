@@ -3009,37 +3009,3 @@ button.oferta-imagen-contenedor:active .oferta-imagen {
     border-width: 1.5px;
   }
 }
-
-
-/* V67.13 — Únicamente los dos ajustes solicitados */
-
-/* 1. Título del producto en OFERTAS DEL DÍA */
-#publicidad-titulo {
-  font-size: 14px !important;
-  font-weight: 400 !important;
-  line-height: 1.25 !important;
-  text-transform: none !important;
-}
-
-/* 2. Logo del cupón junto al título, del lado izquierdo */
-.cupon-encabezado {
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  gap: 8px !important;
-}
-
-.cupon-logo {
-  flex: 0 0 auto !important;
-}
-
-.cupon-encabezado .descuento {
-  margin: 0 !important;
-  text-align: left !important;
-}
-
-@media (max-width: 600px) {
-  #publicidad-titulo {
-    font-size: 13px !important;
-  }
-}

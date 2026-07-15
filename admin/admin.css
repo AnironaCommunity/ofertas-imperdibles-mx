@@ -945,3 +945,64 @@ table td {
 .boton-quitar-imagen {
   width: auto;
 }
+
+
+/* V67.15 — Configuración de la barra debajo del logo */
+.preview-hero {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.preview-hero[hidden] {
+  display: none !important;
+}
+
+.preview-hero img {
+  width: 78px;
+  height: 78px;
+  padding: 6px;
+  border: 1px solid #dce8e3;
+  border-radius: 14px;
+  background: #fff;
+  object-fit: contain;
+}
+
+.hero-admin-preview {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 13px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #e9cdff, #fae8fa);
+}
+
+.hero-admin-preview-image {
+  width: 58px;
+  height: 58px;
+  padding: 5px;
+  border-radius: 13px;
+  background: rgba(255,255,255,.58);
+}
+
+.hero-admin-preview-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.hero-admin-preview strong,
+.hero-admin-preview span {
+  display: block;
+}
+
+.hero-admin-preview strong {
+  font-size: 15px;
+}
+
+.hero-admin-preview span {
+  margin-top: 3px;
+  color: #5f5865;
+  font-size: 10px;
+}

@@ -1,0 +1,60 @@
+function supabaseConfig() {
+  return {
+    url: String(process.env.SUPABASE_URL || "")
+      .trim()
+      .replace(/^["']|["']$/g, "")
+      .replace(/\/rest\/v1\/?$/i, "")
+      .replace(/\/+$/, ""),
+    key:
+      process.env.SUPABASE_SECRET_KEY ||
+      process.env.SUPABASE_SERVICE_ROLE_KEY,
+  };
+}
+
+async function requestSupabase(path, options = {}) {
+  const { url, key } = supabaseConfig();
+  if (!url || !key) throw new Error("Faltan variables de conexión con Supabase.");
+
+  const result = await fetch(`${url}/rest/v1/${path}`, {
+    ...options,
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
+  });
+
+  const text = await result.text();
+  const data = text ? JSON.parse(text) : null;
+
+  if (!result.ok) {
+    throw new Error(data?.message || data?.error || "No se pudo completar la operación.");
+  }
+
+  return data;
+}
+
+export default async function handler(request, response) {
+  if (request.method !== "GET") {
+    return response.status(405).json({ error: "Método no permitido." });
+  }
+
+  try {
+    const data = await requestSupabase(
+      "configuracion_web?select=imagen_url,color_inicio,color_fin&id=eq.hero_redes&limit=1"
+    );
+
+    response.setHeader("Cache-Control", "no-store");
+    return response.status(200).json(
+      data?.[0] || {
+        imagen_url: "",
+        color_inicio: "#e9cdff",
+        color_fin: "#fae8fa",
+      }
+    );
+  } catch (error) {
+    return response.status(500).json({ error: error.message });
+  }
+}
