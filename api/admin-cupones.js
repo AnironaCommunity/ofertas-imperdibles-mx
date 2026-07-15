@@ -67,7 +67,7 @@ export default async function handler(request, response) {
   try {
     if (request.method === "GET") {
       const data = await requestSupabase(
-        "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,categoria,enlace,activo,likes,clics,fecha_inicio,fecha_fin,fecha_creacion,fecha_publicacion&order=id.desc"
+        "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,categoria,enlace,activo,likes,clics,fecha_inicio,fecha_fin,fecha_creacion,fecha_publicacion,imagen_url&order=id.desc"
       );
 
       response.setHeader("Cache-Control", "no-store");
@@ -85,6 +85,7 @@ export default async function handler(request, response) {
         ahorro_maximo: cleanText(request.body?.ahorro_maximo),
         categoria: normalizeCategory(request.body?.categoria),
         enlace: cleanText(request.body?.enlace),
+        imagen_url: cleanText(request.body?.imagen_url),
         activo: request.body?.activo !== false,
         fecha_inicio: request.body?.fecha_inicio || null,
         fecha_fin: request.body?.fecha_fin || null,
@@ -127,6 +128,7 @@ export default async function handler(request, response) {
         "compra_minima",
         "ahorro_maximo",
         "enlace",
+        "imagen_url",
       ]) {
         if (Object.hasOwn(request.body || {}, field)) {
           payload[field] = cleanText(request.body[field]);

@@ -21,6 +21,17 @@ const couponCategory = document.querySelector("#coupon-category");
 const couponStart = document.querySelector("#coupon-start");
 const couponEnd = document.querySelector("#coupon-end");
 const couponLink = document.querySelector("#coupon-link");
+const couponImage = document.querySelector("#coupon-image");
+const couponImageUrl = document.querySelector("#coupon-image-url");
+const couponImagePreviewWrapper = document.querySelector(
+  "#coupon-image-preview-wrapper"
+);
+const couponImagePreview = document.querySelector(
+  "#coupon-image-preview"
+);
+const couponImageRemove = document.querySelector(
+  "#coupon-image-remove"
+);
 const couponActive = document.querySelector("#coupon-active");
 const couponPublishNew = document.querySelector("#coupon-publish-new");
 const couponFormTitle = document.querySelector("#coupon-form-title");
@@ -315,6 +326,10 @@ function editCoupon(coupon) {
   couponStart.value = isoToMexicoLocal(coupon.fecha_inicio);
   couponEnd.value = isoToMexicoLocal(coupon.fecha_fin);
   couponLink.value = coupon.enlace || "";
+  couponImage.value = "";
+  couponImageUrl.value = coupon.imagen_url || "";
+  couponImagePreview.src = coupon.imagen_url || "";
+  couponImagePreviewWrapper.hidden = !coupon.imagen_url;
   couponActive.checked = Boolean(coupon.activo);
   couponPublishNew.checked = false;
 
@@ -390,6 +405,30 @@ async function loadCoupons() {
   }
 }
 
+async function uploadCouponImage() {
+  const file = couponImage.files[0];
+
+  if (!file) {
+    return couponImageUrl.value;
+  }
+
+  if (!file.type.startsWith("image/")) {
+    throw new Error("Selecciona una imagen válida para el cupón.");
+  }
+
+  const dataUrl = await optimizeImage(file);
+
+  const result = await api("/api/admin-publicidad-imagen", {
+    method: "POST",
+    body: JSON.stringify({
+      data_url: dataUrl,
+      nombre: `cupon-${file.name}`,
+    }),
+  });
+
+  return result.imagen_url;
+}
+
 async function saveCoupon(event) {
   event.preventDefault();
 
@@ -405,6 +444,7 @@ async function saveCoupon(event) {
     fecha_inicio: mexicoLocalToIso(couponStart.value),
     fecha_fin: mexicoLocalToIso(couponEnd.value),
     enlace: couponLink.value.trim(),
+    imagen_url: imageUrl || "",
     activo: couponActive.checked,
     publicar_como_nuevo: couponPublishNew.checked,
   };
@@ -1311,6 +1351,23 @@ couponList.addEventListener("click", handleCouponList);
 refreshCoupons.addEventListener("click", loadCoupons);
 newCoupon.addEventListener("click", resetCouponForm);
 cancelCoupon.addEventListener("click", resetCouponForm);
+
+couponImage.addEventListener("change", () => {
+  const file = couponImage.files[0];
+
+  if (!file) return;
+
+  const objectUrl = URL.createObjectURL(file);
+  couponImagePreview.src = objectUrl;
+  couponImagePreviewWrapper.hidden = false;
+});
+
+couponImageRemove.addEventListener("click", () => {
+  couponImage.value = "";
+  couponImageUrl.value = "";
+  couponImagePreview.src = "";
+  couponImagePreviewWrapper.hidden = true;
+});
 
 showImporter.addEventListener("click", () => {
   importerPanel.hidden = false;

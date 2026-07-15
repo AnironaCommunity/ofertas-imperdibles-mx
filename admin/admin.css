@@ -919,3 +919,29 @@ table td {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* V67.0 — Imagen opcional de cupón */
+.preview-cupon {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.preview-cupon[hidden] {
+  display: none !important;
+}
+
+.preview-cupon img {
+  width: 74px;
+  height: 74px;
+  padding: 7px;
+  border: 1px solid #dce8e3;
+  border-radius: 50%;
+  background: #ffffff;
+  object-fit: contain;
+}
+
+.boton-quitar-imagen {
+  width: auto;
+}

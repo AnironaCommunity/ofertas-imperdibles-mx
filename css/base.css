@@ -2971,3 +2971,41 @@ button.oferta-imagen-contenedor:active .oferta-imagen {
     text-align: left;
   }
 }
+
+
+/* V67.0 — Logo opcional en tarjetas de cupones */
+.cupon-encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+.cupon-logo {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  padding: 3px;
+  border: 2px solid rgba(255, 255, 255, .88);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .96);
+  object-fit: contain;
+  box-shadow: 0 3px 9px rgba(23, 44, 62, .14);
+}
+
+.cupon-logo + .descuento {
+  text-align: left;
+}
+
+@media (max-width: 600px) {
+  .cupon-encabezado {
+    gap: 6px;
+  }
+
+  .cupon-logo {
+    width: 27px;
+    height: 27px;
+    padding: 2px;
+    border-width: 1.5px;
+  }
+}
