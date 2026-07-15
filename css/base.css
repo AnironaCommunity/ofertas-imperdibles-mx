@@ -3062,3 +3062,16 @@ button.oferta-imagen-contenedor:active .oferta-imagen {
 }
 
 
+
+
+/* V67.4.2 Ajustes sutiles */
+.cupon{margin-block:2px!important}
+.cupon-contenido{padding-top:10px!important;padding-bottom:10px!important}
+.datos-cupon{row-gap:6px!important}
+.dato{padding-top:7px!important;padding-bottom:7px!important}
+.boton-canjear,.boton-compartir{
+ min-height:40px!important;
+ padding-top:8px!important;
+ padding-bottom:8px!important;
+}
+.cupon-etiquetas{margin-bottom:4px!important}
