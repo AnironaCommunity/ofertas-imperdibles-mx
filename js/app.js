@@ -1,9 +1,16 @@
-const cuponesContainer = document.querySelector("#cupones");
-const todosWrapper = document.querySelector("#todos-wrapper");
-const sinCupones = document.querySelector("#sin-cupones");
-const estadoCarga = document.querySelector("#estado-carga");
-const botonRecargar = document.querySelector("#boton-recargar");
-const contadorActualizacion = document.querySelector("#contador-actualizacion");
+function datosPlataformaPublicidad(publicidad) {
+  const plataforma = obtenerPlataformaPublicidad(publicidad);
+
+  return plataforma === "amazon"
+    ? {
+        nombre: "Amazon",
+        textoBoton: "📦 Ver en Amazon",
+      }
+    : {
+        nombre: "Mercado Libre",
+        textoBoton: plataforma.textoBoton,
+      };
+}Actualizacion = document.querySelector("#contador-actualizacion");
 const ayudaCupones = document.querySelector("#ayuda-cupones");
 const ayudaCuponesToggle = document.querySelector("#ayuda-cupones-toggle");
 const ayudaCuponesContenido = document.querySelector("#ayuda-cupones-contenido");
