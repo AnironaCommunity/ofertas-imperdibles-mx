@@ -1,0 +1,23 @@
+OFERTAS IMPERDIBLES MX — V67.15.2
+
+REEMPLAZA ÚNICAMENTE:
+- admin/admin.js
+- admin/index.html
+- api/admin-hero-config.js
+
+CORRECCIÓN:
+- El mensaje [object Object] se convierte en un mensaje de error legible.
+- La API ahora conserva el error real enviado por Supabase.
+- El guardado de imagen y colores permanece igual.
+- No se modifica la página pública ni las tarjetas de cupones.
+
+DESPUÉS:
+1. Publica los tres archivos.
+2. Espera a que Vercel indique Ready.
+3. Abre el administrador y presiona Ctrl + F5.
+4. Guarda nuevamente.
+
+Si existe otro problema de Supabase, ahora aparecerá escrito claramente
+para identificarlo y corregirlo directamente.
+
+NO REQUIERE SQL ADICIONAL.
