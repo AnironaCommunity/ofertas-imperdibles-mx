@@ -30,3 +30,13 @@
   line-height: 1.35 !important;
   text-transform: none !important;
 }
+
+
+/* V67.16.1 — Logo del cupón sin borde ni espacio blanco */
+.cupon-encabezado .cupon-logo {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}

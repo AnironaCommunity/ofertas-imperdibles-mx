@@ -2,8 +2,11 @@
   const hero = document.querySelector(".hero-redes");
   if (!hero) return;
 
+  const image = hero.querySelector(".hero-redes-logo img");
+  const defaultImage = image?.getAttribute("src") || "";
+
   try {
-    const response = await fetch("/api/cupones?action=hero-config", {
+    const response = await fetch(`/api/cupones?action=hero-config&_=${Date.now()}`, {
       headers: { Accept: "application/json" },
       cache: "no-store",
     });
@@ -20,9 +23,8 @@
       hero.style.setProperty("--hero-color-fin", config.color_fin);
     }
 
-    if (config.imagen_url) {
-      const image = hero.querySelector(".hero-redes-logo img");
-      if (image) image.src = config.imagen_url;
+    if (image) {
+      image.src = config.imagen_url || defaultImage;
     }
   } catch (error) {
     console.warn("No se pudo cargar la configuración de la barra.", error);
