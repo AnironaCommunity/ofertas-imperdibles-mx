@@ -1,16 +1,15 @@
 /* V67.14 — Componente independiente para redes sociales */
 .hero-redes {
-  --hero-color-inicio: #e9cdff;
-  --hero-color-fin: #fae8fa;
   display: grid;
   grid-template-columns: 64px minmax(0, 1fr);
   align-items: center;
   gap: 14px;
-  width: min(930px, calc(100% - 24px));
+  width: min(1120px, calc(100% - 28px));
   margin: 8px auto 10px;
   padding: 14px 16px;
   border-radius: 18px;
-  background: linear-gradient(135deg, var(--hero-color-inicio), var(--hero-color-fin));
+  background:
+    linear-gradient(135deg, rgba(233, 205, 255, .95), rgba(250, 232, 250, .94));
   box-shadow: 0 6px 18px rgba(82, 41, 92, .08);
 }
 
@@ -21,15 +20,16 @@
   width: 64px;
   height: 64px;
   overflow: hidden;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, .58);
+  border-radius: 13px;
+  background: transparent;
 }
 
 .hero-redes-logo img {
   display: block;
-  width: 92%;
-  height: 92%;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  border-radius: 13px;
+  object-fit: cover;
 }
 
 .hero-redes-contenido {
@@ -103,11 +103,9 @@
 
 @media (max-width: 600px) {
   .hero-redes {
-  --hero-color-inicio: #e9cdff;
-  --hero-color-fin: #fae8fa;
     grid-template-columns: 48px minmax(0, 1fr);
     gap: 10px;
-    width: calc(100% - 18px);
+    width: calc(100% - 28px);
     margin-top: 5px;
     margin-bottom: 8px;
     padding: 10px 11px;
@@ -137,5 +135,13 @@
     min-height: 27px;
     padding: 5px 8px;
     font-size: 9px;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .hero-redes-logo,
+  .hero-redes-logo img {
+    border-radius: 11px;
   }
 }
