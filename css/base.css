@@ -3077,3 +3077,85 @@ button.oferta-imagen-contenedor:active .oferta-imagen {
   align-items: center !important;
   justify-content: center !important;
 }
+
+
+/* =========================================================
+   V67.7 — Espacios superiores y alineación de “Ya usaste”
+   Solo aplica en teléfono.
+   ========================================================= */
+
+@media (max-width: 600px) {
+  /*
+    Reduce los espacios marcados:
+    - espacio superior dentro del encabezado;
+    - espacio debajo del título antes de la etiqueta.
+  */
+  .cupon .cupon-encabezado {
+    min-height: 0 !important;
+    padding-top: 9px !important;
+    padding-bottom: 9px !important;
+  }
+
+  .cupon .cupon-contenido {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 5px !important;
+    padding-top: 7px !important;
+  }
+
+  .cupon .cupon-etiquetas {
+    min-height: 20px !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /*
+    Reserva el mismo alto para el texto descriptivo y la compra mínima.
+    De esta forma “Ya usaste este cupón” queda al mismo nivel en todas
+    las tarjetas, aunque un texto ocupe una o dos líneas.
+  */
+  .cupon .descuento-maximo {
+    display: flex !important;
+    min-height: 44px !important;
+    margin: 0 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  .cupon .compra-minima {
+    display: flex !important;
+    min-height: 34px !important;
+    margin: 0 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  /*
+    Mantiene siempre reservado el lugar de “Ya usaste este cupón”.
+    Cuando aún no se ha usado, queda invisible pero conserva el espacio,
+    logrando que Copiar y Canjear permanezca alineado.
+  */
+  .cupon .cupon-usado {
+    display: flex !important;
+    min-height: 38px !important;
+    margin: 0 !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .cupon .cupon-usado[hidden] {
+    visibility: hidden !important;
+  }
+
+  .cupon .acciones-bloque {
+    width: 100% !important;
+    margin-top: 0 !important;
+  }
+
+  .cupon .acciones-cupon {
+    margin-top: 0 !important;
+  }
+}
