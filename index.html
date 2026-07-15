@@ -47,8 +47,8 @@
   <link rel="icon" href="img/logo.png" />
   <link rel="apple-touch-icon" href="img/logo.png" />
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="stylesheet" href="css/style.css?v=67.14.1" />
-  <link rel="stylesheet" href="css/hero-redes.css?v=67.14.1" />
+  <link rel="stylesheet" href="css/style.css?v=67.14.2" />
+  <link rel="stylesheet" href="css/hero-redes.css?v=67.14.2" />
 </head>
 
 <body>
@@ -103,6 +103,115 @@
         </div>
       </div>
     </section>
+
+    <div class="menu-ofertas-contenedor">
+      <button
+        id="menu-ofertas-anterior"
+        class="menu-ofertas-flecha menu-ofertas-flecha-anterior"
+        type="button"
+        aria-label="Ver opciones anteriores"
+        hidden
+      >
+        ‹
+      </button>
+
+      <nav class="menu-ofertas" aria-label="Secciones de ofertas">
+      <button type="button" data-vista="ofertas_mercado_libre" aria-pressed="false">
+        <img class="menu-ofertas-logo logo-mercado-libre" src="img/mercado-libre.png" alt="" aria-hidden="true" />
+        <span>Ofertas Mercado Libre</span>
+        <span
+          id="contador-ofertas-mercado-libre"
+          class="contador-seccion"
+          aria-label="0 productos"
+          hidden
+        >0</span>
+      </button>
+      <button type="button" data-vista="ofertas_amazon" aria-pressed="false">
+        <img class="menu-ofertas-logo logo-amazon" src="img/amazon.png" alt="" aria-hidden="true" />
+        <span>Ofertas Amazon</span>
+        <span
+          id="contador-ofertas-amazon"
+          class="contador-seccion"
+          aria-label="0 productos"
+          hidden
+        >0</span>
+      </button>
+      <button type="button" data-vista="comunidad_anirona" aria-pressed="false">
+        <img class="menu-ofertas-logo logo-anirona" src="img/anirona.png" alt="" aria-hidden="true" />
+        <span>Comunidad Anirona</span>
+        <span
+          id="contador-comunidad-anirona"
+          class="contador-seccion"
+          aria-label="0 productos"
+          hidden
+        >0</span>
+      </button>
+    </nav>
+
+      <button
+        id="menu-ofertas-siguiente"
+        class="menu-ofertas-flecha menu-ofertas-flecha-siguiente"
+        type="button"
+        aria-label="Ver más opciones"
+      >
+        ›
+      </button>
+
+      <span class="menu-ofertas-indicador" aria-hidden="true">
+        Desliza para ver más
+      </span>
+    </div>
+  </header>
+
+  <main class="contenedor">
+    <section id="vista-cupones" class="vista-principal vista-activa">
+<section id="ayuda-cupones" class="ayuda-cupones" aria-labelledby="ayuda-cupones-titulo">
+      <button id="ayuda-cupones-toggle" class="ayuda-cupones-toggle" type="button"
+        aria-expanded="false" aria-controls="ayuda-cupones-contenido">
+        <span class="ayuda-cupones-toggle-texto">
+          <span class="ayuda-cupones-icono" aria-hidden="true">💡</span>
+          <span id="ayuda-cupones-titulo">¿Cómo usar los cupones?</span>
+        </span>
+        <span id="ayuda-cupones-flecha" class="ayuda-cupones-flecha" aria-hidden="true">▼</span>
+      </button>
+
+      <div id="ayuda-cupones-contenido" class="ayuda-cupones-contenido" hidden>
+        <div class="ayuda-cupones-interior">
+                    <ol class="ayuda-cupones-pasos">
+            <li>
+              Elige el cupón que mejor se adapte al monto de tu compra
+              <strong>(revisa la compra mínima)</strong>.
+            </li>
+            <li>
+              Da clic en <strong>📋 Copiar y Canjear</strong>.
+            </li>
+            <li>
+              Se abrirá Mercado Libre y el código quedará copiado automáticamente.
+            </li>
+            <li>
+              Agrega tus productos al carrito y continúa hasta
+              <strong>“Elige cómo pagar”</strong>.
+            </li>
+            <li>
+  Pega tu cupón de cualquiera de estas dos formas:
+  <br>• En la sección <strong>"Cupones"</strong>, selecciona <strong>"Ingresar código"</strong>.
+  <br>• O al momento de pagar, en <strong>"Elige cómo pagar"</strong>, selecciona <strong>"Ingresar código"</strong>.
+  Después, pega el código y aplica tu descuento. 
+            </li>
+          </ol>
+
+          <p class="ayuda-cupones-tip">
+            <strong>Tip:</strong> Si ya tienes productos en tu carrito, también
+            puedes usar estos cupones. Solo ingresa a Mercado Libre desde el botón
+            <strong>📋 Copiar y Canjear</strong> y pega el código antes de finalizar
+            el pago.
+          </p>
+
+          <button id="ayuda-cupones-entendido" class="ayuda-cupones-entendido" type="button">
+            ✓ Entendido
+          </button>
+        </div>
+      </div>
     </section>
 
     <div class="titulo-fila titulo-con-separador">
