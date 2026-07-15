@@ -3060,3 +3060,199 @@ button.oferta-imagen-contenedor:active .oferta-imagen {
     border-radius: 7px !important;
   }
 }
+
+
+/* =========================================================
+   V67.4 — Logo redondo, título más pequeño y cupones compactos
+   ========================================================= */
+
+/* Mantiene el logo a la izquierda y el título junto a él */
+.cupon-encabezado {
+  flex-direction: row !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 12px 14px !important;
+}
+
+/*
+  Logo circular con orilla blanca muy delgada.
+  La máscara radial desvanece suavemente los bordes de imágenes cuadradas,
+  evitando que se noten esquinas o espacios blancos rígidos.
+*/
+.cupon-logo {
+  width: 38px !important;
+  height: 38px !important;
+  flex: 0 0 38px !important;
+  padding: 2px !important;
+  border: 1px solid rgba(255, 255, 255, .82) !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, .92) !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  box-sizing: border-box !important;
+  box-shadow: 0 2px 7px rgba(23, 44, 62, .14) !important;
+
+  -webkit-mask-image:
+    radial-gradient(circle at center, #000 68%, rgba(0, 0, 0, .92) 78%, transparent 100%);
+  mask-image:
+    radial-gradient(circle at center, #000 68%, rgba(0, 0, 0, .92) 78%, transparent 100%);
+}
+
+.cupon-encabezado .descuento {
+  margin: 0 !important;
+  min-width: 0;
+  font-size: 24px !important;
+  line-height: 1.05 !important;
+  text-align: left !important;
+}
+
+/* Título del producto en OFERTAS DEL DÍA un poco más pequeño */
+#publicidad-titulo,
+.publicidad-titulo {
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  line-height: 1.22 !important;
+  text-transform: none !important;
+}
+
+/* Tarjetas de cupones más compactas sin amontonar contenido */
+.cupones-lista {
+  gap: 9px !important;
+}
+
+.cupon {
+  grid-template-columns: minmax(155px, 24%) 1fr !important;
+  min-height: 112px !important;
+  border-radius: 14px !important;
+  box-shadow: 0 5px 15px rgba(27, 44, 38, .065) !important;
+}
+
+.cupon-contenido {
+  grid-template-columns: 1fr minmax(170px, 29%) !important;
+  gap: 10px !important;
+  padding: 10px 12px !important;
+}
+
+.datos-cupon {
+  gap: 6px !important;
+}
+
+.dato {
+  padding: 7px 8px !important;
+  border-radius: 8px !important;
+  font-size: 11.5px !important;
+  line-height: 1.25 !important;
+}
+
+.acciones-cupon {
+  grid-template-columns: 1fr 40px !important;
+  gap: 6px !important;
+}
+
+.boton-canjear {
+  min-height: 38px !important;
+  padding: 8px 8px !important;
+  border-radius: 9px !important;
+  font-size: 12px !important;
+}
+
+.boton-compartir {
+  min-height: 38px !important;
+  padding: 8px !important;
+  border-radius: 9px !important;
+}
+
+.boton-compartir svg {
+  width: 17px !important;
+  height: 17px !important;
+}
+
+/* Compacta etiquetas, temporizador y separaciones internas */
+.cupon-etiquetas {
+  min-height: 18px !important;
+  margin-bottom: 3px !important;
+}
+
+.etiqueta-cupon {
+  min-height: 17px !important;
+  padding: 2px 6px !important;
+  font-size: 7.5px !important;
+}
+
+.cupon .temporizador,
+.cupon .cupon-temporizador,
+.cupon .franja-tiempo {
+  min-height: 24px !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+  font-size: 9px !important;
+}
+
+@media (max-width: 760px) {
+  .cupon {
+    min-height: 0 !important;
+  }
+
+  .cupon-encabezado {
+    min-height: 64px !important;
+    padding: 9px 11px !important;
+    gap: 7px !important;
+  }
+
+  .cupon-logo {
+    width: 32px !important;
+    height: 32px !important;
+    flex-basis: 32px !important;
+    padding: 1.5px !important;
+  }
+
+  .cupon-encabezado .descuento {
+    font-size: 20px !important;
+  }
+
+  .cupon-contenido {
+    gap: 8px !important;
+    padding: 8px 10px !important;
+  }
+
+  #publicidad-titulo,
+  .publicidad-titulo {
+    font-size: 14px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .cupones-lista {
+    gap: 7px !important;
+  }
+
+  .cupon-encabezado {
+    min-height: 55px !important;
+    padding: 8px 9px !important;
+  }
+
+  .cupon-logo {
+    width: 29px !important;
+    height: 29px !important;
+    flex-basis: 29px !important;
+  }
+
+  .cupon-encabezado .descuento {
+    font-size: 17px !important;
+  }
+
+  .cupon-contenido {
+    padding: 7px 8px !important;
+  }
+
+  .dato {
+    padding: 6px 7px !important;
+    font-size: 10px !important;
+  }
+
+  .boton-canjear,
+  .boton-compartir {
+    min-height: 34px !important;
+  }
+}
