@@ -435,23 +435,26 @@ async function saveCoupon(event) {
   const submit = couponForm.querySelector('button[type="submit"]');
   const id = Number(couponId.value);
 
-  const payload = {
-    titulo: couponTitle.value.trim(),
-    codigo: couponCode.value.trim(),
-    compra_minima: couponMinimum.value.trim(),
-    ahorro_maximo: couponSaving.value.trim(),
-    categoria: couponCategory.value,
-    fecha_inicio: mexicoLocalToIso(couponStart.value),
-    fecha_fin: mexicoLocalToIso(couponEnd.value),
-    enlace: couponLink.value.trim(),
-    imagen_url: imageUrl || "",
-    activo: couponActive.checked,
-    publicar_como_nuevo: couponPublishNew.checked,
-  };
-
   submit.disabled = true;
+  setMessage(couponFormMessage, "Guardando cupón...");
 
   try {
+    const imageUrl = await uploadCouponImage();
+
+    const payload = {
+      titulo: couponTitle.value.trim(),
+      codigo: couponCode.value.trim(),
+      compra_minima: couponMinimum.value.trim(),
+      ahorro_maximo: couponSaving.value.trim(),
+      categoria: couponCategory.value,
+      fecha_inicio: mexicoLocalToIso(couponStart.value),
+      fecha_fin: mexicoLocalToIso(couponEnd.value),
+      enlace: couponLink.value.trim(),
+      imagen_url: imageUrl || "",
+      activo: couponActive.checked,
+      publicar_como_nuevo: couponPublishNew.checked,
+    };
+
     await api("/api/admin-cupones", {
       method: id ? "PUT" : "POST",
       body: JSON.stringify(id ? { id, ...payload } : payload),
