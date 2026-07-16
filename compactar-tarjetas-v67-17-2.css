@@ -1,0 +1,78 @@
+/* =========================================================
+   V67.17.1 — Compactación vertical conservadora
+   Solo reduce espacios verticales. No cambia estructura,
+   anchos, tipografías, botones ni saltos de línea.
+   ========================================================= */
+
+/* Encabezado del cupón: mismo contenido y alineación */
+.cupon .cupon-encabezado {
+  padding-top: 14px !important;
+  padding-bottom: 14px !important;
+}
+
+/* Contenido principal: menos aire arriba y abajo */
+.cupon .cupon-contenido {
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+
+/* Etiquetas Nuevo / Top / Popular */
+.cupon .cupon-etiquetas {
+  margin-top: 0 !important;
+  margin-bottom: 3px !important;
+}
+
+/* Bloques de información, sin tocar ancho ni tipografía */
+.cupon .descuento-maximo,
+.cupon .compra-minima {
+  margin-top: 2px !important;
+  margin-bottom: 2px !important;
+}
+
+/* Aviso “Ya usaste este cupón” */
+.cupon .cupon-usado {
+  margin-top: 3px !important;
+  margin-bottom: 3px !important;
+}
+
+/* Acercar acciones al contenido anterior */
+.cupon .acciones-bloque,
+.cupon .acciones-cupon {
+  margin-top: 3px !important;
+}
+
+/* Acercar la zona inferior y su línea punteada */
+.cupon .acciones-secundarias {
+  margin-top: 5px !important;
+  padding-top: 6px !important;
+  padding-bottom: 2px !important;
+}
+
+/* Mensajes y contador sin reservar más altura de la necesaria */
+.cupon .mensaje {
+  margin-top: 3px !important;
+  margin-bottom: 0 !important;
+}
+
+.cupon .contador {
+  margin-top: 1px !important;
+  margin-bottom: 0 !important;
+}
+
+/* Ajuste todavía más prudente en teléfono */
+@media (max-width: 600px) {
+  .cupon .cupon-encabezado {
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+  }
+
+  .cupon .cupon-contenido {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+  }
+
+  .cupon .acciones-secundarias {
+    margin-top: 4px !important;
+    padding-top: 5px !important;
+  }
+}
