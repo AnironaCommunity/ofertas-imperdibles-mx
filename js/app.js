@@ -482,6 +482,7 @@ function cambiarVista(
   {
     actualizarHistorial = false,
     desplazamiento = "smooth",
+    moverAlInicio = true,
   } = {}
 ) {
   vistaActiva = vista;
@@ -527,10 +528,12 @@ function cambiarVista(
     }
   }
 
-  window.scrollTo({
-    top: 0,
-    behavior: desplazamiento,
-  });
+  if (moverAlInicio) {
+    window.scrollTo({
+      top: 0,
+      behavior: desplazamiento,
+    });
+  }
 }
 
 function escaparHtml(valor = "") {
@@ -1795,7 +1798,10 @@ async function cargarPublicidad() {
       seccionOfertasMercadoLibre
     );
 
-    cambiarVista(vistaActiva);
+    cambiarVista(vistaActiva, {
+      moverAlInicio: false,
+      desplazamiento: "auto",
+    });
 
     for (const control of carruselesPublicidad) {
       control.items = todasLasPublicidades.filter((item) =>
@@ -1820,7 +1826,10 @@ async function cargarPublicidad() {
       control.wrapper.hidden = true;
       detenerRotacionPublicidad(control);
     });
-    cambiarVista(vistaActiva);
+    cambiarVista(vistaActiva, {
+      moverAlInicio: false,
+      desplazamiento: "auto",
+    });
   }
 }
 
