@@ -757,6 +757,37 @@ function setSelectedAdPlatform(value, link = "") {
   }
 }
 
+function updateCouponValidationByPlatform({
+  recalculate = true,
+  showMessage = true,
+} = {}) {
+  const isAmazon = selectedAdPlatform() === "amazon";
+
+  adPriceCoupon.disabled = isAmazon;
+  adCouponCode.disabled = isAmazon;
+
+  if (isAmazon) {
+    adPriceCoupon.value = "";
+    adCouponCode.value = "";
+
+    if (showMessage) {
+      adCouponRecommendation.textContent =
+        "Los productos de Amazon no utilizan la validación automática de cupones.";
+      adCouponRecommendation.className =
+        "recomendacion-cupon sin-cupon";
+    }
+
+    return null;
+  }
+
+  adPriceCoupon.disabled = false;
+  adCouponCode.disabled = false;
+
+  return recalculate
+    ? applyBestCouponToAdForm({ showMessage })
+    : null;
+}
+
 function selectedAdSections() {
   return adSections
     .filter((input) => input.checked)
@@ -891,6 +922,20 @@ function findBestCoupon(productPrice) {
 }
 
 function applyBestCouponToAdForm({ showMessage = true } = {}) {
+  if (selectedAdPlatform() === "amazon") {
+    adPriceCoupon.value = "";
+    adCouponCode.value = "";
+
+    if (showMessage) {
+      adCouponRecommendation.textContent =
+        "Los productos de Amazon no utilizan la validación automática de cupones.";
+      adCouponRecommendation.className =
+        "recomendacion-cupon sin-cupon";
+    }
+
+    return null;
+  }
+
   const price = parseMoney(adPricePublished.value);
   const recommendation = findBestCoupon(price);
 
@@ -946,10 +991,18 @@ function renderBulkPrices() {
 
   for (const ad of ads) {
     const currentPrice = parseMoney(ad.precio_publicado);
-    const recommendation = findBestCoupon(currentPrice);
+    const platform =
+      String(ad.plataforma || "").toLowerCase() === "amazon"
+        ? "amazon"
+        : "mercadolibre";
+    const recommendation =
+      platform === "amazon"
+        ? null
+        : findBestCoupon(currentPrice);
     const row = document.createElement("tr");
 
     row.dataset.id = String(ad.id);
+    row.dataset.platform = platform;
     row.innerHTML = `
       <td>
         <strong>${escapeHtml(ad.titulo)}</strong>
@@ -985,10 +1038,12 @@ function renderBulkPrices() {
         />
       </td>
       <td class="cupon-masivo">
-        ${recommendation
-          ? `<strong>${escapeHtml(recommendation.coupon.codigo)}</strong>
-             <small>Ahorra ${escapeHtml(formatMoney(recommendation.discount))}</small>`
-          : `<span>Sin cupón aplicable</span>`}
+        ${platform === "amazon"
+          ? `<span>No aplica para Amazon</span>`
+          : recommendation
+            ? `<strong>${escapeHtml(recommendation.coupon.codigo)}</strong>
+               <small>Ahorra ${escapeHtml(formatMoney(recommendation.discount))}</small>`
+            : `<span>Sin cupón aplicable</span>`}
       </td>
       <td class="precio-final-masivo">
         ${recommendation
@@ -1006,13 +1061,20 @@ function recalculateBulkPriceRow(row) {
   const couponCell = row.querySelector(".cupon-masivo");
   const finalCell = row.querySelector(".precio-final-masivo");
   const price = parseMoney(input.value);
-  const recommendation = findBestCoupon(price);
+  const isAmazon = row.dataset.platform === "amazon";
+  const recommendation = isAmazon ? null : findBestCoupon(price);
 
   row.dataset.price = price ? formatMoney(price) : "";
   row.dataset.coupon = recommendation?.coupon.codigo || "";
   row.dataset.finalPrice = recommendation
     ? formatMoney(recommendation.finalPrice)
     : "";
+
+  if (isAmazon) {
+    couponCell.innerHTML = "<span>No aplica para Amazon</span>";
+    finalCell.textContent = "—";
+    return;
+  }
 
   if (!price) {
     couponCell.innerHTML = "<span>Ingresa un precio</span>";
@@ -1079,6 +1141,10 @@ async function saveAllBulkPrices() {
         precio_publicado: row.dataset.price,
         codigo_cupon: calculatedCoupon,
         precio_cupon: row.dataset.finalPrice,
+        plataforma:
+          product?.plataforma === "amazon"
+            ? "amazon"
+            : "mercadolibre",
         row,
       };
     })
@@ -1105,6 +1171,7 @@ async function saveAllBulkPrices() {
           precio_publicado: change.precio_publicado,
           codigo_cupon: change.codigo_cupon,
           precio_cupon: change.precio_cupon,
+          plataforma: change.plataforma,
         }),
       })
     )
@@ -1142,6 +1209,10 @@ function resetAdForm() {
   adCouponCode.value = "";
   setSelectedAdSections(["ofertas_dia"]);
   setSelectedAdPlatform("mercadolibre");
+  updateCouponValidationByPlatform({
+    recalculate: false,
+    showMessage: false,
+  });
   adOrder.value = "0";
   adActive.checked = true;
   adPreviewWrapper.hidden = true;
@@ -1162,9 +1233,9 @@ function editAd(ad) {
   adPricePublished.value = ad.precio_publicado || "";
   adPriceCoupon.value = ad.precio_cupon || "";
   adCouponCode.value = ad.codigo_cupon || "";
-  applyBestCouponToAdForm();
   setSelectedAdSections(ad.secciones, ad.categoria);
   setSelectedAdPlatform(ad.plataforma, ad.enlace);
+  updateCouponValidationByPlatform();
   adOrder.value = ad.orden || 0;
   adActive.checked = Boolean(ad.activo);
   adImageUrl.value = ad.imagen_url || "";
@@ -1311,7 +1382,7 @@ async function saveAd(event) {
   setMessage(adFormMessage, "Guardando publicidad...");
 
   try {
-    applyBestCouponToAdForm();
+    updateCouponValidationByPlatform();
     const imageUrl = await uploadAdImage();
 
     if (!imageUrl) {
@@ -1528,6 +1599,12 @@ adList.addEventListener("click", handleAdList);
 refreshAds.addEventListener("click", loadAds);
 newAd.addEventListener("click", resetAdForm);
 cancelAd.addEventListener("click", resetAdForm);
+
+for (const input of adPlatforms) {
+  input.addEventListener("change", () => {
+    updateCouponValidationByPlatform();
+  });
+}
 
 adPricePublished.addEventListener("input", () => {
   window.clearTimeout(adPriceTimer);
