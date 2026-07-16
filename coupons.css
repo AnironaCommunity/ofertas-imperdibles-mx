@@ -790,8 +790,14 @@ footer {
   }
 
   .cupon-contenido {
-    gap: 4px !important;
-    padding: 5px 8px 6px !important;
+    gap: 3px !important;
+    padding: 0 8px 6px !important;
+  }
+
+  .cupon-etiquetas {
+    margin-top: 0 !important;
+    margin-bottom: 1px !important;
+    transform: translateY(-2px);
   }
 
   .descuento-maximo {
@@ -902,13 +908,13 @@ footer {
     Se conserva la alineación de los botones, pero con menos espacio vacío.
   */
   .cupon-contenido {
-    min-height: 160px;
+    min-height: 150px;
   }
 }
 
 @media (max-width: 390px) {
   .cupon-contenido {
-    min-height: 152px;
+    min-height: 144px;
   }
 }
 
