@@ -179,6 +179,9 @@
 }
 
 .acciones-bloque {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   margin-top: auto;
 }
 
@@ -945,5 +948,23 @@ footer {
     width: 30px;
     height: 30px;
     flex-basis: 30px;
+  }
+}
+
+/* V67.18.3 — Ajuste preciso del espacio superior en móvil */
+@media (max-width: 680px) {
+  .cupon-contenido {
+    align-content: start !important;
+    align-items: start !important;
+  }
+
+  .cupon-etiquetas,
+  .datos-cupon {
+    align-self: start !important;
+  }
+
+  .acciones-bloque {
+    margin-top: auto !important;
+    padding-top: 1px !important;
   }
 }
