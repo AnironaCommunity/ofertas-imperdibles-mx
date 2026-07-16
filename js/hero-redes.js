@@ -28,5 +28,8 @@
     }
   } catch (error) {
     console.warn("No se pudo cargar la configuración de la barra.", error);
+  } finally {
+    hero.classList.remove("hero-redes-pendiente");
+    hero.classList.add("hero-redes-lista");
   }
 })();

@@ -146,3 +146,22 @@
     border-radius: 11px;
   }
 }
+
+
+/* V67.16.3 — Evita mostrar momentáneamente el diseño predeterminado */
+.hero-redes.hero-redes-pendiente {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.hero-redes.hero-redes-lista {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity .16s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-redes.hero-redes-lista {
+    transition: none;
+  }
+}
