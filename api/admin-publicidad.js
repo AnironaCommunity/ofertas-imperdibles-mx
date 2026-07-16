@@ -125,6 +125,11 @@ export default async function handler(request, response) {
         visitas: 0,
       };
 
+      if (payload.plataforma === "amazon") {
+        payload.precio_cupon = "";
+        payload.codigo_cupon = "";
+      }
+
       if (!payload.titulo || !payload.imagen_url || !payload.enlace) {
         return response.status(400).json({
           error: "Título, imagen y enlace son obligatorios.",
@@ -192,6 +197,11 @@ export default async function handler(request, response) {
         } else {
           payload[field] = String(request.body[field] || "").trim();
         }
+      }
+
+      if (payload.plataforma === "amazon") {
+        payload.precio_cupon = "";
+        payload.codigo_cupon = "";
       }
 
       const data = await requestSupabase(`publicidades?id=eq.${id}`, {
