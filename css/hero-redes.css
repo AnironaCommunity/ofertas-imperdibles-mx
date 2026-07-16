@@ -210,3 +210,30 @@
     font-size: 11px;
   }
 }
+
+
+/* V67.19.4 — Alineación del contador con WhatsApp y Facebook */
+.hero-redes-botones {
+  align-items: center;
+}
+
+.hero-redes-visitantes {
+  height: 30px;
+  min-height: 30px;
+  box-sizing: border-box;
+  align-self: center;
+  vertical-align: middle;
+}
+
+.hero-redes-visitantes > span,
+.hero-redes-visitantes strong {
+  line-height: 1;
+  vertical-align: middle;
+}
+
+@media (max-width: 600px) {
+  .hero-redes-visitantes {
+    height: 27px;
+    min-height: 27px;
+  }
+}
