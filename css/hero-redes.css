@@ -165,3 +165,48 @@
     transition: none;
   }
 }
+
+
+/* V67.19.1 — Contador de visitantes */
+.hero-redes-visitantes {
+  display: inline-flex;
+  min-height: 30px;
+  padding: 6px 10px;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid rgba(79, 56, 90, .10);
+  border-radius: 999px;
+  color: #403944;
+  background: rgba(255, 255, 255, .72);
+  font-size: 10px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.hero-redes-visitantes[hidden] {
+  display: none !important;
+}
+
+.hero-redes-visitantes > span {
+  display: inline !important;
+  font-size: 12px;
+}
+
+.hero-redes-visitantes strong {
+  display: inline !important;
+  font-size: inherit;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .hero-redes-visitantes {
+    min-height: 27px;
+    padding: 5px 8px;
+    font-size: 9px;
+  }
+
+  .hero-redes-visitantes > span {
+    font-size: 11px;
+  }
+}

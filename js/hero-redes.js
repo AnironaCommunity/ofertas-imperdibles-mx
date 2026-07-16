@@ -1,15 +1,27 @@
-(async function cargarConfiguracionHero() {
+(async function iniciarBarra() {
   const hero = document.querySelector(".hero-redes");
   if (!hero) return;
 
   const image = hero.querySelector(".hero-redes-logo img");
   const defaultImage = image?.getAttribute("src") || "";
+  const visitorBox = document.querySelector("#hero-contador-visitantes");
+  const visitorTotal = document.querySelector("#hero-total-visitantes");
 
-  try {
-    const response = await fetch(`/api/cupones?action=hero-config&_=${Date.now()}`, {
-      headers: { Accept: "application/json" },
-      cache: "no-store",
-    });
+  const STORAGE_KEY = "ofertas_imperdibles_ultima_visita";
+  const ONE_DAY = 24 * 60 * 60 * 1000;
+
+  function formatNumber(value) {
+    const number = Number(value);
+    return Number.isFinite(number)
+      ? new Intl.NumberFormat("es-MX").format(number)
+      : "0";
+  }
+
+  async function cargarConfiguracion() {
+    const response = await fetch(
+      `/api/cupones?action=hero-config&_=${Date.now()}`,
+      { cache: "no-store" }
+    );
 
     if (!response.ok) return;
 
@@ -26,10 +38,50 @@
     if (image) {
       image.src = config.imagen_url || defaultImage;
     }
-  } catch (error) {
-    console.warn("No se pudo cargar la configuración de la barra.", error);
-  } finally {
-    hero.classList.remove("hero-redes-pendiente");
-    hero.classList.add("hero-redes-lista");
   }
+
+  async function cargarVisitantes() {
+    if (!visitorBox || !visitorTotal) return;
+
+    let registrar = true;
+
+    try {
+      const ultimaVisita = Number(localStorage.getItem(STORAGE_KEY) || 0);
+      registrar = !ultimaVisita || Date.now() - ultimaVisita >= ONE_DAY;
+    } catch {
+      registrar = true;
+    }
+
+    const response = await fetch(
+      `/api/cupones?action=visitantes&_=${Date.now()}`,
+      {
+        method: registrar ? "POST" : "GET",
+        headers: { "Content-Type": "application/json" },
+        cache: "no-store",
+      }
+    );
+
+    if (!response.ok) {
+      visitorTotal.textContent = "0";
+      return;
+    }
+
+    const data = await response.json();
+    visitorTotal.textContent = formatNumber(data.total_visitas);
+    visitorBox.hidden = false;
+
+    if (registrar) {
+      try {
+        localStorage.setItem(STORAGE_KEY, String(Date.now()));
+      } catch {}
+    }
+  }
+
+  await Promise.allSettled([
+    cargarConfiguracion(),
+    cargarVisitantes(),
+  ]);
+
+  hero.classList.remove("hero-redes-pendiente");
+  hero.classList.add("hero-redes-lista");
 })();
