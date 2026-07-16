@@ -781,8 +781,8 @@ footer {
   }
 
   .cupon-encabezado {
-    min-height: 52px !important;
-    padding: 9px 10px !important;
+    min-height: 47px !important;
+    padding: 6px 10px !important;
   }
 
   .descuento {
@@ -790,8 +790,8 @@ footer {
   }
 
   .cupon-contenido {
-    gap: 5px !important;
-    padding: 8px 8px 9px !important;
+    gap: 4px !important;
+    padding: 5px 8px 6px !important;
   }
 
   .descuento-maximo {
@@ -807,7 +807,7 @@ footer {
   }
 
   .acciones-secundarias {
-    margin-top: 6px !important;
+    margin-top: 3px !important;
   }
 }
 
@@ -890,7 +890,7 @@ footer {
 /* Móvil: conservar alineación sin agrandar demasiado */
 @media (max-width: 680px) {
   .acciones-bloque {
-    padding-top: 3px;
+    padding-top: 1px;
   }
 
   .cupon {
@@ -902,13 +902,13 @@ footer {
     Se conserva la alineación de los botones, pero con menos espacio vacío.
   */
   .cupon-contenido {
-    min-height: 178px;
+    min-height: 160px;
   }
 }
 
 @media (max-width: 390px) {
   .cupon-contenido {
-    min-height: 170px;
+    min-height: 152px;
   }
 }
 
