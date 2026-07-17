@@ -51,7 +51,7 @@
   <link rel="stylesheet" href="css/hero-redes.css?v=67.19.4" />
   <link rel="stylesheet" href="css/ajustes-visuales-v67-16.css?v=67.16.1" />
   <link rel="stylesheet" href="css/eventos-v68.css?v=68.0.3" />
-  <link rel="stylesheet" href="css/ux-premium-v68-2.css?v=68.2.0" />
+  <link rel="stylesheet" href="css/header-dinamico-v68-3.css?v=68.3.0" />
 </head>
 
 <body>
@@ -70,6 +70,11 @@
       />
     </a>
 
+    <div class="estado-dinamico-cabecera" aria-live="polite" aria-atomic="true">
+      <span class="estado-dinamico-punto" aria-hidden="true"></span>
+      <span id="estado-dinamico-texto">Consultando cupones disponibles…</span>
+    </div>
+
     <section class="hero-redes hero-redes-pendiente" aria-label="Redes sociales de Ofertas Imperdibles MX">
       <div class="hero-redes-logo">
         <img
@@ -81,7 +86,7 @@
 
       <div class="hero-redes-contenido">
         <strong>Ofertas Imperdibles MX</strong>
-        <span id="hero-mensaje-dinamico">Cupones, promociones y novedades todos los días.</span>
+        <span>Cupones, promociones y novedades todos los días.</span>
 
         <div class="hero-redes-botones">
           <a
@@ -171,7 +176,7 @@
       </button>
 
       <span class="menu-ofertas-indicador" aria-hidden="true">
-        Desliza las categorías
+        Desliza para ver más
       </span>
     </div>
   </header>
@@ -405,19 +410,7 @@
     </section>
   </main>
 
-  <footer class="pie-actualizacion" aria-label="Información de actualización">
-    <span class="pie-actualizacion-punto" aria-hidden="true"></span>
-    <span>Cupones actualizados</span>
-    <strong id="hora-ultima-actualizacion">ahora</strong>
-  </footer>
-
-  <div id="logro-toast" class="logro-toast" role="status" aria-live="polite" hidden>
-    <span id="logro-toast-icono" aria-hidden="true">🏅</span>
-    <div>
-      <strong id="logro-toast-titulo">Nuevo logro</strong>
-      <span id="logro-toast-texto"></span>
-    </div>
-  </div>
+  <footer></footer>
 
   <nav class="navegacion-inferior" aria-label="Categorías de cupones">
     <button
@@ -451,6 +444,21 @@
         class="contador-seccion contador-seccion-inferior"
         aria-label="0 cupones"
         hidden
+      >0</span>
+    </button>
+
+    <button
+      id="tab-seccion-contextual"
+      class="tab-inferior tab-seccion-contextual"
+      type="button"
+      hidden
+    >
+      <span id="tab-seccion-contextual-icono" aria-hidden="true">🏷️</span>
+      <strong id="tab-seccion-contextual-texto">Sección</strong>
+      <span
+        id="contador-seccion-contextual"
+        class="contador-seccion contador-seccion-inferior"
+        aria-label="0 elementos"
       >0</span>
     </button>
   </nav>
@@ -488,6 +496,6 @@
 
   <script type="module" src="js/app.js?v=68.0.1"></script>
   <script src="js/hero-redes.js?v=67.19.3" defer></script>
-  <script src="js/ux-premium-v68-2.js?v=68.2.0" defer></script>
+  <script src="js/header-dinamico-v68-3.js?v=68.3.0" defer></script>
 </body>
 </html>
