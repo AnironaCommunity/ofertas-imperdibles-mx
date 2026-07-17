@@ -49,3 +49,12 @@
   .evento-info{padding:11px}
   .evento-consulta-fila{flex-direction:column}
 }
+
+
+/* V68.0.4 — Enlace promocional del premio */
+.evento-premio-enlace{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0;padding:8px 10px;border:1px solid #d9e8d6;border-radius:10px;background:#f7fbf5}
+.evento-premio-enlace span{display:flex;flex-direction:column;gap:1px;min-width:0}
+.evento-premio-enlace strong{font-size:.82rem;color:#245f21}
+.evento-premio-enlace small{font-size:.72rem;color:#687168;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.evento-premio-boton{flex:0 0 auto;padding:8px 11px;font-size:.78rem;text-decoration:none;white-space:nowrap}
+@media(max-width:430px){.evento-premio-enlace{align-items:stretch;flex-direction:column}.evento-premio-boton{text-align:center;width:100%;box-sizing:border-box}}
