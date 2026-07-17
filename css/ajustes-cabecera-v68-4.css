@@ -1,0 +1,222 @@
+/* V68.4 — Ajustes conservadores de cabecera y navegación */
+
+/* El degradado pertenece al encabezado; la imagen del logo continúa transparente. */
+.encabezado {
+  position: relative;
+  overflow: hidden;
+}
+
+.encabezado::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  top: -48px;
+  left: 50%;
+  width: min(760px, 118vw);
+  height: 270px;
+  transform: translateX(-50%);
+  border-radius: 0 0 50% 50%;
+  background:
+    radial-gradient(circle at 32% 45%, rgba(255, 142, 153, .16), transparent 42%),
+    radial-gradient(circle at 70% 48%, rgba(255, 210, 111, .23), transparent 44%),
+    linear-gradient(180deg, rgba(245, 255, 247, .96), rgba(255, 255, 255, 0));
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+.enlace-logo-inicio::before {
+  inset: 8% -20% -25%;
+  background: radial-gradient(
+    ellipse,
+    rgba(42, 200, 66, .16) 0%,
+    rgba(255, 217, 132, .10) 43%,
+    rgba(255, 255, 255, 0) 74%
+  );
+  filter: blur(9px);
+}
+
+/* Visitantes: información secundaria, más discreta que las redes. */
+.hero-redes-visitantes {
+  min-height: 25px !important;
+  padding: 4px 7px !important;
+  gap: 4px !important;
+  font-size: 8.5px !important;
+  opacity: .88;
+}
+
+.hero-redes-visitantes > span {
+  font-size: 9.5px !important;
+}
+
+.hero-redes-visitantes strong {
+  font-size: 8.5px !important;
+  font-weight: 600 !important;
+}
+
+/* Mercado Libre y Amazon permanecen juntos como accesos comerciales principales. */
+.menu-ofertas {
+  justify-content: center;
+}
+
+.menu-ofertas > button {
+  flex: 1 0 min(330px, 46vw);
+}
+
+/* Comunidad se separa visualmente para no competir con los cupones y ofertas. */
+.acceso-comunidad-anirona {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto 18px;
+  align-items: center;
+  gap: 9px;
+  width: min(1120px, calc(100% - 28px));
+  min-height: 54px;
+  margin: 5px auto 9px;
+  padding: 8px 12px;
+  border: 1px solid rgba(35, 141, 83, .16);
+  border-radius: 15px;
+  color: #24352c;
+  background: linear-gradient(105deg, rgba(242, 253, 246, .98), rgba(255, 250, 235, .94));
+  box-shadow: 0 5px 15px rgba(34, 106, 64, .06);
+  text-align: left;
+  cursor: pointer;
+  transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+
+.acceso-comunidad-anirona:hover,
+.acceso-comunidad-anirona:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(35, 141, 83, .30);
+  box-shadow: 0 7px 18px rgba(34, 106, 64, .10);
+  outline: none;
+}
+
+.acceso-comunidad-icono {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  overflow: hidden;
+  border-radius: 11px;
+  background: rgba(255,255,255,.86);
+}
+
+.acceso-comunidad-icono img {
+  display: block;
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.acceso-comunidad-contenido {
+  min-width: 0;
+}
+
+.acceso-comunidad-contenido strong,
+.acceso-comunidad-contenido small {
+  display: block;
+}
+
+.acceso-comunidad-contenido strong {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.acceso-comunidad-contenido small {
+  margin-top: 2px;
+  overflow: hidden;
+  color: #647067;
+  font-size: 9px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.acceso-comunidad-contador {
+  position: static !important;
+  flex: 0 0 auto;
+}
+
+.acceso-comunidad-flecha {
+  color: #258654;
+  font-size: 22px;
+  line-height: 1;
+}
+
+/* La barra inferior jamás cambia fuera de Tienda/Bancarios. */
+.navegacion-inferior {
+  grid-template-columns: 1fr 1fr !important;
+}
+
+.navegacion-inferior #tab-tienda,
+.navegacion-inferior #tab-bancarios {
+  display: inline-flex !important;
+}
+
+@media (max-width: 600px) {
+  .encabezado::before {
+    top: -32px;
+    height: 225px;
+  }
+
+  .hero-redes-visitantes {
+    min-height: 23px !important;
+    padding: 3px 6px !important;
+    font-size: 7.8px !important;
+  }
+
+  .hero-redes-visitantes > span {
+    font-size: 8.8px !important;
+  }
+
+  .hero-redes-visitantes strong {
+    font-size: 7.8px !important;
+  }
+
+  .menu-ofertas > button {
+    flex-basis: calc(50% - 5px);
+    min-width: 0;
+  }
+
+  .menu-ofertas-indicador {
+    font-size: 9px;
+  }
+
+  .acceso-comunidad-anirona {
+    grid-template-columns: 34px minmax(0, 1fr) auto 14px;
+    gap: 7px;
+    width: calc(100% - 22px);
+    min-height: 48px;
+    margin-top: 3px;
+    padding: 7px 9px;
+    border-radius: 13px;
+  }
+
+  .acceso-comunidad-icono {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+  }
+
+  .acceso-comunidad-icono img {
+    width: 27px;
+    height: 27px;
+  }
+
+  .acceso-comunidad-contenido strong {
+    font-size: 11px;
+  }
+
+  .acceso-comunidad-contenido small {
+    font-size: 8px;
+  }
+
+  .acceso-comunidad-flecha {
+    font-size: 19px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .acceso-comunidad-anirona {
+    transition: none;
+  }
+}
