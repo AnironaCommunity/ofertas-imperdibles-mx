@@ -452,3 +452,49 @@
     top: 1px;
   }
 }
+
+/* V69.0 — Estabilidad horizontal al cambiar entre Mercado Libre y Amazon */
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.encabezado,
+main,
+.vista-principal,
+.modulo-ofertas-categoria,
+.menu-ofertas-contenedor,
+.acceso-comunidad-anirona,
+.navegacion-inferior {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+#seccion-ofertas-amazon,
+#seccion-ofertas-mercado-libre,
+#seccion-comunidad-anirona,
+#vista-cupones {
+  width: 100%;
+  margin-right: auto !important;
+  margin-left: auto !important;
+  transform: none !important;
+}
+
+.menu-ofertas {
+  overscroll-behavior-inline: none;
+  scroll-behavior: auto !important;
+  transform: none !important;
+}
+
+.menu-ofertas > button {
+  box-sizing: border-box;
+  transform-origin: center;
+}
+
+@supports not (overflow: clip) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+}
