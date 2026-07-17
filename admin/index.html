@@ -57,6 +57,15 @@
           📢 Publicidad
         </button>
 
+
+        <button
+          id="tab-eventos"
+          class="menu-opcion"
+          type="button"
+          data-seccion="eventos"
+        >
+          🎉 Eventos
+        </button>
         <button
           id="tab-apariencia"
           class="menu-opcion"
@@ -617,6 +626,66 @@ https://meli.la/xxxxx"
       </section>
 
       <!-- ================= APARIENCIA ================= -->
+
+      <!-- ================= EVENTOS V68 ================= -->
+      <section id="seccion-eventos" class="seccion-admin" hidden>
+        <div class="cabecera-seccion">
+          <div>
+            <h2>🎉 Eventos y rifas</h2>
+            <p>Crea dinámicas reutilizables, administra participantes y publica ganadores.</p>
+          </div>
+          <div class="acciones-cabecera">
+            <button id="evento-nuevo" class="boton-secundario" type="button">+ Nuevo evento</button>
+            <button id="evento-actualizar" class="boton-secundario" type="button">↻ Actualizar</button>
+          </div>
+        </div>
+
+        <div class="eventos-admin-grid">
+          <div>
+            <section class="panel">
+              <h3 id="evento-form-titulo">Crear evento</h3>
+              <form id="evento-form">
+                <input id="evento-id" type="hidden">
+                <div class="form-grid">
+                  <div class="campo campo-completo"><label for="evento-nombre">Nombre del evento</label><input id="evento-nombre" required placeholder="Ej. Rifa Sierra PROMAX"></div>
+                  <div class="campo"><label for="evento-tipo">Tipo</label><select id="evento-tipo"><option value="rifa">Rifa</option><option value="sorteo">Sorteo</option><option value="dinamica">Dinámica</option><option value="evento">Evento</option></select></div>
+                  <div class="campo"><label for="evento-prefijo">Prefijo del boleto</label><input id="evento-prefijo" value="ANI" maxlength="8"></div>
+                  <div class="campo campo-completo"><label for="evento-producto">Nombre del producto o premio</label><input id="evento-producto" required placeholder="Ej. Sierra Circular Anirona"></div>
+                  <div class="campo campo-completo"><label for="evento-descripcion">Descripción</label><textarea id="evento-descripcion" rows="3" placeholder="Describe la dinámica y el premio"></textarea></div>
+                  <div class="campo campo-completo"><label for="evento-imagen">Foto del producto</label><input id="evento-imagen" type="file" accept="image/png,image/jpeg,image/webp"><input id="evento-imagen-url" type="hidden"><img id="evento-imagen-preview" class="evento-admin-imagen" alt="Vista previa" hidden></div>
+                  <div class="campo"><label for="evento-fecha">Fecha y hora del sorteo</label><input id="evento-fecha" type="datetime-local"><small>Hora de Ciudad de México.</small></div>
+                  <div class="campo"><label for="evento-limite">Máximo de boletos</label><input id="evento-limite" type="number" min="1" value="500" required></div>
+                  <div class="campo"><label for="evento-ganadores">Cantidad de ganadores</label><input id="evento-ganadores" type="number" min="1" value="1" required></div>
+                  <div class="campo"><label for="evento-estado">Estado</label><select id="evento-estado"><option value="borrador">Borrador</option><option value="abierta">Abierta</option><option value="cerrada">Cerrada</option><option value="finalizada">Finalizada</option></select></div>
+                  <label class="switch-row campo-completo"><input id="evento-mostrar-contador" type="checkbox" checked><span>Mostrar avance y boletos disponibles</span></label>
+                  <label class="switch-row campo-completo"><input id="evento-mostrar-participantes" type="checkbox"><span>Permitir lista pública de participantes (nombre parcial)</span></label>
+                  <label class="switch-row campo-completo"><input id="evento-publicar-ganador" type="checkbox" checked><span>Publicar el ganador en la página y barra de visitantes</span></label>
+                  <div class="acciones campo-completo"><button class="boton-principal" type="submit">Guardar evento</button><button id="evento-cancelar" class="boton-secundario" type="button">Cancelar</button></div>
+                  <p id="evento-form-mensaje" class="mensaje campo-completo" aria-live="polite"></p>
+                </div>
+              </form>
+            </section>
+          </div>
+
+          <div>
+            <section class="panel">
+              <h3>Eventos creados</h3>
+              <div id="eventos-lista" class="evento-admin-cards"></div>
+              <p id="eventos-lista-mensaje" class="mensaje"></p>
+            </section>
+
+            <section id="evento-detalle" class="panel" hidden>
+              <div class="cabecera-panel"><div><h3 id="evento-detalle-titulo">Detalle del evento</h3><p id="evento-detalle-subtitulo"></p></div><button id="evento-exportar" class="boton-secundario" type="button">⬇ Exportar CSV</button></div>
+              <div class="evento-admin-estadisticas"><div class="evento-admin-stat"><span>Participantes</span><strong id="evento-stat-participantes">0</strong></div><div class="evento-admin-stat"><span>Disponibles</span><strong id="evento-stat-disponibles">0</strong></div><div class="evento-admin-stat"><span>Ganadores</span><strong id="evento-stat-ganadores">0</strong></div><div class="evento-admin-stat"><span>Estado</span><strong id="evento-stat-estado">—</strong></div></div>
+              <div class="acciones"><button id="evento-sortear" class="boton-principal" type="button">🎲 Elegir ganador</button><button id="evento-cerrar" class="boton-secundario" type="button">Cerrar registros</button></div>
+              <p id="evento-detalle-mensaje" class="mensaje"></p>
+              <div class="evento-admin-tabs"><button class="evento-admin-tab activo" data-evento-vista="participantes" type="button">Participantes</button><button class="evento-admin-tab" data-evento-vista="ganadores" type="button">Ganadores</button></div>
+              <div id="evento-vista-participantes"><div class="evento-filtro"><input id="evento-buscar" placeholder="Buscar por nombre, teléfono, número o código"></div><div class="tabla-contenedor"><table class="tabla-eventos"><thead><tr><th>No.</th><th>Código</th><th>Nombre</th><th>Teléfono</th><th>Ciudad</th><th>Fecha</th></tr></thead><tbody id="evento-participantes-lista"></tbody></table></div></div>
+              <div id="evento-vista-ganadores" hidden><div id="evento-ganadores-lista"></div></div>
+            </section>
+          </div>
+        </div>
+      </section>
       <section id="seccion-apariencia" class="seccion-admin" hidden>
         <div class="cabecera-seccion">
           <div>
@@ -687,5 +756,6 @@ https://meli.la/xxxxx"
   </main>
 
   <script type="module" src="admin.js?v=67.20.1"></script>
+  <script type="module" src="eventos-admin-v68.js?v=68.0.0"></script>
 </body>
 </html>
