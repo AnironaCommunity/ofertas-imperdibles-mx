@@ -8,9 +8,11 @@ const logoutButton = document.querySelector("#cerrar-sesion");
 const tabCoupons = document.querySelector("#tab-cupones");
 const tabAds = document.querySelector("#tab-publicidad");
 const tabAppearance = document.querySelector("#tab-apariencia");
+const tabEvents = document.querySelector("#tab-eventos");
 const couponsSection = document.querySelector("#seccion-cupones");
 const adsSection = document.querySelector("#seccion-publicidad");
 const appearanceSection = document.querySelector("#seccion-apariencia");
+const eventsSection = document.querySelector("#seccion-eventos");
 
 const heroConfigForm = document.querySelector("#hero-config-form");
 const heroImage = document.querySelector("#hero-image");
@@ -216,14 +218,17 @@ function logout() {
 function showSection(section) {
   const isCoupons = section === "cupones";
   const isAds = section === "publicidad";
+  const isEvents = section === "eventos";
   const isAppearance = section === "apariencia";
 
   tabCoupons.classList.toggle("activo", isCoupons);
   tabAds.classList.toggle("activo", isAds);
+  tabEvents?.classList.toggle("activo", isEvents);
   tabAppearance.classList.toggle("activo", isAppearance);
 
   couponsSection.hidden = !isCoupons;
   adsSection.hidden = !isAds;
+  if (eventsSection) eventsSection.hidden = !isEvents;
   appearanceSection.hidden = !isAppearance;
 
   if (isAppearance) loadHeroConfig();
@@ -1551,6 +1556,7 @@ passwordInput.addEventListener("keydown", (event) => {
 logoutButton.addEventListener("click", logout);
 tabCoupons.addEventListener("click", () => showSection("cupones"));
 tabAds.addEventListener("click", () => showSection("publicidad"));
+tabEvents?.addEventListener("click", () => showSection("eventos"));
 tabAppearance.addEventListener("click", () => showSection("apariencia"));
 
 couponForm.addEventListener("submit", saveCoupon);
@@ -1663,4 +1669,42 @@ adImage.addEventListener("change", async () => {
 
 if (adminPassword) {
   login();
+}
+
+
+/* ================= EVENTOS Y RIFAS V68.0.1 ================= */
+{
+const $=s=>document.querySelector(s);const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+const tab=$('#tab-eventos'),section=$('#seccion-eventos'),otherTabs=['#tab-cupones','#tab-publicidad','#tab-apariencia'],otherSections=['#seccion-cupones','#seccion-publicidad','#seccion-apariencia'];
+let events=[],selected=null,participants=[],winners=[];
+const password=()=>sessionStorage.getItem('adminPassword')||'';
+async function api(url,opt={}){const r=await fetch(url,{...opt,headers:{'Content-Type':'application/json','x-admin-password':password(),...(opt.headers||{})}});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'No fue posible completar la operación.');return d;}
+const msg=(el,text='',error=false)=>{el.textContent=text;el.classList.toggle('error',error)};
+const formatNo=n=>String(n||0).padStart(6,'0');
+const dateText=v=>v?new Intl.DateTimeFormat('es-MX',{dateStyle:'short',timeStyle:'short',timeZone:'America/Mexico_City'}).format(new Date(v)):'—';
+function isoToLocal(v){if(!v)return'';const d=new Date(v),parts=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Mexico_City',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(d);const o=Object.fromEntries(parts.filter(x=>x.type!=='literal').map(x=>[x.type,x.value]));return `${o.year}-${o.month}-${o.day}T${o.hour}:${o.minute}`;}
+function localToIso(v){if(!v)return null;return new Date(v+':00-06:00').toISOString();}
+tab?.addEventListener('click',()=>{otherTabs.forEach(x=>$(x)?.classList.remove('activo'));otherSections.forEach(x=>{if($(x))$(x).hidden=true});tab.classList.add('activo');section.hidden=false;loadEvents();});
+otherTabs.forEach(x=>$(x)?.addEventListener('click',()=>{tab?.classList.remove('activo');if(section)section.hidden=true;}));
+function resetForm(){selected=null;$('#evento-form').reset();$('#evento-id').value='';$('#evento-prefijo').value='ANI';$('#evento-limite').value='500';$('#evento-ganadores').value='1';$('#evento-mostrar-contador').checked=true;$('#evento-publicar-ganador').checked=true;$('#evento-form-titulo').textContent='Crear evento';$('#evento-imagen-url').value='';$('#evento-imagen-preview').hidden=true;msg($('#evento-form-mensaje'));}
+async function loadEvents(){msg($('#eventos-lista-mensaje'),'Cargando…');try{events=await api('/api/admin-eventos');renderEvents();msg($('#eventos-lista-mensaje'));}catch(e){msg($('#eventos-lista-mensaje'),e.message,true);}}
+function renderEvents(){const root=$('#eventos-lista');if(!events.length){root.innerHTML='<p>No hay eventos creados.</p>';return;}root.innerHTML=events.map(e=>`<article class="evento-admin-card ${selected?.id===e.id?'activo':''}"><span class="estado-chip ${esc(e.estado)}">${esc(e.estado)}</span><h4>${esc(e.nombre)}</h4><p>${esc(e.producto_nombre)}</p><div class="evento-admin-meta"><span>👥 ${e.participantes_count}/${e.limite_boletos}</span><span>🏆 ${e.cantidad_ganadores}</span><span>📅 ${dateText(e.fecha_sorteo)}</span></div><div class="evento-admin-acciones"><button class="boton-secundario" data-open="${e.id}" type="button">Ver</button><button class="boton-secundario" data-edit="${e.id}" type="button">Editar</button><button class="boton-peligro" data-delete="${e.id}" type="button">Eliminar</button></div></article>`).join('');root.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openEvent(Number(b.dataset.open)));root.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editEvent(Number(b.dataset.edit)));root.querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>deleteEvent(Number(b.dataset.delete)));}
+function editEvent(id){const e=events.find(x=>x.id===id);if(!e)return;selected=e;$('#evento-id').value=e.id;$('#evento-nombre').value=e.nombre;$('#evento-tipo').value=e.tipo;$('#evento-prefijo').value=e.prefijo;$('#evento-producto').value=e.producto_nombre;$('#evento-descripcion').value=e.descripcion;$('#evento-imagen-url').value=e.imagen_url;$('#evento-fecha').value=isoToLocal(e.fecha_sorteo);$('#evento-limite').value=e.limite_boletos;$('#evento-ganadores').value=e.cantidad_ganadores;$('#evento-estado').value=e.estado;$('#evento-mostrar-contador').checked=e.mostrar_contador;$('#evento-mostrar-participantes').checked=e.mostrar_participantes;$('#evento-publicar-ganador').checked=e.publicar_ganador;$('#evento-form-titulo').textContent='Editar evento';const im=$('#evento-imagen-preview');if(e.imagen_url){im.src=e.imagen_url;im.hidden=false}else im.hidden=true;window.scrollTo({top:section.offsetTop,behavior:'smooth'});renderEvents();}
+async function uploadImage(file){const reader=new FileReader();const dataUrl=await new Promise((ok,no)=>{reader.onload=()=>ok(reader.result);reader.onerror=no;reader.readAsDataURL(file)});const d=await api('/api/admin-publicidad-imagen',{method:'POST',body:JSON.stringify({data_url:dataUrl,nombre:file.name})});return d.imagen_url;}
+$('#evento-imagen')?.addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;msg($('#evento-form-mensaje'),'Subiendo imagen…');try{const url=await uploadImage(file);$('#evento-imagen-url').value=url;$('#evento-imagen-preview').src=url;$('#evento-imagen-preview').hidden=false;msg($('#evento-form-mensaje'),'Imagen lista.')}catch(err){msg($('#evento-form-mensaje'),err.message,true);}});
+$('#evento-form')?.addEventListener('submit',async ev=>{ev.preventDefault();const id=Number($('#evento-id').value||0),body={id,nombre:$('#evento-nombre').value,tipo:$('#evento-tipo').value,prefijo:$('#evento-prefijo').value,producto_nombre:$('#evento-producto').value,descripcion:$('#evento-descripcion').value,imagen_url:$('#evento-imagen-url').value,fecha_sorteo:localToIso($('#evento-fecha').value),limite_boletos:Number($('#evento-limite').value),cantidad_ganadores:Number($('#evento-ganadores').value),estado:$('#evento-estado').value,mostrar_contador:$('#evento-mostrar-contador').checked,mostrar_participantes:$('#evento-mostrar-participantes').checked,publicar_ganador:$('#evento-publicar-ganador').checked};msg($('#evento-form-mensaje'),'Guardando…');try{await api('/api/admin-eventos',{method:id?'PUT':'POST',body:JSON.stringify(body)});msg($('#evento-form-mensaje'),'Evento guardado correctamente.');resetForm();await loadEvents();}catch(e){msg($('#evento-form-mensaje'),e.message,true);}});
+async function deleteEvent(id){if(!confirm('¿Eliminar este evento y todos sus registros? Esta acción no se puede deshacer.'))return;try{await api(`/api/admin-eventos?id=${id}`,{method:'DELETE'});if(selected?.id===id){selected=null;$('#evento-detalle').hidden=true}await loadEvents();}catch(e){alert(e.message);}}
+async function openEvent(id){selected=events.find(x=>x.id===id);if(!selected)return;$('#evento-detalle').hidden=false;$('#evento-detalle-titulo').textContent=selected.nombre;$('#evento-detalle-subtitulo').textContent=selected.producto_nombre;renderEvents();await loadDetail();}
+async function loadDetail(){msg($('#evento-detalle-mensaje'),'Cargando registros…');try{[participants,winners]=await Promise.all([api(`/api/admin-eventos?action=participantes&evento_id=${selected.id}`),api(`/api/admin-eventos?action=ganadores&evento_id=${selected.id}`)]);renderDetail();msg($('#evento-detalle-mensaje'));}catch(e){msg($('#evento-detalle-mensaje'),e.message,true);}}
+function renderDetail(){const e=selected;$('#evento-stat-participantes').textContent=participants.length;$('#evento-stat-disponibles').textContent=Math.max(0,e.limite_boletos-participants.length);$('#evento-stat-ganadores').textContent=winners.length;$('#evento-stat-estado').textContent=e.estado;renderParticipants();renderWinners();}
+function renderParticipants(filter=''){const q=filter.toLowerCase().trim(),rows=participants.filter(p=>!q||[p.numero,p.codigo,p.nombre,p.telefono,p.ciudad].some(v=>String(v||'').toLowerCase().includes(q)));$('#evento-participantes-lista').innerHTML=rows.map(p=>`<tr><td>${formatNo(p.numero)}</td><td>${esc(p.codigo)}</td><td>${esc(p.nombre)}</td><td>${esc(p.telefono)}</td><td>${esc(p.ciudad)}</td><td>${dateText(p.fecha_registro)}</td></tr>`).join('')||'<tr><td colspan="6">Sin participantes.</td></tr>';}
+function renderWinners(){$('#evento-ganadores-lista').innerHTML=winners.map(w=>`<div class="ganador-admin"><span>🏆 Ganador ${w.posicion}</span><strong>${formatNo(w.participantes_evento?.numero)} · ${esc(w.participantes_evento?.nombre)}</strong><p>${esc(w.participantes_evento?.telefono)} · ${esc(w.participantes_evento?.codigo)}</p><div class="acciones"><button class="boton-secundario" data-publish="${w.id}" data-value="${!w.publicado}" type="button">${w.publicado?'Ocultar':'Publicar'}</button><button class="boton-secundario" data-delivered="${w.id}" data-value="${!w.premio_entregado}" type="button">${w.premio_entregado?'✓ Premio entregado':'Marcar entregado'}</button><a class="boton-secundario" target="_blank" href="https://wa.me/52${esc(w.participantes_evento?.telefono)}?text=${encodeURIComponent(`🎉 ¡Felicidades! Tu número ${formatNo(w.participantes_evento?.numero)} resultó ganador de ${selected.nombre}. Comunícate con nosotros para validar y coordinar la entrega.`)}">WhatsApp</a></div></div>`).join('')||'<p>Aún no hay ganadores.</p>';document.querySelectorAll('[data-publish]').forEach(b=>b.onclick=()=>updateWinner(Number(b.dataset.publish),{publicado:b.dataset.value==='true'}));document.querySelectorAll('[data-delivered]').forEach(b=>b.onclick=()=>updateWinner(Number(b.dataset.delivered),{premio_entregado:b.dataset.value==='true'}));}
+async function updateWinner(id,data){try{await api('/api/admin-eventos?action=ganador',{method:'PATCH',body:JSON.stringify({id,...data})});await loadDetail();}catch(e){alert(e.message);}}
+$('#evento-buscar')?.addEventListener('input',e=>renderParticipants(e.target.value));
+$('#evento-sortear')?.addEventListener('click',async()=>{if(!selected||!confirm(`¿Elegir al azar ${selected.cantidad_ganadores-winners.length} ganador(es) entre los participantes activos?`))return;msg($('#evento-detalle-mensaje'),'🎲 Realizando sorteo…');try{await api('/api/admin-eventos?action=sortear',{method:'POST',body:JSON.stringify({evento_id:selected.id})});await loadEvents();selected=events.find(x=>x.id===selected.id)||selected;await loadDetail();msg($('#evento-detalle-mensaje'),'🏆 Sorteo realizado y ganador publicado.');}catch(e){msg($('#evento-detalle-mensaje'),e.message,true);}});
+$('#evento-cerrar')?.addEventListener('click',async()=>{if(!selected)return;try{await api('/api/admin-eventos',{method:'PUT',body:JSON.stringify({...selected,estado:'cerrada'})});await loadEvents();selected=events.find(x=>x.id===selected.id);await loadDetail();}catch(e){alert(e.message);}});
+$('#evento-exportar')?.addEventListener('click',()=>{if(!selected)return;const cells=v=>`"${String(v??'').replaceAll('"','""')}"`;const csv=['Número,Código,Nombre,Teléfono,Ciudad,Fecha',...participants.map(p=>[formatNo(p.numero),p.codigo,p.nombre,p.telefono,p.ciudad,p.fecha_registro].map(cells).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download=`participantes-${selected.nombre.toLowerCase().replace(/[^a-z0-9]+/g,'-')}.csv`;a.click();URL.revokeObjectURL(a.href);});
+$('.evento-admin-tabs')?.addEventListener('click',e=>{const b=e.target.closest('[data-evento-vista]');if(!b)return;document.querySelectorAll('.evento-admin-tab').forEach(x=>x.classList.toggle('activo',x===b));$('#evento-vista-participantes').hidden=b.dataset.eventoVista!=='participantes';$('#evento-vista-ganadores').hidden=b.dataset.eventoVista!=='ganadores';});
+$('#evento-nuevo')?.addEventListener('click',resetForm);$('#evento-cancelar')?.addEventListener('click',resetForm);$('#evento-actualizar')?.addEventListener('click',loadEvents);
+
 }
