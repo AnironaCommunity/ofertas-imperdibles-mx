@@ -237,3 +237,88 @@
     min-height: 27px;
   }
 }
+
+/* V68.1 — Hero premium compacto y alineado con el contenido */
+.hero-redes {
+  /* La cabecera ya tiene 14 px de separación lateral; no restar otros 28 px. */
+  width: min(1120px, 100%);
+  gap: 12px;
+  margin-top: 6px;
+  margin-bottom: 8px;
+  padding: 12px 14px;
+  border-radius: 17px;
+  box-shadow: 0 5px 16px rgba(82, 41, 92, .075);
+}
+
+.hero-redes-logo {
+  width: 58px;
+  height: 58px;
+  border-radius: 12px;
+}
+
+.hero-redes-logo img {
+  border-radius: 12px;
+}
+
+.hero-redes-contenido strong {
+  font-size: 16px;
+}
+
+.hero-redes-botones {
+  margin-top: 8px;
+  gap: 6px;
+}
+
+.hero-redes-boton,
+.hero-redes-visitantes {
+  min-height: 29px;
+  height: 29px;
+  padding: 5px 9px;
+}
+
+@media (max-width: 600px) {
+  .hero-redes {
+    grid-template-columns: 44px minmax(0, 1fr);
+    width: 100%;
+    gap: 9px;
+    margin-top: 4px;
+    margin-bottom: 7px;
+    padding: 9px 10px;
+    border-radius: 14px;
+  }
+
+  .hero-redes-logo,
+  .hero-redes-logo img {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+  }
+
+  .hero-redes-contenido strong {
+    font-size: 12.5px;
+  }
+
+  .hero-redes-contenido > span {
+    margin-top: 2px;
+    font-size: 8.5px;
+  }
+
+  .hero-redes-botones {
+    gap: 4px;
+    margin-top: 6px;
+  }
+
+  .hero-redes-boton,
+  .hero-redes-visitantes {
+    min-height: 25px;
+    height: 25px;
+    padding: 4px 7px;
+    font-size: 8.5px;
+  }
+
+  .hero-redes-whatsapp span,
+  .hero-redes-facebook span,
+  .hero-redes-visitantes > span {
+    font-size: 10.5px;
+  }
+}
