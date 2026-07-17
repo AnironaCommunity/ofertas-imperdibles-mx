@@ -52,6 +52,7 @@
   <link rel="stylesheet" href="css/ajustes-visuales-v67-16.css?v=67.16.1" />
   <link rel="stylesheet" href="css/eventos-v68.css?v=68.0.3" />
   <link rel="stylesheet" href="css/header-dinamico-v68-3.css?v=68.3.0" />
+  <link rel="stylesheet" href="css/ajustes-cabecera-v68-4.css?v=68.4.0" />
 </head>
 
 <body>
@@ -154,16 +155,6 @@
           hidden
         >0</span>
       </button>
-      <button type="button" data-vista="comunidad_anirona" aria-pressed="false">
-        <img class="menu-ofertas-logo logo-anirona" src="img/anirona.png" alt="" aria-hidden="true" />
-        <span>Comunidad Anirona</span>
-        <span
-          id="contador-comunidad-anirona"
-          class="contador-seccion"
-          aria-label="0 productos"
-          hidden
-        >0</span>
-      </button>
     </nav>
 
       <button
@@ -176,9 +167,32 @@
       </button>
 
       <span class="menu-ofertas-indicador" aria-hidden="true">
-        Desliza para ver más
+        Elige dónde buscar ofertas
       </span>
     </div>
+
+    <button
+      type="button"
+      class="acceso-comunidad-anirona"
+      data-vista="comunidad_anirona"
+      aria-pressed="false"
+      aria-label="Abrir Comunidad Anirona"
+    >
+      <span class="acceso-comunidad-icono" aria-hidden="true">
+        <img src="img/anirona.png" alt="" />
+      </span>
+      <span class="acceso-comunidad-contenido">
+        <strong>Comunidad Anirona</strong>
+        <small>Rifas, novedades y publicaciones de la comunidad</small>
+      </span>
+      <span
+        id="contador-comunidad-anirona"
+        class="contador-seccion acceso-comunidad-contador"
+        aria-label="0 publicaciones"
+        hidden
+      >0</span>
+      <span class="acceso-comunidad-flecha" aria-hidden="true">›</span>
+    </button>
   </header>
 
   <main class="contenedor">
@@ -447,20 +461,6 @@
       >0</span>
     </button>
 
-    <button
-      id="tab-seccion-contextual"
-      class="tab-inferior tab-seccion-contextual"
-      type="button"
-      hidden
-    >
-      <span id="tab-seccion-contextual-icono" aria-hidden="true">🏷️</span>
-      <strong id="tab-seccion-contextual-texto">Sección</strong>
-      <span
-        id="contador-seccion-contextual"
-        class="contador-seccion contador-seccion-inferior"
-        aria-label="0 elementos"
-      >0</span>
-    </button>
   </nav>
 
   <div
@@ -496,6 +496,6 @@
 
   <script type="module" src="js/app.js?v=68.0.1"></script>
   <script src="js/hero-redes.js?v=67.19.3" defer></script>
-  <script src="js/header-dinamico-v68-3.js?v=68.3.0" defer></script>
+  <script src="js/header-dinamico-v68-3.js?v=68.4.0" defer></script>
 </body>
 </html>
