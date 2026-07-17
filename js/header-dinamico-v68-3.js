@@ -1,47 +1,15 @@
 (() => {
   const textoEstado = document.querySelector("#estado-dinamico-texto");
   const cajaEstado = document.querySelector(".estado-dinamico-cabecera");
-  const navegacionInferior = document.querySelector(".navegacion-inferior");
-  const tabTienda = document.querySelector("#tab-tienda");
-  const tabBancarios = document.querySelector("#tab-bancarios");
-  const tabContextual = document.querySelector("#tab-seccion-contextual");
-  const contextualTexto = document.querySelector("#tab-seccion-contextual-texto");
-  const contextualIcono = document.querySelector("#tab-seccion-contextual-icono");
-  const contextualContador = document.querySelector("#contador-seccion-contextual");
 
-  if (!textoEstado || !cajaEstado || !navegacionInferior) return;
+  if (!textoEstado || !cajaEstado) return;
 
-  const SECCIONES = {
-    tienda: {
-      nombre: "Tienda",
-      icono: "🛒",
-      contador: "#contador-cupones-tienda",
-      unidad: "cupones",
-    },
-    bancarios: {
-      nombre: "Bancarios",
-      icono: "💳",
-      contador: "#contador-cupones-bancarios",
-      unidad: "cupones",
-    },
-    mercadolibre: {
-      nombre: "Mercado Libre",
-      icono: "🛒",
-      contador: "#contador-ofertas-mercado-libre",
-      unidad: "ofertas",
-    },
-    amazon: {
-      nombre: "Amazon",
-      icono: "📦",
-      contador: "#contador-ofertas-amazon",
-      unidad: "ofertas",
-    },
-    anirona: {
-      nombre: "Comunidad Anirona",
-      icono: "👥",
-      contador: "#contador-comunidad-anirona",
-      unidad: "publicaciones",
-    },
+  const CONTADORES = {
+    tienda: "#contador-cupones-tienda",
+    bancarios: "#contador-cupones-bancarios",
+    mercadolibre: "#contador-ofertas-mercado-libre",
+    amazon: "#contador-ofertas-amazon",
+    anirona: "#contador-comunidad-anirona",
   };
 
   let mensajes = [];
@@ -55,24 +23,19 @@
     return Number.isFinite(limpio) ? limpio : 0;
   }
 
-  function seccionActual() {
-    const valor = new URLSearchParams(location.search).get("seccion");
-    return SECCIONES[valor] ? valor : "tienda";
-  }
-
   function construirMensajes() {
-    const tienda = numero(SECCIONES.tienda.contador);
-    const bancarios = numero(SECCIONES.bancarios.contador);
-    const ml = numero(SECCIONES.mercadolibre.contador);
-    const amazon = numero(SECCIONES.amazon.contador);
-    const anirona = numero(SECCIONES.anirona.contador);
+    const tienda = numero(CONTADORES.tienda);
+    const bancarios = numero(CONTADORES.bancarios);
+    const ml = numero(CONTADORES.mercadolibre);
+    const amazon = numero(CONTADORES.amazon);
+    const anirona = numero(CONTADORES.anirona);
     const totalCupones = tienda + bancarios;
 
     const nuevos = [];
     if (totalCupones > 0) nuevos.push(`🎟️ ${totalCupones} cupones disponibles para ahorrar hoy`);
     if (ml > 0) nuevos.push(`🔥 ${ml} ofertas de Mercado Libre para descubrir`);
     if (amazon > 0) nuevos.push(`📦 ${amazon} ofertas disponibles en Amazon`);
-    if (anirona > 0) nuevos.push(`👥 Comunidad Anirona tiene ${anirona} publicaciones activas`);
+    if (anirona > 0) nuevos.push(`👥 ${anirona} novedades activas en Comunidad Anirona`);
     nuevos.push("⚡ Cupones, promociones y novedades actualizadas todos los días");
 
     mensajes = [...new Set(nuevos)];
@@ -110,73 +73,26 @@
     intervalo = window.setInterval(rotarMensaje, 4500);
   }
 
-  function actualizarBarraInferior() {
-    const clave = seccionActual();
-    const config = SECCIONES[clave];
-    const esCupones = clave === "tienda" || clave === "bancarios";
-
-    navegacionInferior.classList.toggle("modo-contextual", !esCupones);
-
-    if (esCupones) {
-      tabContextual.hidden = true;
-      tabTienda.hidden = false;
-      tabBancarios.hidden = false;
-      return;
-    }
-
-    const total = numero(config.contador);
-    tabContextual.hidden = false;
-    contextualTexto.textContent = config.nombre;
-    contextualIcono.textContent = config.icono;
-    contextualContador.textContent = total > 99 ? "99+" : String(total);
-    contextualContador.setAttribute(
-      "aria-label",
-      `${total} ${config.unidad}`
-    );
-    contextualContador.title = `${total} ${config.unidad}`;
-  }
-
-  function actualizarTodo() {
-    actualizarBarraInferior();
-    construirMensajes();
-  }
-
-  tabContextual?.addEventListener("click", () => {
-    const clave = seccionActual();
-    const selector = {
-      mercadolibre: '[data-vista="ofertas_mercado_libre"]',
-      amazon: '[data-vista="ofertas_amazon"]',
-      anirona: '[data-vista="comunidad_anirona"]',
-    }[clave];
-    document.querySelector(selector)?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-  });
-
+  /*
+   * La navegación inferior se deja intacta: siempre conserva Tienda y Bancarios.
+   * Las secciones superiores ya no modifican ni reemplazan la opción Bancarios.
+   */
   document.addEventListener("click", (event) => {
     if (event.target.closest("[data-vista], #tab-tienda, #tab-bancarios")) {
-      window.setTimeout(() => {
-        actualizarTodo();
-        reiniciarRotacion();
-      }, 80);
+      window.setTimeout(reiniciarRotacion, 80);
     }
   });
 
-  window.addEventListener("popstate", () => {
-    window.setTimeout(() => {
-      actualizarTodo();
-      reiniciarRotacion();
-    }, 50);
-  });
-
-  const observados = Object.values(SECCIONES)
-    .map((config) => document.querySelector(config.contador))
+  const observados = Object.values(CONTADORES)
+    .map((selector) => document.querySelector(selector))
     .filter(Boolean);
 
-  const observer = new MutationObserver(() => {
-    actualizarTodo();
-    reiniciarRotacion();
-  });
-  observados.forEach((elemento) => observer.observe(elemento, { childList: true, characterData: true, subtree: true }));
+  const observer = new MutationObserver(reiniciarRotacion);
+  observados.forEach((elemento) => observer.observe(elemento, {
+    childList: true,
+    characterData: true,
+    subtree: true,
+  }));
 
-  actualizarTodo();
   reiniciarRotacion();
 })();
