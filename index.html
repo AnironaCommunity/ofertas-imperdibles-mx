@@ -48,9 +48,10 @@
   <link rel="apple-touch-icon" href="img/logo.png" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="stylesheet" href="css/style.css?v=67.18.3" />
-  <link rel="stylesheet" href="css/hero-redes.css?v=68.1.0" />
+  <link rel="stylesheet" href="css/hero-redes.css?v=67.19.4" />
   <link rel="stylesheet" href="css/ajustes-visuales-v67-16.css?v=67.16.1" />
   <link rel="stylesheet" href="css/eventos-v68.css?v=68.0.3" />
+  <link rel="stylesheet" href="css/ux-premium-v68-2.css?v=68.2.0" />
 </head>
 
 <body>
@@ -80,7 +81,7 @@
 
       <div class="hero-redes-contenido">
         <strong>Ofertas Imperdibles MX</strong>
-        <span>Cupones, promociones y novedades todos los días.</span>
+        <span id="hero-mensaje-dinamico">Cupones, promociones y novedades todos los días.</span>
 
         <div class="hero-redes-botones">
           <a
@@ -170,7 +171,7 @@
       </button>
 
       <span class="menu-ofertas-indicador" aria-hidden="true">
-        Desliza para ver más
+        Desliza las categorías
       </span>
     </div>
   </header>
@@ -404,7 +405,19 @@
     </section>
   </main>
 
-  <footer></footer>
+  <footer class="pie-actualizacion" aria-label="Información de actualización">
+    <span class="pie-actualizacion-punto" aria-hidden="true"></span>
+    <span>Cupones actualizados</span>
+    <strong id="hora-ultima-actualizacion">ahora</strong>
+  </footer>
+
+  <div id="logro-toast" class="logro-toast" role="status" aria-live="polite" hidden>
+    <span id="logro-toast-icono" aria-hidden="true">🏅</span>
+    <div>
+      <strong id="logro-toast-titulo">Nuevo logro</strong>
+      <span id="logro-toast-texto"></span>
+    </div>
+  </div>
 
   <nav class="navegacion-inferior" aria-label="Categorías de cupones">
     <button
@@ -475,5 +488,6 @@
 
   <script type="module" src="js/app.js?v=68.0.1"></script>
   <script src="js/hero-redes.js?v=67.19.3" defer></script>
+  <script src="js/ux-premium-v68-2.js?v=68.2.0" defer></script>
 </body>
 </html>
