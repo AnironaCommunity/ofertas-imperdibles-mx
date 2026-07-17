@@ -23,6 +23,7 @@ const tabTienda = document.querySelector("#tab-tienda");
 const tabBancarios = document.querySelector("#tab-bancarios");
 const vistaCupones = document.querySelector("#vista-cupones");
 const botonesMenuOfertas = document.querySelectorAll(".menu-ofertas [data-vista]");
+const botonComunidadAnirona = document.querySelector(".acceso-comunidad-anirona[data-vista]");
 const menuOfertas = document.querySelector(".menu-ofertas");
 const botonMenuAnterior = document.querySelector("#menu-ofertas-anterior");
 const botonMenuSiguiente = document.querySelector("#menu-ofertas-siguiente");
@@ -357,6 +358,13 @@ botonesMenuOfertas.forEach((boton) => {
   });
 });
 
+botonComunidadAnirona?.addEventListener("click", () => {
+  cambiarVista(botonComunidadAnirona.dataset.vista, {
+    actualizarHistorial: true,
+    desplazamiento: "smooth",
+  });
+});
+
 function actualizarControlesMenuOfertas() {
   if (!menuOfertas) return;
 
@@ -509,6 +517,12 @@ function cambiarVista(
     boton.classList.toggle("activo", activo);
     boton.setAttribute("aria-pressed", String(activo));
   });
+
+  if (botonComunidadAnirona) {
+    const comunidadActiva = vista === botonComunidadAnirona.dataset.vista;
+    botonComunidadAnirona.classList.toggle("activo", comunidadActiva);
+    botonComunidadAnirona.setAttribute("aria-pressed", String(comunidadActiva));
+  }
 
   const tiendaActiva = mostrarCupones && categoriaActiva === "tienda";
   const bancariosActivos = mostrarCupones && categoriaActiva === "bancarios";
