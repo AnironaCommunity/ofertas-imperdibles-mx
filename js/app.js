@@ -310,11 +310,12 @@ function activarSeccionDesdeUrl({
     (boton) => boton.dataset.vista === configuracion.vista
   );
 
-  botonActivo?.scrollIntoView({
-    behavior: desplazamiento === "smooth" ? "smooth" : "auto",
-    block: "nearest",
-    inline: "center",
-  });
+  // Los accesos de Mercado Libre y Amazon ya caben completos.
+  // Evitamos scrollIntoView porque algunos navegadores móviles desplazan
+  // horizontalmente todo el documento al centrar el botón activo.
+  if (menuOfertas) {
+    menuOfertas.scrollLeft = 0;
+  }
 
   if (actualizarHistorial) {
     actualizarUrlSeccion(seccion, "replace");
@@ -348,11 +349,14 @@ botonesMenuOfertas.forEach((boton) => {
       desplazamiento: "smooth",
     });
 
-    boton.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "center",
-    });
+    // Mantener el documento centrado al cambiar de sección.
+    // Ya no existe un carrusel horizontal: ambos accesos permanecen visibles.
+    if (menuOfertas) {
+      menuOfertas.scrollLeft = 0;
+    }
+    if (window.scrollX !== 0) {
+      window.scrollTo({ left: 0, top: window.scrollY, behavior: "auto" });
+    }
 
     window.setTimeout(actualizarControlesMenuOfertas, 250);
   });
