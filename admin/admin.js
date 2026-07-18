@@ -15,6 +15,14 @@ const appearanceSection = document.querySelector("#seccion-apariencia");
 const eventsSection = document.querySelector("#seccion-eventos");
 
 const heroConfigForm = document.querySelector("#hero-config-form");
+const siteMainLogo = document.querySelector("#site-main-logo");
+const siteMainLogoUrl = document.querySelector("#site-main-logo-url");
+const siteMainLogoPreviewWrapper = document.querySelector("#site-main-logo-preview-wrapper");
+const siteMainLogoPreview = document.querySelector("#site-main-logo-preview");
+const siteMainLogoRemove = document.querySelector("#site-main-logo-remove");
+const siteName = document.querySelector("#site-name");
+const siteSlogan = document.querySelector("#site-slogan");
+const siteShowSlogan = document.querySelector("#site-show-slogan");
 const heroImage = document.querySelector("#hero-image");
 const heroImageUrl = document.querySelector("#hero-image-url");
 const heroPreviewWrapper = document.querySelector("#hero-preview-wrapper");
@@ -35,6 +43,7 @@ const heroCommunitySectionName = document.querySelector("#hero-community-section
 const heroWhatsappUrl = document.querySelector("#hero-whatsapp-url");
 const heroFacebookUrl = document.querySelector("#hero-facebook-url");
 const heroAdminPreviewText = document.querySelector("#hero-admin-preview-text");
+const heroAdminPreviewName = document.querySelector("#hero-admin-preview-name");
 
 /* Cupones */
 const couponForm = document.querySelector("#coupon-form");
@@ -1492,15 +1501,26 @@ function updateHeroAdminPreview() {
       : heroImageUrl.value || "../img/logo-ofertas-transparente.png?v=63.6";
 
   heroAdminPreviewImage.src = image;
+  if (heroAdminPreviewName) {
+    heroAdminPreviewName.textContent = siteName?.value.trim() || "Ofertas Imperdibles MX";
+  }
   if (heroAdminPreviewText) {
-    heroAdminPreviewText.textContent = heroText?.value.trim() ||
-      "Cupones, promociones y novedades todos los días.";
+    heroAdminPreviewText.textContent = siteSlogan?.value.trim() ||
+      heroText?.value.trim() || "Las mejores ofertas, siempre";
+    heroAdminPreviewText.hidden = siteShowSlogan ? !siteShowSlogan.checked : false;
   }
 }
 
 async function loadHeroConfig() {
   try {
     const config = await api("/api/admin-cupones?action=hero-config");
+
+    siteMainLogoUrl.value = config.logo_principal_url || "";
+    siteName.value = config.nombre_sitio || "Ofertas Imperdibles MX";
+    siteSlogan.value = config.eslogan || "Las mejores ofertas, siempre";
+    siteShowSlogan.checked = config.mostrar_eslogan !== false;
+    siteMainLogoPreview.src = siteMainLogoUrl.value || "../img/logo-ofertas-horizontal.png?v=71.4";
+    siteMainLogoPreviewWrapper.hidden = false;
 
     heroImageUrl.value = config.imagen_url || "";
     heroColorStart.value = config.color_inicio || "#e9cdff";
@@ -1525,6 +1545,15 @@ async function loadHeroConfig() {
   }
 }
 
+async function uploadConfiguredImage(fileInput, currentUrl = "") {
+  const file = fileInput?.files?.[0];
+  if (!file) return currentUrl;
+  if (!file.type.startsWith("image/")) {
+    throw new Error("Selecciona una imagen válida.");
+  }
+  return await optimizeImage(file);
+}
+
 async function uploadHeroImage() {
   const file = heroImage.files[0];
 
@@ -1547,10 +1576,15 @@ async function saveHeroConfig(event) {
 
   try {
     const imageUrl = await uploadHeroImage();
+    const mainLogoUrl = await uploadConfiguredImage(siteMainLogo, siteMainLogoUrl.value);
 
     const savedConfig = await api("/api/admin-cupones?action=hero-config", {
       method: "PUT",
       body: JSON.stringify({
+        logo_principal_url: mainLogoUrl || "",
+        nombre_sitio: siteName.value.trim(),
+        eslogan: siteSlogan.value.trim(),
+        mostrar_eslogan: siteShowSlogan.checked,
         imagen_url: imageUrl || "",
         color_inicio: heroColorStart.value,
         color_fin: heroColorEnd.value,
@@ -1565,6 +1599,11 @@ async function saveHeroConfig(event) {
         enlace_facebook: heroFacebookUrl.value.trim(),
       }),
     });
+
+    siteMainLogoUrl.value = savedConfig.logo_principal_url || mainLogoUrl || "";
+    siteMainLogo.value = "";
+    siteMainLogoPreview.src = siteMainLogoUrl.value || "../img/logo-ofertas-horizontal.png?v=71.4";
+    siteMainLogoPreviewWrapper.hidden = false;
 
     heroImageUrl.value = savedConfig.imagen_url || imageUrl || "";
     heroImage.value = "";
@@ -1668,6 +1707,24 @@ saveBulkPrices.addEventListener("click", saveAllBulkPrices);
 [heroText, heroColorStart, heroColorEnd].forEach((input) => {
   input?.addEventListener("input", updateHeroAdminPreview);
 });
+siteMainLogo?.addEventListener("change", () => {
+  const file = siteMainLogo.files?.[0];
+  if (!file) return;
+  const objectUrl = URL.createObjectURL(file);
+  siteMainLogoPreview.src = objectUrl;
+  siteMainLogoPreviewWrapper.hidden = false;
+});
+siteMainLogoRemove?.addEventListener("click", () => {
+  siteMainLogo.value = "";
+  siteMainLogoUrl.value = "";
+  siteMainLogoPreview.src = "../img/logo-ofertas-horizontal.png?v=71.4";
+  siteMainLogoPreviewWrapper.hidden = false;
+});
+[siteName, siteSlogan, siteShowSlogan].forEach((element) => {
+  element?.addEventListener("input", updateHeroAdminPreview);
+  element?.addEventListener("change", updateHeroAdminPreview);
+});
+
 heroConfigForm.addEventListener("submit", saveHeroConfig);
 
 heroColorStart.addEventListener("input", updateHeroAdminPreview);

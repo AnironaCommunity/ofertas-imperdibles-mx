@@ -72,6 +72,7 @@
       title="Ir a la página principal"
     >
       <img
+        id="logo-principal-sitio"
         class="logo"
         src="img/logo-ofertas-horizontal.png?v=71.4"
         alt="Ofertas Imperdibles MX"
@@ -93,7 +94,7 @@
       </div>
 
       <div class="hero-redes-contenido">
-        <strong>Ofertas Imperdibles MX</strong>
+        <strong id="nombre-sitio">Ofertas Imperdibles MX</strong>
         <span id="hero-texto-descriptivo">Cupones, promociones y novedades todos los días.</span>
 
         <div class="hero-redes-botones">
@@ -138,12 +139,19 @@
           if (!cache || typeof cache !== "object") return;
 
           const texto = document.querySelector("#hero-texto-descriptivo");
+          const nombre = document.querySelector("#nombre-sitio");
+          const logoPrincipal = document.querySelector("#logo-principal-sitio");
           const imagen = document.querySelector(".hero-redes-logo img");
           const whatsapp = document.querySelector(".hero-redes-whatsapp");
           const facebook = document.querySelector(".hero-redes-facebook");
           const visitantes = document.querySelector("#hero-total-visitantes");
 
-          if (texto && cache.texto_descriptivo) texto.textContent = cache.texto_descriptivo;
+          if (texto) {
+            texto.textContent = cache.eslogan || cache.texto_descriptivo || texto.textContent;
+            texto.hidden = cache.mostrar_eslogan === false;
+          }
+          if (nombre && cache.nombre_sitio) nombre.textContent = cache.nombre_sitio;
+          if (logoPrincipal && cache.logo_principal_url) logoPrincipal.src = cache.logo_principal_url;
           if (imagen && cache.imagen_url) imagen.src = cache.imagen_url;
           if (whatsapp && cache.enlace_whatsapp) whatsapp.href = cache.enlace_whatsapp;
           if (facebook && cache.enlace_facebook) facebook.href = cache.enlace_facebook;
@@ -510,7 +518,7 @@
   </div>
 
   <script type="module" src="js/app.js?v=70.0.0"></script>
-  <script src="js/hero-redes.js?v=70.0.0" defer></script>
+  <script src="js/hero-redes.js?v=71.5.0" defer></script>
   <script src="js/header-dinamico-v68-3.js?v=70.0.0" defer></script>
   <script src="js/cabecera-inteligente.js?v=71.2.0" defer></script>
 </body>

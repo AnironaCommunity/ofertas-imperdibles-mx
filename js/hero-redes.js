@@ -4,6 +4,10 @@
 
   const image = hero.querySelector(".hero-redes-logo img");
   const defaultImage = image?.getAttribute("src") || "";
+  const mainLogo = document.querySelector("#logo-principal-sitio");
+  const defaultMainLogo = mainLogo?.getAttribute("src") || "";
+  const siteName = document.querySelector("#nombre-sitio");
+  const slogan = document.querySelector("#hero-texto-descriptivo");
   const visitorBox = document.querySelector("#hero-contador-visitantes");
   const visitorTotal = document.querySelector("#hero-total-visitantes");
 
@@ -53,8 +57,22 @@
       );
     } catch {}
 
+    if (mainLogo) {
+      mainLogo.src = config.logo_principal_url || defaultMainLogo;
+      mainLogo.alt = config.nombre_sitio || "Ofertas Imperdibles MX";
+    }
+
     if (image) {
       image.src = config.imagen_url || defaultImage;
+    }
+
+    if (siteName) {
+      siteName.textContent = config.nombre_sitio || "Ofertas Imperdibles MX";
+    }
+
+    if (slogan) {
+      slogan.textContent = config.eslogan || config.texto_descriptivo || "Las mejores ofertas, siempre";
+      slogan.hidden = config.mostrar_eslogan === false;
     }
 
     const whatsappButton = hero.querySelector(".hero-redes-whatsapp");
@@ -67,7 +85,7 @@
     }
 
     const labels = {
-      textoDescriptivo: config.texto_descriptivo || "Cupones, promociones y novedades todos los días.",
+      textoDescriptivo: config.eslogan || config.texto_descriptivo || "Las mejores ofertas, siempre",
       botonTienda: config.nombre_boton_tienda || "Tienda",
       seccionTienda: config.nombre_seccion_tienda || "Cupones de tienda",
       botonBancarios: config.nombre_boton_bancarios || "Bancarios",
@@ -77,7 +95,9 @@
     };
 
     window.ofertasEtiquetas = labels;
-    document.querySelector("#hero-texto-descriptivo")?.replaceChildren(labels.textoDescriptivo);
+    const heroDescription = document.querySelector("#hero-texto-descriptivo");
+    heroDescription?.replaceChildren(labels.textoDescriptivo);
+    if (heroDescription) heroDescription.hidden = config.mostrar_eslogan === false;
     document.querySelector("#nombre-boton-tienda")?.replaceChildren(labels.botonTienda);
     document.querySelector("#nombre-boton-bancarios")?.replaceChildren(labels.botonBancarios);
     document.querySelector("#nombre-boton-comunidad")?.replaceChildren(labels.botonComunidad);

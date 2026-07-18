@@ -8,7 +8,7 @@
   <title>Administrador | Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="../img/logo.png" />
-  <link rel="stylesheet" href="admin.css?v=67.15" />
+  <link rel="stylesheet" href="admin.css?v=71.5" />
 </head>
 
 <body>
@@ -692,13 +692,49 @@ https://meli.la/xxxxx"
       <section id="seccion-apariencia" class="seccion-admin" hidden>
         <div class="cabecera-seccion">
           <div>
-            <h2>🎨 Barra debajo del logo</h2>
-            <p>Cambia únicamente la imagen pequeña y los colores de la barra.</p>
+            <h2>🎨 Identidad del sitio</h2>
+            <p>Modifica el logo principal, el nombre, el eslogan y la barra desde el administrador.</p>
           </div>
         </div>
 
         <section class="panel">
           <form id="hero-config-form" class="formulario">
+            <div class="campo campo-completo">
+              <h3>Identidad principal</h3>
+              <small>Estos datos se muestran en la cabecera principal y en la barra debajo del logo.</small>
+            </div>
+
+            <div class="campo campo-completo">
+              <label for="site-main-logo">Logo principal horizontal</label>
+              <input id="site-main-logo" type="file" accept="image/png,image/jpeg,image/webp" />
+              <input id="site-main-logo-url" type="hidden" />
+              <small>Recomendado: PNG o WebP horizontal con fondo transparente. Si no seleccionas otro, se conserva el actual.</small>
+            </div>
+
+            <div id="site-main-logo-preview-wrapper" class="preview-wrapper preview-logo-principal" hidden>
+              <img id="site-main-logo-preview" src="" alt="Vista previa del logo principal" />
+              <button id="site-main-logo-remove" class="boton-secundario" type="button">Restaurar logo predeterminado</button>
+            </div>
+
+            <div class="campo">
+              <label for="site-name">Nombre del sitio</label>
+              <input id="site-name" type="text" maxlength="70" placeholder="Ofertas Imperdibles MX" />
+            </div>
+
+            <div class="campo">
+              <label for="site-slogan">Eslogan</label>
+              <input id="site-slogan" type="text" maxlength="120" placeholder="Las mejores ofertas, siempre" />
+            </div>
+
+            <label class="switch-row campo-completo">
+              <input id="site-show-slogan" type="checkbox" checked />
+              <span>Mostrar el eslogan debajo del nombre</span>
+            </label>
+
+            <div class="campo campo-completo">
+              <h3>Barra debajo del logo</h3>
+              <small>Configura el ícono, los botones, redes y colores de la barra fija.</small>
+            </div>
             <div class="campo campo-completo">
               <label for="hero-image">Imagen pequeña</label>
               <input
@@ -783,7 +819,7 @@ https://meli.la/xxxxx"
                 <img id="hero-admin-preview-image" src="../img/logo-ofertas-transparente.png?v=63.6" alt="" />
               </div>
               <div>
-                <strong>Ofertas Imperdibles MX</strong>
+                <strong id="hero-admin-preview-name">Ofertas Imperdibles MX</strong>
                 <span id="hero-admin-preview-text">Cupones, promociones y novedades todos los días.</span>
               </div>
             </div>
@@ -802,6 +838,6 @@ https://meli.la/xxxxx"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=68.6.3"></script>
+  <script type="module" src="admin.js?v=71.5"></script>
 </body>
 </html>
