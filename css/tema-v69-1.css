@@ -1,4 +1,4 @@
-/* V68.6.3 — Solo la sección seleccionada hereda el color de la barra. */
+/* V68.7 — Navegación estable y color únicamente en la opción seleccionada. */
 :root {
   --tema-color-inicio: #e9cdff;
   --tema-color-fin: #fae8fa;
@@ -59,4 +59,48 @@
   .navegacion-inferior .tab-inferior[aria-pressed="true"] {
     border-color: var(--tema-color-inicio) !important;
   }
+}
+
+
+/* V68.7 — Tienda y Bancarios usan exactamente el mismo estado visual activo. */
+.navegacion-inferior #tab-tienda.activo,
+.navegacion-inferior #tab-tienda[aria-pressed="true"],
+.navegacion-inferior #tab-bancarios.activo,
+.navegacion-inferior #tab-bancarios[aria-pressed="true"] {
+  color: var(--tema-texto) !important;
+  background-color: var(--tema-color-inicio) !important;
+  background-image: linear-gradient(135deg, var(--tema-color-inicio), var(--tema-color-fin)) !important;
+  border-color: var(--tema-color-inicio) !important;
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--tema-color-inicio) 28%, transparent) !important;
+}
+
+.navegacion-inferior #tab-tienda:not(.activo)[aria-pressed="false"],
+.navegacion-inferior #tab-bancarios:not(.activo)[aria-pressed="false"] {
+  color: #35433a !important;
+  background-color: #ffffff !important;
+  background-image: none !important;
+  border-color: #dfe6e1 !important;
+  box-shadow: 0 4px 12px rgba(31, 54, 40, .08) !important;
+}
+
+/* Mantiene el mismo ancho útil aunque una sección sea más corta y desaparezca
+   la barra vertical; así la cabecera y sus botones no se recorren al abrir Amazon. */
+html {
+  scrollbar-gutter: stable;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.menu-ofertas-contenedor,
+.menu-ofertas,
+.menu-ofertas > button {
+  left: auto !important;
+  right: auto !important;
+  translate: none !important;
 }
