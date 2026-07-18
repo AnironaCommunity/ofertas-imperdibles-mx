@@ -1,18 +1,18 @@
 /*
-  Ofertas Imperdibles MX — V71.0
-  Smart Header 2.0
+  Ofertas Imperdibles MX — V71.1
+  Cabecera híbrida fija
 
-  La cabecera original conserva siempre su tamaño y se desplaza de forma natural.
-  Al navegar hacia abajo aparece una barra compacta independiente. Al subir,
-  la barra se retira inmediatamente para no cubrir el primer cupón visible.
+  El encabezado completo permanece natural. Cuando la barra original de redes
+  sale de la pantalla, aparece una barra fija estable con redes y navegación.
+  No se oculta al cambiar la dirección del desplazamiento, evitando brincos y
+  cupones cubiertos por una aparición repentina.
 */
 
 :root {
-  --smart-header-alto: 58px;
-  --smart-header-transicion: 210ms cubic-bezier(.22, .75, .25, 1);
+  --cabecera-hibrida-alto: 92px;
+  --cabecera-hibrida-transicion: 190ms cubic-bezier(.22,.75,.25,1);
 }
 
-/* La cabecera principal vuelve a ser completamente natural: no cambia de alto. */
 .encabezado {
   position: relative !important;
   top: auto !important;
@@ -20,11 +20,10 @@
   background: transparent;
   box-shadow: none !important;
   transform: none !important;
-  will-change: auto !important;
   transition: none !important;
 }
 
-/* Anula cualquier estado compacto guardado por una versión anterior. */
+/* Neutraliza estados de las versiones anteriores. */
 body.cabecera-compacta .encabezado,
 body.cabecera-compacta .enlace-logo-inicio,
 body.cabecera-compacta .estado-dinamico-cabecera,
@@ -37,163 +36,168 @@ body.cabecera-compacta .hero-redes-boton,
 body.cabecera-compacta .hero-redes-visitantes,
 body.cabecera-compacta .menu-ofertas-contenedor,
 body.cabecera-compacta .menu-ofertas > button,
-body.cabecera-compacta .acceso-comunidad-anirona,
-body.cabecera-compacta .acceso-comunidad-icono,
-body.cabecera-compacta .acceso-comunidad-contenido small {
+body.cabecera-compacta .acceso-comunidad-anirona {
   max-height: none !important;
   min-height: initial !important;
   height: auto !important;
-  margin-top: initial !important;
-  margin-bottom: initial !important;
+  margin: initial !important;
   padding-top: initial !important;
   padding-bottom: initial !important;
-  gap: initial !important;
   opacity: 1 !important;
   visibility: visible !important;
   overflow: visible !important;
   pointer-events: auto !important;
   transform: none !important;
-  border-width: initial !important;
-  box-shadow: initial !important;
 }
 
-.smart-header {
+.cabecera-hibrida {
   position: fixed;
   top: max(0px, env(safe-area-inset-top));
   left: 50%;
   z-index: 1200;
-  width: min(1120px, calc(100% - 18px));
-  height: var(--smart-header-alto);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 9px;
-  border: 1px solid rgba(94, 63, 105, .13);
+  width: min(1120px, calc(100% - 14px));
+  min-height: var(--cabecera-hibrida-alto);
+  padding: 7px 8px 8px;
+  border: 1px solid rgba(94,63,105,.12);
+  border-top: 0;
   border-radius: 0 0 15px 15px;
-  background: rgba(255, 255, 255, .965);
-  box-shadow: 0 8px 24px rgba(15, 23, 42, .13);
+  background: rgba(255,255,255,.955);
+  box-shadow: 0 8px 24px rgba(15,23,42,.12);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transform: translate3d(-50%, calc(-100% - 12px), 0);
+  transform: translate3d(-50%, -10px, 0);
   transition:
-    transform var(--smart-header-transicion),
     opacity 150ms ease,
-    visibility 0s linear 210ms;
+    transform var(--cabecera-hibrida-transicion),
+    visibility 0s linear 190ms;
   contain: layout paint style;
 }
 
-.smart-header.smart-header-visible {
+.cabecera-hibrida.is-visible {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
   transform: translate3d(-50%, 0, 0);
   transition:
-    transform var(--smart-header-transicion),
     opacity 150ms ease,
+    transform var(--cabecera-hibrida-transicion),
     visibility 0s linear 0s;
 }
 
-.smart-header-marca {
-  min-width: 0;
+.cabecera-hibrida-redes,
+.cabecera-hibrida-nav {
   display: flex;
   align-items: center;
-  gap: 7px;
-  border: 0;
-  padding: 0;
-  color: #302334;
-  background: transparent;
+  justify-content: center;
+  min-width: 0;
+}
+
+.cabecera-hibrida-redes {
+  gap: 6px;
+  margin-bottom: 7px;
+}
+
+.cabecera-hibrida-red,
+.cabecera-hibrida-visitantes {
+  height: 29px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.cabecera-hibrida-red {
+  border: 1px solid rgba(255,255,255,.24);
+  color: #fff;
+}
+
+.cabecera-hibrida-whatsapp { background: #1fa855; }
+.cabecera-hibrida-facebook { background: #1877f2; }
+
+.cabecera-hibrida-visitantes {
+  border: 1px solid rgba(94,63,105,.13);
+  color: #443448;
+  background: #fff;
+}
+
+.cabecera-hibrida-nav {
+  gap: 6px;
+}
+
+.cabecera-hibrida-nav button {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 5px 7px;
+  border: 1px solid rgba(94,63,105,.12);
+  border-radius: 11px;
+  background: #fff;
+  color: #3c3040;
+  box-shadow: 0 2px 7px rgba(40,30,43,.045);
   cursor: pointer;
-  text-align: left;
 }
 
-.smart-header-marca img {
-  width: 37px;
-  height: 37px;
-  flex: 0 0 37px;
+.cabecera-hibrida-nav button img {
+  width: 25px;
+  height: 25px;
+  flex: 0 0 25px;
   object-fit: contain;
-  border-radius: 9px;
 }
 
-.smart-header-marca span {
+.cabecera-hibrida-nav button span {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 12px;
-  font-weight: 800;
-  line-height: 1.05;
+  font-size: 9px;
+  font-weight: 700;
 }
 
-.smart-header-nav {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.smart-header-boton {
-  min-width: 39px;
-  height: 39px;
-  display: inline-grid;
-  place-items: center;
-  padding: 5px;
-  border: 1px solid rgba(94, 63, 105, .12);
-  border-radius: 11px;
-  background: #fff;
-  cursor: pointer;
-  box-shadow: 0 2px 7px rgba(40, 30, 43, .05);
-}
-
-.smart-header-boton img {
-  width: 27px;
-  height: 27px;
-  object-fit: contain;
-}
-
-.smart-header-boton[aria-pressed="true"] {
-  border-color: rgba(94, 63, 105, .34);
+.cabecera-hibrida-nav button[aria-pressed="true"] {
+  border-color: rgba(94,63,105,.34);
   background: #f7f1f9;
-  box-shadow: inset 0 0 0 1px rgba(94, 63, 105, .08);
+  box-shadow: inset 0 0 0 1px rgba(94,63,105,.07);
 }
 
-.smart-header-boton:active,
-.smart-header-marca:active {
-  transform: scale(.96);
-}
+.cabecera-hibrida a:active,
+.cabecera-hibrida button:active { transform: scale(.97); }
+
+html { scroll-padding-top: calc(var(--cabecera-hibrida-alto) + 12px); }
 
 @media (min-width: 769px) {
-  :root { --smart-header-alto: 62px; }
+  :root { --cabecera-hibrida-alto: 98px; }
+  .cabecera-hibrida { width: min(1120px, calc(100% - 30px)); padding-inline: 12px; }
+  .cabecera-hibrida-red,
+  .cabecera-hibrida-visitantes { height: 31px; font-size: 11px; }
+  .cabecera-hibrida-nav button { max-width: 220px; height: 45px; }
+  .cabecera-hibrida-nav button span { font-size: 10px; }
+}
 
-  .smart-header {
-    width: min(1120px, calc(100% - 32px));
-    padding-inline: 12px;
-  }
-
-  .smart-header-marca span {
-    font-size: 13px;
-  }
-
-  .smart-header-boton {
-    width: auto;
-    min-width: 112px;
-    grid-auto-flow: column;
-    gap: 7px;
-    padding-inline: 10px;
-  }
-
-  .smart-header-boton::after {
-    content: attr(data-etiqueta);
-    font-size: 10px;
-    font-weight: 700;
-    white-space: nowrap;
-  }
+@media (max-width: 420px) {
+  .cabecera-hibrida { width: calc(100% - 8px); padding-inline: 5px; }
+  .cabecera-hibrida-red,
+  .cabecera-hibrida-visitantes { padding-inline: 8px; font-size: 9px; }
+  .cabecera-hibrida-nav { gap: 4px; }
+  .cabecera-hibrida-nav button { gap: 4px; padding-inline: 4px; }
+  .cabecera-hibrida-nav button img { width: 22px; height: 22px; flex-basis: 22px; }
+  .cabecera-hibrida-nav button span { font-size: 8px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .smart-header {
-    transition: none !important;
-  }
+  .cabecera-hibrida { transition: none !important; }
 }
