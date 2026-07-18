@@ -97,7 +97,7 @@ export default async function handler(request, response) {
     if (request.query?.action === "hero-config") {
       if (request.method === "GET") {
         const config = await requestSupabase(
-          "configuracion_web?select=imagen_url,color_inicio,color_fin&id=eq.hero_redes&limit=1"
+          "configuracion_web?select=imagen_url,color_inicio,color_fin,nombre_tienda,nombre_bancarios,nombre_mercadolibre,nombre_amazon&id=eq.hero_redes&limit=1"
         );
 
         response.setHeader("Cache-Control", "no-store");
@@ -107,6 +107,10 @@ export default async function handler(request, response) {
             imagen_url: "",
             color_inicio: "#e9cdff",
             color_fin: "#fae8fa",
+            nombre_tienda: "Tienda",
+            nombre_bancarios: "Bancarios",
+            nombre_mercadolibre: "Ofertas Mercado Libre",
+            nombre_amazon: "Ofertas Amazon",
           }
         );
       }
@@ -128,6 +132,10 @@ export default async function handler(request, response) {
             request.body?.color_fin,
             "#fae8fa"
           ),
+          nombre_tienda: cleanText(request.body?.nombre_tienda).slice(0, 36) || "Tienda",
+          nombre_bancarios: cleanText(request.body?.nombre_bancarios).slice(0, 36) || "Bancarios",
+          nombre_mercadolibre: cleanText(request.body?.nombre_mercadolibre).slice(0, 48) || "Ofertas Mercado Libre",
+          nombre_amazon: cleanText(request.body?.nombre_amazon).slice(0, 48) || "Ofertas Amazon",
           actualizado_en: new Date().toISOString(),
         };
 

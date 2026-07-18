@@ -155,7 +155,7 @@ export default async function handler(request, response) {
   try {
     if (action === "hero-config") {
       const config = await requestSupabase(
-        "configuracion_web?select=imagen_url,color_inicio,color_fin&id=eq.hero_redes&limit=1"
+        "configuracion_web?select=imagen_url,color_inicio,color_fin,nombre_tienda,nombre_bancarios,nombre_mercadolibre,nombre_amazon&id=eq.hero_redes&limit=1"
       );
 
       response.setHeader("Cache-Control", "no-store");
@@ -165,6 +165,10 @@ export default async function handler(request, response) {
           imagen_url: "",
           color_inicio: "#e9cdff",
           color_fin: "#fae8fa",
+          nombre_tienda: "Tienda",
+          nombre_bancarios: "Bancarios",
+          nombre_mercadolibre: "Ofertas Mercado Libre",
+          nombre_amazon: "Ofertas Amazon",
         }
       );
     }
