@@ -358,6 +358,9 @@ function cambiarVista(
 
   // La navegación ML/Amazon es una cuadrícula fija; nunca conserva desplazamiento horizontal.
   if (menuOfertas) menuOfertas.scrollLeft = 0;
+  document.documentElement.scrollLeft = 0;
+  document.body.scrollLeft = 0;
+  window.scrollTo({ left: 0, top: window.scrollY, behavior: "auto" });
 
   const vistas = [
     [vistaCupones, "cupones"],

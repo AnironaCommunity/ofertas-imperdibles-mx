@@ -8,6 +8,7 @@
   const visitorTotal = document.querySelector("#hero-total-visitantes");
 
   const STORAGE_KEY = "ofertas_imperdibles_ultima_visita";
+  const CONFIG_CACHE_KEY = "ofertas_imperdibles_config_cache";
   const ONE_DAY = 24 * 60 * 60 * 1000;
 
   function formatNumber(value) {
@@ -26,6 +27,11 @@
     if (!response.ok) return;
 
     const config = await response.json();
+
+    try {
+      const anterior = JSON.parse(localStorage.getItem(CONFIG_CACHE_KEY) || "{}");
+      localStorage.setItem(CONFIG_CACHE_KEY, JSON.stringify({ ...anterior, ...config }));
+    } catch {}
 
     if (config.color_inicio) {
       hero.style.setProperty("--hero-color-inicio", config.color_inicio);
@@ -106,8 +112,17 @@
     }
 
     const data = await response.json();
-    visitorTotal.textContent = formatNumber(data.total_visitas);
+    const totalFormateado = formatNumber(data.total_visitas);
+    visitorTotal.textContent = totalFormateado;
     visitorBox.hidden = false;
+
+    try {
+      const anterior = JSON.parse(localStorage.getItem(CONFIG_CACHE_KEY) || "{}");
+      localStorage.setItem(
+        CONFIG_CACHE_KEY,
+        JSON.stringify({ ...anterior, total_visitantes: totalFormateado })
+      );
+    } catch {}
 
     if (registrar) {
       try {
