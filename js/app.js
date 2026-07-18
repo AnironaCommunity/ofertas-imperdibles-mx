@@ -162,30 +162,6 @@ const TITULOS_SECCION = {
   anirona: "Comunidad Anirona | Ofertas Imperdibles MX",
 };
 
-function nombresPrincipales() {
-  return window.OFERTAS_CONFIG?.nombres || {
-    tienda: "Tienda",
-    bancarios: "Bancarios",
-    mercadolibre: "Ofertas Mercado Libre",
-    amazon: "Ofertas Amazon",
-  };
-}
-
-function actualizarTitulosConfigurables() {
-  const nombres = nombresPrincipales();
-  const tituloCupones = document.querySelector("#vista-cupones .titulo-seccion");
-  if (tituloCupones) {
-    tituloCupones.textContent = categoriaActiva === "tienda"
-      ? `🎟️ ${nombres.tienda}`
-      : `💳 ${nombres.bancarios}`;
-  }
-  actualizarTituloSeccion(
-    vistaActiva === "cupones" ? categoriaActiva : (VISTA_A_SECCION_URL[vistaActiva] || "tienda")
-  );
-}
-
-window.addEventListener("ofertas:configuracion", actualizarTitulosConfigurables);
-
 
 function mostrarCantidadSeccion(elemento, cantidad, tipo) {
   if (!elemento) return;
@@ -272,15 +248,9 @@ function actualizarContadoresSecciones() {
 }
 
 function actualizarTituloSeccion(seccion) {
-  const nombres = nombresPrincipales();
-  const titulos = {
-    tienda: `${nombres.tienda} | Ofertas Imperdibles MX`,
-    bancarios: `${nombres.bancarios} | Ofertas Imperdibles MX`,
-    mercadolibre: `${nombres.mercadolibre} | Ofertas Imperdibles MX`,
-    amazon: `${nombres.amazon} | Ofertas Imperdibles MX`,
-    anirona: TITULOS_SECCION.anirona,
-  };
-  document.title = titulos[seccion] || "Ofertas Imperdibles MX";
+  document.title =
+    TITULOS_SECCION[seccion] ||
+    "Ofertas Imperdibles MX";
 }
 
 const VISTA_A_SECCION_URL = {
@@ -340,12 +310,11 @@ function activarSeccionDesdeUrl({
     (boton) => boton.dataset.vista === configuracion.vista
   );
 
-  // Los accesos de Mercado Libre y Amazon ya caben completos.
-  // Evitamos scrollIntoView porque algunos navegadores móviles desplazan
-  // horizontalmente todo el documento al centrar el botón activo.
-  if (menuOfertas) {
-    menuOfertas.scrollLeft = 0;
-  }
+  botonActivo?.scrollIntoView({
+    behavior: desplazamiento === "smooth" ? "smooth" : "auto",
+    block: "nearest",
+    inline: "center",
+  });
 
   if (actualizarHistorial) {
     actualizarUrlSeccion(seccion, "replace");
@@ -379,14 +348,11 @@ botonesMenuOfertas.forEach((boton) => {
       desplazamiento: "smooth",
     });
 
-    // Mantener el documento centrado al cambiar de sección.
-    // Ya no existe un carrusel horizontal: ambos accesos permanecen visibles.
-    if (menuOfertas) {
-      menuOfertas.scrollLeft = 0;
-    }
-    if (window.scrollX !== 0) {
-      window.scrollTo({ left: 0, top: window.scrollY, behavior: "auto" });
-    }
+    boton.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center",
+    });
 
     window.setTimeout(actualizarControlesMenuOfertas, 250);
   });
@@ -1067,15 +1033,18 @@ function renderizarCategoria() {
 
   const esTienda = categoriaActiva === "tienda";
 
-  const nombres = nombresPrincipales();
-  document.querySelector("#vista-cupones .titulo-seccion").textContent = esTienda
-    ? `🎟️ ${nombres.tienda}`
-    : `💳 ${nombres.bancarios}`;
+  const etiquetas = window.ofertasEtiquetas || {};
+  const tituloCupones = document.querySelector("#titulo-seccion-cupones");
+  if (tituloCupones) {
+    tituloCupones.textContent = esTienda
+      ? `🎟️ ${etiquetas.seccionTienda || "Cupones de tienda"}`
+      : `💳 ${etiquetas.seccionBancarios || "Cupones bancarios"}`;
+  }
 
   if (cuponesCategoria.length === 0) {
     sinCupones.querySelector("h2").textContent = esTienda
-      ? `No hay cupones disponibles en ${nombres.tienda}`
-      : `No hay cupones disponibles en ${nombres.bancarios}`;
+      ? `No hay ${(etiquetas.seccionTienda || "cupones de tienda").toLowerCase()} disponibles`
+      : `No hay ${(etiquetas.seccionBancarios || "cupones bancarios").toLowerCase()} disponibles`;
 
     sinCupones.querySelector("p").textContent =
       "Pronto agregaremos nuevas opciones.";
@@ -2118,3 +2087,8 @@ async function load(){try{const d=await api('/api/cupones?action=eventos');rende
 load();
 
 }
+
+
+document.addEventListener("ofertas:etiquetas-cargadas", () => {
+  if (vistaActiva === "cupones") renderizarCategoria();
+});

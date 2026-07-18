@@ -17,54 +17,6 @@
       : "0";
   }
 
-
-  function contrastePara(colorInicio, colorFin) {
-    const hexToRgb = (hex) => {
-      const clean = String(hex || "").replace("#", "");
-      if (!/^[0-9a-f]{6}$/i.test(clean)) return [255, 255, 255];
-      return [0, 2, 4].map((i) => parseInt(clean.slice(i, i + 2), 16));
-    };
-    const a = hexToRgb(colorInicio);
-    const b = hexToRgb(colorFin);
-    const rgb = a.map((v, i) => (v + b[i]) / 2);
-    const luminancia = (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]) / 255;
-    return luminancia > 0.62 ? "#173022" : "#ffffff";
-  }
-
-  function aplicarConfiguracionGlobal(config) {
-    const inicio = config.color_inicio || "#e9cdff";
-    const fin = config.color_fin || "#fae8fa";
-    document.documentElement.style.setProperty("--tema-color-inicio", inicio);
-    document.documentElement.style.setProperty("--tema-color-fin", fin);
-    document.documentElement.style.setProperty("--tema-texto-activo", contrastePara(inicio, fin));
-
-    const nombres = {
-      tienda: config.nombre_tienda || "Tienda",
-      bancarios: config.nombre_bancarios || "Bancarios",
-      mercadolibre: config.nombre_mercadolibre || "Ofertas Mercado Libre",
-      amazon: config.nombre_amazon || "Ofertas Amazon",
-    };
-
-    document.querySelector("#tab-tienda strong")?.replaceChildren(nombres.tienda);
-    document.querySelector("#tab-bancarios strong")?.replaceChildren(nombres.bancarios);
-    document.querySelector('[data-vista="ofertas_mercado_libre"] > span:not(.contador-seccion)')?.replaceChildren(nombres.mercadolibre);
-    document.querySelector('[data-vista="ofertas_amazon"] > span:not(.contador-seccion)')?.replaceChildren(nombres.amazon);
-
-    const tituloMl = document.querySelector("#seccion-ofertas-mercado-libre .titulo-seccion");
-    const tituloAmazon = document.querySelector("#seccion-ofertas-amazon .titulo-seccion");
-    if (tituloMl) {
-      const img = tituloMl.querySelector("img")?.cloneNode(true);
-      tituloMl.replaceChildren(...(img ? [img, document.createTextNode(` ${nombres.mercadolibre}`)] : [nombres.mercadolibre]));
-    }
-    if (tituloAmazon) {
-      const img = tituloAmazon.querySelector("img")?.cloneNode(true);
-      tituloAmazon.replaceChildren(...(img ? [img, document.createTextNode(` ${nombres.amazon}`)] : [nombres.amazon]));
-    }
-
-    window.OFERTAS_CONFIG = { ...(window.OFERTAS_CONFIG || {}), ...config, nombres };
-    window.dispatchEvent(new CustomEvent("ofertas:configuracion", { detail: window.OFERTAS_CONFIG }));
-  }
-
   async function cargarConfiguracion() {
     const response = await fetch(
       `/api/cupones?action=hero-config&_=${Date.now()}`,
@@ -87,7 +39,23 @@
       image.src = config.imagen_url || defaultImage;
     }
 
-    aplicarConfiguracionGlobal(config);
+    const labels = {
+      textoDescriptivo: config.texto_descriptivo || "Cupones, promociones y novedades todos los días.",
+      botonTienda: config.nombre_boton_tienda || "Tienda",
+      seccionTienda: config.nombre_seccion_tienda || "Cupones de tienda",
+      botonBancarios: config.nombre_boton_bancarios || "Bancarios",
+      seccionBancarios: config.nombre_seccion_bancarios || "Cupones bancarios",
+      botonComunidad: config.nombre_boton_comunidad || "Comunidad Anirona",
+      seccionComunidad: config.nombre_seccion_comunidad || "Comunidad Anirona",
+    };
+
+    window.ofertasEtiquetas = labels;
+    document.querySelector("#hero-texto-descriptivo")?.replaceChildren(labels.textoDescriptivo);
+    document.querySelector("#nombre-boton-tienda")?.replaceChildren(labels.botonTienda);
+    document.querySelector("#nombre-boton-bancarios")?.replaceChildren(labels.botonBancarios);
+    document.querySelector("#nombre-boton-comunidad")?.replaceChildren(labels.botonComunidad);
+    document.querySelector("#nombre-seccion-comunidad")?.replaceChildren(labels.seccionComunidad);
+    document.dispatchEvent(new CustomEvent("ofertas:etiquetas-cargadas", { detail: labels }));
   }
 
   async function cargarVisitantes() {
