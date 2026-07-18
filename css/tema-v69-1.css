@@ -1,18 +1,18 @@
-/* V68.6.2 — Los botones principales heredan el color configurado para la barra. */
+/* V68.6.3 — Solo la sección seleccionada hereda el color de la barra. */
 :root {
   --tema-color-inicio: #e9cdff;
   --tema-color-fin: #fae8fa;
   --tema-texto: #173022;
 }
 
-/* Mercado Libre, Amazon, Tienda y Bancarios comparten el degradado de la barra. */
+/* Estado neutro de las opciones no seleccionadas. */
 .menu-ofertas > button,
 .navegacion-inferior #tab-tienda,
 .navegacion-inferior #tab-bancarios {
-  color: var(--tema-texto) !important;
-  background: linear-gradient(135deg, var(--tema-color-inicio), var(--tema-color-fin)) !important;
-  border-color: color-mix(in srgb, var(--tema-color-inicio) 55%, #ffffff) !important;
-  box-shadow: 0 5px 14px color-mix(in srgb, var(--tema-color-inicio) 18%, transparent) !important;
+  color: #35433a !important;
+  background: #ffffff !important;
+  border-color: #dfe6e1 !important;
+  box-shadow: 0 4px 12px rgba(31, 54, 40, .08) !important;
 }
 
 .menu-ofertas > button:hover,
@@ -21,11 +21,12 @@
 .navegacion-inferior #tab-tienda:focus-visible,
 .navegacion-inferior #tab-bancarios:hover,
 .navegacion-inferior #tab-bancarios:focus-visible {
-  color: var(--tema-texto) !important;
-  background: linear-gradient(135deg, var(--tema-color-inicio), var(--tema-color-fin)) !important;
-  filter: brightness(.98);
+  color: #26362c !important;
+  background: #f7f9f7 !important;
+  border-color: color-mix(in srgb, var(--tema-color-inicio) 42%, #dfe6e1) !important;
 }
 
+/* El degradado configurado se reserva exclusivamente para la opción activa. */
 .menu-ofertas > button.activo,
 .menu-ofertas > button[aria-pressed="true"],
 .navegacion-inferior .tab-inferior.activo,
@@ -49,9 +50,13 @@
 }
 
 @supports not (color: color-mix(in srgb, red, blue)) {
-  .menu-ofertas > button,
-  .navegacion-inferior #tab-tienda,
-  .navegacion-inferior #tab-bancarios {
+  .menu-ofertas > button:hover,
+  .navegacion-inferior #tab-tienda:hover,
+  .navegacion-inferior #tab-bancarios:hover,
+  .menu-ofertas > button.activo,
+  .menu-ofertas > button[aria-pressed="true"],
+  .navegacion-inferior .tab-inferior.activo,
+  .navegacion-inferior .tab-inferior[aria-pressed="true"] {
     border-color: var(--tema-color-inicio) !important;
   }
 }
