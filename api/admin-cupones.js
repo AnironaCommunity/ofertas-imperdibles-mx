@@ -97,7 +97,7 @@ export default async function handler(request, response) {
     if (request.query?.action === "hero-config") {
       if (request.method === "GET") {
         const config = await requestSupabase(
-          "configuracion_web?select=imagen_url,color_inicio,color_fin,texto_descriptivo,nombre_boton_tienda,nombre_seccion_tienda,nombre_boton_bancarios,nombre_seccion_bancarios,nombre_boton_comunidad,nombre_seccion_comunidad&id=eq.hero_redes&limit=1"
+          "configuracion_web?select=imagen_url,color_inicio,color_fin,texto_descriptivo,nombre_boton_tienda,nombre_seccion_tienda,nombre_boton_bancarios,nombre_seccion_bancarios,nombre_boton_comunidad,nombre_seccion_comunidad,enlace_whatsapp,enlace_facebook&id=eq.hero_redes&limit=1"
         );
 
         response.setHeader("Cache-Control", "no-store");
@@ -114,6 +114,8 @@ export default async function handler(request, response) {
             nombre_seccion_bancarios: "Cupones bancarios",
             nombre_boton_comunidad: "Comunidad Anirona",
             nombre_seccion_comunidad: "Comunidad Anirona",
+            enlace_whatsapp: "https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n",
+            enlace_facebook: "https://www.facebook.com/OfertasImperdiblesView",
           }
         );
       }
@@ -142,6 +144,8 @@ export default async function handler(request, response) {
           nombre_seccion_bancarios: cleanText(request.body?.nombre_seccion_bancarios).slice(0, 55) || "Cupones bancarios",
           nombre_boton_comunidad: cleanText(request.body?.nombre_boton_comunidad).slice(0, 45) || "Comunidad Anirona",
           nombre_seccion_comunidad: cleanText(request.body?.nombre_seccion_comunidad).slice(0, 55) || "Comunidad Anirona",
+          enlace_whatsapp: cleanText(request.body?.enlace_whatsapp).slice(0, 500) || "https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n",
+          enlace_facebook: cleanText(request.body?.enlace_facebook).slice(0, 500) || "https://www.facebook.com/OfertasImperdiblesView",
           actualizado_en: new Date().toISOString(),
         };
 
