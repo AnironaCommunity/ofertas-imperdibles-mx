@@ -1,36 +1,44 @@
-/* V69.1 — Tema heredado de la barra y nombres configurables */
+/* V68.6.2 — Los botones principales heredan el color configurado para la barra. */
 :root {
   --tema-color-inicio: #e9cdff;
   --tema-color-fin: #fae8fa;
-  --tema-texto-activo: #173022;
+  --tema-texto: #173022;
 }
 
-/* Los accesos principales activos heredan el degradado configurado. */
+/* Mercado Libre, Amazon, Tienda y Bancarios comparten el degradado de la barra. */
+.menu-ofertas > button,
+.navegacion-inferior #tab-tienda,
+.navegacion-inferior #tab-bancarios {
+  color: var(--tema-texto) !important;
+  background: linear-gradient(135deg, var(--tema-color-inicio), var(--tema-color-fin)) !important;
+  border-color: color-mix(in srgb, var(--tema-color-inicio) 55%, #ffffff) !important;
+  box-shadow: 0 5px 14px color-mix(in srgb, var(--tema-color-inicio) 18%, transparent) !important;
+}
+
+.menu-ofertas > button:hover,
+.menu-ofertas > button:focus-visible,
+.navegacion-inferior #tab-tienda:hover,
+.navegacion-inferior #tab-tienda:focus-visible,
+.navegacion-inferior #tab-bancarios:hover,
+.navegacion-inferior #tab-bancarios:focus-visible {
+  color: var(--tema-texto) !important;
+  background: linear-gradient(135deg, var(--tema-color-inicio), var(--tema-color-fin)) !important;
+  filter: brightness(.98);
+}
+
 .menu-ofertas > button.activo,
 .menu-ofertas > button[aria-pressed="true"],
 .navegacion-inferior .tab-inferior.activo,
 .navegacion-inferior .tab-inferior[aria-pressed="true"] {
-  color: var(--tema-texto-activo) !important;
+  color: var(--tema-texto) !important;
   background: linear-gradient(135deg, var(--tema-color-inicio), var(--tema-color-fin)) !important;
-  border-color: color-mix(in srgb, var(--tema-color-inicio) 58%, #ffffff) !important;
-  box-shadow: 0 8px 20px color-mix(in srgb, var(--tema-color-inicio) 20%, transparent) !important;
+  border-color: color-mix(in srgb, var(--tema-color-inicio) 72%, #ffffff) !important;
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--tema-color-inicio) 28%, transparent) !important;
 }
 
-.menu-ofertas > button.activo span,
-.menu-ofertas > button[aria-pressed="true"] span,
-.navegacion-inferior .tab-inferior.activo strong,
-.navegacion-inferior .tab-inferior[aria-pressed="true"] strong {
+.menu-ofertas > button span,
+.navegacion-inferior .tab-inferior strong {
   color: inherit !important;
-}
-
-/* Acentos suaves para mantener identidad sin pintar toda la interfaz. */
-.menu-ofertas > button:not(.activo),
-.navegacion-inferior .tab-inferior:not(.activo) {
-  border-color: color-mix(in srgb, var(--tema-color-inicio) 20%, #dfe5e1) !important;
-}
-
-.contador-seccion {
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--tema-color-fin) 22%, transparent);
 }
 
 .boton-recargar:focus-visible,
@@ -41,10 +49,9 @@
 }
 
 @supports not (color: color-mix(in srgb, red, blue)) {
-  .menu-ofertas > button.activo,
-  .menu-ofertas > button[aria-pressed="true"],
-  .navegacion-inferior .tab-inferior.activo,
-  .navegacion-inferior .tab-inferior[aria-pressed="true"] {
+  .menu-ofertas > button,
+  .navegacion-inferior #tab-tienda,
+  .navegacion-inferior #tab-bancarios {
     border-color: var(--tema-color-inicio) !important;
   }
 }
