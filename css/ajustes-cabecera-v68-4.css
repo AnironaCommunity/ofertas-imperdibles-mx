@@ -1,6 +1,24 @@
-/* V68.4 — Ajustes conservadores de cabecera y navegación */
+/* V68.6.1 — Cabecera consolidada, botones blancos y estabilidad horizontal */
 
-/* El degradado pertenece al encabezado; la imagen del logo continúa transparente. */
+/* Estabilidad de la página al alternar vistas con diferente altura. */
+html {
+  max-width: 100%;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+}
+
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Degradado decorativo detrás del logo; el PNG permanece transparente. */
 .encabezado {
   position: relative;
   overflow: hidden;
@@ -9,19 +27,24 @@
 .encabezado::before {
   content: "";
   position: absolute;
-  z-index: -2;
-  top: -48px;
+  z-index: 0;
+  top: -30px;
   left: 50%;
   width: min(760px, 118vw);
-  height: 270px;
+  height: 178px;
   transform: translateX(-50%);
   border-radius: 0 0 50% 50%;
   background:
-    radial-gradient(circle at 32% 45%, rgba(255, 142, 153, .16), transparent 42%),
-    radial-gradient(circle at 70% 48%, rgba(255, 210, 111, .23), transparent 44%),
-    linear-gradient(180deg, rgba(245, 255, 247, .96), rgba(255, 255, 255, 0));
+    radial-gradient(circle at 32% 42%, rgba(255, 142, 153, .14), transparent 40%),
+    radial-gradient(circle at 70% 44%, rgba(255, 210, 111, .20), transparent 42%),
+    linear-gradient(180deg, rgba(245, 255, 247, .94), rgba(255, 255, 255, 0));
   filter: blur(2px);
   pointer-events: none;
+}
+
+.encabezado > * {
+  position: relative;
+  z-index: 1;
 }
 
 .enlace-logo-inicio::before {
@@ -35,45 +58,145 @@
   filter: blur(9px);
 }
 
-/* Visitantes: información secundaria, más discreta que las redes. */
+.estado-dinamico-cabecera {
+  margin-bottom: 9px;
+}
+
+/* Redes y visitantes: tarjetas completamente blancas. */
+.hero-redes-boton,
 .hero-redes-visitantes {
-  min-height: 25px !important;
-  padding: 4px 7px !important;
-  gap: 4px !important;
-  font-size: 8.5px !important;
-  opacity: .88;
+  border-color: rgba(31, 41, 55, .10) !important;
+  background: #fff !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, .055) !important;
+}
+
+.hero-redes-boton:hover,
+.hero-redes-boton:focus-visible {
+  background: #fff !important;
+  box-shadow: 0 4px 11px rgba(15, 23, 42, .09) !important;
+}
+
+.hero-redes-visitantes {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  align-self: center !important;
+  min-height: 22px !important;
+  height: 22px !important;
+  padding: 3px 6px !important;
+  gap: 3px !important;
+  color: #403944 !important;
+  font-size: 7.5px !important;
+  line-height: 1 !important;
+  opacity: .92;
+}
+
+.hero-redes-visitantes > span,
+.hero-redes-visitantes strong {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: static !important;
+  top: auto !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+  vertical-align: middle !important;
 }
 
 .hero-redes-visitantes > span {
-  font-size: 9.5px !important;
+  font-size: 8px !important;
 }
 
 .hero-redes-visitantes strong {
-  font-size: 8.5px !important;
+  font-size: 7.5px !important;
   font-weight: 600 !important;
 }
 
-/* Mercado Libre y Amazon permanecen juntos como accesos comerciales principales. */
+/* Accesos de Mercado Libre y Amazon. */
+.menu-ofertas-contenedor {
+  width: min(1120px, calc(100% - 28px)) !important;
+  max-width: 100%;
+  margin: 7px auto 4px !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+.menu-ofertas-contenedor::before,
+.menu-ofertas-contenedor::after,
+.menu-ofertas-flecha,
+.menu-ofertas-indicador {
+  display: none !important;
+}
+
 .menu-ofertas {
-  justify-content: center;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  transform: none !important;
+  scroll-behavior: auto !important;
 }
 
 .menu-ofertas > button {
-  flex: 1 0 min(330px, 46vw);
+  display: grid !important;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 46px !important;
+  margin: 0 !important;
+  padding: 7px 9px !important;
+  gap: 6px !important;
+  overflow: hidden !important;
+  border-color: rgba(31, 41, 55, .10) !important;
+  background: #fff !important;
+  box-shadow: 0 3px 11px rgba(15, 23, 42, .055) !important;
+  transform: none;
 }
 
-/* Comunidad se separa visualmente para no competir con los cupones y ofertas. */
+.menu-ofertas > button:hover,
+.menu-ofertas > button:focus-visible {
+  background: #fff !important;
+  transform: translateY(-1px);
+}
+
+.menu-ofertas > button.activo {
+  background: #fff !important;
+  border-color: rgba(21, 147, 106, .28) !important;
+  box-shadow: 0 0 0 2px rgba(21, 147, 106, .07), 0 5px 14px rgba(15, 23, 42, .07) !important;
+}
+
+.menu-ofertas > button > span:not(.contador-seccion):not(.menu-ofertas-logo-marco) {
+  min-width: 0;
+  overflow: hidden;
+  line-height: 1.15;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: normal;
+}
+
+.menu-ofertas .contador-seccion {
+  margin-left: 0 !important;
+}
+
+/* Comunidad permanece independiente y compacta. */
 .acceso-comunidad-anirona {
   display: grid;
-  grid-template-columns: 38px minmax(0, 1fr) auto 18px;
+  grid-template-columns: 34px minmax(0, 1fr) auto 14px;
   align-items: center;
-  gap: 9px;
+  gap: 7px;
   width: min(1120px, calc(100% - 28px));
-  min-height: 54px;
-  margin: 5px auto 9px;
-  padding: 8px 12px;
+  max-width: 100%;
+  min-height: 48px;
+  margin: 4px auto 8px;
+  padding: 7px 10px;
+  overflow: hidden;
   border: 1px solid rgba(35, 141, 83, .16);
-  border-radius: 15px;
+  border-radius: 14px;
   color: #24352c;
   background: linear-gradient(105deg, rgba(242, 253, 246, .98), rgba(255, 250, 235, .94));
   box-shadow: 0 5px 15px rgba(34, 106, 64, .06);
@@ -90,20 +213,25 @@
   outline: none;
 }
 
+.acceso-comunidad-anirona.activo {
+  border-color: rgba(35, 141, 83, .42);
+  box-shadow: 0 0 0 2px rgba(35, 141, 83, .08), 0 7px 18px rgba(34, 106, 64, .10);
+}
+
 .acceso-comunidad-icono {
   display: grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
   overflow: hidden;
-  border-radius: 11px;
-  background: rgba(255,255,255,.86);
+  border-radius: 10px;
+  background: #fff;
 }
 
 .acceso-comunidad-icono img {
   display: block;
-  width: 30px;
-  height: 30px;
+  width: 27px;
+  height: 27px;
   object-fit: contain;
 }
 
@@ -117,7 +245,7 @@
 }
 
 .acceso-comunidad-contenido strong {
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.2;
 }
 
@@ -125,7 +253,7 @@
   margin-top: 2px;
   overflow: hidden;
   color: #647067;
-  font-size: 9px;
+  font-size: 8px;
   line-height: 1.25;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -138,11 +266,11 @@
 
 .acceso-comunidad-flecha {
   color: #258654;
-  font-size: 22px;
+  font-size: 18px;
   line-height: 1;
 }
 
-/* La barra inferior jamás cambia fuera de Tienda/Bancarios. */
+/* Tienda y Bancarios no cambian al abrir otras vistas. */
 .navegacion-inferior {
   grid-template-columns: 1fr 1fr !important;
 }
@@ -152,138 +280,34 @@
   display: inline-flex !important;
 }
 
-@media (max-width: 600px) {
-  .encabezado::before {
-    top: -32px;
-    height: 225px;
-  }
-
-  .hero-redes-visitantes {
-    min-height: 23px !important;
-    padding: 3px 6px !important;
-    font-size: 7.8px !important;
-  }
-
-  .hero-redes-visitantes > span {
-    font-size: 8.8px !important;
-  }
-
-  .hero-redes-visitantes strong {
-    font-size: 7.8px !important;
-  }
-
-  .menu-ofertas > button {
-    flex-basis: calc(50% - 5px);
-    min-width: 0;
-  }
-
-  .menu-ofertas-indicador {
-    font-size: 9px;
-  }
-
-  .acceso-comunidad-anirona {
-    grid-template-columns: 34px minmax(0, 1fr) auto 14px;
-    gap: 7px;
-    width: calc(100% - 22px);
-    min-height: 48px;
-    margin-top: 3px;
-    padding: 7px 9px;
-    border-radius: 13px;
-  }
-
-  .acceso-comunidad-icono {
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
-  }
-
-  .acceso-comunidad-icono img {
-    width: 27px;
-    height: 27px;
-  }
-
-  .acceso-comunidad-contenido strong {
-    font-size: 11px;
-  }
-
-  .acceso-comunidad-contenido small {
-    font-size: 8px;
-  }
-
-  .acceso-comunidad-flecha {
-    font-size: 19px;
-  }
+/* Vistas estables: sin traslaciones ni anchos mayores al viewport. */
+main,
+.vista-principal,
+.modulo-ofertas-categoria,
+.ofertas-grid-compacta,
+#vista-cupones,
+#seccion-ofertas-amazon,
+#seccion-ofertas-mercado-libre,
+#seccion-comunidad-anirona {
+  min-width: 0;
+  max-width: 100%;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .acceso-comunidad-anirona {
-    transition: none;
-  }
+#vista-cupones,
+#seccion-ofertas-amazon,
+#seccion-ofertas-mercado-libre,
+#seccion-comunidad-anirona {
+  width: 100% !important;
+  margin-right: auto !important;
+  margin-left: auto !important;
+  transform: none !important;
 }
 
-
-/* V68.5 — Pulido de cabecera y acceso Comunidad */
-.encabezado::before {
-  top: -44px;
-  height: 205px;
-  background:
-    radial-gradient(circle at 32% 42%, rgba(255, 142, 153, .14), transparent 40%),
-    radial-gradient(circle at 70% 44%, rgba(255, 210, 111, .20), transparent 42%),
-    linear-gradient(180deg, rgba(245, 255, 247, .94), rgba(255, 255, 255, 0));
-}
-
-.estado-dinamico-cabecera {
-  margin-bottom: 10px;
-}
-
-.hero-redes-visitantes {
-  min-height: 22px !important;
-  padding: 3px 6px !important;
-  gap: 3px !important;
-  font-size: 7.5px !important;
-}
-
-.hero-redes-visitantes > span {
-  font-size: 8px !important;
-}
-
-.hero-redes-visitantes strong {
-  font-size: 7.5px !important;
-  font-weight: 600 !important;
-}
-
-.acceso-comunidad-anirona {
-  grid-template-columns: 34px minmax(0, 1fr) auto 14px;
-  min-height: 48px;
-  padding: 7px 10px;
-  border-radius: 14px;
-}
-
-.acceso-comunidad-anirona.activo {
-  border-color: rgba(35, 141, 83, .42);
-  box-shadow: 0 0 0 2px rgba(35, 141, 83, .08), 0 7px 18px rgba(34, 106, 64, .10);
-}
-
-.acceso-comunidad-icono {
-  width: 34px;
-  height: 34px;
-}
-
-.acceso-comunidad-icono img {
-  width: 27px;
-  height: 27px;
-}
-
-.acceso-comunidad-contenido strong {
-  font-size: 11px;
-}
-
-.acceso-comunidad-contenido small {
-  font-size: 8px;
-}
-
-.acceso-comunidad-flecha {
-  font-size: 18px;
+.ofertas-grid-compacta > *,
+.tarjeta-oferta,
+.oferta-contenido {
+  min-width: 0;
+  max-width: 100%;
 }
 
 @media (max-width: 600px) {
@@ -292,125 +316,12 @@
     height: 178px;
   }
 
-  .estado-dinamico-cabecera {
-    margin-bottom: 9px;
-  }
-
-  .hero-redes-visitantes {
-    min-height: 20px !important;
-    padding: 2px 5px !important;
-    font-size: 7px !important;
-  }
-
-  .hero-redes-visitantes > span,
-  .hero-redes-visitantes strong {
-    font-size: 7px !important;
-  }
-
+  .menu-ofertas-contenedor,
   .acceso-comunidad-anirona {
-    grid-template-columns: 31px minmax(0, 1fr) auto 12px;
-    min-height: 44px;
-    padding: 6px 8px;
-  }
-
-  .acceso-comunidad-icono {
-    width: 31px;
-    height: 31px;
-  }
-
-  .acceso-comunidad-icono img {
-    width: 25px;
-    height: 25px;
-  }
-}
-
-/* V68.5.1 — Corrección de accesos superiores y alineación de visitantes */
-
-/* Con solo Mercado Libre y Amazon ya no se necesita carrusel ni flechas. */
-.menu-ofertas-contenedor {
-  width: min(1120px, calc(100% - 28px)) !important;
-  margin-top: 7px !important;
-  margin-bottom: 4px !important;
-  padding: 0 !important;
-}
-
-.menu-ofertas-contenedor::before,
-.menu-ofertas-contenedor::after,
-.menu-ofertas-flecha,
-.menu-ofertas-indicador {
-  display: none !important;
-}
-
-.menu-ofertas {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px !important;
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: visible !important;
-}
-
-.menu-ofertas > button {
-  display: grid !important;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  width: 100% !important;
-  min-width: 0 !important;
-  min-height: 46px !important;
-  padding: 7px 9px !important;
-  gap: 6px !important;
-  overflow: visible !important;
-}
-
-.menu-ofertas > button > span:not(.contador-seccion) {
-  min-width: 0;
-  overflow: visible;
-  line-height: 1.15;
-  text-align: left;
-  text-overflow: clip;
-  white-space: normal;
-}
-
-.menu-ofertas-logo {
-  max-width: 29px !important;
-}
-
-.menu-ofertas .contador-seccion {
-  margin-left: 0 !important;
-}
-
-/* Reduce el espacio entre las categorías y Comunidad Anirona. */
-.acceso-comunidad-anirona {
-  margin-top: 4px !important;
-  margin-bottom: 8px !important;
-}
-
-/* Icono y cifra de visitantes centrados en la misma línea. */
-.hero-redes-visitantes {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  line-height: 1 !important;
-}
-
-.hero-redes-visitantes > span {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  line-height: 1 !important;
-  position: relative;
-  top: 1px;
-}
-
-.hero-redes-visitantes strong {
-  display: inline-flex !important;
-  align-items: center !important;
-  line-height: 1 !important;
-}
-
-@media (max-width: 600px) {
-  .menu-ofertas-contenedor {
     width: calc(100% - 22px) !important;
+  }
+
+  .menu-ofertas-contenedor {
     margin-top: 6px !important;
     margin-bottom: 3px !important;
   }
@@ -427,16 +338,6 @@
     font-size: 9.6px !important;
   }
 
-  .menu-ofertas-logo {
-    height: 13px !important;
-    max-width: 24px !important;
-  }
-
-  .menu-ofertas-logo.logo-amazon {
-    height: 12px !important;
-    max-width: 27px !important;
-  }
-
   .menu-ofertas .contador-seccion {
     min-width: 18px !important;
     height: 18px !important;
@@ -445,56 +346,39 @@
   }
 
   .acceso-comunidad-anirona {
-    margin-top: 3px !important;
+    grid-template-columns: 31px minmax(0, 1fr) auto 12px;
+    min-height: 44px;
+    margin-top: 3px;
+    padding: 6px 8px;
+    border-radius: 13px;
   }
 
-  .hero-redes-visitantes > span {
-    top: 1px;
+  .acceso-comunidad-icono {
+    width: 31px;
+    height: 31px;
+  }
+
+  .acceso-comunidad-icono img {
+    width: 25px;
+    height: 25px;
+  }
+
+  .hero-redes-visitantes {
+    min-height: 20px !important;
+    height: 20px !important;
+    padding: 2px 5px !important;
+    font-size: 7px !important;
+  }
+
+  .hero-redes-visitantes > span,
+  .hero-redes-visitantes strong {
+    font-size: 7px !important;
   }
 }
 
-/* V69.0 — Estabilidad horizontal al cambiar entre Mercado Libre y Amazon */
-html,
-body {
-  max-width: 100%;
-  overflow-x: clip;
-}
-
-.encabezado,
-main,
-.vista-principal,
-.modulo-ofertas-categoria,
-.menu-ofertas-contenedor,
-.acceso-comunidad-anirona,
-.navegacion-inferior {
-  box-sizing: border-box;
-  max-width: 100%;
-}
-
-#seccion-ofertas-amazon,
-#seccion-ofertas-mercado-libre,
-#seccion-comunidad-anirona,
-#vista-cupones {
-  width: 100%;
-  margin-right: auto !important;
-  margin-left: auto !important;
-  transform: none !important;
-}
-
-.menu-ofertas {
-  overscroll-behavior-inline: none;
-  scroll-behavior: auto !important;
-  transform: none !important;
-}
-
-.menu-ofertas > button {
-  box-sizing: border-box;
-  transform-origin: center;
-}
-
-@supports not (overflow: clip) {
-  html,
-  body {
-    overflow-x: hidden;
+@media (prefers-reduced-motion: reduce) {
+  .acceso-comunidad-anirona,
+  .menu-ofertas > button {
+    transition: none;
   }
 }
