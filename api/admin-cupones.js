@@ -97,7 +97,7 @@ export default async function handler(request, response) {
     if (request.query?.action === "hero-config") {
       if (request.method === "GET") {
         const config = await requestSupabase(
-          "configuracion_web?select=imagen_url,color_inicio,color_fin,nombre_tienda,nombre_bancarios,nombre_mercadolibre,nombre_amazon&id=eq.hero_redes&limit=1"
+          "configuracion_web?select=imagen_url,color_inicio,color_fin,texto_descriptivo,nombre_boton_tienda,nombre_seccion_tienda,nombre_boton_bancarios,nombre_seccion_bancarios,nombre_boton_comunidad,nombre_seccion_comunidad&id=eq.hero_redes&limit=1"
         );
 
         response.setHeader("Cache-Control", "no-store");
@@ -107,10 +107,13 @@ export default async function handler(request, response) {
             imagen_url: "",
             color_inicio: "#e9cdff",
             color_fin: "#fae8fa",
-            nombre_tienda: "Tienda",
-            nombre_bancarios: "Bancarios",
-            nombre_mercadolibre: "Ofertas Mercado Libre",
-            nombre_amazon: "Ofertas Amazon",
+            texto_descriptivo: "Cupones, promociones y novedades todos los días.",
+            nombre_boton_tienda: "Tienda",
+            nombre_seccion_tienda: "Cupones de tienda",
+            nombre_boton_bancarios: "Bancarios",
+            nombre_seccion_bancarios: "Cupones bancarios",
+            nombre_boton_comunidad: "Comunidad Anirona",
+            nombre_seccion_comunidad: "Comunidad Anirona",
           }
         );
       }
@@ -132,10 +135,13 @@ export default async function handler(request, response) {
             request.body?.color_fin,
             "#fae8fa"
           ),
-          nombre_tienda: cleanText(request.body?.nombre_tienda).slice(0, 36) || "Tienda",
-          nombre_bancarios: cleanText(request.body?.nombre_bancarios).slice(0, 36) || "Bancarios",
-          nombre_mercadolibre: cleanText(request.body?.nombre_mercadolibre).slice(0, 48) || "Ofertas Mercado Libre",
-          nombre_amazon: cleanText(request.body?.nombre_amazon).slice(0, 48) || "Ofertas Amazon",
+          texto_descriptivo: cleanText(request.body?.texto_descriptivo).slice(0, 120) || "Cupones, promociones y novedades todos los días.",
+          nombre_boton_tienda: cleanText(request.body?.nombre_boton_tienda).slice(0, 35) || "Tienda",
+          nombre_seccion_tienda: cleanText(request.body?.nombre_seccion_tienda).slice(0, 55) || "Cupones de tienda",
+          nombre_boton_bancarios: cleanText(request.body?.nombre_boton_bancarios).slice(0, 35) || "Bancarios",
+          nombre_seccion_bancarios: cleanText(request.body?.nombre_seccion_bancarios).slice(0, 55) || "Cupones bancarios",
+          nombre_boton_comunidad: cleanText(request.body?.nombre_boton_comunidad).slice(0, 45) || "Comunidad Anirona",
+          nombre_seccion_comunidad: cleanText(request.body?.nombre_seccion_comunidad).slice(0, 55) || "Comunidad Anirona",
           actualizado_en: new Date().toISOString(),
         };
 

@@ -155,7 +155,7 @@ export default async function handler(request, response) {
   try {
     if (action === "hero-config") {
       const config = await requestSupabase(
-        "configuracion_web?select=imagen_url,color_inicio,color_fin,nombre_tienda,nombre_bancarios,nombre_mercadolibre,nombre_amazon&id=eq.hero_redes&limit=1"
+        "configuracion_web?select=imagen_url,color_inicio,color_fin,texto_descriptivo,nombre_boton_tienda,nombre_seccion_tienda,nombre_boton_bancarios,nombre_seccion_bancarios,nombre_boton_comunidad,nombre_seccion_comunidad&id=eq.hero_redes&limit=1"
       );
 
       response.setHeader("Cache-Control", "no-store");
@@ -165,10 +165,13 @@ export default async function handler(request, response) {
           imagen_url: "",
           color_inicio: "#e9cdff",
           color_fin: "#fae8fa",
-          nombre_tienda: "Tienda",
-          nombre_bancarios: "Bancarios",
-          nombre_mercadolibre: "Ofertas Mercado Libre",
-          nombre_amazon: "Ofertas Amazon",
+          texto_descriptivo: "Cupones, promociones y novedades todos los días.",
+          nombre_boton_tienda: "Tienda",
+          nombre_seccion_tienda: "Cupones de tienda",
+          nombre_boton_bancarios: "Bancarios",
+          nombre_seccion_bancarios: "Cupones bancarios",
+          nombre_boton_comunidad: "Comunidad Anirona",
+          nombre_seccion_comunidad: "Comunidad Anirona",
         }
       );
     }
