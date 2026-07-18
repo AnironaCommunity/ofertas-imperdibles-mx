@@ -32,6 +32,8 @@ const heroBankButtonName = document.querySelector("#hero-bank-button-name");
 const heroBankSectionName = document.querySelector("#hero-bank-section-name");
 const heroCommunityButtonName = document.querySelector("#hero-community-button-name");
 const heroCommunitySectionName = document.querySelector("#hero-community-section-name");
+const heroWhatsappUrl = document.querySelector("#hero-whatsapp-url");
+const heroFacebookUrl = document.querySelector("#hero-facebook-url");
 const heroAdminPreviewText = document.querySelector("#hero-admin-preview-text");
 
 /* Cupones */
@@ -1510,6 +1512,8 @@ async function loadHeroConfig() {
     heroBankSectionName.value = config.nombre_seccion_bancarios || "Cupones bancarios";
     heroCommunityButtonName.value = config.nombre_boton_comunidad || "Comunidad Anirona";
     heroCommunitySectionName.value = config.nombre_seccion_comunidad || "Comunidad Anirona";
+    heroWhatsappUrl.value = config.enlace_whatsapp || "https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n";
+    heroFacebookUrl.value = config.enlace_facebook || "https://www.facebook.com/OfertasImperdiblesView";
 
     heroPreview.src = config.imagen_url || "";
     heroPreviewWrapper.hidden = !config.imagen_url;
@@ -1557,6 +1561,8 @@ async function saveHeroConfig(event) {
         nombre_seccion_bancarios: heroBankSectionName.value.trim(),
         nombre_boton_comunidad: heroCommunityButtonName.value.trim(),
         nombre_seccion_comunidad: heroCommunitySectionName.value.trim(),
+        enlace_whatsapp: heroWhatsappUrl.value.trim(),
+        enlace_facebook: heroFacebookUrl.value.trim(),
       }),
     });
 
