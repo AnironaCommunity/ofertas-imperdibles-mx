@@ -1,6 +1,6 @@
 /*
-  Ofertas Imperdibles MX — V70.0
-  Cambio magnífico #1: Cabecera inteligente.
+  Ofertas Imperdibles MX — V70.0.1
+  Cambio magnífico #1: Cabecera inteligente — corrección antiparpadeo.
 
   La apariencia inicial se conserva. Al desplazarse, la cabecera se compacta
   para dejar más espacio al contenido y permanece accesible en la parte superior.
@@ -15,6 +15,10 @@
   top: 0;
   z-index: 1000;
   background: rgba(255, 255, 255, .98);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  will-change: box-shadow, background-color;
   transition:
     padding var(--cabecera-transicion),
     box-shadow var(--cabecera-transicion),
