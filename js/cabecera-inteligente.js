@@ -4,66 +4,123 @@
   const encabezado = document.querySelector(".encabezado");
   if (!encabezado) return;
 
-  const CLASE_COMPACTA = "cabecera-compacta";
+  /* Limpia el estado de las versiones V70.0/V70.0.1. */
+  document.body.classList.remove("cabecera-compacta");
+  encabezado.removeAttribute("data-compacta");
 
-  /*
-    Dos umbrales separados evitan que el cambio de altura de la cabecera
-    active y desactive el mismo estado repetidamente.
-  */
-  const UMBRAL_COMPACTAR = 140;
-  const UMBRAL_EXPANDIR = 4;
+  const referencias = {
+    inicio: document.querySelector("#enlace-logo-inicio"),
+    mercadoLibre: document.querySelector('[data-vista="ofertas_mercado_libre"]'),
+    amazon: document.querySelector('[data-vista="ofertas_amazon"]'),
+    comunidad: document.querySelector('[data-vista="comunidad_anirona"]')
+  };
 
-  let compacta = document.body.classList.contains(CLASE_COMPACTA);
-  let pendiente = false;
-  let ultimoDesplazamiento = Math.max(
-    window.scrollY || 0,
-    document.documentElement.scrollTop || 0
-  );
-  let bloqueoHasta = 0;
+  if (!referencias.mercadoLibre || !referencias.amazon || !referencias.comunidad) return;
 
-  function obtenerDesplazamiento() {
-    return Math.max(
-      window.scrollY || 0,
-      document.documentElement.scrollTop || 0
-    );
+  const barra = document.createElement("div");
+  barra.className = "smart-header";
+  barra.setAttribute("role", "navigation");
+  barra.setAttribute("aria-label", "Navegación rápida");
+  barra.innerHTML = `
+    <button type="button" class="smart-header-marca" aria-label="Volver al inicio">
+      <img src="img/logo-ofertas-transparente.png?v=63.6" alt="" aria-hidden="true" />
+      <span>Ofertas Imperdibles MX</span>
+    </button>
+    <div class="smart-header-nav">
+      <button type="button" class="smart-header-boton" data-destino="mercadoLibre" data-etiqueta="Mercado Libre" aria-label="Ofertas Mercado Libre" aria-pressed="false">
+        <img src="img/mercado-libre.png" alt="" aria-hidden="true" />
+      </button>
+      <button type="button" class="smart-header-boton" data-destino="amazon" data-etiqueta="Amazon" aria-label="Ofertas Amazon" aria-pressed="false">
+        <img src="img/amazon.png" alt="" aria-hidden="true" />
+      </button>
+      <button type="button" class="smart-header-boton" data-destino="comunidad" data-etiqueta="Comunidad" aria-label="Comunidad Anirona" aria-pressed="false">
+        <img src="img/anirona.png" alt="" aria-hidden="true" />
+      </button>
+    </div>
+  `;
+  document.body.appendChild(barra);
+
+  const botonMarca = barra.querySelector(".smart-header-marca");
+  const botones = Array.from(barra.querySelectorAll(".smart-header-boton"));
+
+  botonMarca?.addEventListener("click", () => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  });
+
+  botones.forEach((boton) => {
+    boton.addEventListener("click", () => {
+      const destino = boton.dataset.destino;
+      referencias[destino]?.click();
+      ocultar();
+    });
+  });
+
+  function sincronizarSeleccion() {
+    const mapa = {
+      mercadoLibre: referencias.mercadoLibre,
+      amazon: referencias.amazon,
+      comunidad: referencias.comunidad
+    };
+
+    botones.forEach((boton) => {
+      const original = mapa[boton.dataset.destino];
+      const activo = original?.getAttribute("aria-pressed") === "true";
+      boton.setAttribute("aria-pressed", String(activo));
+    });
   }
 
-  function aplicarEstado(nuevoEstado) {
-    if (nuevoEstado === compacta) return;
+  const observador = new MutationObserver(sincronizarSeleccion);
+  [referencias.mercadoLibre, referencias.amazon, referencias.comunidad].forEach((elemento) => {
+    observador.observe(elemento, { attributes: true, attributeFilter: ["aria-pressed", "class"] });
+  });
+  sincronizarSeleccion();
 
-    compacta = nuevoEstado;
-    bloqueoHasta = performance.now() + 360;
+  let visible = false;
+  let pendiente = false;
+  let ultimoY = Math.max(0, window.scrollY || 0);
+  let acumuladoDireccion = 0;
+  let ultimaDireccion = 0;
 
-    document.body.classList.toggle(CLASE_COMPACTA, compacta);
-    encabezado.setAttribute("data-compacta", String(compacta));
+  function mostrar() {
+    if (visible) return;
+    visible = true;
+    barra.classList.add("smart-header-visible");
+    barra.setAttribute("aria-hidden", "false");
+  }
 
-    /*
-      Al expandirse ya estamos prácticamente en el inicio. Mantener el scroll
-      en cero impide que el aumento de altura de la cabecera vuelva a cruzar
-      el umbral de compactación y produzca parpadeo.
-    */
-    if (!compacta) {
-      requestAnimationFrame(() => {
-        window.scrollTo({ left: 0, top: 0, behavior: "auto" });
-      });
-    }
+  function ocultar() {
+    if (!visible) return;
+    visible = false;
+    barra.classList.remove("smart-header-visible");
+    barra.setAttribute("aria-hidden", "true");
   }
 
   function actualizar() {
-    const desplazamiento = obtenerDesplazamiento();
-    const subiendo = desplazamiento < ultimoDesplazamiento;
-    const bajando = desplazamiento > ultimoDesplazamiento;
-    const bloqueada = performance.now() < bloqueoHasta;
+    const y = Math.max(0, window.scrollY || document.documentElement.scrollTop || 0);
+    const delta = y - ultimoY;
+    const direccion = delta > 0 ? 1 : delta < 0 ? -1 : 0;
+    const limiteCabecera = encabezado.offsetTop + encabezado.offsetHeight;
 
-    if (!bloqueada) {
-      if (!compacta && bajando && desplazamiento >= UMBRAL_COMPACTAR) {
-        aplicarEstado(true);
-      } else if (compacta && subiendo && desplazamiento <= UMBRAL_EXPANDIR) {
-        aplicarEstado(false);
-      }
+    if (direccion !== 0) {
+      if (direccion !== ultimaDireccion) acumuladoDireccion = 0;
+      acumuladoDireccion += Math.abs(delta);
+      ultimaDireccion = direccion;
     }
 
-    ultimoDesplazamiento = desplazamiento;
+    /*
+      La barra solo entra cuando la cabecera original ya salió de la pantalla
+      y el usuario continúa bajando. Al detectar una subida real se retira
+      inmediatamente, por lo que nunca tapa el cupón mientras se regresa.
+    */
+    if (y <= Math.max(12, limiteCabecera - 20)) {
+      ocultar();
+    } else if (direccion < 0 && acumuladoDireccion >= 6) {
+      ocultar();
+    } else if (direccion > 0 && acumuladoDireccion >= 18) {
+      mostrar();
+    }
+
+    ultimoY = y;
     pendiente = false;
   }
 
@@ -73,13 +130,12 @@
     requestAnimationFrame(actualizar);
   }
 
+  barra.setAttribute("aria-hidden", "true");
   window.addEventListener("scroll", solicitarActualizacion, { passive: true });
   window.addEventListener("resize", solicitarActualizacion, { passive: true });
   window.addEventListener("pageshow", () => {
-    ultimoDesplazamiento = obtenerDesplazamiento();
-    solicitarActualizacion();
+    ultimoY = Math.max(0, window.scrollY || 0);
+    acumuladoDireccion = 0;
+    ocultar();
   });
-
-  encabezado.setAttribute("data-compacta", String(compacta));
-  solicitarActualizacion();
 })();

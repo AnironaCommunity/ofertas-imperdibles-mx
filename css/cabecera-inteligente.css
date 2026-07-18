@@ -1,219 +1,199 @@
 /*
-  Ofertas Imperdibles MX — V70.0.1
-  Cambio magnífico #1: Cabecera inteligente — corrección antiparpadeo.
+  Ofertas Imperdibles MX — V71.0
+  Smart Header 2.0
 
-  La apariencia inicial se conserva. Al desplazarse, la cabecera se compacta
-  para dejar más espacio al contenido y permanece accesible en la parte superior.
+  La cabecera original conserva siempre su tamaño y se desplaza de forma natural.
+  Al navegar hacia abajo aparece una barra compacta independiente. Al subir,
+  la barra se retira inmediatamente para no cubrir el primer cupón visible.
 */
 
 :root {
-  --cabecera-transicion: 240ms cubic-bezier(.2, .7, .2, 1);
+  --smart-header-alto: 58px;
+  --smart-header-transicion: 210ms cubic-bezier(.22, .75, .25, 1);
 }
 
+/* La cabecera principal vuelve a ser completamente natural: no cambia de alto. */
 .encabezado {
-  position: sticky !important;
-  top: 0;
-  z-index: 1000;
-  background: rgba(255, 255, 255, .98);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  transform: translateZ(0);
-  will-change: box-shadow, background-color;
-  transition:
-    padding var(--cabecera-transicion),
-    box-shadow var(--cabecera-transicion),
-    background-color var(--cabecera-transicion);
+  position: relative !important;
+  top: auto !important;
+  z-index: 2;
+  background: transparent;
+  box-shadow: none !important;
+  transform: none !important;
+  will-change: auto !important;
+  transition: none !important;
 }
 
-.enlace-logo-inicio,
-.estado-dinamico-cabecera,
-.hero-redes,
-.hero-redes-logo,
-.hero-redes-contenido > span,
-.hero-redes-botones,
-.hero-redes-boton,
-.hero-redes-visitantes,
-.menu-ofertas-contenedor,
-.menu-ofertas > button,
-.acceso-comunidad-anirona,
-.acceso-comunidad-icono,
-.acceso-comunidad-contenido small {
-  transition:
-    max-height var(--cabecera-transicion),
-    min-height var(--cabecera-transicion),
-    height var(--cabecera-transicion),
-    margin var(--cabecera-transicion),
-    padding var(--cabecera-transicion),
-    gap var(--cabecera-transicion),
-    opacity 180ms ease,
-    transform var(--cabecera-transicion),
-    border-radius var(--cabecera-transicion),
-    box-shadow var(--cabecera-transicion);
-}
-
-/* Estado compacto: se activa por JavaScript después de superar el umbral. */
-body.cabecera-compacta .encabezado {
-  padding-top: 4px !important;
-  padding-bottom: 5px !important;
-  background: rgba(255, 255, 255, .96);
-  box-shadow: 0 8px 24px rgba(15, 23, 42, .10);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-}
-
-body.cabecera-compacta .encabezado::before {
-  opacity: .45;
-}
-
+/* Anula cualquier estado compacto guardado por una versión anterior. */
+body.cabecera-compacta .encabezado,
 body.cabecera-compacta .enlace-logo-inicio,
-body.cabecera-compacta .estado-dinamico-cabecera {
-  max-height: 0 !important;
-  min-height: 0 !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-  border-width: 0 !important;
-  opacity: 0;
-  overflow: hidden;
-  pointer-events: none;
-  transform: translateY(-8px);
-}
-
-body.cabecera-compacta .enlace-logo-inicio .logo {
-  margin-bottom: 0 !important;
-}
-
-body.cabecera-compacta .hero-redes {
-  grid-template-columns: 36px minmax(0, 1fr) !important;
-  gap: 8px !important;
-  margin-top: 1px !important;
-  margin-bottom: 4px !important;
-  padding: 5px 8px !important;
-  border-radius: 12px !important;
-  box-shadow: 0 3px 10px rgba(82, 41, 92, .06) !important;
-}
-
+body.cabecera-compacta .estado-dinamico-cabecera,
+body.cabecera-compacta .hero-redes,
 body.cabecera-compacta .hero-redes-logo,
-body.cabecera-compacta .hero-redes-logo img {
-  width: 36px !important;
-  height: 36px !important;
-  border-radius: 9px !important;
-}
-
-body.cabecera-compacta .hero-redes-contenido > strong {
-  font-size: 11px !important;
-  line-height: 1.05 !important;
-}
-
-body.cabecera-compacta .hero-redes-contenido > span {
-  max-height: 0 !important;
-  margin: 0 !important;
-  opacity: 0;
-  overflow: hidden;
-}
-
-body.cabecera-compacta .hero-redes-botones {
-  gap: 4px !important;
-  margin-top: 3px !important;
-}
-
+body.cabecera-compacta .hero-redes-logo img,
+body.cabecera-compacta .hero-redes-contenido > span,
+body.cabecera-compacta .hero-redes-botones,
 body.cabecera-compacta .hero-redes-boton,
-body.cabecera-compacta .hero-redes-visitantes {
-  height: 22px !important;
-  min-height: 22px !important;
-  padding: 3px 6px !important;
-  gap: 4px !important;
-  font-size: 8px !important;
-}
-
-body.cabecera-compacta .hero-redes-visitantes > span {
-  font-size: 9px !important;
-}
-
-body.cabecera-compacta .hero-redes-visitantes strong {
-  font-size: 8px !important;
-}
-
-body.cabecera-compacta .menu-ofertas-contenedor {
-  margin-top: 3px !important;
-  margin-bottom: 3px !important;
-}
-
-body.cabecera-compacta .menu-ofertas {
-  gap: 6px !important;
-}
-
-body.cabecera-compacta .menu-ofertas > button {
-  min-height: 38px !important;
-  padding: 5px 8px !important;
-  gap: 5px !important;
-  border-radius: 11px !important;
-}
-
-body.cabecera-compacta .menu-ofertas-logo {
-  width: 25px !important;
-  height: 25px !important;
-}
-
-body.cabecera-compacta .menu-ofertas > button > span:not(.contador-seccion) {
-  font-size: 10px !important;
-}
-
-body.cabecera-compacta .acceso-comunidad-anirona {
-  grid-template-columns: 28px minmax(0, 1fr) auto 12px !important;
-  min-height: 38px !important;
-  margin-top: 3px !important;
-  margin-bottom: 3px !important;
-  padding: 5px 8px !important;
-  gap: 6px !important;
-  border-radius: 11px !important;
-}
-
-body.cabecera-compacta .acceso-comunidad-icono {
-  width: 28px !important;
-  height: 28px !important;
-  border-radius: 8px !important;
-}
-
-body.cabecera-compacta .acceso-comunidad-icono img {
-  width: 23px !important;
-  height: 23px !important;
-}
-
-body.cabecera-compacta .acceso-comunidad-contenido strong {
-  font-size: 10px !important;
-  line-height: 1.1 !important;
-}
-
+body.cabecera-compacta .hero-redes-visitantes,
+body.cabecera-compacta .menu-ofertas-contenedor,
+body.cabecera-compacta .menu-ofertas > button,
+body.cabecera-compacta .acceso-comunidad-anirona,
+body.cabecera-compacta .acceso-comunidad-icono,
 body.cabecera-compacta .acceso-comunidad-contenido small {
-  max-height: 0 !important;
-  margin: 0 !important;
-  opacity: 0;
-  overflow: hidden;
+  max-height: none !important;
+  min-height: initial !important;
+  height: auto !important;
+  margin-top: initial !important;
+  margin-bottom: initial !important;
+  padding-top: initial !important;
+  padding-bottom: initial !important;
+  gap: initial !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  overflow: visible !important;
+  pointer-events: auto !important;
+  transform: none !important;
+  border-width: initial !important;
+  box-shadow: initial !important;
 }
 
-/* En escritorio la compactación es deliberadamente más discreta. */
+.smart-header {
+  position: fixed;
+  top: max(0px, env(safe-area-inset-top));
+  left: 50%;
+  z-index: 1200;
+  width: min(1120px, calc(100% - 18px));
+  height: var(--smart-header-alto);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 9px;
+  border: 1px solid rgba(94, 63, 105, .13);
+  border-radius: 0 0 15px 15px;
+  background: rgba(255, 255, 255, .965);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, .13);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate3d(-50%, calc(-100% - 12px), 0);
+  transition:
+    transform var(--smart-header-transicion),
+    opacity 150ms ease,
+    visibility 0s linear 210ms;
+  contain: layout paint style;
+}
+
+.smart-header.smart-header-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate3d(-50%, 0, 0);
+  transition:
+    transform var(--smart-header-transicion),
+    opacity 150ms ease,
+    visibility 0s linear 0s;
+}
+
+.smart-header-marca {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  padding: 0;
+  color: #302334;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.smart-header-marca img {
+  width: 37px;
+  height: 37px;
+  flex: 0 0 37px;
+  object-fit: contain;
+  border-radius: 9px;
+}
+
+.smart-header-marca span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.smart-header-nav {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.smart-header-boton {
+  min-width: 39px;
+  height: 39px;
+  display: inline-grid;
+  place-items: center;
+  padding: 5px;
+  border: 1px solid rgba(94, 63, 105, .12);
+  border-radius: 11px;
+  background: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 7px rgba(40, 30, 43, .05);
+}
+
+.smart-header-boton img {
+  width: 27px;
+  height: 27px;
+  object-fit: contain;
+}
+
+.smart-header-boton[aria-pressed="true"] {
+  border-color: rgba(94, 63, 105, .34);
+  background: #f7f1f9;
+  box-shadow: inset 0 0 0 1px rgba(94, 63, 105, .08);
+}
+
+.smart-header-boton:active,
+.smart-header-marca:active {
+  transform: scale(.96);
+}
+
 @media (min-width: 769px) {
-  body.cabecera-compacta .hero-redes {
-    grid-template-columns: 42px minmax(0, 1fr) !important;
-    padding: 6px 10px !important;
+  :root { --smart-header-alto: 62px; }
+
+  .smart-header {
+    width: min(1120px, calc(100% - 32px));
+    padding-inline: 12px;
   }
 
-  body.cabecera-compacta .hero-redes-logo,
-  body.cabecera-compacta .hero-redes-logo img {
-    width: 42px !important;
-    height: 42px !important;
+  .smart-header-marca span {
+    font-size: 13px;
   }
 
-  body.cabecera-compacta .hero-redes-contenido > strong {
-    font-size: 12px !important;
+  .smart-header-boton {
+    width: auto;
+    min-width: 112px;
+    grid-auto-flow: column;
+    gap: 7px;
+    padding-inline: 10px;
+  }
+
+  .smart-header-boton::after {
+    content: attr(data-etiqueta);
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .encabezado,
-  .encabezado * {
+  .smart-header {
     transition: none !important;
   }
 }
