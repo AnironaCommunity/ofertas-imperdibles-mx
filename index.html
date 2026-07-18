@@ -47,12 +47,12 @@
   <link rel="icon" href="img/logo.png" />
   <link rel="apple-touch-icon" href="img/logo.png" />
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="stylesheet" href="css/style.css?v=69.0.0" />
-  <link rel="stylesheet" href="css/hero-redes.css?v=69.0.0" />
-  <link rel="stylesheet" href="css/ajustes-visuales-v67-16.css?v=69.0.0" />
-  <link rel="stylesheet" href="css/eventos-v68.css?v=69.0.0" />
-  <link rel="stylesheet" href="css/header-dinamico-v68-3.css?v=69.0.0" />
-  <link rel="stylesheet" href="css/estabilidad.css?v=69.0.0" />  <script>
+  <link rel="stylesheet" href="css/style.css?v=69.1.0" />
+  <link rel="stylesheet" href="css/hero-redes.css?v=69.1.0" />
+  <link rel="stylesheet" href="css/ajustes-visuales-v67-16.css?v=69.1.0" />
+  <link rel="stylesheet" href="css/eventos-v68.css?v=69.1.0" />
+  <link rel="stylesheet" href="css/header-dinamico-v68-3.css?v=69.1.0" />
+  <link rel="stylesheet" href="css/estabilidad.css?v=69.1.0" />  <script>
     try {
       const temaGuardado = JSON.parse(localStorage.getItem("ofertas_imperdibles_tema") || "null");
       if (temaGuardado?.inicio) document.documentElement.style.setProperty("--tema-color-inicio", temaGuardado.inicio);
@@ -82,7 +82,7 @@
       <span id="estado-dinamico-texto">Consultando cupones disponibles…</span>
     </div>
 
-    <section class="hero-redes hero-redes-pendiente" aria-label="Redes sociales de Ofertas Imperdibles MX">
+    <section class="hero-redes hero-redes-lista" aria-label="Redes sociales de Ofertas Imperdibles MX">
       <div class="hero-redes-logo">
         <img
           src="img/logo-ofertas-transparente.png?v=63.6"
@@ -128,6 +128,37 @@
         </div>
       </div>
     </section>
+
+    <script>
+      /* V69.1 — Aplica la última configuración conocida antes del primer render. */
+      (() => {
+        try {
+          const cache = JSON.parse(localStorage.getItem("ofertas_imperdibles_config_cache") || "null");
+          if (!cache || typeof cache !== "object") return;
+
+          const texto = document.querySelector("#hero-texto-descriptivo");
+          const imagen = document.querySelector(".hero-redes-logo img");
+          const whatsapp = document.querySelector(".hero-redes-whatsapp");
+          const facebook = document.querySelector(".hero-redes-facebook");
+          const visitantes = document.querySelector("#hero-total-visitantes");
+
+          if (texto && cache.texto_descriptivo) texto.textContent = cache.texto_descriptivo;
+          if (imagen && cache.imagen_url) imagen.src = cache.imagen_url;
+          if (whatsapp && cache.enlace_whatsapp) whatsapp.href = cache.enlace_whatsapp;
+          if (facebook && cache.enlace_facebook) facebook.href = cache.enlace_facebook;
+          if (visitantes && cache.total_visitantes != null) visitantes.textContent = cache.total_visitantes;
+
+          if (cache.color_inicio) {
+            document.documentElement.style.setProperty("--tema-color-inicio", cache.color_inicio);
+            document.querySelector(".hero-redes")?.style.setProperty("--hero-color-inicio", cache.color_inicio);
+          }
+          if (cache.color_fin) {
+            document.documentElement.style.setProperty("--tema-color-fin", cache.color_fin);
+            document.querySelector(".hero-redes")?.style.setProperty("--hero-color-fin", cache.color_fin);
+          }
+        } catch {}
+      })();
+    </script>
 
     <div class="menu-ofertas-contenedor">
       <nav class="menu-ofertas" aria-label="Secciones de ofertas">
@@ -477,8 +508,8 @@
     </div>
   </div>
 
-  <script type="module" src="js/app.js?v=69.0.0"></script>
-  <script src="js/hero-redes.js?v=69.0.0" defer></script>
-  <script src="js/header-dinamico-v68-3.js?v=69.0.0" defer></script>
+  <script type="module" src="js/app.js?v=69.1.0"></script>
+  <script src="js/hero-redes.js?v=69.1.0" defer></script>
+  <script src="js/header-dinamico-v68-3.js?v=69.1.0" defer></script>
 </body>
 </html>
