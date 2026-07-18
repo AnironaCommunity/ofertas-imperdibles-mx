@@ -53,7 +53,15 @@
   <link rel="stylesheet" href="css/eventos-v68.css?v=68.0.3" />
   <link rel="stylesheet" href="css/header-dinamico-v68-3.css?v=68.3.0" />
   <link rel="stylesheet" href="css/ajustes-cabecera-v68-4.css?v=68.5.1" />
-  <link rel="stylesheet" href="css/configuracion-etiquetas-v68-6.css?v=68.6.0" />
+  <link rel="stylesheet" href="css/configuracion-etiquetas-v68-6.css?v=68.6.2" />
+  <link rel="stylesheet" href="css/tema-v69-1.css?v=68.6.2" />
+  <script>
+    try {
+      const temaGuardado = JSON.parse(localStorage.getItem("ofertas_imperdibles_tema") || "null");
+      if (temaGuardado?.inicio) document.documentElement.style.setProperty("--tema-color-inicio", temaGuardado.inicio);
+      if (temaGuardado?.fin) document.documentElement.style.setProperty("--tema-color-fin", temaGuardado.fin);
+    } catch {}
+  </script>
 </head>
 
 <body>
@@ -137,7 +145,7 @@
 
       <nav class="menu-ofertas" aria-label="Secciones de ofertas">
       <button type="button" data-vista="ofertas_mercado_libre" aria-pressed="false">
-        <span class="menu-ofertas-logo-marco" aria-hidden="true"><img class="menu-ofertas-logo logo-mercado-libre" src="img/mercado-libre.png" alt="" /></span>
+        <img class="menu-ofertas-logo logo-mercado-libre" src="img/mercado-libre.png" alt="" aria-hidden="true" />
         <span>Ofertas Mercado Libre</span>
         <span
           id="contador-ofertas-mercado-libre"
@@ -147,7 +155,7 @@
         >0</span>
       </button>
       <button type="button" data-vista="ofertas_amazon" aria-pressed="false">
-        <span class="menu-ofertas-logo-marco" aria-hidden="true"><img class="menu-ofertas-logo logo-amazon" src="img/amazon.png" alt="" /></span>
+        <img class="menu-ofertas-logo logo-amazon" src="img/amazon.png" alt="" aria-hidden="true" />
         <span>Ofertas Amazon</span>
         <span
           id="contador-ofertas-amazon"
@@ -291,7 +299,7 @@
       hidden
     >
       <div class="titulo-fila titulo-con-separador">
-        <h2 class="titulo-seccion titulo-seccion-con-logo"><span class="titulo-logo-marco" aria-hidden="true"><img src="img/mercado-libre.png" alt="" /></span><span>Ofertas Mercado Libre</span></h2>
+        <h2 class="titulo-seccion titulo-seccion-con-logo"><img src="img/mercado-libre.png" alt="" aria-hidden="true" /><span>Ofertas Mercado Libre</span></h2>
       </div>
       <div
         id="ofertas-mercado-libre"
@@ -307,7 +315,7 @@
       hidden
     >
       <div class="titulo-fila titulo-con-separador">
-        <h2 class="titulo-seccion titulo-seccion-con-logo"><span class="titulo-logo-marco" aria-hidden="true"><img src="img/anirona.png" alt="" /></span><span id="nombre-seccion-comunidad">Comunidad Anirona</span></h2>
+        <h2 class="titulo-seccion titulo-seccion-con-logo"><img src="img/anirona.png" alt="" aria-hidden="true" /><span id="nombre-seccion-comunidad">Comunidad Anirona</span></h2>
       </div>
       <div id="eventos-comunidad" class="eventos-comunidad" aria-label="Eventos y rifas de Comunidad Anirona"></div>
       <div
@@ -324,7 +332,7 @@
       hidden
     >
       <div class="titulo-fila titulo-con-separador">
-        <h2 class="titulo-seccion titulo-seccion-con-logo"><span class="titulo-logo-marco" aria-hidden="true"><img src="img/amazon.png" alt="" /></span><span>Ofertas Amazon</span></h2>
+        <h2 class="titulo-seccion titulo-seccion-con-logo"><img src="img/amazon.png" alt="" aria-hidden="true" /><span>Ofertas Amazon</span></h2>
       </div>
       <div
         id="ofertas-amazon"
