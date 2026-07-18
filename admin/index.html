@@ -693,27 +693,27 @@ https://meli.la/xxxxx"
         <div class="cabecera-seccion">
           <div>
             <h2>🎨 Identidad del sitio</h2>
-            <p>Modifica el logo principal, el nombre, el eslogan y la barra desde el administrador.</p>
+            <p>Modifica por separado el ícono, el nombre, el eslogan y el contenido de la barra.</p>
           </div>
         </div>
 
         <section class="panel">
           <form id="hero-config-form" class="formulario">
             <div class="campo campo-completo">
-              <h3>Identidad principal</h3>
-              <small>Estos datos se muestran en la cabecera principal y en la barra debajo del logo.</small>
+              <h3>Cabecera principal</h3>
+              <small>Modifica únicamente los tres elementos de la marca: ícono, nombre y eslogan.</small>
             </div>
 
             <div class="campo campo-completo">
-              <label for="site-main-logo">Logo principal horizontal</label>
+              <label for="site-main-logo">Ícono principal</label>
               <input id="site-main-logo" type="file" accept="image/png,image/jpeg,image/webp" />
               <input id="site-main-logo-url" type="hidden" />
-              <small>Recomendado: PNG o WebP horizontal con fondo transparente. Si no seleccionas otro, se conserva el actual.</small>
+              <small>Recomendado: imagen cuadrada PNG o WebP con fondo transparente. El nombre y el eslogan se administran en los campos siguientes.</small>
             </div>
 
             <div id="site-main-logo-preview-wrapper" class="preview-wrapper preview-logo-principal" hidden>
-              <img id="site-main-logo-preview" src="" alt="Vista previa del logo principal" />
-              <button id="site-main-logo-remove" class="boton-secundario" type="button">Restaurar logo predeterminado</button>
+              <img id="site-main-logo-preview" src="" alt="Vista previa del ícono principal" />
+              <button id="site-main-logo-remove" class="boton-secundario" type="button">Restaurar ícono predeterminado</button>
             </div>
 
             <div class="campo">
@@ -732,8 +732,8 @@ https://meli.la/xxxxx"
             </label>
 
             <div class="campo campo-completo">
-              <h3>Barra debajo del logo</h3>
-              <small>Configura el ícono, los botones, redes y colores de la barra fija.</small>
+              <h3>Barra debajo de la cabecera</h3>
+              <small>Esta sección es independiente del eslogan principal.</small>
             </div>
             <div class="campo campo-completo">
               <label for="hero-image">Imagen pequeña</label>
@@ -760,7 +760,7 @@ https://meli.la/xxxxx"
             <div class="campo campo-completo">
               <label for="hero-text">Texto descriptivo de la barra</label>
               <input id="hero-text" type="text" maxlength="120" placeholder="Cupones, promociones y novedades todos los días." />
-              <small>Se muestra debajo de “Ofertas Imperdibles MX”.</small>
+              <small>Se muestra únicamente dentro de la barra fija; no modifica el eslogan principal.</small>
             </div>
 
             <div class="campo">
@@ -838,6 +838,6 @@ https://meli.la/xxxxx"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=71.5"></script>
+  <script type="module" src="admin.js?v=71.6"></script>
 </body>
 </html>

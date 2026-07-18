@@ -1505,9 +1505,9 @@ function updateHeroAdminPreview() {
     heroAdminPreviewName.textContent = siteName?.value.trim() || "Ofertas Imperdibles MX";
   }
   if (heroAdminPreviewText) {
-    heroAdminPreviewText.textContent = siteSlogan?.value.trim() ||
-      heroText?.value.trim() || "Las mejores ofertas, siempre";
-    heroAdminPreviewText.hidden = siteShowSlogan ? !siteShowSlogan.checked : false;
+    heroAdminPreviewText.textContent = heroText?.value.trim() ||
+      "Cupones, promociones y novedades todos los días.";
+    heroAdminPreviewText.hidden = false;
   }
 }
 
@@ -1515,11 +1515,11 @@ async function loadHeroConfig() {
   try {
     const config = await api("/api/admin-cupones?action=hero-config");
 
-    siteMainLogoUrl.value = config.logo_principal_url || "";
+    siteMainLogoUrl.value = config.logo_icono_url || "";
     siteName.value = config.nombre_sitio || "Ofertas Imperdibles MX";
     siteSlogan.value = config.eslogan || "Las mejores ofertas, siempre";
     siteShowSlogan.checked = config.mostrar_eslogan !== false;
-    siteMainLogoPreview.src = siteMainLogoUrl.value || "../img/logo-ofertas-horizontal.png?v=71.4";
+    siteMainLogoPreview.src = siteMainLogoUrl.value || "../img/logo-ofertas-transparente.png?v=71.6";
     siteMainLogoPreviewWrapper.hidden = false;
 
     heroImageUrl.value = config.imagen_url || "";
@@ -1581,7 +1581,7 @@ async function saveHeroConfig(event) {
     const savedConfig = await api("/api/admin-cupones?action=hero-config", {
       method: "PUT",
       body: JSON.stringify({
-        logo_principal_url: mainLogoUrl || "",
+        logo_icono_url: mainLogoUrl || "",
         nombre_sitio: siteName.value.trim(),
         eslogan: siteSlogan.value.trim(),
         mostrar_eslogan: siteShowSlogan.checked,
@@ -1600,9 +1600,9 @@ async function saveHeroConfig(event) {
       }),
     });
 
-    siteMainLogoUrl.value = savedConfig.logo_principal_url || mainLogoUrl || "";
+    siteMainLogoUrl.value = savedConfig.logo_icono_url || mainLogoUrl || "";
     siteMainLogo.value = "";
-    siteMainLogoPreview.src = siteMainLogoUrl.value || "../img/logo-ofertas-horizontal.png?v=71.4";
+    siteMainLogoPreview.src = siteMainLogoUrl.value || "../img/logo-ofertas-transparente.png?v=71.6";
     siteMainLogoPreviewWrapper.hidden = false;
 
     heroImageUrl.value = savedConfig.imagen_url || imageUrl || "";
@@ -1717,7 +1717,7 @@ siteMainLogo?.addEventListener("change", () => {
 siteMainLogoRemove?.addEventListener("click", () => {
   siteMainLogo.value = "";
   siteMainLogoUrl.value = "";
-  siteMainLogoPreview.src = "../img/logo-ofertas-horizontal.png?v=71.4";
+  siteMainLogoPreview.src = "../img/logo-ofertas-transparente.png?v=71.6";
   siteMainLogoPreviewWrapper.hidden = false;
 });
 [siteName, siteSlogan, siteShowSlogan].forEach((element) => {

@@ -53,7 +53,7 @@
   <link rel="stylesheet" href="css/eventos-v68.css?v=70.0.0" />
   <link rel="stylesheet" href="css/header-dinamico-v68-3.css?v=70.0.0" />
   <link rel="stylesheet" href="css/estabilidad.css?v=70.0.0" />
-  <link rel="stylesheet" href="css/cabecera-inteligente.css?v=71.4.0" />  <script>
+  <link rel="stylesheet" href="css/cabecera-inteligente.css?v=71.6.0" />  <script>
     try {
       const temaGuardado = JSON.parse(localStorage.getItem("ofertas_imperdibles_tema") || "null");
       if (temaGuardado?.inicio) document.documentElement.style.setProperty("--tema-color-inicio", temaGuardado.inicio);
@@ -71,12 +71,19 @@
       aria-label="Ir a la página principal de Ofertas Imperdibles MX"
       title="Ir a la página principal"
     >
-      <img
-        id="logo-principal-sitio"
-        class="logo"
-        src="img/logo-ofertas-horizontal.png?v=71.4"
-        alt="Ofertas Imperdibles MX"
-      />
+      <span class="marca-principal">
+        <img
+          id="logo-principal-icono"
+          class="marca-principal-icono"
+          src="img/logo-ofertas-transparente.png?v=71.6"
+          alt=""
+          aria-hidden="true"
+        />
+        <span class="marca-principal-textos">
+          <strong id="nombre-sitio-principal" class="marca-principal-nombre"><span>Ofertas</span> <span class="marca-principal-destacado">Imperdibles</span></strong>
+          <span id="eslogan-sitio-principal" class="marca-principal-eslogan">Las mejores ofertas, siempre</span>
+        </span>
+      </span>
     </a>
 
     <div class="estado-dinamico-cabecera" aria-live="polite" aria-atomic="true">
@@ -138,20 +145,33 @@
           const cache = JSON.parse(localStorage.getItem("ofertas_imperdibles_config_cache") || "null");
           if (!cache || typeof cache !== "object") return;
 
-          const texto = document.querySelector("#hero-texto-descriptivo");
-          const nombre = document.querySelector("#nombre-sitio");
-          const logoPrincipal = document.querySelector("#logo-principal-sitio");
+          const textoBarra = document.querySelector("#hero-texto-descriptivo");
+          const nombreBarra = document.querySelector("#nombre-sitio");
+          const iconoPrincipal = document.querySelector("#logo-principal-icono");
+          const nombrePrincipal = document.querySelector("#nombre-sitio-principal");
+          const esloganPrincipal = document.querySelector("#eslogan-sitio-principal");
           const imagen = document.querySelector(".hero-redes-logo img");
           const whatsapp = document.querySelector(".hero-redes-whatsapp");
           const facebook = document.querySelector(".hero-redes-facebook");
           const visitantes = document.querySelector("#hero-total-visitantes");
 
-          if (texto) {
-            texto.textContent = cache.eslogan || cache.texto_descriptivo || texto.textContent;
-            texto.hidden = cache.mostrar_eslogan === false;
+          if (textoBarra && cache.texto_descriptivo) textoBarra.textContent = cache.texto_descriptivo;
+          if (nombreBarra && cache.nombre_sitio) nombreBarra.textContent = cache.nombre_sitio;
+          if (iconoPrincipal && cache.logo_icono_url) iconoPrincipal.src = cache.logo_icono_url;
+          if (nombrePrincipal && cache.nombre_sitio) {
+            const palabras = String(cache.nombre_sitio).trim().split(/\s+/).filter(Boolean);
+            const destacada = palabras.pop() || "Imperdibles";
+            nombrePrincipal.replaceChildren();
+            if (palabras.length) nombrePrincipal.append(document.createTextNode(`${palabras.join(" ")} `));
+            const parteDestacada = document.createElement("span");
+            parteDestacada.className = "marca-principal-destacado";
+            parteDestacada.textContent = destacada;
+            nombrePrincipal.append(parteDestacada);
           }
-          if (nombre && cache.nombre_sitio) nombre.textContent = cache.nombre_sitio;
-          if (logoPrincipal && cache.logo_principal_url) logoPrincipal.src = cache.logo_principal_url;
+          if (esloganPrincipal) {
+            esloganPrincipal.textContent = cache.eslogan || esloganPrincipal.textContent;
+            esloganPrincipal.hidden = cache.mostrar_eslogan === false;
+          }
           if (imagen && cache.imagen_url) imagen.src = cache.imagen_url;
           if (whatsapp && cache.enlace_whatsapp) whatsapp.href = cache.enlace_whatsapp;
           if (facebook && cache.enlace_facebook) facebook.href = cache.enlace_facebook;

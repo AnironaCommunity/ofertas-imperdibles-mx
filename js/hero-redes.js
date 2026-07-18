@@ -4,10 +4,12 @@
 
   const image = hero.querySelector(".hero-redes-logo img");
   const defaultImage = image?.getAttribute("src") || "";
-  const mainLogo = document.querySelector("#logo-principal-sitio");
-  const defaultMainLogo = mainLogo?.getAttribute("src") || "";
-  const siteName = document.querySelector("#nombre-sitio");
-  const slogan = document.querySelector("#hero-texto-descriptivo");
+  const mainIcon = document.querySelector("#logo-principal-icono");
+  const defaultMainIcon = mainIcon?.getAttribute("src") || "";
+  const mainSiteName = document.querySelector("#nombre-sitio-principal");
+  const mainSlogan = document.querySelector("#eslogan-sitio-principal");
+  const barSiteName = document.querySelector("#nombre-sitio");
+  const barDescription = document.querySelector("#hero-texto-descriptivo");
   const visitorBox = document.querySelector("#hero-contador-visitantes");
   const visitorTotal = document.querySelector("#hero-total-visitantes");
 
@@ -20,6 +22,18 @@
     return Number.isFinite(number)
       ? new Intl.NumberFormat("es-MX").format(number)
       : "0";
+  }
+
+  function renderMainSiteName(element, value) {
+    if (!element) return;
+    const words = String(value || "Ofertas Imperdibles").trim().split(/\s+/).filter(Boolean);
+    const highlighted = words.pop() || "Imperdibles";
+    element.replaceChildren();
+    if (words.length) element.append(document.createTextNode(`${words.join(" ")} `));
+    const span = document.createElement("span");
+    span.className = "marca-principal-destacado";
+    span.textContent = highlighted;
+    element.append(span);
   }
 
   async function cargarConfiguracion() {
@@ -57,22 +71,26 @@
       );
     } catch {}
 
-    if (mainLogo) {
-      mainLogo.src = config.logo_principal_url || defaultMainLogo;
-      mainLogo.alt = config.nombre_sitio || "Ofertas Imperdibles MX";
+    if (mainIcon) {
+      mainIcon.src = config.logo_icono_url || defaultMainIcon;
     }
 
     if (image) {
       image.src = config.imagen_url || defaultImage;
     }
 
-    if (siteName) {
-      siteName.textContent = config.nombre_sitio || "Ofertas Imperdibles MX";
+    const configuredName = config.nombre_sitio || "Ofertas Imperdibles";
+    if (mainSiteName) renderMainSiteName(mainSiteName, configuredName);
+    if (barSiteName) barSiteName.textContent = configuredName;
+
+    if (mainSlogan) {
+      mainSlogan.textContent = config.eslogan || "Las mejores ofertas, siempre";
+      mainSlogan.hidden = config.mostrar_eslogan === false;
     }
 
-    if (slogan) {
-      slogan.textContent = config.eslogan || config.texto_descriptivo || "Las mejores ofertas, siempre";
-      slogan.hidden = config.mostrar_eslogan === false;
+    if (barDescription) {
+      barDescription.textContent = config.texto_descriptivo || "Cupones, promociones y novedades todos los días.";
+      barDescription.hidden = false;
     }
 
     const whatsappButton = hero.querySelector(".hero-redes-whatsapp");
@@ -85,7 +103,7 @@
     }
 
     const labels = {
-      textoDescriptivo: config.eslogan || config.texto_descriptivo || "Las mejores ofertas, siempre",
+      textoDescriptivo: config.texto_descriptivo || "Cupones, promociones y novedades todos los días.",
       botonTienda: config.nombre_boton_tienda || "Tienda",
       seccionTienda: config.nombre_seccion_tienda || "Cupones de tienda",
       botonBancarios: config.nombre_boton_bancarios || "Bancarios",
@@ -97,7 +115,7 @@
     window.ofertasEtiquetas = labels;
     const heroDescription = document.querySelector("#hero-texto-descriptivo");
     heroDescription?.replaceChildren(labels.textoDescriptivo);
-    if (heroDescription) heroDescription.hidden = config.mostrar_eslogan === false;
+    if (heroDescription) heroDescription.hidden = false;
     document.querySelector("#nombre-boton-tienda")?.replaceChildren(labels.botonTienda);
     document.querySelector("#nombre-boton-bancarios")?.replaceChildren(labels.botonBancarios);
     document.querySelector("#nombre-boton-comunidad")?.replaceChildren(labels.botonComunidad);
