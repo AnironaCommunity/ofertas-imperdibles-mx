@@ -1,0 +1,131 @@
+/* V68.3 — Integración visual del logo, línea dinámica y barra inferior contextual */
+.encabezado {
+  isolation: isolate;
+}
+
+.enlace-logo-inicio {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 2px 18px 0;
+}
+
+/* El fondo pertenece al encabezado, no a la imagen. El PNG sigue transparente. */
+.enlace-logo-inicio::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 18% -12% -18%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(38, 199, 55, .08), rgba(255,255,255,0) 70%);
+  filter: blur(7px);
+  pointer-events: none;
+}
+
+.enlace-logo-inicio .logo {
+  display: block;
+  object-fit: contain;
+  background: transparent !important;
+}
+
+.estado-dinamico-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: min(620px, calc(100% - 34px));
+  min-height: 24px;
+  margin: 1px auto 6px;
+  padding: 3px 11px;
+  color: #557064;
+  font-size: 11px;
+  line-height: 1.25;
+  text-align: center;
+  border-top: 1px solid rgba(24, 146, 95, .10);
+  border-bottom: 1px solid rgba(24, 146, 95, .10);
+  background: linear-gradient(90deg, transparent, rgba(239, 250, 244, .72), transparent);
+  transition: opacity .22s ease, transform .22s ease;
+}
+
+.estado-dinamico-cabecera.cambiando {
+  opacity: 0;
+  transform: translateY(3px);
+}
+
+.estado-dinamico-punto {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #20a66c;
+  box-shadow: 0 0 0 4px rgba(32, 166, 108, .10);
+}
+
+/* Barra inferior: conserva Tienda/Bancarios como prioridad y usa contexto fuera de cupones. */
+.navegacion-inferior.modo-contextual {
+  grid-template-columns: .82fr 1.18fr;
+}
+
+.navegacion-inferior.modo-contextual #tab-bancarios {
+  display: none;
+}
+
+.navegacion-inferior.modo-contextual #tab-tienda {
+  display: inline-flex;
+}
+
+.navegacion-inferior.modo-contextual #tab-tienda strong::before {
+  content: "Volver a ";
+  font-weight: 400;
+}
+
+.tab-seccion-contextual {
+  min-width: 0;
+  cursor: default;
+  color: #0d6655;
+  border-color: rgba(21, 147, 106, .28) !important;
+  background: linear-gradient(180deg, #ffffff 0%, #edf9f4 100%) !important;
+}
+
+.tab-seccion-contextual strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tab-seccion-contextual[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 600px) {
+  .enlace-logo-inicio {
+    padding-inline: 10px;
+  }
+
+  .estado-dinamico-cabecera {
+    width: calc(100% - 22px);
+    min-height: 22px;
+    margin-top: 0;
+    margin-bottom: 5px;
+    padding: 3px 8px;
+    font-size: 10px;
+  }
+
+  .navegacion-inferior.modo-contextual {
+    grid-template-columns: .72fr 1.28fr;
+  }
+
+  .navegacion-inferior.modo-contextual #tab-tienda strong::before {
+    content: "";
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .estado-dinamico-cabecera {
+    transition: none;
+  }
+}
