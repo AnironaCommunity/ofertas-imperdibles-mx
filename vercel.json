@@ -1,8 +1,0 @@
-{
-  "crons": [
-    {
-      "path": "/api/admin-publicidad?action=actualizar-precios",
-      "schedule": "0 12 * * *"
-    }
-  ]
-}
