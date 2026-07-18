@@ -306,23 +306,6 @@ function activarSeccionDesdeUrl({
     });
   }
 
-  const botonActivo = [...botonesMenuOfertas].find(
-    (boton) => boton.dataset.vista === configuracion.vista
-  );
-
-  /* La navegación horizontal se limita al propio menú. scrollIntoView podía
-     desplazar también el documento completo al abrir Amazon. */
-  if (botonActivo && menuOfertas) {
-    const destino = Math.max(
-      0,
-      botonActivo.offsetLeft - (menuOfertas.clientWidth - botonActivo.offsetWidth) / 2
-    );
-    menuOfertas.scrollTo({
-      left: destino,
-      behavior: desplazamiento === "smooth" ? "smooth" : "auto",
-    });
-  }
-
   if (actualizarHistorial) {
     actualizarUrlSeccion(seccion, "replace");
   }
@@ -353,12 +336,6 @@ botonesMenuOfertas.forEach((boton) => {
     cambiarVista(boton.dataset.vista, {
       actualizarHistorial: true,
       desplazamiento: "smooth",
-    });
-
-    boton.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "center",
     });
 
     window.setTimeout(actualizarControlesMenuOfertas, 250);
