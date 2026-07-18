@@ -156,3 +156,34 @@ html {
     margin-bottom: 4px !important;
   }
 }
+
+/* V71.4 — Logo oficial horizontal alineado y recortado. */
+.enlace-logo-inicio {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  line-height: 0;
+}
+
+.enlace-logo-inicio .logo {
+  display: block;
+  width: min(560px, 88vw) !important;
+  height: auto !important;
+  max-height: none !important;
+  object-fit: contain;
+  object-position: center;
+  margin: 1px auto 5px !important;
+}
+
+@media (max-width: 600px) {
+  .enlace-logo-inicio .logo {
+    width: min(360px, 92vw) !important;
+    margin: 1px auto 4px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .enlace-logo-inicio .logo {
+    width: min(330px, 93vw) !important;
+  }
+}
