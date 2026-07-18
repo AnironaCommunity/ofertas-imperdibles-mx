@@ -352,121 +352,27 @@ botonComunidadAnirona?.addEventListener("click", () => {
 function actualizarControlesMenuOfertas() {
   if (!menuOfertas) return;
 
-  const tolerancia = 4;
-  const tieneDesbordamiento =
-    menuOfertas.scrollWidth > menuOfertas.clientWidth + tolerancia;
-  const alInicio = menuOfertas.scrollLeft <= tolerancia;
-  const alFinal =
-    menuOfertas.scrollLeft + menuOfertas.clientWidth >=
-    menuOfertas.scrollWidth - tolerancia;
-
-  if (botonMenuAnterior) {
-    botonMenuAnterior.hidden = !tieneDesbordamiento || alInicio;
-  }
-
-  if (botonMenuSiguiente) {
-    botonMenuSiguiente.hidden = !tieneDesbordamiento || alFinal;
-  }
-
-  if (indicadorMenuOfertas) {
-    indicadorMenuOfertas.hidden = !tieneDesbordamiento || !alInicio;
-  }
-
-  menuOfertas.classList.toggle("puede-desplazar-izquierda", tieneDesbordamiento && !alInicio);
-  menuOfertas.classList.toggle("puede-desplazar-derecha", tieneDesbordamiento && !alFinal);
-}
-
-function desplazarMenuOfertas(direccion) {
-  if (!menuOfertas) return;
-
-  const distancia = Math.max(menuOfertas.clientWidth * 0.72, 180);
-  menuOfertas.scrollBy({
-    left: direccion * distancia,
-    behavior: "smooth",
-  });
-}
-
-let temporizadorRecorridoSecciones = null;
-let recorridoSeccionesActivo = false;
-
-function cancelarRecorridoSecciones() {
-  if (!recorridoSeccionesActivo) return;
-
-  recorridoSeccionesActivo = false;
-
-  if (temporizadorRecorridoSecciones) {
-    window.clearTimeout(temporizadorRecorridoSecciones);
-    temporizadorRecorridoSecciones = null;
-  }
-}
-
-function iniciarRecorridoSecciones() {
-  if (!menuOfertas) return;
-
-  const tieneDesbordamiento =
-    menuOfertas.scrollWidth > menuOfertas.clientWidth + 4;
-
-  if (!tieneDesbordamiento) {
-    return;
-  }
-
-  recorridoSeccionesActivo = true;
-
   /*
-    El recorrido siempre debe regresar al inicio real del menú.
-    No usamos scrollLeft como posición inicial porque el navegador puede
-    haber centrado previamente la sección activa y dejar un desplazamiento.
+    V68.7.1: Mercado Libre y Amazon son una cuadrícula fija de dos columnas.
+    El código anterior todavía trataba este bloque como carrusel horizontal y
+    podía conservar scrollLeft al cambiar de vista. Eso desplazaba los botones.
   */
-  const posicionInicial = 0;
-  const posicionFinal =
-    menuOfertas.scrollWidth - menuOfertas.clientWidth;
+  if (menuOfertas.scrollLeft !== 0) {
+    menuOfertas.scrollLeft = 0;
+  }
 
-  temporizadorRecorridoSecciones = window.setTimeout(() => {
-    if (!recorridoSeccionesActivo) return;
+  menuOfertas.classList.remove(
+    "puede-desplazar-izquierda",
+    "puede-desplazar-derecha"
+  );
 
-    menuOfertas.scrollTo({
-      left: posicionFinal,
-      behavior: "smooth",
-    });
-
-    temporizadorRecorridoSecciones = window.setTimeout(() => {
-      if (!recorridoSeccionesActivo) return;
-
-      menuOfertas.scrollTo({
-        left: posicionInicial,
-        behavior: "smooth",
-      });
-
-      temporizadorRecorridoSecciones = window.setTimeout(() => {
-        menuOfertas.scrollTo({
-          left: 0,
-          behavior: "auto",
-        });
-
-        recorridoSeccionesActivo = false;
-        actualizarControlesMenuOfertas();
-      }, 850);
-    }, 820);
-  }, 700);
+  if (botonMenuAnterior) botonMenuAnterior.hidden = true;
+  if (botonMenuSiguiente) botonMenuSiguiente.hidden = true;
+  if (indicadorMenuOfertas) indicadorMenuOfertas.hidden = true;
 }
 
-for (const evento of ["pointerdown", "touchstart", "wheel"]) {
-  menuOfertas?.addEventListener(evento, cancelarRecorridoSecciones, {
-    passive: true,
-  });
-}
-
-
-botonMenuAnterior?.addEventListener("click", () => desplazarMenuOfertas(-1));
-botonMenuSiguiente?.addEventListener("click", () => desplazarMenuOfertas(1));
-menuOfertas?.addEventListener("scroll", actualizarControlesMenuOfertas, {
-  passive: true,
-});
 window.addEventListener("resize", actualizarControlesMenuOfertas);
-window.addEventListener("load", () => {
-  actualizarControlesMenuOfertas();
-  window.setTimeout(iniciarRecorridoSecciones, 250);
-});
+window.addEventListener("load", actualizarControlesMenuOfertas);
 requestAnimationFrame(actualizarControlesMenuOfertas);
 
 function cambiarVista(
