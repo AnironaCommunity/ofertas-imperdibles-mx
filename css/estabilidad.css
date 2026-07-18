@@ -557,3 +557,71 @@ body {
 .seccion-ofertas[hidden] {
   display: none !important;
 }
+
+/* ============================================================
+   V69.1 — CARGA ESTABLE Y ALINEACIÓN DE VISITANTES
+   No modifica la interfaz; iguala dimensiones y evita saltos.
+   ============================================================ */
+.hero-redes-botones {
+  align-items: stretch !important;
+}
+
+.hero-redes-boton,
+.hero-redes-visitantes {
+  height: 29px !important;
+  min-height: 29px !important;
+  padding: 5px 9px !important;
+  gap: 6px !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+  opacity: 1 !important;
+}
+
+.hero-redes-visitantes > span {
+  font-size: 12px !important;
+  line-height: 1 !important;
+}
+
+.hero-redes-visitantes strong {
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+}
+
+.hero-redes.hero-redes-pendiente,
+.hero-redes.hero-redes-lista {
+  visibility: visible !important;
+  opacity: 1 !important;
+  transition: none !important;
+}
+
+@media (max-width: 600px) {
+  .hero-redes-boton,
+  .hero-redes-visitantes {
+    height: 25px !important;
+    min-height: 25px !important;
+    padding: 4px 7px !important;
+    gap: 4px !important;
+    font-size: 8.5px !important;
+  }
+
+  .hero-redes-visitantes > span {
+    font-size: 10.5px !important;
+  }
+
+  .hero-redes-visitantes strong {
+    font-size: 8.5px !important;
+  }
+}
+
+/* Toda navegación empieza siempre en el borde horizontal real del documento. */
+html,
+body {
+  overscroll-behavior-x: none;
+}
+
+.menu-ofertas-contenedor,
+.menu-ofertas {
+  overscroll-behavior-x: none;
+  touch-action: pan-y;
+}
