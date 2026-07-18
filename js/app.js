@@ -162,6 +162,30 @@ const TITULOS_SECCION = {
   anirona: "Comunidad Anirona | Ofertas Imperdibles MX",
 };
 
+function nombresPrincipales() {
+  return window.OFERTAS_CONFIG?.nombres || {
+    tienda: "Tienda",
+    bancarios: "Bancarios",
+    mercadolibre: "Ofertas Mercado Libre",
+    amazon: "Ofertas Amazon",
+  };
+}
+
+function actualizarTitulosConfigurables() {
+  const nombres = nombresPrincipales();
+  const tituloCupones = document.querySelector("#vista-cupones .titulo-seccion");
+  if (tituloCupones) {
+    tituloCupones.textContent = categoriaActiva === "tienda"
+      ? `🎟️ ${nombres.tienda}`
+      : `💳 ${nombres.bancarios}`;
+  }
+  actualizarTituloSeccion(
+    vistaActiva === "cupones" ? categoriaActiva : (VISTA_A_SECCION_URL[vistaActiva] || "tienda")
+  );
+}
+
+window.addEventListener("ofertas:configuracion", actualizarTitulosConfigurables);
+
 
 function mostrarCantidadSeccion(elemento, cantidad, tipo) {
   if (!elemento) return;
@@ -248,9 +272,15 @@ function actualizarContadoresSecciones() {
 }
 
 function actualizarTituloSeccion(seccion) {
-  document.title =
-    TITULOS_SECCION[seccion] ||
-    "Ofertas Imperdibles MX";
+  const nombres = nombresPrincipales();
+  const titulos = {
+    tienda: `${nombres.tienda} | Ofertas Imperdibles MX`,
+    bancarios: `${nombres.bancarios} | Ofertas Imperdibles MX`,
+    mercadolibre: `${nombres.mercadolibre} | Ofertas Imperdibles MX`,
+    amazon: `${nombres.amazon} | Ofertas Imperdibles MX`,
+    anirona: TITULOS_SECCION.anirona,
+  };
+  document.title = titulos[seccion] || "Ofertas Imperdibles MX";
 }
 
 const VISTA_A_SECCION_URL = {
@@ -1037,14 +1067,15 @@ function renderizarCategoria() {
 
   const esTienda = categoriaActiva === "tienda";
 
-  document.querySelector(".titulo-seccion").textContent = esTienda
-    ? "🎟️ Cupones de tienda"
-    : "💳 Cupones bancarios";
+  const nombres = nombresPrincipales();
+  document.querySelector("#vista-cupones .titulo-seccion").textContent = esTienda
+    ? `🎟️ ${nombres.tienda}`
+    : `💳 ${nombres.bancarios}`;
 
   if (cuponesCategoria.length === 0) {
     sinCupones.querySelector("h2").textContent = esTienda
-      ? "No hay cupones de tienda disponibles"
-      : "No hay cupones bancarios disponibles";
+      ? `No hay cupones disponibles en ${nombres.tienda}`
+      : `No hay cupones disponibles en ${nombres.bancarios}`;
 
     sinCupones.querySelector("p").textContent =
       "Pronto agregaremos nuevas opciones.";
