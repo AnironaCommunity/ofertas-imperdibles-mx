@@ -29,11 +29,23 @@
 
     if (config.color_inicio) {
       hero.style.setProperty("--hero-color-inicio", config.color_inicio);
+      document.documentElement.style.setProperty("--tema-color-inicio", config.color_inicio);
     }
 
     if (config.color_fin) {
       hero.style.setProperty("--hero-color-fin", config.color_fin);
+      document.documentElement.style.setProperty("--tema-color-fin", config.color_fin);
     }
+
+    try {
+      localStorage.setItem(
+        "ofertas_imperdibles_tema",
+        JSON.stringify({
+          inicio: config.color_inicio || "#e9cdff",
+          fin: config.color_fin || "#fae8fa",
+        })
+      );
+    } catch {}
 
     if (image) {
       image.src = config.imagen_url || defaultImage;
