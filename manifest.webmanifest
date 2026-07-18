@@ -1,0 +1,11 @@
+{
+  "name": "Ofertas Imperdibles MX",
+  "short_name": "Ofertas MX",
+  "description": "Cupones, promociones y ofertas de Mercado Libre, Amazon y más.",
+  "lang": "es-MX",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#43b929"
+}

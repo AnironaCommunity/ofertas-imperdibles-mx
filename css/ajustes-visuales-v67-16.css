@@ -1,0 +1,42 @@
+/* V67.16 — Solo los ajustes visuales solicitados */
+
+/* Logo del cupón a la izquierda del título, sin alterar el contenido inferior */
+.cupon-encabezado {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+}
+
+.cupon-encabezado .cupon-logo {
+  display: block !important;
+  flex: 0 0 auto !important;
+  border-radius: 9px !important;
+  object-fit: cover !important;
+  object-position: center !important;
+}
+
+.cupon-encabezado .descuento {
+  margin: 0 !important;
+  text-align: left !important;
+}
+
+/* Título del producto en OFERTAS DEL DÍA */
+#publicidad-titulo,
+.publicidad-titulo {
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  line-height: 1.35 !important;
+  text-transform: none !important;
+}
+
+
+/* V67.16.1 — Logo del cupón sin borde ni espacio blanco */
+.cupon-encabezado .cupon-logo {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
