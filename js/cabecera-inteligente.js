@@ -2,132 +2,96 @@
   "use strict";
 
   const encabezado = document.querySelector(".encabezado");
-  const hero = document.querySelector(".hero-redes");
-  if (!encabezado || !hero) return;
+  const hero = encabezado?.querySelector(".hero-redes");
+  const menu = encabezado?.querySelector(".menu-ofertas-contenedor");
+  const comunidad = encabezado?.querySelector(".acceso-comunidad-anirona");
 
+  if (!encabezado || !hero || !menu || !comunidad) return;
+
+  /* Limpia cualquier cabecera generada por V71.0/V71.1. */
+  document.querySelectorAll(".smart-header, .cabecera-hibrida, .cabecera-fija-original").forEach((nodo) => nodo.remove());
   document.body.classList.remove("cabecera-compacta");
   encabezado.removeAttribute("data-compacta");
-  document.querySelectorAll(".smart-header, .cabecera-hibrida").forEach((nodo) => nodo.remove());
-
-  const originales = {
-    whatsapp: document.querySelector(".hero-redes-whatsapp"),
-    facebook: document.querySelector(".hero-redes-facebook"),
-    visitantes: document.querySelector("#hero-total-visitantes"),
-    mercadoLibre: document.querySelector('[data-vista="ofertas_mercado_libre"]'),
-    amazon: document.querySelector('[data-vista="ofertas_amazon"]'),
-    comunidad: document.querySelector('[data-vista="comunidad_anirona"]')
-  };
-
-  if (!originales.mercadoLibre || !originales.amazon || !originales.comunidad) return;
-
-  const barra = document.createElement("div");
-  barra.className = "cabecera-hibrida";
-  barra.setAttribute("role", "navigation");
-  barra.setAttribute("aria-label", "Redes y navegación rápida");
-  barra.setAttribute("aria-hidden", "true");
-  barra.innerHTML = `
-    <div class="cabecera-hibrida-redes">
-      <a class="cabecera-hibrida-red cabecera-hibrida-whatsapp" target="_blank" rel="noopener noreferrer">
-        <span aria-hidden="true">◉</span><span>WhatsApp</span>
-      </a>
-      <a class="cabecera-hibrida-red cabecera-hibrida-facebook" target="_blank" rel="noopener noreferrer">
-        <span aria-hidden="true">f</span><span>Facebook</span>
-      </a>
-      <span class="cabecera-hibrida-visitantes" title="Visitantes">
-        <span aria-hidden="true">👥</span><strong>—</strong>
-      </span>
-    </div>
-    <div class="cabecera-hibrida-nav">
-      <button type="button" data-destino="mercadoLibre" aria-label="Ofertas Mercado Libre" aria-pressed="false">
-        <img src="img/mercado-libre.png" alt="" aria-hidden="true"><span>Mercado Libre</span>
-      </button>
-      <button type="button" data-destino="amazon" aria-label="Ofertas Amazon" aria-pressed="false">
-        <img src="img/amazon.png" alt="" aria-hidden="true"><span>Amazon</span>
-      </button>
-      <button type="button" data-destino="comunidad" aria-label="Comunidad Anirona" aria-pressed="false">
-        <img src="img/anirona.png" alt="" aria-hidden="true"><span>Comunidad</span>
-      </button>
-    </div>
-  `;
-  document.body.appendChild(barra);
-
-  const clonWhatsapp = barra.querySelector(".cabecera-hibrida-whatsapp");
-  const clonFacebook = barra.querySelector(".cabecera-hibrida-facebook");
-  const clonVisitantes = barra.querySelector(".cabecera-hibrida-visitantes strong");
-  const botones = Array.from(barra.querySelectorAll(".cabecera-hibrida-nav button"));
-
-  function sincronizarDatos() {
-    if (clonWhatsapp && originales.whatsapp) clonWhatsapp.href = originales.whatsapp.href;
-    if (clonFacebook && originales.facebook) clonFacebook.href = originales.facebook.href;
-    if (clonVisitantes && originales.visitantes) clonVisitantes.textContent = originales.visitantes.textContent || "—";
-
-    botones.forEach((boton) => {
-      const original = originales[boton.dataset.destino];
-      const activo = original?.getAttribute("aria-pressed") === "true" || original?.classList.contains("activo");
-      boton.setAttribute("aria-pressed", String(Boolean(activo)));
-    });
-  }
-
-  botones.forEach((boton) => {
-    boton.addEventListener("click", () => originales[boton.dataset.destino]?.click());
-  });
-
-  const observadorCambios = new MutationObserver(sincronizarDatos);
-  [originales.whatsapp, originales.facebook, originales.visitantes,
-   originales.mercadoLibre, originales.amazon, originales.comunidad]
-    .filter(Boolean)
-    .forEach((elemento) => observadorCambios.observe(elemento, {
-      attributes: true,
-      childList: true,
-      subtree: true,
-      attributeFilter: ["href", "aria-pressed", "class"]
-    }));
-  sincronizarDatos();
-
-  let visible = false;
-  function establecerVisible(nuevoEstado) {
-    if (visible === nuevoEstado) return;
-    visible = nuevoEstado;
-    barra.classList.toggle("is-visible", visible);
-    barra.setAttribute("aria-hidden", String(!visible));
-  }
 
   /*
-    La barra aparece únicamente cuando la barra social original ya salió casi
-    por completo. No depende de la dirección del scroll, por lo que permanece
-    estable al subir y no aparece de golpe encima de un cupón.
+    V71.2: la barra que ya existe en la página se separa del logo.
+
+    El logo y el estado dinámico permanecen en el encabezado superior y salen
+    naturalmente al desplazar. La barra original (imagen, redes, visitantes,
+    ofertas y comunidad) se mantiene en el flujo y se vuelve sticky al llegar
+    arriba. Al no usar position:fixed ni clonar elementos, nunca cubre el título
+    ni el primer cupón.
   */
+  const barra = document.createElement("div");
+  barra.className = "cabecera-fija-original";
+  barra.setAttribute("data-cabecera-fija", "true");
+  barra.setAttribute("aria-label", "Redes y secciones de Ofertas Imperdibles MX");
+
   const centinela = document.createElement("span");
+  centinela.className = "cabecera-fija-centinela";
   centinela.setAttribute("aria-hidden", "true");
-  centinela.style.cssText = "display:block;width:1px;height:1px;pointer-events:none;";
-  hero.insertAdjacentElement("afterend", centinela);
+
+  encabezado.insertAdjacentElement("afterend", centinela);
+  centinela.insertAdjacentElement("afterend", barra);
+
+  barra.append(hero, menu, comunidad);
+
+  const raiz = document.documentElement;
+  let alturaAnterior = 0;
+
+  function actualizarAltura() {
+    const altura = Math.ceil(barra.getBoundingClientRect().height);
+    if (!altura || altura === alturaAnterior) return;
+    alturaAnterior = altura;
+    raiz.style.setProperty("--cabecera-fija-alto", `${altura}px`);
+  }
+
+  function establecerPegada(pegada) {
+    barra.classList.toggle("esta-pegada", pegada);
+    document.body.classList.toggle("cabecera-original-pegada", pegada);
+  }
 
   if ("IntersectionObserver" in window) {
-    const observadorPosicion = new IntersectionObserver((entradas) => {
-      const entrada = entradas[0];
-      establecerVisible(!entrada.isIntersecting && entrada.boundingClientRect.top < 0);
-    }, {
-      root: null,
-      threshold: 0,
-      rootMargin: "0px 0px 0px 0px"
-    });
-    observadorPosicion.observe(centinela);
+    const observador = new IntersectionObserver(([entrada]) => {
+      establecerPegada(!entrada.isIntersecting && entrada.boundingClientRect.top < 0);
+    }, { threshold: 0 });
+    observador.observe(centinela);
   } else {
     let pendiente = false;
-    const actualizar = () => {
+    const revisar = () => {
       pendiente = false;
-      establecerVisible(centinela.getBoundingClientRect().top < 0);
+      establecerPegada(centinela.getBoundingClientRect().top < 0);
     };
     window.addEventListener("scroll", () => {
       if (pendiente) return;
       pendiente = true;
-      requestAnimationFrame(actualizar);
+      requestAnimationFrame(revisar);
     }, { passive: true });
-    actualizar();
+    revisar();
   }
 
-  window.addEventListener("pageshow", () => {
-    sincronizarDatos();
-    establecerVisible(centinela.getBoundingClientRect().top < 0);
+  if ("ResizeObserver" in window) {
+    const observadorTamano = new ResizeObserver(() => requestAnimationFrame(actualizarAltura));
+    observadorTamano.observe(barra);
+  } else {
+    window.addEventListener("resize", actualizarAltura, { passive: true });
+  }
+
+  /* Recalcula cuando cambian textos, contadores o configuración remota. */
+  const observadorContenido = new MutationObserver(() => requestAnimationFrame(actualizarAltura));
+  observadorContenido.observe(barra, {
+    childList: true,
+    subtree: true,
+    characterData: true,
+    attributes: true,
+    attributeFilter: ["hidden", "class", "aria-pressed"]
   });
+
+  window.addEventListener("load", actualizarAltura, { once: true });
+  window.addEventListener("pageshow", () => {
+    actualizarAltura();
+    establecerPegada(centinela.getBoundingClientRect().top < 0);
+  });
+
+  actualizarAltura();
 })();

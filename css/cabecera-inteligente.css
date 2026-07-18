@@ -1,29 +1,29 @@
 /*
-  Ofertas Imperdibles MX — V71.1
-  Cabecera híbrida fija
+  Ofertas Imperdibles MX — V71.2
+  Cabecera original fija, sin clonados ni cambios de altura durante el scroll.
 
-  El encabezado completo permanece natural. Cuando la barra original de redes
-  sale de la pantalla, aparece una barra fija estable con redes y navegación.
-  No se oculta al cambiar la dirección del desplazamiento, evitando brincos y
-  cupones cubiertos por una aparición repentina.
+  El logo superior sale naturalmente. La barra ORIGINAL con imagen, redes,
+  visitantes, ofertas y comunidad queda sticky al llegar a la parte superior.
 */
 
 :root {
-  --cabecera-hibrida-alto: 92px;
-  --cabecera-hibrida-transicion: 190ms cubic-bezier(.22,.75,.25,1);
+  --cabecera-fija-alto: 210px;
+  --cabecera-fija-sombra: 0 8px 22px rgba(15, 23, 42, .11);
 }
 
+/* El encabezado vuelve a contener únicamente logo y estado dinámico. */
 .encabezado {
   position: relative !important;
   top: auto !important;
   z-index: 2;
+  overflow: hidden;
   background: transparent;
   box-shadow: none !important;
   transform: none !important;
   transition: none !important;
 }
 
-/* Neutraliza estados de las versiones anteriores. */
+/* Neutraliza por completo los estados de las versiones V70/V71 anteriores. */
 body.cabecera-compacta .encabezado,
 body.cabecera-compacta .enlace-logo-inicio,
 body.cabecera-compacta .estado-dinamico-cabecera,
@@ -50,154 +50,93 @@ body.cabecera-compacta .acceso-comunidad-anirona {
   transform: none !important;
 }
 
-.cabecera-hibrida {
-  position: fixed;
-  top: max(0px, env(safe-area-inset-top));
-  left: 50%;
-  z-index: 1200;
-  width: min(1120px, calc(100% - 14px));
-  min-height: var(--cabecera-hibrida-alto);
-  padding: 7px 8px 8px;
-  border: 1px solid rgba(94,63,105,.12);
-  border-top: 0;
-  border-radius: 0 0 15px 15px;
-  background: rgba(255,255,255,.955);
-  box-shadow: 0 8px 24px rgba(15,23,42,.12);
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
-  opacity: 0;
-  visibility: hidden;
+/* Punto exacto en el que la barra comienza a pegarse. */
+.cabecera-fija-centinela {
+  display: block;
+  width: 1px;
+  height: 1px;
+  margin-top: -1px;
   pointer-events: none;
-  transform: translate3d(-50%, -10px, 0);
+  visibility: hidden;
+}
+
+/*
+  Al permanecer en el flujo, esta barra reserva siempre su propia altura.
+  Por ello nunca se superpone al título de sección ni a los cupones.
+*/
+.cabecera-fija-original {
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+  width: 100%;
+  padding: 1px 14px 5px;
+  background: rgba(255, 255, 255, .985);
+  border-bottom: 1px solid transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   transition:
-    opacity 150ms ease,
-    transform var(--cabecera-hibrida-transicion),
-    visibility 0s linear 190ms;
-  contain: layout paint style;
+    box-shadow 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease;
+  isolation: isolate;
 }
 
-.cabecera-hibrida.is-visible {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: translate3d(-50%, 0, 0);
-  transition:
-    opacity 150ms ease,
-    transform var(--cabecera-hibrida-transicion),
-    visibility 0s linear 0s;
+.cabecera-fija-original.esta-pegada {
+  border-bottom-color: rgba(94, 63, 105, .10);
+  background: rgba(255, 255, 255, .96);
+  box-shadow: var(--cabecera-fija-sombra);
 }
 
-.cabecera-hibrida-redes,
-.cabecera-hibrida-nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 0;
+/* Conserva exactamente la barra original, sin una copia reducida. */
+.cabecera-fija-original .hero-redes {
+  margin-top: 0 !important;
 }
 
-.cabecera-hibrida-redes {
-  gap: 6px;
-  margin-bottom: 7px;
+.cabecera-fija-original .menu-ofertas-contenedor,
+.cabecera-fija-original .acceso-comunidad-anirona {
+  position: relative;
+  z-index: 1;
 }
 
-.cabecera-hibrida-red,
-.cabecera-hibrida-visitantes {
-  height: 29px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  padding: 0 10px;
-  border-radius: 999px;
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 1;
-  white-space: nowrap;
-  text-decoration: none;
-  box-sizing: border-box;
+/*
+  Cualquier salto, ancla o scrollIntoView deja visible el título bajo la barra.
+  Se aplica también a las vistas que se muestran dinámicamente.
+*/
+html {
+  scroll-padding-top: calc(var(--cabecera-fija-alto) + 14px) !important;
 }
 
-.cabecera-hibrida-red {
-  border: 1px solid rgba(255,255,255,.24);
-  color: #fff;
+.titulo-seccion,
+.seccion-ofertas-categoria,
+.modulo-ofertas-categoria,
+#vista-cupones,
+#seccion-ofertas-mercado-libre,
+#seccion-ofertas-amazon,
+#seccion-comunidad-anirona {
+  scroll-margin-top: calc(var(--cabecera-fija-alto) + 14px) !important;
 }
 
-.cabecera-hibrida-whatsapp { background: #1fa855; }
-.cabecera-hibrida-facebook { background: #1877f2; }
-
-.cabecera-hibrida-visitantes {
-  border: 1px solid rgba(94,63,105,.13);
-  color: #443448;
-  background: #fff;
+/* Evita que el navegador intente recolocar el contenido al activarse sticky. */
+.cabecera-fija-original,
+.contenedor {
+  overflow-anchor: none;
 }
-
-.cabecera-hibrida-nav {
-  gap: 6px;
-}
-
-.cabecera-hibrida-nav button {
-  flex: 1 1 0;
-  min-width: 0;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 5px 7px;
-  border: 1px solid rgba(94,63,105,.12);
-  border-radius: 11px;
-  background: #fff;
-  color: #3c3040;
-  box-shadow: 0 2px 7px rgba(40,30,43,.045);
-  cursor: pointer;
-}
-
-.cabecera-hibrida-nav button img {
-  width: 25px;
-  height: 25px;
-  flex: 0 0 25px;
-  object-fit: contain;
-}
-
-.cabecera-hibrida-nav button span {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 9px;
-  font-weight: 700;
-}
-
-.cabecera-hibrida-nav button[aria-pressed="true"] {
-  border-color: rgba(94,63,105,.34);
-  background: #f7f1f9;
-  box-shadow: inset 0 0 0 1px rgba(94,63,105,.07);
-}
-
-.cabecera-hibrida a:active,
-.cabecera-hibrida button:active { transform: scale(.97); }
-
-html { scroll-padding-top: calc(var(--cabecera-hibrida-alto) + 12px); }
 
 @media (min-width: 769px) {
-  :root { --cabecera-hibrida-alto: 98px; }
-  .cabecera-hibrida { width: min(1120px, calc(100% - 30px)); padding-inline: 12px; }
-  .cabecera-hibrida-red,
-  .cabecera-hibrida-visitantes { height: 31px; font-size: 11px; }
-  .cabecera-hibrida-nav button { max-width: 220px; height: 45px; }
-  .cabecera-hibrida-nav button span { font-size: 10px; }
+  .cabecera-fija-original {
+    padding-inline: max(22px, calc((100vw - 1120px) / 2));
+  }
 }
 
-@media (max-width: 420px) {
-  .cabecera-hibrida { width: calc(100% - 8px); padding-inline: 5px; }
-  .cabecera-hibrida-red,
-  .cabecera-hibrida-visitantes { padding-inline: 8px; font-size: 9px; }
-  .cabecera-hibrida-nav { gap: 4px; }
-  .cabecera-hibrida-nav button { gap: 4px; padding-inline: 4px; }
-  .cabecera-hibrida-nav button img { width: 22px; height: 22px; flex-basis: 22px; }
-  .cabecera-hibrida-nav button span { font-size: 8px; }
+@media (max-width: 480px) {
+  .cabecera-fija-original {
+    padding: 1px 7px 4px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cabecera-hibrida { transition: none !important; }
+  .cabecera-fija-original {
+    transition: none !important;
+  }
 }
