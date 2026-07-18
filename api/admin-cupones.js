@@ -97,7 +97,7 @@ export default async function handler(request, response) {
     if (request.query?.action === "hero-config") {
       if (request.method === "GET") {
         const config = await requestSupabase(
-          "configuracion_web?select=logo_icono_url,nombre_sitio,eslogan,mostrar_eslogan,imagen_url,color_inicio,color_fin,texto_descriptivo,nombre_boton_tienda,nombre_seccion_tienda,nombre_boton_bancarios,nombre_seccion_bancarios,nombre_boton_comunidad,nombre_seccion_comunidad,enlace_whatsapp,enlace_facebook&id=eq.hero_redes&limit=1"
+          "configuracion_web?select=logo_icono_url,nombre_sitio,eslogan,mostrar_eslogan,nombre_barra,imagen_url,color_inicio,color_fin,texto_descriptivo,nombre_boton_tienda,nombre_seccion_tienda,nombre_boton_bancarios,nombre_seccion_bancarios,nombre_boton_comunidad,nombre_seccion_comunidad,enlace_whatsapp,enlace_facebook&id=eq.hero_redes&limit=1"
         );
 
         response.setHeader("Cache-Control", "no-store");
@@ -108,6 +108,7 @@ export default async function handler(request, response) {
             nombre_sitio: "Ofertas Imperdibles MX",
             eslogan: "Las mejores ofertas, siempre",
             mostrar_eslogan: true,
+            nombre_barra: "Ofertas Imperdibles MX",
             imagen_url: "",
             color_inicio: "#e9cdff",
             color_fin: "#fae8fa",
@@ -136,6 +137,7 @@ export default async function handler(request, response) {
           nombre_sitio: cleanText(request.body?.nombre_sitio).slice(0, 70) || "Ofertas Imperdibles MX",
           eslogan: cleanText(request.body?.eslogan).slice(0, 120) || "Las mejores ofertas, siempre",
           mostrar_eslogan: request.body?.mostrar_eslogan !== false,
+          nombre_barra: cleanText(request.body?.nombre_barra).slice(0, 70) || "Ofertas Imperdibles MX",
           imagen_url: cleanText(request.body?.imagen_url),
           color_inicio: cleanColor(
             request.body?.color_inicio,

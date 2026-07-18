@@ -81,7 +81,7 @@
 
     const configuredName = config.nombre_sitio || "Ofertas Imperdibles";
     if (mainSiteName) renderMainSiteName(mainSiteName, configuredName);
-    if (barSiteName) barSiteName.textContent = configuredName;
+    if (barSiteName) barSiteName.textContent = config.nombre_barra || "Ofertas Imperdibles MX";
 
     if (mainSlogan) {
       mainSlogan.textContent = config.eslogan || "Las mejores ofertas, siempre";

@@ -155,7 +155,7 @@ export default async function handler(request, response) {
   try {
     if (action === "hero-config") {
       const config = await requestSupabase(
-        "configuracion_web?select=logo_icono_url,nombre_sitio,eslogan,mostrar_eslogan,imagen_url,color_inicio,color_fin,texto_descriptivo,nombre_boton_tienda,nombre_seccion_tienda,nombre_boton_bancarios,nombre_seccion_bancarios,nombre_boton_comunidad,nombre_seccion_comunidad,enlace_whatsapp,enlace_facebook&id=eq.hero_redes&limit=1"
+        "configuracion_web?select=logo_icono_url,nombre_sitio,eslogan,mostrar_eslogan,nombre_barra,imagen_url,color_inicio,color_fin,texto_descriptivo,nombre_boton_tienda,nombre_seccion_tienda,nombre_boton_bancarios,nombre_seccion_bancarios,nombre_boton_comunidad,nombre_seccion_comunidad,enlace_whatsapp,enlace_facebook&id=eq.hero_redes&limit=1"
       );
 
       response.setHeader("Cache-Control", "no-store");
@@ -166,6 +166,7 @@ export default async function handler(request, response) {
           nombre_sitio: "Ofertas Imperdibles MX",
           eslogan: "Las mejores ofertas, siempre",
           mostrar_eslogan: true,
+          nombre_barra: "Ofertas Imperdibles MX",
           imagen_url: "",
           color_inicio: "#e9cdff",
           color_fin: "#fae8fa",

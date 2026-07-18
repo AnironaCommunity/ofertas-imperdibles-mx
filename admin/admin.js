@@ -33,6 +33,7 @@ const heroColorEnd = document.querySelector("#hero-color-end");
 const heroAdminPreview = document.querySelector("#hero-admin-preview");
 const heroAdminPreviewImage = document.querySelector("#hero-admin-preview-image");
 const heroConfigMessage = document.querySelector("#hero-config-message");
+const heroBarName = document.querySelector("#hero-bar-name");
 const heroText = document.querySelector("#hero-text");
 const heroStoreButtonName = document.querySelector("#hero-store-button-name");
 const heroStoreSectionName = document.querySelector("#hero-store-section-name");
@@ -1502,7 +1503,7 @@ function updateHeroAdminPreview() {
 
   heroAdminPreviewImage.src = image;
   if (heroAdminPreviewName) {
-    heroAdminPreviewName.textContent = siteName?.value.trim() || "Ofertas Imperdibles MX";
+    heroAdminPreviewName.textContent = heroBarName?.value.trim() || "Ofertas Imperdibles MX";
   }
   if (heroAdminPreviewText) {
     heroAdminPreviewText.textContent = heroText?.value.trim() ||
@@ -1519,6 +1520,7 @@ async function loadHeroConfig() {
     siteName.value = config.nombre_sitio || "Ofertas Imperdibles MX";
     siteSlogan.value = config.eslogan || "Las mejores ofertas, siempre";
     siteShowSlogan.checked = config.mostrar_eslogan !== false;
+    heroBarName.value = config.nombre_barra || "Ofertas Imperdibles MX";
     siteMainLogoPreview.src = siteMainLogoUrl.value || "../img/logo-ofertas-transparente.png?v=71.6";
     siteMainLogoPreviewWrapper.hidden = false;
 
@@ -1585,6 +1587,7 @@ async function saveHeroConfig(event) {
         nombre_sitio: siteName.value.trim(),
         eslogan: siteSlogan.value.trim(),
         mostrar_eslogan: siteShowSlogan.checked,
+        nombre_barra: heroBarName.value.trim(),
         imagen_url: imageUrl || "",
         color_inicio: heroColorStart.value,
         color_fin: heroColorEnd.value,
@@ -1720,7 +1723,7 @@ siteMainLogoRemove?.addEventListener("click", () => {
   siteMainLogoPreview.src = "../img/logo-ofertas-transparente.png?v=71.6";
   siteMainLogoPreviewWrapper.hidden = false;
 });
-[siteName, siteSlogan, siteShowSlogan].forEach((element) => {
+[siteName, siteSlogan, siteShowSlogan, heroBarName].forEach((element) => {
   element?.addEventListener("input", updateHeroAdminPreview);
   element?.addEventListener("change", updateHeroAdminPreview);
 });

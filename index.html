@@ -156,7 +156,7 @@
           const visitantes = document.querySelector("#hero-total-visitantes");
 
           if (textoBarra && cache.texto_descriptivo) textoBarra.textContent = cache.texto_descriptivo;
-          if (nombreBarra && cache.nombre_sitio) nombreBarra.textContent = cache.nombre_sitio;
+          if (nombreBarra) nombreBarra.textContent = cache.nombre_barra || "Ofertas Imperdibles MX";
           if (iconoPrincipal && cache.logo_icono_url) iconoPrincipal.src = cache.logo_icono_url;
           if (nombrePrincipal && cache.nombre_sitio) {
             const palabras = String(cache.nombre_sitio).trim().split(/\s+/).filter(Boolean);
@@ -538,7 +538,7 @@
   </div>
 
   <script type="module" src="js/app.js?v=70.0.0"></script>
-  <script src="js/hero-redes.js?v=71.5.0" defer></script>
+  <script src="js/hero-redes.js?v=71.7" defer></script>
   <script src="js/header-dinamico-v68-3.js?v=70.0.0" defer></script>
   <script src="js/cabecera-inteligente.js?v=71.2.0" defer></script>
 </body>
