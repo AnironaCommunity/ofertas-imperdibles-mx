@@ -25,6 +25,10 @@ const heroColorEnd = document.querySelector("#hero-color-end");
 const heroAdminPreview = document.querySelector("#hero-admin-preview");
 const heroAdminPreviewImage = document.querySelector("#hero-admin-preview-image");
 const heroConfigMessage = document.querySelector("#hero-config-message");
+const nombreTienda = document.querySelector("#nombre-tienda");
+const nombreBancarios = document.querySelector("#nombre-bancarios");
+const nombreMercadoLibre = document.querySelector("#nombre-mercadolibre");
+const nombreAmazon = document.querySelector("#nombre-amazon");
 
 /* Cupones */
 const couponForm = document.querySelector("#coupon-form");
@@ -1482,6 +1486,10 @@ function updateHeroAdminPreview() {
       : heroImageUrl.value || "../img/logo-ofertas-transparente.png?v=63.6";
 
   heroAdminPreviewImage.src = image;
+  const previewTitle = heroAdminPreview.querySelector("strong");
+  const previewText = heroAdminPreview.querySelector("span");
+  if (previewTitle) previewTitle.textContent = nombreTienda?.value || "Tienda";
+  if (previewText) previewText.textContent = `${nombreMercadoLibre?.value || "Ofertas Mercado Libre"} · ${nombreAmazon?.value || "Ofertas Amazon"}`;
 }
 
 async function loadHeroConfig() {
@@ -1491,6 +1499,10 @@ async function loadHeroConfig() {
     heroImageUrl.value = config.imagen_url || "";
     heroColorStart.value = config.color_inicio || "#e9cdff";
     heroColorEnd.value = config.color_fin || "#fae8fa";
+    nombreTienda.value = config.nombre_tienda || "Tienda";
+    nombreBancarios.value = config.nombre_bancarios || "Bancarios";
+    nombreMercadoLibre.value = config.nombre_mercadolibre || "Ofertas Mercado Libre";
+    nombreAmazon.value = config.nombre_amazon || "Ofertas Amazon";
 
     heroPreview.src = config.imagen_url || "";
     heroPreviewWrapper.hidden = !config.imagen_url;
@@ -1531,6 +1543,10 @@ async function saveHeroConfig(event) {
         imagen_url: imageUrl || "",
         color_inicio: heroColorStart.value,
         color_fin: heroColorEnd.value,
+        nombre_tienda: nombreTienda.value,
+        nombre_bancarios: nombreBancarios.value,
+        nombre_mercadolibre: nombreMercadoLibre.value,
+        nombre_amazon: nombreAmazon.value,
       }),
     });
 
@@ -1637,6 +1653,7 @@ heroConfigForm.addEventListener("submit", saveHeroConfig);
 
 heroColorStart.addEventListener("input", updateHeroAdminPreview);
 heroColorEnd.addEventListener("input", updateHeroAdminPreview);
+[nombreTienda, nombreBancarios, nombreMercadoLibre, nombreAmazon].forEach((input) => input?.addEventListener("input", updateHeroAdminPreview));
 
 heroImage.addEventListener("change", () => {
   const file = heroImage.files[0];

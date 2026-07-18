@@ -692,8 +692,8 @@ https://meli.la/xxxxx"
       <section id="seccion-apariencia" class="seccion-admin" hidden>
         <div class="cabecera-seccion">
           <div>
-            <h2>🎨 Barra debajo del logo</h2>
-            <p>Cambia únicamente la imagen pequeña y los colores de la barra.</p>
+            <h2>🎨 Apariencia y nombres principales</h2>
+            <p>Configura la barra, el tema de los botones activos y los nombres de las secciones principales.</p>
           </div>
         </div>
 
@@ -731,6 +731,29 @@ https://meli.la/xxxxx"
               <input id="hero-color-end" type="color" value="#fae8fa" />
             </div>
 
+
+            <div class="campo campo-completo apariencia-subtitulo">
+              <h3>Nombres de las secciones</h3>
+              <small>El mismo nombre aparecerá en el botón y en el título de su sección.</small>
+            </div>
+
+            <div class="campo">
+              <label for="nombre-tienda">Tienda</label>
+              <input id="nombre-tienda" type="text" maxlength="36" value="Tienda" />
+            </div>
+            <div class="campo">
+              <label for="nombre-bancarios">Bancarios</label>
+              <input id="nombre-bancarios" type="text" maxlength="36" value="Bancarios" />
+            </div>
+            <div class="campo">
+              <label for="nombre-mercadolibre">Ofertas Mercado Libre</label>
+              <input id="nombre-mercadolibre" type="text" maxlength="48" value="Ofertas Mercado Libre" />
+            </div>
+            <div class="campo">
+              <label for="nombre-amazon">Ofertas Amazon</label>
+              <input id="nombre-amazon" type="text" maxlength="48" value="Ofertas Amazon" />
+            </div>
+
             <div
               id="hero-admin-preview"
               class="hero-admin-preview campo-completo"
@@ -758,6 +781,6 @@ https://meli.la/xxxxx"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=68.0.1"></script>
+  <script type="module" src="admin.js?v=69.1.0"></script>
 </body>
 </html>
