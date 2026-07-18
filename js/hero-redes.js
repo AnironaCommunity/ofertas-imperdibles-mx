@@ -51,6 +51,15 @@
       image.src = config.imagen_url || defaultImage;
     }
 
+    const whatsappButton = hero.querySelector(".hero-redes-whatsapp");
+    const facebookButton = hero.querySelector(".hero-redes-facebook");
+    if (whatsappButton && config.enlace_whatsapp) {
+      whatsappButton.href = config.enlace_whatsapp;
+    }
+    if (facebookButton && config.enlace_facebook) {
+      facebookButton.href = config.enlace_facebook;
+    }
+
     const labels = {
       textoDescriptivo: config.texto_descriptivo || "Cupones, promociones y novedades todos los días.",
       botonTienda: config.nombre_boton_tienda || "Tienda",
