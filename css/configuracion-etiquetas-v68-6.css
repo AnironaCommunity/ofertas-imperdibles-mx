@@ -1,0 +1,43 @@
+/* V68.6 — Etiquetas configurables y marcos uniformes para logos */
+.menu-ofertas-logo-marco {
+  width: 38px;
+  height: 32px;
+  flex: 0 0 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.9);
+  border: 1px solid rgba(29, 78, 59, .08);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, .06);
+}
+.menu-ofertas-logo-marco .menu-ofertas-logo {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain;
+}
+.titulo-logo-marco {
+  width: 76px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 8px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid rgba(15,23,42,.08);
+  box-shadow: 0 2px 8px rgba(15,23,42,.05);
+  overflow: hidden;
+}
+.titulo-seccion-con-logo .titulo-logo-marco img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+@media (max-width: 600px) {
+  .menu-ofertas-logo-marco { width: 34px; height: 30px; flex-basis: 34px; padding: 4px; border-radius: 9px; }
+  .titulo-logo-marco { width: 64px; height: 30px; padding: 4px 7px; border-radius: 9px; }
+}
