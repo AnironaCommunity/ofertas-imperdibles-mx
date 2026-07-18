@@ -4454,3 +4454,16 @@ footer {
   .menu-ofertas-logo.logo-amazon { height: 13px; max-width: 30px; }
   .menu-ofertas-logo.logo-anirona { height: 14px; max-width: 31px; }
 }
+
+/* ============================================================
+   V71.8 — FONDO GENERAL BLANCO
+   Único cambio visual: unifica el fondo de toda la página con la cabecera.
+   ============================================================ */
+:root {
+  --fondo: #ffffff;
+}
+
+body {
+  background: #ffffff !important;
+  background-image: none !important;
+}
