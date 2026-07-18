@@ -140,3 +140,19 @@ html {
     transition: none !important;
   }
 }
+
+/* V71.3 — Logo principal horizontal: conserva la marca y reduce altura. */
+.enlace-logo-inicio .logo {
+  width: min(620px, 91vw) !important;
+  max-height: 86px;
+  object-fit: contain;
+  margin-bottom: 6px !important;
+}
+
+@media (max-width: 600px) {
+  .enlace-logo-inicio .logo {
+    width: min(430px, 94vw) !important;
+    max-height: 58px;
+    margin-bottom: 4px !important;
+  }
+}
