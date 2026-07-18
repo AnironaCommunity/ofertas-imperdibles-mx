@@ -2,14 +2,16 @@
 
 /* Estabilidad de la página al alternar vistas con diferente altura. */
 html {
+  width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
-  scrollbar-gutter: stable;
+  overflow-x: clip;
 }
 
 body {
+  width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  margin: 0;
+  overflow-x: clip;
 }
 
 *,

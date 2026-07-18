@@ -83,18 +83,30 @@
   box-shadow: 0 4px 12px rgba(31, 54, 40, .08) !important;
 }
 
-/* Mantiene el mismo ancho útil aunque una sección sea más corta y desaparezca
-   la barra vertical; así la cabecera y sus botones no se recorren al abrir Amazon. */
-html {
-  scrollbar-gutter: stable;
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
-
+/* V68.7.1 — El espacio blanco provenía de reservar permanentemente el canal
+   de la barra vertical en Chrome móvil. En pantallas táctiles no se reserva
+   ningún canal; únicamente los escritorios con scrollbar clásico conservan
+   estabilidad entre vistas de distinta altura. */
+html,
 body {
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+html {
+  overflow-y: auto;
+  scrollbar-gutter: auto;
+}
+
+body {
+  margin: 0;
+}
+
+@media (min-width: 769px) and (hover: hover) and (pointer: fine) {
+  html {
+    scrollbar-gutter: stable;
+  }
 }
 
 .menu-ofertas-contenedor,
