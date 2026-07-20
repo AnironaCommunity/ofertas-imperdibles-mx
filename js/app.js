@@ -328,14 +328,34 @@ tabBancarios.addEventListener("click", () =>
   cambiarCategoria("bancarios", { actualizarHistorial: true })
 );
 
-botonesMenuOfertas.forEach((boton) => {
-  boton.addEventListener("click", () => {
-    cambiarVista(boton.dataset.vista, {
-      actualizarHistorial: true,
-      desplazamiento: "smooth",
-    });
+function abrirEnlacePrincipal(boton) {
+  const vista = boton?.dataset?.vista;
+  const cache = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("ofertas_imperdibles_config_cache") || "{}");
+    } catch {
+      return {};
+    }
+  })();
 
-  });
+  const url = boton?.dataset?.enlaceExterno ||
+    (vista === "ofertas_mercado_libre"
+      ? window.ofertasEnlacesPrincipales?.mercadoLibre || cache.enlace_mercado_libre
+      : window.ofertasEnlacesPrincipales?.amazon || cache.enlace_amazon);
+
+  if (!url) return;
+
+  try {
+    const destino = new URL(url, window.location.origin);
+    if (!["http:", "https:"].includes(destino.protocol)) return;
+    window.location.href = destino.toString();
+  } catch (error) {
+    console.warn("La liga configurada no es válida.", error);
+  }
+}
+
+botonesMenuOfertas.forEach((boton) => {
+  boton.addEventListener("click", () => abrirEnlacePrincipal(boton));
 });
 
 botonComunidadAnirona?.addEventListener("click", () => {

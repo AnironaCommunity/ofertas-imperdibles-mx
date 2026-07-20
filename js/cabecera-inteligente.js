@@ -8,33 +8,38 @@
 
   if (!encabezado || !hero || !menu || !comunidad) return;
 
-  /* Limpia cualquier cabecera generada por V71.0/V71.1. */
-  document.querySelectorAll(".smart-header, .cabecera-hibrida, .cabecera-fija-original").forEach((nodo) => nodo.remove());
+  /* Limpia cualquier cabecera generada por versiones anteriores. */
+  document.querySelectorAll(".smart-header, .cabecera-hibrida, .cabecera-fija-original, .navegacion-principal-flujo").forEach((nodo) => nodo.remove());
   document.body.classList.remove("cabecera-compacta");
   encabezado.removeAttribute("data-compacta");
 
   /*
-    V71.2: la barra que ya existe en la página se separa del logo.
+    V71.9: únicamente la barra social permanece fija.
 
-    El logo y el estado dinámico permanecen en el encabezado superior y salen
-    naturalmente al desplazar. La barra original (imagen, redes, visitantes,
-    ofertas y comunidad) se mantiene en el flujo y se vuelve sticky al llegar
-    arriba. Al no usar position:fixed ni clonar elementos, nunca cubre el título
-    ni el primer cupón.
+    El logo sale naturalmente al desplazar. La barra original con imagen,
+    nombre, redes y visitantes se vuelve sticky al llegar arriba. Los botones
+    Mercado Libre, Amazon y Comunidad permanecen en el flujo normal, por lo
+    que desaparecen de la pantalla al continuar bajando.
   */
   const barra = document.createElement("div");
   barra.className = "cabecera-fija-original";
   barra.setAttribute("data-cabecera-fija", "true");
-  barra.setAttribute("aria-label", "Redes y secciones de Ofertas Imperdibles MX");
+  barra.setAttribute("aria-label", "Barra de Ofertas Imperdibles MX");
 
   const centinela = document.createElement("span");
   centinela.className = "cabecera-fija-centinela";
   centinela.setAttribute("aria-hidden", "true");
 
+  const navegacion = document.createElement("div");
+  navegacion.className = "navegacion-principal-flujo";
+  navegacion.setAttribute("aria-label", "Accesos principales");
+
   encabezado.insertAdjacentElement("afterend", centinela);
   centinela.insertAdjacentElement("afterend", barra);
+  barra.insertAdjacentElement("afterend", navegacion);
 
-  barra.append(hero, menu, comunidad);
+  barra.append(hero);
+  navegacion.append(menu, comunidad);
 
   const raiz = document.documentElement;
   let alturaAnterior = 0;
@@ -77,14 +82,13 @@
     window.addEventListener("resize", actualizarAltura, { passive: true });
   }
 
-  /* Recalcula cuando cambian textos, contadores o configuración remota. */
   const observadorContenido = new MutationObserver(() => requestAnimationFrame(actualizarAltura));
   observadorContenido.observe(barra, {
     childList: true,
     subtree: true,
     characterData: true,
     attributes: true,
-    attributeFilter: ["hidden", "class", "aria-pressed"]
+    attributeFilter: ["hidden", "class"]
   });
 
   window.addEventListener("load", actualizarAltura, { once: true });

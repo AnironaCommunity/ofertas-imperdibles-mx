@@ -1,13 +1,13 @@
 /*
   Ofertas Imperdibles MX — V71.2
-  Cabecera original fija, sin clonados ni cambios de altura durante el scroll.
+  Barra original fija, sin clonados ni cambios de altura durante el scroll.
 
   El logo superior sale naturalmente. La barra ORIGINAL con imagen, redes,
-  visitantes, ofertas y comunidad queda sticky al llegar a la parte superior.
+  visitantes queda sticky al llegar a la parte superior. Los accesos de secciones continúan en el flujo normal.
 */
 
 :root {
-  --cabecera-fija-alto: 210px;
+  --cabecera-fija-alto: 112px;
   --cabecera-fija-sombra: 0 8px 22px rgba(15, 23, 42, .11);
 }
 
@@ -93,8 +93,15 @@ body.cabecera-compacta .acceso-comunidad-anirona {
   margin-top: 0 !important;
 }
 
-.cabecera-fija-original .menu-ofertas-contenedor,
-.cabecera-fija-original .acceso-comunidad-anirona {
+.navegacion-principal-flujo {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  background: #fff;
+}
+
+.navegacion-principal-flujo .menu-ofertas-contenedor,
+.navegacion-principal-flujo .acceso-comunidad-anirona {
   position: relative;
   z-index: 1;
 }

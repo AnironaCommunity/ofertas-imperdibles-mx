@@ -102,6 +102,17 @@
       facebookButton.href = config.enlace_facebook;
     }
 
+    const enlacesPrincipales = {
+      mercadoLibre: config.enlace_mercado_libre || "https://www.mercadolibre.com.mx/",
+      amazon: config.enlace_amazon || "https://www.amazon.com.mx/",
+    };
+    window.ofertasEnlacesPrincipales = enlacesPrincipales;
+    const botonMercadoLibre = document.querySelector('[data-vista="ofertas_mercado_libre"]');
+    const botonAmazon = document.querySelector('[data-vista="ofertas_amazon"]');
+    if (botonMercadoLibre) botonMercadoLibre.dataset.enlaceExterno = enlacesPrincipales.mercadoLibre;
+    if (botonAmazon) botonAmazon.dataset.enlaceExterno = enlacesPrincipales.amazon;
+    document.dispatchEvent(new CustomEvent("ofertas:enlaces-principales-cargados", { detail: enlacesPrincipales }));
+
     const labels = {
       textoDescriptivo: config.texto_descriptivo || "Cupones, promociones y novedades todos los días.",
       botonTienda: config.nombre_boton_tienda || "Tienda",

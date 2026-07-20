@@ -53,7 +53,7 @@
   <link rel="stylesheet" href="css/eventos-v68.css?v=70.0.0" />
   <link rel="stylesheet" href="css/header-dinamico-v68-3.css?v=70.0.0" />
   <link rel="stylesheet" href="css/estabilidad.css?v=70.0.0" />
-  <link rel="stylesheet" href="css/cabecera-inteligente.css?v=71.6.0" />  <script>
+  <link rel="stylesheet" href="css/cabecera-inteligente.css?v=71.9.0" />  <script>
     try {
       const temaGuardado = JSON.parse(localStorage.getItem("ofertas_imperdibles_tema") || "null");
       if (temaGuardado?.inicio) document.documentElement.style.setProperty("--tema-color-inicio", temaGuardado.inicio);
@@ -175,6 +175,10 @@
           if (imagen && cache.imagen_url) imagen.src = cache.imagen_url;
           if (whatsapp && cache.enlace_whatsapp) whatsapp.href = cache.enlace_whatsapp;
           if (facebook && cache.enlace_facebook) facebook.href = cache.enlace_facebook;
+          const botonMercadoLibre = document.querySelector('[data-vista="ofertas_mercado_libre"]');
+          const botonAmazon = document.querySelector('[data-vista="ofertas_amazon"]');
+          if (botonMercadoLibre && cache.enlace_mercado_libre) botonMercadoLibre.dataset.enlaceExterno = cache.enlace_mercado_libre;
+          if (botonAmazon && cache.enlace_amazon) botonAmazon.dataset.enlaceExterno = cache.enlace_amazon;
           if (visitantes && cache.total_visitantes != null) visitantes.textContent = cache.total_visitantes;
 
           if (cache.color_inicio) {
@@ -537,9 +541,9 @@
     </div>
   </div>
 
-  <script type="module" src="js/app.js?v=70.0.0"></script>
-  <script src="js/hero-redes.js?v=71.7" defer></script>
+  <script type="module" src="js/app.js?v=71.9.0"></script>
+  <script src="js/hero-redes.js?v=71.9" defer></script>
   <script src="js/header-dinamico-v68-3.js?v=70.0.0" defer></script>
-  <script src="js/cabecera-inteligente.js?v=71.2.0" defer></script>
+  <script src="js/cabecera-inteligente.js?v=71.9.0" defer></script>
 </body>
 </html>
