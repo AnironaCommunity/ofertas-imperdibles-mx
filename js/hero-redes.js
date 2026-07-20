@@ -109,8 +109,14 @@
     window.ofertasEnlacesPrincipales = enlacesPrincipales;
     const botonMercadoLibre = document.querySelector('[data-vista="ofertas_mercado_libre"]');
     const botonAmazon = document.querySelector('[data-vista="ofertas_amazon"]');
-    if (botonMercadoLibre) botonMercadoLibre.dataset.enlaceExterno = enlacesPrincipales.mercadoLibre;
-    if (botonAmazon) botonAmazon.dataset.enlaceExterno = enlacesPrincipales.amazon;
+    if (botonMercadoLibre) {
+      botonMercadoLibre.dataset.enlaceExterno = enlacesPrincipales.mercadoLibre;
+      botonMercadoLibre.dataset.estiloColor = config.estilo_color_boton_mercado_libre === "barra" ? "barra" : "marca";
+    }
+    if (botonAmazon) {
+      botonAmazon.dataset.enlaceExterno = enlacesPrincipales.amazon;
+      botonAmazon.dataset.estiloColor = config.estilo_color_boton_amazon === "barra" ? "barra" : "marca";
+    }
     document.dispatchEvent(new CustomEvent("ofertas:enlaces-principales-cargados", { detail: enlacesPrincipales }));
 
     const labels = {

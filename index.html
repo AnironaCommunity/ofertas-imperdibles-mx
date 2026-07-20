@@ -183,6 +183,10 @@
           const nombreBotonAmazon = document.querySelector("#nombre-boton-amazon");
           if (nombreBotonMercadoLibre && cache.nombre_boton_mercado_libre) nombreBotonMercadoLibre.textContent = cache.nombre_boton_mercado_libre;
           if (nombreBotonAmazon && cache.nombre_boton_amazon) nombreBotonAmazon.textContent = cache.nombre_boton_amazon;
+          const botonPrincipalMercadoLibre = document.querySelector("#boton-principal-mercado-libre");
+          const botonPrincipalAmazon = document.querySelector("#boton-principal-amazon");
+          if (botonPrincipalMercadoLibre) botonPrincipalMercadoLibre.dataset.estiloColor = cache.estilo_color_boton_mercado_libre || "marca";
+          if (botonPrincipalAmazon) botonPrincipalAmazon.dataset.estiloColor = cache.estilo_color_boton_amazon || "marca";
           if (visitantes && cache.total_visitantes != null) visitantes.textContent = cache.total_visitantes;
 
           if (cache.color_inicio) {
@@ -199,12 +203,12 @@
 
     <div class="menu-ofertas-contenedor">
       <nav class="menu-ofertas" aria-label="Secciones de ofertas">
-      <button type="button" data-vista="ofertas_mercado_libre" aria-pressed="false">
-        <img class="menu-ofertas-logo logo-mercado-libre" src="img/mercado-libre.png" alt="" aria-hidden="true" />
+      <button id="boton-principal-mercado-libre" class="boton-principal-marca boton-marca-mercado-libre" type="button" data-vista="ofertas_mercado_libre" data-estilo-color="marca" aria-pressed="false">
+        <img class="menu-ofertas-logo logo-mercado-libre" src="img/mercado-libre-boton.png" alt="" aria-hidden="true" />
         <span id="nombre-boton-mercado-libre">Ofertas Mercado Libre</span>
       </button>
-      <button type="button" data-vista="ofertas_amazon" aria-pressed="false">
-        <img class="menu-ofertas-logo logo-amazon" src="img/amazon.png" alt="" aria-hidden="true" />
+      <button id="boton-principal-amazon" class="boton-principal-marca boton-marca-amazon" type="button" data-vista="ofertas_amazon" data-estilo-color="marca" aria-pressed="false">
+        <img class="menu-ofertas-logo logo-amazon" src="img/amazon-boton.png" alt="" aria-hidden="true" />
         <span id="nombre-boton-amazon">Ofertas Amazon</span>
       </button>
     </nav>

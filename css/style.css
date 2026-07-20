@@ -4473,3 +4473,62 @@ body {
 .tab-inferior .contador-seccion {
   color: #000000;
 }
+
+/* ============================================================
+   V72.1 — Colores y logos de marca en botones principales
+   Conserva dimensiones, posición y comportamiento de los botones.
+   ============================================================ */
+.menu-ofertas .boton-principal-marca {
+  --boton-marca-fondo: #ffffff;
+  --boton-marca-texto: #1f2937;
+}
+
+.menu-ofertas .boton-marca-mercado-libre {
+  --boton-marca-fondo: #ffe600;
+  --boton-marca-texto: #24356b;
+}
+
+.menu-ofertas .boton-marca-amazon {
+  --boton-marca-fondo: #232f3e;
+  --boton-marca-texto: #ffffff;
+}
+
+.menu-ofertas .boton-principal-marca[data-estilo-color="marca"],
+.menu-ofertas .boton-principal-marca[data-estilo-color="marca"]:hover,
+.menu-ofertas .boton-principal-marca[data-estilo-color="marca"]:focus-visible,
+.menu-ofertas .boton-principal-marca[data-estilo-color="marca"].activo {
+  background: var(--boton-marca-fondo);
+  color: var(--boton-marca-texto);
+}
+
+.menu-ofertas .boton-principal-marca[data-estilo-color="barra"],
+.menu-ofertas .boton-principal-marca[data-estilo-color="barra"]:hover,
+.menu-ofertas .boton-principal-marca[data-estilo-color="barra"]:focus-visible,
+.menu-ofertas .boton-principal-marca[data-estilo-color="barra"].activo {
+  background: linear-gradient(135deg, var(--tema-color-inicio, #e9cdff), var(--tema-color-fin, #fae8fa));
+  color: #24312c;
+}
+
+.menu-ofertas .boton-principal-marca::after {
+  background: currentColor;
+  opacity: .55;
+}
+
+.menu-ofertas .boton-principal-marca .menu-ofertas-logo {
+  height: 24px;
+  max-width: 84px;
+  border-radius: 3px;
+}
+
+.menu-ofertas .boton-principal-marca .menu-ofertas-logo.logo-amazon {
+  height: 24px;
+  max-width: 84px;
+}
+
+@media (max-width: 600px) {
+  .menu-ofertas .boton-principal-marca .menu-ofertas-logo,
+  .menu-ofertas .boton-principal-marca .menu-ofertas-logo.logo-amazon {
+    height: 21px;
+    max-width: 72px;
+  }
+}
