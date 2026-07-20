@@ -308,3 +308,55 @@ button:disabled {
     margin-left: 0;
   }
 }
+
+/* V73 — Publicidad compacta */
+.panel-formulario-compacto { padding: 15px 16px; }
+.formulario-compacto .form-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px 11px;
+  align-items: start;
+}
+.formulario-compacto label { margin-bottom: 3px; font-size: 11.5px; }
+.formulario-compacto input,
+.formulario-compacto textarea {
+  min-height: 35px;
+  padding: 7px 9px;
+  font-size: 12px;
+}
+.formulario-compacto textarea { min-height: 64px; }
+.formulario-compacto small { margin-top: 3px; font-size: 10px; line-height: 1.25; }
+.formulario-compacto .acciones { margin-top: 10px; }
+.formulario-compacto .acciones button { min-height: 35px; padding: 7px 12px; }
+.formulario-compacto .campo-ad-titulo { grid-column: span 3; }
+.formulario-compacto .campo-ad-orden { grid-column: span 1; }
+.formulario-compacto .campo-ad-descripcion,
+.formulario-compacto .campo-ad-enlace,
+.formulario-compacto .campo-ad-imagen,
+.formulario-compacto .campo-ad-activo,
+.formulario-compacto .preview-wrapper { grid-column: span 2; }
+.formulario-compacto .campo-ad-activo {
+  min-height: 38px;
+  margin: 0;
+  padding: 7px 10px;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  background: #f9fcfa;
+  font-size: 11.5px;
+}
+.formulario-compacto .preview-wrapper { min-height: 74px; padding: 8px; }
+.formulario-compacto .preview-wrapper img { max-height: 105px; }
+@media (max-width: 760px) {
+  .formulario-compacto .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .formulario-compacto .campo-ad-titulo,
+  .formulario-compacto .campo-ad-descripcion,
+  .formulario-compacto .campo-ad-enlace,
+  .formulario-compacto .campo-ad-imagen,
+  .formulario-compacto .campo-ad-activo,
+  .formulario-compacto .preview-wrapper { grid-column: span 2; }
+}
+@media (max-width: 520px) {
+  .panel-formulario-compacto { padding: 12px; }
+  .formulario-compacto .form-grid { grid-template-columns: 1fr; }
+  .formulario-compacto .form-grid > * { grid-column: auto !important; }
+  .formulario-compacto .acciones button { flex: 1 1 100%; }
+}

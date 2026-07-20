@@ -202,14 +202,14 @@ Descuento máximo: $180"
           </div>
         </section>
 
-        <section class="panel">
-          <h3 id="coupon-form-title">Agregar cupón</h3>
+        <section class="panel panel-formulario-compacto panel-cupon-compacto">
+          <h3 id="coupon-form-title">➕ Agregar cupón</h3>
 
-          <form id="coupon-form">
+          <form id="coupon-form" class="formulario-compacto">
             <input id="coupon-id" type="hidden" />
 
-            <div class="form-grid">
-              <div class="campo">
+            <div class="form-grid form-grid-cupon">
+              <div class="campo campo-cupon-titulo">
                 <label for="coupon-title">Título</label>
                 <input
                   id="coupon-title"
@@ -219,7 +219,7 @@ Descuento máximo: $180"
                 />
               </div>
 
-              <div class="campo">
+              <div class="campo campo-cupon-codigo">
                 <label for="coupon-code">Código</label>
                 <input
                   id="coupon-code"
@@ -316,17 +316,17 @@ Descuento máximo: $180"
                 </button>
               </div>
 
-              <label class="switch-row campo-completo switch-nuevo-cupon">
-                <input id="coupon-publish-new" type="checkbox" checked />
-                <span>
-                  Mostrar como <strong>✨ Nuevo</strong> durante una hora
-                </span>
-              </label>
+              <div class="opciones-formulario-compactas campo-completo">
+                <label class="switch-row switch-nuevo-cupon">
+                  <input id="coupon-publish-new" type="checkbox" checked />
+                  <span>Mostrar como <strong>✨ Nuevo</strong> durante una hora</span>
+                </label>
 
-              <label class="switch-row campo-completo">
-                <input id="coupon-active" type="checkbox" checked />
-                <span>Publicar cupón como activo</span>
-              </label>
+                <label class="switch-row switch-activo-cupon">
+                  <input id="coupon-active" type="checkbox" checked />
+                  <span>Publicar cupón como activo</span>
+                </label>
+              </div>
             </div>
 
             <div class="acciones">
@@ -392,15 +392,15 @@ Descuento máximo: $180"
           </button>
         </div>
 
-        <section class="panel">
-          <h3 id="ad-form-title">Agregar publicidad</h3>
+        <section class="panel panel-formulario-compacto panel-publicidad-compacta">
+          <h3 id="ad-form-title">📢 Agregar publicidad</h3>
 
-          <form id="ad-form">
+          <form id="ad-form" class="formulario-compacto">
             <input id="ad-id" type="hidden" />
             <input id="ad-image-url" type="hidden" />
 
-            <div class="form-grid">
-              <div class="campo">
+            <div class="form-grid form-grid-publicidad">
+              <div class="campo campo-ad-titulo">
                 <label for="ad-title">Título</label>
                 <input
                   id="ad-title"
@@ -411,7 +411,7 @@ Descuento máximo: $180"
               </div>
 
 
-              <fieldset class="campo campo-completo grupo-secciones">
+              <fieldset class="campo grupo-secciones campo-ad-secciones">
                 <legend>Secciones donde se mostrará</legend>
                 <p class="ayuda-secciones">
                   Puedes seleccionar una o varias secciones para el mismo producto.
@@ -457,7 +457,7 @@ Descuento máximo: $180"
                 </div>
               </fieldset>
 
-              <fieldset class="plataforma-publicidad campo-completo">
+              <fieldset class="plataforma-publicidad campo-ad-plataforma">
                 <legend>Plataforma del producto</legend>
                 <p class="ayuda-secciones">
                   Define el texto del botón en todas las secciones donde
@@ -486,7 +486,7 @@ Descuento máximo: $180"
                 </div>
               </fieldset>
 
-              <div class="campo">
+              <div class="campo campo-ad-orden">
                 <label for="ad-order">Orden</label>
                 <input
                   id="ad-order"
@@ -496,7 +496,7 @@ Descuento máximo: $180"
                 />
               </div>
 
-              <div class="campo campo-completo">
+              <div class="campo campo-ad-descripcion">
                 <label for="ad-description">Descripción</label>
                 <textarea
                   id="ad-description"
@@ -505,7 +505,7 @@ Descuento máximo: $180"
                 ></textarea>
               </div>
 
-              <div class="campo campo-completo">
+              <div class="campo campo-ad-enlace">
                 <label for="ad-link">Enlace del producto</label>
                 <input
                   id="ad-link"
@@ -515,7 +515,7 @@ Descuento máximo: $180"
                 />
               </div>
 
-              <div class="campo">
+              <div class="campo campo-ad-precio">
                 <label for="ad-price-published">Precio publicado</label>
                 <input
                   id="ad-price-published"
@@ -524,7 +524,7 @@ Descuento máximo: $180"
                 />
               </div>
 
-              <div class="campo">
+              <div class="campo campo-ad-precio">
                 <label for="ad-price-coupon">Precio con cupón</label>
                 <input
                   id="ad-price-coupon"
@@ -533,7 +533,7 @@ Descuento máximo: $180"
                 />
               </div>
 
-              <div class="campo campo-completo campo-cupon-oculto">
+              <div class="campo campo-cupon-oculto campo-ad-cupon">
                 <label for="ad-coupon-code">Cupón aplicable</label>
                 <input
                   id="ad-coupon-code"
@@ -552,7 +552,7 @@ Descuento máximo: $180"
                 ></div>
               </div>
 
-              <div class="campo campo-completo">
+              <div class="campo campo-ad-imagen">
                 <label for="ad-image">Foto del producto</label>
                 <input
                   id="ad-image"
@@ -568,7 +568,7 @@ Descuento máximo: $180"
                 <img id="ad-preview" src="" alt="Vista previa" />
               </div>
 
-              <label class="switch-row campo-completo">
+              <label class="switch-row campo-ad-activo">
                 <input id="ad-active" type="checkbox" checked />
                 <span>Mostrar publicidad en el carrusel</span>
               </label>
