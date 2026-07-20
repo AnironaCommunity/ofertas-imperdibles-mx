@@ -179,6 +179,10 @@
           const botonAmazon = document.querySelector('[data-vista="ofertas_amazon"]');
           if (botonMercadoLibre && cache.enlace_mercado_libre) botonMercadoLibre.dataset.enlaceExterno = cache.enlace_mercado_libre;
           if (botonAmazon && cache.enlace_amazon) botonAmazon.dataset.enlaceExterno = cache.enlace_amazon;
+          const nombreBotonMercadoLibre = document.querySelector("#nombre-boton-mercado-libre");
+          const nombreBotonAmazon = document.querySelector("#nombre-boton-amazon");
+          if (nombreBotonMercadoLibre && cache.nombre_boton_mercado_libre) nombreBotonMercadoLibre.textContent = cache.nombre_boton_mercado_libre;
+          if (nombreBotonAmazon && cache.nombre_boton_amazon) nombreBotonAmazon.textContent = cache.nombre_boton_amazon;
           if (visitantes && cache.total_visitantes != null) visitantes.textContent = cache.total_visitantes;
 
           if (cache.color_inicio) {
@@ -197,23 +201,11 @@
       <nav class="menu-ofertas" aria-label="Secciones de ofertas">
       <button type="button" data-vista="ofertas_mercado_libre" aria-pressed="false">
         <img class="menu-ofertas-logo logo-mercado-libre" src="img/mercado-libre.png" alt="" aria-hidden="true" />
-        <span>Ofertas Mercado Libre</span>
-        <span
-          id="contador-ofertas-mercado-libre"
-          class="contador-seccion"
-          aria-label="0 productos"
-          hidden
-        >0</span>
+        <span id="nombre-boton-mercado-libre">Ofertas Mercado Libre</span>
       </button>
       <button type="button" data-vista="ofertas_amazon" aria-pressed="false">
         <img class="menu-ofertas-logo logo-amazon" src="img/amazon.png" alt="" aria-hidden="true" />
-        <span>Ofertas Amazon</span>
-        <span
-          id="contador-ofertas-amazon"
-          class="contador-seccion"
-          aria-label="0 productos"
-          hidden
-        >0</span>
+        <span id="nombre-boton-amazon">Ofertas Amazon</span>
       </button>
     </nav>
     </div>
@@ -232,12 +224,6 @@
         <strong id="nombre-boton-comunidad">Comunidad Anirona</strong>
         <small>Rifas, novedades y publicaciones de la comunidad</small>
       </span>
-      <span
-        id="contador-comunidad-anirona"
-        class="contador-seccion acceso-comunidad-contador"
-        aria-label="0 publicaciones"
-        hidden
-      >0</span>
       <span class="acceso-comunidad-flecha" aria-hidden="true">›</span>
     </button>
   </header>

@@ -223,21 +223,6 @@ function actualizarContadoresSecciones() {
     "cupón"
   );
   mostrarCantidadSeccion(
-    contadorOfertasMercadoLibre,
-    cantidadMercadoLibre,
-    "producto"
-  );
-  mostrarCantidadSeccion(
-    contadorOfertasAmazon,
-    cantidadAmazon,
-    "producto"
-  );
-  mostrarCantidadSeccion(
-    contadorComunidadAnirona,
-    cantidadComunidadAnirona,
-    "producto"
-  );
-  mostrarCantidadSeccion(
     contadorCuponesBancarios,
     cantidadBancarios,
     "cupón"

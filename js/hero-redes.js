@@ -121,6 +121,8 @@
       seccionBancarios: config.nombre_seccion_bancarios || "Cupones bancarios",
       botonComunidad: config.nombre_boton_comunidad || "Comunidad Anirona",
       seccionComunidad: config.nombre_seccion_comunidad || "Comunidad Anirona",
+      botonMercadoLibre: config.nombre_boton_mercado_libre || "Ofertas Mercado Libre",
+      botonAmazon: config.nombre_boton_amazon || "Ofertas Amazon",
     };
 
     window.ofertasEtiquetas = labels;
@@ -131,6 +133,8 @@
     document.querySelector("#nombre-boton-bancarios")?.replaceChildren(labels.botonBancarios);
     document.querySelector("#nombre-boton-comunidad")?.replaceChildren(labels.botonComunidad);
     document.querySelector("#nombre-seccion-comunidad")?.replaceChildren(labels.seccionComunidad);
+    document.querySelector("#nombre-boton-mercado-libre")?.replaceChildren(labels.botonMercadoLibre);
+    document.querySelector("#nombre-boton-amazon")?.replaceChildren(labels.botonAmazon);
     document.dispatchEvent(new CustomEvent("ofertas:etiquetas-cargadas", { detail: labels }));
   }
 

@@ -4467,3 +4467,9 @@ body {
   background: #ffffff !important;
   background-image: none !important;
 }
+
+
+/* V72.0 — Número negro únicamente en los contadores inferiores de Tienda y Bancarios */
+.tab-inferior .contador-seccion {
+  color: #000000;
+}
