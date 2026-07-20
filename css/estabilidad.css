@@ -664,3 +664,98 @@ body {
 .menu-ofertas > button[data-vista="ofertas_amazon"]::after {
   display: none !important;
 }
+
+/* ============================================================
+   V72.2 — BOTONES CON PROFUNDIDAD Y LOGO ML MÁS VISIBLE
+   Únicamente afecta los accesos de Mercado Libre y Amazon.
+   ============================================================ */
+.menu-ofertas > button[data-vista="ofertas_mercado_libre"],
+.menu-ofertas > button[data-vista="ofertas_amazon"] {
+  position: relative;
+  border-width: 1px !important;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, .16) !important;
+  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease !important;
+  will-change: transform;
+}
+
+.menu-ofertas > button[data-vista="ofertas_mercado_libre"] {
+  background: linear-gradient(180deg, #ffe91f 0%, #ffe600 58%, #f5d900 100%) !important;
+}
+
+.menu-ofertas > button[data-vista="ofertas_amazon"] {
+  background: linear-gradient(180deg, #29384d 0%, #222f42 58%, #192536 100%) !important;
+}
+
+.menu-ofertas > button[data-vista="ofertas_mercado_libre"]:hover,
+.menu-ofertas > button[data-vista="ofertas_mercado_libre"]:focus-visible,
+.menu-ofertas > button[data-vista="ofertas_amazon"]:hover,
+.menu-ofertas > button[data-vista="ofertas_amazon"]:focus-visible {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 17px rgba(15, 23, 42, .22) !important;
+  filter: brightness(1.025);
+}
+
+.menu-ofertas > button[data-vista="ofertas_mercado_libre"]:active,
+.menu-ofertas > button[data-vista="ofertas_amazon"]:active {
+  transform: translateY(0) scale(.98) !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, .18) !important;
+  filter: brightness(.985);
+}
+
+/* Solo el logo de Mercado Libre crece ligeramente para mejorar su lectura. */
+.menu-ofertas > button[data-vista="ofertas_mercado_libre"] .logo-mercado-libre {
+  height: 21px !important;
+  max-width: 38px !important;
+}
+
+@media (max-width: 600px) {
+  .menu-ofertas > button[data-vista="ofertas_mercado_libre"] .logo-mercado-libre {
+    height: 19px !important;
+    max-width: 35px !important;
+  }
+
+  /* En pantallas táctiles conserva la sensación de pulsación sin movimientos bruscos. */
+  .menu-ofertas > button[data-vista="ofertas_mercado_libre"]:hover,
+  .menu-ofertas > button[data-vista="ofertas_amazon"]:hover {
+    transform: none !important;
+  }
+
+  .menu-ofertas > button[data-vista="ofertas_mercado_libre"]:active,
+  .menu-ofertas > button[data-vista="ofertas_amazon"]:active {
+    transform: scale(.98) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-ofertas > button[data-vista="ofertas_mercado_libre"],
+  .menu-ofertas > button[data-vista="ofertas_amazon"] {
+    transition: none !important;
+  }
+}
+
+
+/* ============================================================
+   V72.3 — AJUSTES COMPACTOS DE ACCESOS PRINCIPALES
+   - Logo de Mercado Libre +5 px.
+   - Menor separación entre la barra y los botones.
+   - Sin modificar la altura ni el tamaño de los botones.
+   ============================================================ */
+.navegacion-principal-flujo .menu-ofertas-contenedor {
+  margin-top: 2px !important;
+}
+
+.menu-ofertas > button[data-vista="ofertas_mercado_libre"] .logo-mercado-libre {
+  height: 26px !important;
+  max-width: 43px !important;
+}
+
+@media (max-width: 600px) {
+  .navegacion-principal-flujo .menu-ofertas-contenedor {
+    margin-top: 1px !important;
+  }
+
+  .menu-ofertas > button[data-vista="ofertas_mercado_libre"] .logo-mercado-libre {
+    height: 24px !important;
+    max-width: 40px !important;
+  }
+}

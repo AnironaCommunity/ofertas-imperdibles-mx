@@ -40,13 +40,12 @@ const heroStoreSectionName = document.querySelector("#hero-store-section-name");
 const heroBankButtonName = document.querySelector("#hero-bank-button-name");
 const heroBankSectionName = document.querySelector("#hero-bank-section-name");
 const heroCommunityButtonName = document.querySelector("#hero-community-button-name");
+const heroCommunityButtonDescription = document.querySelector("#hero-community-button-description");
 const heroCommunitySectionName = document.querySelector("#hero-community-section-name");
 const heroMercadoLibreButtonName = document.querySelector("#hero-mercado-libre-button-name");
 const heroMercadoLibreUrl = document.querySelector("#hero-mercado-libre-url");
-const heroMercadoLibreColorMode = document.querySelector("#hero-mercado-libre-color-mode");
 const heroAmazonButtonName = document.querySelector("#hero-amazon-button-name");
 const heroAmazonUrl = document.querySelector("#hero-amazon-url");
-const heroAmazonColorMode = document.querySelector("#hero-amazon-color-mode");
 const heroWhatsappUrl = document.querySelector("#hero-whatsapp-url");
 const heroFacebookUrl = document.querySelector("#hero-facebook-url");
 const heroAdminPreviewText = document.querySelector("#hero-admin-preview-text");
@@ -1539,13 +1538,12 @@ async function loadHeroConfig() {
     heroBankButtonName.value = config.nombre_boton_bancarios || "Bancarios";
     heroBankSectionName.value = config.nombre_seccion_bancarios || "Cupones bancarios";
     heroCommunityButtonName.value = config.nombre_boton_comunidad || "Comunidad Anirona";
+    heroCommunityButtonDescription.value = config.descripcion_boton_comunidad || "Rifas, novedades y publicaciones de la comunidad";
     heroCommunitySectionName.value = config.nombre_seccion_comunidad || "Comunidad Anirona";
     heroMercadoLibreButtonName.value = config.nombre_boton_mercado_libre || "Ofertas Mercado Libre";
     heroMercadoLibreUrl.value = config.enlace_mercado_libre || "https://www.mercadolibre.com.mx/";
-    heroMercadoLibreColorMode.value = config.estilo_color_boton_mercado_libre === "barra" ? "barra" : "marca";
     heroAmazonButtonName.value = config.nombre_boton_amazon || "Ofertas Amazon";
     heroAmazonUrl.value = config.enlace_amazon || "https://www.amazon.com.mx/";
-    heroAmazonColorMode.value = config.estilo_color_boton_amazon === "barra" ? "barra" : "marca";
     heroWhatsappUrl.value = config.enlace_whatsapp || "https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n";
     heroFacebookUrl.value = config.enlace_facebook || "https://www.facebook.com/OfertasImperdiblesView";
 
@@ -1609,13 +1607,12 @@ async function saveHeroConfig(event) {
         nombre_boton_bancarios: heroBankButtonName.value.trim(),
         nombre_seccion_bancarios: heroBankSectionName.value.trim(),
         nombre_boton_comunidad: heroCommunityButtonName.value.trim(),
+        descripcion_boton_comunidad: heroCommunityButtonDescription.value.trim(),
         nombre_seccion_comunidad: heroCommunitySectionName.value.trim(),
         nombre_boton_mercado_libre: heroMercadoLibreButtonName.value.trim(),
         enlace_mercado_libre: heroMercadoLibreUrl.value.trim(),
-        estilo_color_boton_mercado_libre: heroMercadoLibreColorMode.value,
         nombre_boton_amazon: heroAmazonButtonName.value.trim(),
         enlace_amazon: heroAmazonUrl.value.trim(),
-        estilo_color_boton_amazon: heroAmazonColorMode.value,
         enlace_whatsapp: heroWhatsappUrl.value.trim(),
         enlace_facebook: heroFacebookUrl.value.trim(),
       }),

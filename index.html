@@ -181,8 +181,10 @@
           if (botonAmazon && cache.enlace_amazon) botonAmazon.dataset.enlaceExterno = cache.enlace_amazon;
           const nombreBotonMercadoLibre = document.querySelector("#nombre-boton-mercado-libre");
           const nombreBotonAmazon = document.querySelector("#nombre-boton-amazon");
+          const descripcionBotonComunidad = document.querySelector("#descripcion-boton-comunidad");
           if (nombreBotonMercadoLibre && cache.nombre_boton_mercado_libre) nombreBotonMercadoLibre.textContent = cache.nombre_boton_mercado_libre;
           if (nombreBotonAmazon && cache.nombre_boton_amazon) nombreBotonAmazon.textContent = cache.nombre_boton_amazon;
+          if (descripcionBotonComunidad && cache.descripcion_boton_comunidad) descripcionBotonComunidad.textContent = cache.descripcion_boton_comunidad;
           if (visitantes && cache.total_visitantes != null) visitantes.textContent = cache.total_visitantes;
 
           if (cache.color_inicio) {
@@ -222,7 +224,7 @@
       </span>
       <span class="acceso-comunidad-contenido">
         <strong id="nombre-boton-comunidad">Comunidad Anirona</strong>
-        <small>Rifas, novedades y publicaciones de la comunidad</small>
+        <small id="descripcion-boton-comunidad">Rifas, novedades y publicaciones de la comunidad</small>
       </span>
       <span class="acceso-comunidad-flecha" aria-hidden="true">›</span>
     </button>

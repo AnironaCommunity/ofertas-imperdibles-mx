@@ -109,14 +109,8 @@
     window.ofertasEnlacesPrincipales = enlacesPrincipales;
     const botonMercadoLibre = document.querySelector('[data-vista="ofertas_mercado_libre"]');
     const botonAmazon = document.querySelector('[data-vista="ofertas_amazon"]');
-    if (botonMercadoLibre) {
-      botonMercadoLibre.dataset.enlaceExterno = enlacesPrincipales.mercadoLibre;
-      botonMercadoLibre.dataset.estiloColor = config.estilo_color_boton_mercado_libre === "barra" ? "barra" : "marca";
-    }
-    if (botonAmazon) {
-      botonAmazon.dataset.enlaceExterno = enlacesPrincipales.amazon;
-      botonAmazon.dataset.estiloColor = config.estilo_color_boton_amazon === "barra" ? "barra" : "marca";
-    }
+    if (botonMercadoLibre) botonMercadoLibre.dataset.enlaceExterno = enlacesPrincipales.mercadoLibre;
+    if (botonAmazon) botonAmazon.dataset.enlaceExterno = enlacesPrincipales.amazon;
     document.dispatchEvent(new CustomEvent("ofertas:enlaces-principales-cargados", { detail: enlacesPrincipales }));
 
     const labels = {
@@ -126,6 +120,7 @@
       botonBancarios: config.nombre_boton_bancarios || "Bancarios",
       seccionBancarios: config.nombre_seccion_bancarios || "Cupones bancarios",
       botonComunidad: config.nombre_boton_comunidad || "Comunidad Anirona",
+      descripcionComunidad: config.descripcion_boton_comunidad || "Rifas, novedades y publicaciones de la comunidad",
       seccionComunidad: config.nombre_seccion_comunidad || "Comunidad Anirona",
       botonMercadoLibre: config.nombre_boton_mercado_libre || "Ofertas Mercado Libre",
       botonAmazon: config.nombre_boton_amazon || "Ofertas Amazon",
@@ -138,6 +133,7 @@
     document.querySelector("#nombre-boton-tienda")?.replaceChildren(labels.botonTienda);
     document.querySelector("#nombre-boton-bancarios")?.replaceChildren(labels.botonBancarios);
     document.querySelector("#nombre-boton-comunidad")?.replaceChildren(labels.botonComunidad);
+    document.querySelector("#descripcion-boton-comunidad")?.replaceChildren(labels.descripcionComunidad);
     document.querySelector("#nombre-seccion-comunidad")?.replaceChildren(labels.seccionComunidad);
     document.querySelector("#nombre-boton-mercado-libre")?.replaceChildren(labels.botonMercadoLibre);
     document.querySelector("#nombre-boton-amazon")?.replaceChildren(labels.botonAmazon);
