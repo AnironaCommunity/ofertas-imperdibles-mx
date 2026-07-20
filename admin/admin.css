@@ -1031,3 +1031,50 @@ table td {
   max-height: 110px;
   object-fit: contain;
 }
+
+
+/* V72.4 — Importador inteligente de cupones */
+.importador-liga-general {
+  display: grid;
+  gap: 12px;
+  margin: 16px 0;
+  padding: 16px;
+  border: 1px solid #dfe5eb;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.importador-liga-general .campo {
+  margin: 0;
+}
+
+.importador-liga-general input[type="url"]:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+}
+
+.importador-resumen {
+  display: grid;
+  gap: 5px;
+  margin-bottom: 14px;
+  padding: 14px 16px;
+  border: 1px solid #cfe3d7;
+  border-radius: 12px;
+  background: #f3fbf6;
+}
+
+.importador-resumen strong {
+  color: #17663a;
+}
+
+.importador-resumen span {
+  overflow-wrap: anywhere;
+  color: #43515d;
+  font-size: 0.92rem;
+}
+
+@media (max-width: 640px) {
+  .importador-liga-general {
+    padding: 13px;
+  }
+}

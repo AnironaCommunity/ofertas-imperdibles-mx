@@ -8,7 +8,7 @@
   <title>Administrador | Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="../img/logo.png" />
-  <link rel="stylesheet" href="admin.css?v=71.5" />
+  <link rel="stylesheet" href="admin.css?v=72.4" />
 </head>
 
 <body>
@@ -103,7 +103,7 @@
           <div class="cabecera-panel">
             <div>
               <h3>📥 Importar cupones desde texto</h3>
-              <p>Pega varios cupones separados por una línea en blanco.</p>
+              <p>Pega los cupones tal como los recibes o usa el formato clásico. Sepáralos con una línea en blanco.</p>
             </div>
 
             <button id="cerrar-importador" class="boton-secundario" type="button">
@@ -111,16 +111,40 @@
             </button>
           </div>
 
+          <div class="importador-liga-general">
+            <div class="campo campo-completo">
+              <label for="import-general-link">Liga para todos los cupones</label>
+              <input
+                id="import-general-link"
+                type="url"
+                inputmode="url"
+                placeholder="https://meli.la/xxxxx"
+              />
+              <small>Escribe una liga y activa la opción siguiente para aplicarla a todos los cupones detectados.</small>
+            </div>
+
+            <label class="switch-row campo-completo">
+              <input id="import-use-general-link" type="checkbox" />
+              <span>Usar esta liga en todos los cupones importados</span>
+            </label>
+          </div>
+
           <textarea
             id="texto-importacion"
             rows="14"
-            placeholder="Ejemplo:
+            placeholder="Puedes pegar directamente:
 
-10% OFF
-Compra mínima: $500
-Ahorra hasta: $63
-CASILLEGO77
-https://meli.la/xxxxx"
+🎟️Cupón: BYECOPA
+10% de descuento
+Compra minima: $1.000
+Descuento máximo: $125
+
+🎟️Cupón: FINAL26
+$180 de descuento
+Compra minima: $1.800
+Descuento máximo: $180
+
+También se conserva el formato clásico."
           ></textarea>
 
           <div class="acciones">
@@ -144,6 +168,8 @@ https://meli.la/xxxxx"
           </label>
 
           <div id="import-preview" class="vista-importacion" hidden>
+            <div id="import-summary" class="importador-resumen" aria-live="polite"></div>
+
             <div class="tabla-contenedor">
               <table>
                 <thead>
@@ -869,6 +895,6 @@ https://meli.la/xxxxx"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=71.9"></script>
+  <script type="module" src="admin.js?v=72.4"></script>
 </body>
 </html>

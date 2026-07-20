@@ -95,6 +95,9 @@ const importMessage = document.querySelector("#import-message");
 const importPreview = document.querySelector("#import-preview");
 const importPublishNew = document.querySelector("#import-publish-new");
 const importList = document.querySelector("#import-list");
+const importGeneralLink = document.querySelector("#import-general-link");
+const importUseGeneralLink = document.querySelector("#import-use-general-link");
+const importSummary = document.querySelector("#import-summary");
 
 /* Publicidad */
 const adForm = document.querySelector("#ad-form");
@@ -601,18 +604,87 @@ function normalizeLine(line) {
     .trim();
 }
 
-function extractMoney(line) {
-  const match = line.match(/\$?\s*[\d,.]+/);
-  return match ? match[0].replace(/\s+/g, "") : "";
+function normalizeImportedMoney(value) {
+  const raw = String(value || "")
+    .replace(/[^\d.,-]/g, "")
+    .trim();
+
+  if (!raw) return "";
+
+  let normalized = raw;
+  const lastComma = raw.lastIndexOf(",");
+  const lastDot = raw.lastIndexOf(".");
+
+  if (lastComma >= 0 && lastDot >= 0) {
+    const decimalSeparator = lastComma > lastDot ? "," : ".";
+    const thousandsSeparator = decimalSeparator === "," ? "." : ",";
+    normalized = raw.split(thousandsSeparator).join("").replace(decimalSeparator, ".");
+  } else if (/^\d{1,3}([.,]\d{3})+$/.test(raw)) {
+    normalized = raw.replace(/[.,]/g, "");
+  } else if (lastComma >= 0) {
+    normalized = raw.replace(/,/g, ".");
+  }
+
+  const amount = Number(normalized);
+  if (!Number.isFinite(amount)) return "";
+
+  return `$${amount.toLocaleString("es-MX", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  })}`;
 }
 
-function parseImportBlock(block) {
+function extractMoney(line) {
+  const match = String(line || "").match(/\$?\s*[\d,.]+/);
+  return match ? normalizeImportedMoney(match[0]) : "";
+}
+
+function normalizeDiscountTitle(line) {
+  const value = normalizeLine(line);
+  const percentMatch = value.match(/([\d.,]+)\s*%\s*(?:de\s*descuento|off)?/i);
+
+  if (percentMatch) {
+    const percent = Number(percentMatch[1].replace(",", "."));
+    return Number.isFinite(percent) ? `${percent.toLocaleString("es-MX")}% OFF` : "";
+  }
+
+  const amountMatch = value.match(/\$\s*[\d,.]+\s*(?:de\s*descuento|off)?/i);
+  if (amountMatch) {
+    const amount = extractMoney(amountMatch[0]);
+    return amount ? `${amount} OFF` : "";
+  }
+
+  return /\boff\b/i.test(value) ? value : "";
+}
+
+function isValidImportLink(value) {
+  try {
+    const url = new URL(String(value || "").trim());
+    return ["http:", "https:"].includes(url.protocol);
+  } catch {
+    return false;
+  }
+}
+
+function detectImportFormat(lines) {
+  if (lines.some((line) => /^\s*🎟️?\s*cup[oó]n\s*:/i.test(line))) {
+    return "Mercado Libre";
+  }
+
+  return "Clásico";
+}
+
+function parseImportBlock(block, options = {}) {
   const lines = block
     .split("\n")
     .map(normalizeLine)
     .filter(Boolean);
 
-  const link = lines.find((line) => /^https?:\/\/\S+/i.test(line)) || "";
+  const format = detectImportFormat(lines);
+  const couponLine = lines.find((line) => /^\s*🎟️?\s*cup[oó]n\s*:/i.test(line));
+  const blockLink = lines.find((line) => /^https?:\/\/\S+/i.test(line)) || "";
+  const generalLink = String(options.generalLink || "").trim();
+  const link = options.useGeneralLink ? generalLink : blockLink;
 
   const minimumLine = lines.find((line) =>
     /compra\s*m[ií]nima|m[ií]nimo/i.test(line)
@@ -622,41 +694,87 @@ function parseImportBlock(block) {
     /ahorra\s*hasta|descuento\s*m[aá]ximo|tope/i.test(line)
   );
 
-  const title =
-    lines.find((line) =>
-      /%|\boff\b|^\$\s*[\d,.]+/i.test(line)
-    ) || lines[0] || "";
+  const discountLine = lines.find((line) =>
+    /(?:[\d.,]+\s*%|\$\s*[\d,.]+)\s*(?:de\s*descuento|off)/i.test(line)
+  );
 
-  const code =
-    lines.find((line) => {
-      if ([title, link, minimumLine, savingLine].includes(line)) return false;
-      if (/compra|ahorra|descuento|tope/i.test(line)) return false;
+  const title = normalizeDiscountTitle(discountLine || "") ||
+    normalizeDiscountTitle(lines.find((line) => /%|\boff\b|^\$\s*[\d,.]+/i.test(line)) || "");
+
+  let code = couponLine
+    ? couponLine.replace(/^\s*🎟️?\s*cup[oó]n\s*:\s*/i, "")
+    : "";
+
+  if (!code) {
+    code = lines.find((line) => {
+      if ([title, discountLine, blockLink, minimumLine, savingLine].includes(line)) return false;
+      if (/cup[oó]n\s*:|compra|ahorra|descuento|tope/i.test(line)) return false;
       return /^[A-ZÁÉÍÓÚÑ0-9_-]{3,40}$/i.test(line.replace(/\s+/g, ""));
     }) || "";
+  }
+
+  code = code.replace(/\s+/g, "").toUpperCase();
+  const compraMinima = minimumLine ? extractMoney(minimumLine) : "";
+  const ahorroMaximo = savingLine ? extractMoney(savingLine) : "";
+
+  const missing = [];
+  if (!title) missing.push("título");
+  if (!code) missing.push("código");
+  if (!link) missing.push("enlace");
+  else if (!isValidImportLink(link)) missing.push("enlace válido");
 
   return {
     titulo: title,
-    codigo: code.replace(/\s+/g, ""),
-    compra_minima: minimumLine ? extractMoney(minimumLine) : "",
-    ahorro_maximo: savingLine ? extractMoney(savingLine) : "",
+    codigo: code,
+    compra_minima: compraMinima,
+    ahorro_maximo: ahorroMaximo,
     enlace: link,
     categoria: "tienda",
     fecha_inicio: null,
     fecha_fin: null,
     activo: true,
-    valid: Boolean(title && code && link),
-    result: "",
+    valid: missing.length === 0,
+    result: missing.length ? `Falta: ${missing.join(", ")}` : "Listo",
+    format,
   };
 }
 
+function renderImportSummary() {
+  const validCoupons = detectedCoupons.filter((item) => item.valid);
+  const fixed = validCoupons.filter((item) => /^\$/i.test(item.titulo)).length;
+  const percentages = validCoupons.filter((item) => /%\s*OFF/i.test(item.titulo)).length;
+  const formats = [...new Set(detectedCoupons.map((item) => item.format).filter(Boolean))];
+  const generalLinkApplied = importUseGeneralLink.checked && importGeneralLink.value.trim();
+
+  importSummary.innerHTML = `
+    <strong>${validCoupons.length} cupón${validCoupons.length === 1 ? "" : "es"} listo${validCoupons.length === 1 ? "" : "s"}</strong>
+    <span>${fixed} de monto fijo · ${percentages} porcentual${percentages === 1 ? "" : "es"}</span>
+    <span>Formato detectado: ${escapeHtml(formats.join(" y ") || "Sin identificar")}</span>
+    <span>${generalLinkApplied
+      ? `Liga general aplicada: ${escapeHtml(importGeneralLink.value.trim())}`
+      : "Se usarán las ligas individuales de cada cupón."}</span>
+  `;
+}
+
 function analyzeImport() {
+  const generalLink = importGeneralLink.value.trim();
+
+  if (importUseGeneralLink.checked && !isValidImportLink(generalLink)) {
+    detectedCoupons = [];
+    importList.replaceChildren();
+    importPreview.hidden = true;
+    setMessage(importMessage, "Escribe una liga general válida antes de analizar.", true);
+    return;
+  }
+
   detectedCoupons = importText.value
     .trim()
     .split(/\n\s*\n+/)
-    .map(parseImportBlock)
-    .filter((item) =>
-      item.titulo || item.codigo || item.enlace
-    );
+    .map((block) => parseImportBlock(block, {
+      generalLink,
+      useGeneralLink: importUseGeneralLink.checked,
+    }))
+    .filter((item) => item.titulo || item.codigo || item.enlace);
 
   importList.replaceChildren();
 
@@ -670,7 +788,7 @@ function analyzeImport() {
       <td>${escapeHtml(coupon.ahorro_maximo)}</td>
       <td>${escapeHtml(coupon.enlace)}</td>
       <td class="${coupon.valid ? "resultado-ok" : "resultado-error"}">
-        ${coupon.valid ? "Listo" : "Revisar"}
+        ${escapeHtml(coupon.result)}
       </td>
     `;
 
@@ -678,12 +796,13 @@ function analyzeImport() {
   }
 
   importPreview.hidden = detectedCoupons.length === 0;
+  renderImportSummary();
 
   const valid = detectedCoupons.filter((item) => item.valid).length;
 
   setMessage(
     importMessage,
-    `${valid} cupones listos de ${detectedCoupons.length} detectados.`,
+    `${valid} cupones listos de ${detectedCoupons.length} detectados. Revisa la vista previa antes de publicar.`,
     valid !== detectedCoupons.length
   );
 }
@@ -691,27 +810,55 @@ function analyzeImport() {
 async function publishImport() {
   const validCoupons = detectedCoupons.filter((item) => item.valid);
 
+  if (!validCoupons.length) {
+    setMessage(importMessage, "No hay cupones válidos para publicar.", true);
+    return;
+  }
+
+  const confirmation = confirm(
+    `Se publicarán ${validCoupons.length} cupón${validCoupons.length === 1 ? "" : "es"}.\n\n` +
+    `${validCoupons.filter((item) => /^\$/i.test(item.titulo)).length} de monto fijo\n` +
+    `${validCoupons.filter((item) => /%\s*OFF/i.test(item.titulo)).length} porcentual(es)\n\n` +
+    "¿Deseas continuar?"
+  );
+
+  if (!confirmation) return;
+
   saveImport.disabled = true;
+  let published = 0;
+  const errors = [];
 
   try {
     for (const coupon of validCoupons) {
-      await api("/api/admin-cupones", {
-        method: "POST",
-        body: JSON.stringify({
-          ...coupon,
-          publicar_como_nuevo: importPublishNew.checked,
-        }),
-      });
+      try {
+        await api("/api/admin-cupones", {
+          method: "POST",
+          body: JSON.stringify({
+            ...coupon,
+            publicar_como_nuevo: importPublishNew.checked,
+          }),
+        });
+        published += 1;
+      } catch (error) {
+        errors.push(`${coupon.codigo}: ${error.message}`);
+      }
     }
 
-    importText.value = "";
-    importPublishNew.checked = true;
-    detectedCoupons = [];
-    importPreview.hidden = true;
-    setMessage(importMessage, `${validCoupons.length} cupones publicados.`);
+    if (errors.length === 0) {
+      importText.value = "";
+      importPublishNew.checked = true;
+      detectedCoupons = [];
+      importPreview.hidden = true;
+      setMessage(importMessage, `✅ Importación finalizada: ${published} cupones publicados, 0 errores.`);
+    } else {
+      setMessage(
+        importMessage,
+        `Importación parcial: ${published} publicados y ${errors.length} con error. ${errors.join(" | ")}`,
+        true
+      );
+    }
+
     await loadCoupons();
-  } catch (error) {
-    setMessage(importMessage, error.message, true);
   } finally {
     saveImport.disabled = false;
   }
@@ -1680,9 +1827,21 @@ closeImporter.addEventListener("click", () => {
 });
 
 processImport.addEventListener("click", analyzeImport);
+importUseGeneralLink.addEventListener("change", () => {
+  importGeneralLink.disabled = !importUseGeneralLink.checked;
+  if (!importPreview.hidden) analyzeImport();
+});
+importGeneralLink.addEventListener("input", () => {
+  if (importUseGeneralLink.checked && !importPreview.hidden) analyzeImport();
+});
+importGeneralLink.disabled = true;
 clearImport.addEventListener("click", () => {
   importText.value = "";
+  importGeneralLink.value = "";
+  importUseGeneralLink.checked = false;
+  importPublishNew.checked = true;
   detectedCoupons = [];
+  importList.replaceChildren();
   importPreview.hidden = true;
   setMessage(importMessage);
 });
