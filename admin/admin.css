@@ -1078,3 +1078,187 @@ table td {
     padding: 13px;
   }
 }
+
+
+/* V72.5 — Importador compacto con categoría y vencimiento */
+.importador-panel {
+  padding: 16px;
+}
+
+.importador-cabecera {
+  margin-bottom: 10px;
+}
+
+.importador-cabecera p {
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.boton-compacto {
+  min-height: 34px;
+  padding: 7px 12px;
+}
+
+.importador-configuracion {
+  display: grid;
+  grid-template-columns: minmax(150px, .7fr) minmax(180px, .8fr) minmax(260px, 1.7fr);
+  gap: 9px 11px;
+  margin: 0 0 10px;
+  padding: 11px;
+  border: 1px solid #dfe7e3;
+  border-radius: 12px;
+  background: #f8fbf9;
+}
+
+.importador-configuracion .campo {
+  margin: 0;
+}
+
+.importador-configuracion label,
+.importador-etiqueta-texto {
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.importador-configuracion input,
+.importador-configuracion select {
+  min-height: 35px;
+  padding: 7px 9px;
+  font-size: 13px;
+}
+
+.importador-configuracion small {
+  margin-top: 3px;
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+.importador-opciones {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  padding-top: 1px;
+}
+
+.importador-opciones .switch-row {
+  gap: 7px;
+  margin: 0;
+  font-size: 12px;
+}
+
+.importador-opciones input {
+  width: 17px;
+  height: 17px;
+  min-height: auto;
+}
+
+.importador-etiqueta-texto {
+  display: block;
+}
+
+#texto-importacion {
+  min-height: 170px;
+  padding: 10px 11px;
+  font-size: 12px;
+  line-height: 1.4;
+  resize: vertical;
+}
+
+.importador-acciones {
+  justify-content: flex-start;
+  gap: 7px;
+  margin-top: 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.importador-mensaje {
+  min-height: 18px;
+  margin: 7px 0;
+  font-size: 12px;
+}
+
+.importador-resumen {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 12px;
+  margin: 8px 0 9px;
+  padding: 10px 12px;
+}
+
+.importador-resumen strong {
+  grid-column: 1 / -1;
+}
+
+.importador-resumen span {
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.tabla-importador {
+  max-height: 300px;
+  overflow: auto;
+}
+
+.tabla-importador th,
+.tabla-importador td {
+  padding: 7px 8px;
+  font-size: 11px;
+}
+
+.importador-boton-publicar {
+  display: block;
+  width: fit-content;
+  min-height: 36px;
+  margin: 10px 0 0 auto;
+  padding: 8px 14px;
+}
+
+@media (max-width: 760px) {
+  .importador-panel {
+    padding: 12px;
+  }
+
+  .importador-configuracion {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 9px;
+  }
+
+  .importador-liga-campo {
+    grid-column: 1 / -1;
+  }
+
+  .importador-resumen {
+    grid-template-columns: 1fr;
+  }
+
+  .importador-resumen strong {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .importador-configuracion {
+    grid-template-columns: 1fr;
+  }
+
+  .importador-liga-campo,
+  .importador-opciones {
+    grid-column: auto;
+  }
+
+  .importador-opciones {
+    display: grid;
+    gap: 7px;
+  }
+
+  #texto-importacion {
+    min-height: 150px;
+  }
+
+  .importador-boton-publicar {
+    width: 100%;
+  }
+}

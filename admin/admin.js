@@ -98,6 +98,8 @@ const importList = document.querySelector("#import-list");
 const importGeneralLink = document.querySelector("#import-general-link");
 const importUseGeneralLink = document.querySelector("#import-use-general-link");
 const importSummary = document.querySelector("#import-summary");
+const importCategory = document.querySelector("#import-category");
+const importExpirationTime = document.querySelector("#import-expiration-time");
 
 /* Publicidad */
 const adForm = document.querySelector("#ad-form");
@@ -745,15 +747,40 @@ function renderImportSummary() {
   const percentages = validCoupons.filter((item) => /%\s*OFF/i.test(item.titulo)).length;
   const formats = [...new Set(detectedCoupons.map((item) => item.format).filter(Boolean))];
   const generalLinkApplied = importUseGeneralLink.checked && importGeneralLink.value.trim();
+  const categoryLabel = importCategory.value === "bancarios" ? "💳 Bancarios" : "🛒 Tienda";
+  const expirationLabel = importExpirationTime.value
+    ? `${importExpirationTime.value} h (Ciudad de México)`
+    : "Sin vencimiento asignado";
 
   importSummary.innerHTML = `
-    <strong>${validCoupons.length} cupón${validCoupons.length === 1 ? "" : "es"} listo${validCoupons.length === 1 ? "" : "s"}</strong>
+    <strong>✓ ${validCoupons.length} cupón${validCoupons.length === 1 ? "" : "es"} listo${validCoupons.length === 1 ? "" : "s"}</strong>
     <span>${fixed} de monto fijo · ${percentages} porcentual${percentages === 1 ? "" : "es"}</span>
-    <span>Formato detectado: ${escapeHtml(formats.join(" y ") || "Sin identificar")}</span>
+    <span>${categoryLabel} · 🕒 ${escapeHtml(expirationLabel)}</span>
+    <span>Formato: ${escapeHtml(formats.join(" y ") || "Sin identificar")}</span>
     <span>${generalLinkApplied
-      ? `Liga general aplicada: ${escapeHtml(importGeneralLink.value.trim())}`
-      : "Se usarán las ligas individuales de cada cupón."}</span>
+      ? `🔗 Liga general: ${escapeHtml(importGeneralLink.value.trim())}`
+      : "🔗 Se usarán las ligas individuales."}</span>
+    <span>${importPublishNew.checked ? "✨ Se publicarán como Nuevo durante una hora." : "Sin etiqueta Nuevo."}</span>
   `;
+}
+
+
+function getMexicoTodayDate() {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Mexico_City",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
+}
+
+function getImportExpirationIso() {
+  const time = importExpirationTime.value;
+  if (!time) return null;
+  return mexicoLocalToIso(`${getMexicoTodayDate()}T${time}`);
 }
 
 function analyzeImport() {
@@ -767,12 +794,18 @@ function analyzeImport() {
     return;
   }
 
+  const expirationIso = getImportExpirationIso();
+
   detectedCoupons = importText.value
     .trim()
     .split(/\n\s*\n+/)
-    .map((block) => parseImportBlock(block, {
-      generalLink,
-      useGeneralLink: importUseGeneralLink.checked,
+    .map((block) => ({
+      ...parseImportBlock(block, {
+        generalLink,
+        useGeneralLink: importUseGeneralLink.checked,
+      }),
+      categoria: importCategory.value,
+      fecha_fin: expirationIso,
     }))
     .filter((item) => item.titulo || item.codigo || item.enlace);
 
@@ -818,7 +851,10 @@ async function publishImport() {
   const confirmation = confirm(
     `Se publicarán ${validCoupons.length} cupón${validCoupons.length === 1 ? "" : "es"}.\n\n` +
     `${validCoupons.filter((item) => /^\$/i.test(item.titulo)).length} de monto fijo\n` +
-    `${validCoupons.filter((item) => /%\s*OFF/i.test(item.titulo)).length} porcentual(es)\n\n` +
+    `${validCoupons.filter((item) => /%\s*OFF/i.test(item.titulo)).length} porcentual(es)\n` +
+    `Categoría: ${importCategory.value === "bancarios" ? "Bancarios" : "Tienda"}\n` +
+    `Vencimiento: ${importExpirationTime.value || "Sin vencimiento"}\n` +
+    `Nuevo durante 1 hora: ${importPublishNew.checked ? "Sí" : "No"}\n\n` +
     "¿Deseas continuar?"
   );
 
@@ -1826,19 +1862,37 @@ closeImporter.addEventListener("click", () => {
   importerPanel.hidden = true;
 });
 
+let importPreviewTimer = 0;
+function scheduleImportPreview() {
+  window.clearTimeout(importPreviewTimer);
+  importPreviewTimer = window.setTimeout(() => {
+    if (importText.value.trim()) {
+      analyzeImport();
+    } else {
+      detectedCoupons = [];
+      importList.replaceChildren();
+      importPreview.hidden = true;
+      setMessage(importMessage);
+    }
+  }, 280);
+}
+
 processImport.addEventListener("click", analyzeImport);
 importUseGeneralLink.addEventListener("change", () => {
   importGeneralLink.disabled = !importUseGeneralLink.checked;
-  if (!importPreview.hidden) analyzeImport();
+  scheduleImportPreview();
 });
-importGeneralLink.addEventListener("input", () => {
-  if (importUseGeneralLink.checked && !importPreview.hidden) analyzeImport();
+[importText, importGeneralLink, importCategory, importExpirationTime, importPublishNew].forEach((control) => {
+  control?.addEventListener("input", scheduleImportPreview);
+  control?.addEventListener("change", scheduleImportPreview);
 });
 importGeneralLink.disabled = true;
 clearImport.addEventListener("click", () => {
   importText.value = "";
   importGeneralLink.value = "";
   importUseGeneralLink.checked = false;
+  importCategory.value = "tienda";
+  importExpirationTime.value = "23:59";
   importPublishNew.checked = true;
   detectedCoupons = [];
   importList.replaceChildren();

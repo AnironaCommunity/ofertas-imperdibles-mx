@@ -8,7 +8,7 @@
   <title>Administrador | Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="../img/logo.png" />
-  <link rel="stylesheet" href="admin.css?v=72.4" />
+  <link rel="stylesheet" href="admin.css?v=72.5" />
 </head>
 
 <body>
@@ -100,19 +100,33 @@
         </div>
 
         <section id="importador-panel" class="panel importador-panel" hidden>
-          <div class="cabecera-panel">
+          <div class="cabecera-panel importador-cabecera">
             <div>
-              <h3>📥 Importar cupones desde texto</h3>
-              <p>Pega los cupones tal como los recibes o usa el formato clásico. Sepáralos con una línea en blanco.</p>
+              <h3>📥 Importador de cupones</h3>
+              <p>Pega el texto tal como lo recibes. La vista previa se actualiza automáticamente.</p>
             </div>
 
-            <button id="cerrar-importador" class="boton-secundario" type="button">
+            <button id="cerrar-importador" class="boton-secundario boton-compacto" type="button">
               Cerrar
             </button>
           </div>
 
-          <div class="importador-liga-general">
-            <div class="campo campo-completo">
+          <div class="importador-configuracion">
+            <div class="campo importador-campo-corto">
+              <label for="import-category">Categoría</label>
+              <select id="import-category">
+                <option value="tienda">🛒 Tienda</option>
+                <option value="bancarios">💳 Bancarios</option>
+              </select>
+            </div>
+
+            <div class="campo importador-campo-corto">
+              <label for="import-expiration-time">Hora de vencimiento</label>
+              <input id="import-expiration-time" type="time" value="23:59" />
+              <small>Hora de Ciudad de México. Déjala vacía para no asignar vencimiento.</small>
+            </div>
+
+            <div class="campo importador-liga-campo">
               <label for="import-general-link">Liga para todos los cupones</label>
               <input
                 id="import-general-link"
@@ -120,21 +134,26 @@
                 inputmode="url"
                 placeholder="https://meli.la/xxxxx"
               />
-              <small>Escribe una liga y activa la opción siguiente para aplicarla a todos los cupones detectados.</small>
             </div>
 
-            <label class="switch-row campo-completo">
-              <input id="import-use-general-link" type="checkbox" />
-              <span>Usar esta liga en todos los cupones importados</span>
-            </label>
+            <div class="importador-opciones">
+              <label class="switch-row">
+                <input id="import-use-general-link" type="checkbox" />
+                <span>Usar esta liga en todos</span>
+              </label>
+
+              <label class="switch-row">
+                <input id="import-publish-new" type="checkbox" checked />
+                <span>✨ Nuevo durante 1 hora</span>
+              </label>
+            </div>
           </div>
 
+          <label class="importador-etiqueta-texto" for="texto-importacion">Cupones para importar</label>
           <textarea
             id="texto-importacion"
-            rows="14"
-            placeholder="Puedes pegar directamente:
-
-🎟️Cupón: BYECOPA
+            rows="9"
+            placeholder="🎟️Cupón: BYECOPA
 10% de descuento
 Compra minima: $1.000
 Descuento máximo: $125
@@ -142,35 +161,25 @@ Descuento máximo: $125
 🎟️Cupón: FINAL26
 $180 de descuento
 Compra minima: $1.800
-Descuento máximo: $180
-
-También se conserva el formato clásico."
+Descuento máximo: $180"
           ></textarea>
 
-          <div class="acciones">
-            <button id="procesar-importacion" class="boton-principal" type="button">
-              Analizar cupones
+          <div class="acciones importador-acciones">
+            <button id="procesar-importacion" class="boton-secundario boton-compacto" type="button">
+              Actualizar vista previa
             </button>
 
-            <button id="limpiar-importacion" class="boton-secundario" type="button">
+            <button id="limpiar-importacion" class="boton-secundario boton-compacto" type="button">
               Limpiar
             </button>
           </div>
 
-          <p id="import-message" class="mensaje" aria-live="polite"></p>
-
-          <label class="switch-row campo-completo switch-nuevo-cupon importador-nuevo">
-            <input id="import-publish-new" type="checkbox" checked />
-            <span>
-              Marcar los cupones importados como
-              <strong>✨ Nuevo</strong> durante una hora
-            </span>
-          </label>
+          <p id="import-message" class="mensaje importador-mensaje" aria-live="polite"></p>
 
           <div id="import-preview" class="vista-importacion" hidden>
             <div id="import-summary" class="importador-resumen" aria-live="polite"></div>
 
-            <div class="tabla-contenedor">
+            <div class="tabla-contenedor tabla-importador">
               <table>
                 <thead>
                   <tr>
@@ -187,7 +196,7 @@ También se conserva el formato clásico."
               </table>
             </div>
 
-            <button id="guardar-importacion" class="boton-principal" type="button">
+            <button id="guardar-importacion" class="boton-principal importador-boton-publicar" type="button">
               Publicar cupones detectados
             </button>
           </div>
@@ -895,6 +904,6 @@ También se conserva el formato clásico."
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=72.4"></script>
+  <script type="module" src="admin.js?v=72.5"></script>
 </body>
 </html>
