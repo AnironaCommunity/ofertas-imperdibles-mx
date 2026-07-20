@@ -52,7 +52,7 @@
   <link rel="stylesheet" href="css/ajustes-visuales-v67-16.css?v=70.0.0" />
   <link rel="stylesheet" href="css/eventos-v68.css?v=70.0.0" />
   <link rel="stylesheet" href="css/header-dinamico-v68-3.css?v=70.0.0" />
-  <link rel="stylesheet" href="css/estabilidad.css?v=70.0.0" />
+  <link rel="stylesheet" href="css/estabilidad.css?v=72.1.0" />
   <link rel="stylesheet" href="css/cabecera-inteligente.css?v=71.9.0" />  <script>
     try {
       const temaGuardado = JSON.parse(localStorage.getItem("ofertas_imperdibles_tema") || "null");
@@ -183,10 +183,6 @@
           const nombreBotonAmazon = document.querySelector("#nombre-boton-amazon");
           if (nombreBotonMercadoLibre && cache.nombre_boton_mercado_libre) nombreBotonMercadoLibre.textContent = cache.nombre_boton_mercado_libre;
           if (nombreBotonAmazon && cache.nombre_boton_amazon) nombreBotonAmazon.textContent = cache.nombre_boton_amazon;
-          const botonPrincipalMercadoLibre = document.querySelector("#boton-principal-mercado-libre");
-          const botonPrincipalAmazon = document.querySelector("#boton-principal-amazon");
-          if (botonPrincipalMercadoLibre) botonPrincipalMercadoLibre.dataset.estiloColor = cache.estilo_color_boton_mercado_libre || "marca";
-          if (botonPrincipalAmazon) botonPrincipalAmazon.dataset.estiloColor = cache.estilo_color_boton_amazon || "marca";
           if (visitantes && cache.total_visitantes != null) visitantes.textContent = cache.total_visitantes;
 
           if (cache.color_inicio) {
@@ -203,12 +199,12 @@
 
     <div class="menu-ofertas-contenedor">
       <nav class="menu-ofertas" aria-label="Secciones de ofertas">
-      <button id="boton-principal-mercado-libre" class="boton-principal-marca boton-marca-mercado-libre" type="button" data-vista="ofertas_mercado_libre" data-estilo-color="marca" aria-pressed="false">
-        <img class="menu-ofertas-logo logo-mercado-libre" src="img/mercado-libre-boton.png" alt="" aria-hidden="true" />
+      <button type="button" data-vista="ofertas_mercado_libre" aria-pressed="false">
+        <img class="menu-ofertas-logo logo-mercado-libre" src="img/mercado-libre.png?v=72.1.0" alt="" aria-hidden="true" />
         <span id="nombre-boton-mercado-libre">Ofertas Mercado Libre</span>
       </button>
-      <button id="boton-principal-amazon" class="boton-principal-marca boton-marca-amazon" type="button" data-vista="ofertas_amazon" data-estilo-color="marca" aria-pressed="false">
-        <img class="menu-ofertas-logo logo-amazon" src="img/amazon-boton.png" alt="" aria-hidden="true" />
+      <button type="button" data-vista="ofertas_amazon" aria-pressed="false">
+        <img class="menu-ofertas-logo logo-amazon" src="img/amazon.png?v=72.1.0" alt="" aria-hidden="true" />
         <span id="nombre-boton-amazon">Ofertas Amazon</span>
       </button>
     </nav>
@@ -327,7 +323,7 @@
       hidden
     >
       <div class="titulo-fila titulo-con-separador">
-        <h2 class="titulo-seccion titulo-seccion-con-logo"><img src="img/mercado-libre.png" alt="" aria-hidden="true" /><span>Ofertas Mercado Libre</span></h2>
+        <h2 class="titulo-seccion titulo-seccion-con-logo"><img src="img/mercado-libre.png?v=72.1.0" alt="" aria-hidden="true" /><span>Ofertas Mercado Libre</span></h2>
       </div>
       <div
         id="ofertas-mercado-libre"
@@ -360,7 +356,7 @@
       hidden
     >
       <div class="titulo-fila titulo-con-separador">
-        <h2 class="titulo-seccion titulo-seccion-con-logo"><img src="img/amazon.png" alt="" aria-hidden="true" /><span>Ofertas Amazon</span></h2>
+        <h2 class="titulo-seccion titulo-seccion-con-logo"><img src="img/amazon.png?v=72.1.0" alt="" aria-hidden="true" /><span>Ofertas Amazon</span></h2>
       </div>
       <div
         id="ofertas-amazon"

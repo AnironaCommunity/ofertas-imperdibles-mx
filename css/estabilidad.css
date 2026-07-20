@@ -625,3 +625,42 @@ body {
   overscroll-behavior-x: none;
   touch-action: pan-y;
 }
+
+/* ============================================================
+   V72.1 — IDENTIDAD VISUAL EN BOTONES MERCADO LIBRE Y AMAZON
+   Solo cambia el fondo y contraste de estos dos accesos.
+   Se conserva el tamaño anterior de botones, logos y distribución.
+   ============================================================ */
+.menu-ofertas > button[data-vista="ofertas_mercado_libre"] {
+  background: #ffe600 !important;
+  border-color: rgba(35, 46, 91, .18) !important;
+  color: #22305b !important;
+}
+
+.menu-ofertas > button[data-vista="ofertas_mercado_libre"]:hover,
+.menu-ofertas > button[data-vista="ofertas_mercado_libre"]:focus-visible,
+.menu-ofertas > button[data-vista="ofertas_mercado_libre"].activo {
+  background: #ffe600 !important;
+  color: #22305b !important;
+  border-color: rgba(35, 46, 91, .28) !important;
+}
+
+.menu-ofertas > button[data-vista="ofertas_amazon"] {
+  background: #222f42 !important;
+  border-color: rgba(255, 255, 255, .16) !important;
+  color: #ffffff !important;
+}
+
+.menu-ofertas > button[data-vista="ofertas_amazon"]:hover,
+.menu-ofertas > button[data-vista="ofertas_amazon"]:focus-visible,
+.menu-ofertas > button[data-vista="ofertas_amazon"].activo {
+  background: #222f42 !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, .28) !important;
+}
+
+/* Evita que la línea decorativa verde compita con los colores de marca. */
+.menu-ofertas > button[data-vista="ofertas_mercado_libre"]::after,
+.menu-ofertas > button[data-vista="ofertas_amazon"]::after {
+  display: none !important;
+}
