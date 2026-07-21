@@ -10,7 +10,7 @@
   <meta name="theme-color" content="#43b929" />
   <meta name="color-scheme" content="light" />
 
-  <title>Cupones de Mercado Libre | Hoy</title>
+  <title>Ofertas Imperdibles MX | Cupones y ofertas de Mercado Libre y Amazon</title>
 
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="es_MX" />
@@ -102,7 +102,7 @@
 
       <div class="hero-redes-contenido">
         <strong id="nombre-sitio">Ofertas Imperdibles MX</strong>
-        <span id="hero-texto-descriptivo">Cupones, promociones y novedades todos los días.</span>
+        <span id="hero-texto-descriptivo">Cupones de Mercado Libre | Hoy</span>
 
         <div class="hero-redes-botones">
           <a
@@ -156,7 +156,16 @@
           const visitantes = document.querySelector("#hero-total-visitantes");
 
           if (textoBarra && cache.texto_descriptivo) textoBarra.textContent = cache.texto_descriptivo;
-          if (nombreBarra) nombreBarra.textContent = cache.nombre_barra || "Ofertas Imperdibles MX";
+          if (nombreBarra) {
+            const partesFecha = new Intl.DateTimeFormat("es-MX", {
+              timeZone: "America/Mexico_City",
+              day: "numeric",
+              month: "long",
+            }).formatToParts(new Date());
+            const dia = partesFecha.find((parte) => parte.type === "day")?.value || "";
+            const mes = partesFecha.find((parte) => parte.type === "month")?.value || "";
+            nombreBarra.textContent = `Cupones de Mercado Libre | Hoy ${dia} de ${mes}`;
+          }
           if (iconoPrincipal && cache.logo_icono_url) iconoPrincipal.src = cache.logo_icono_url;
           if (nombrePrincipal && cache.nombre_sitio) {
             const palabras = String(cache.nombre_sitio).trim().split(/\s+/).filter(Boolean);
@@ -529,8 +538,8 @@
     </div>
   </div>
 
-  <script type="module" src="js/app.js?v=74.1.0"></script>
-  <script src="js/hero-redes.js?v=74.1.0" defer></script>
+  <script type="module" src="js/app.js?v=71.9.0"></script>
+  <script src="js/hero-redes.js?v=74.2" defer></script>
   <script src="js/header-dinamico-v68-3.js?v=70.0.0" defer></script>
   <script src="js/cabecera-inteligente.js?v=71.9.0" defer></script>
 </body>

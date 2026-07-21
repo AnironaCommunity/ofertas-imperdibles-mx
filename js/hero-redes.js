@@ -17,6 +17,26 @@
   const CONFIG_CACHE_KEY = "ofertas_imperdibles_config_cache";
   const ONE_DAY = 24 * 60 * 60 * 1000;
 
+  function obtenerTextoFechaActual() {
+    const partes = new Intl.DateTimeFormat("es-MX", {
+      timeZone: "America/Mexico_City",
+      day: "numeric",
+      month: "long",
+    }).formatToParts(new Date());
+
+    const dia = partes.find((parte) => parte.type === "day")?.value || "";
+    const mes = partes.find((parte) => parte.type === "month")?.value || "";
+
+    return `Cupones de Mercado Libre | Hoy ${dia} de ${mes}`;
+  }
+
+  function actualizarNombreBarraConFecha() {
+    if (!barSiteName) return;
+    barSiteName.textContent = obtenerTextoFechaActual();
+  }
+
+  actualizarNombreBarraConFecha();
+
   function formatNumber(value) {
     const number = Number(value);
     return Number.isFinite(number)
@@ -81,7 +101,7 @@
 
     const configuredName = config.nombre_sitio || "Ofertas Imperdibles";
     if (mainSiteName) renderMainSiteName(mainSiteName, configuredName);
-    if (barSiteName) barSiteName.textContent = config.nombre_barra || "Ofertas Imperdibles MX";
+    actualizarNombreBarraConFecha();
 
     if (mainSlogan) {
       mainSlogan.textContent = config.eslogan || "Las mejores ofertas, siempre";
@@ -89,9 +109,7 @@
     }
 
     if (barDescription) {
-      barDescription.textContent =
-        config.texto_descriptivo ||
-        "Cupones, promociones y novedades todos los días.";
+      barDescription.textContent = config.texto_descriptivo || "Cupones, promociones y novedades todos los días.";
       barDescription.hidden = false;
     }
 
@@ -116,9 +134,7 @@
     document.dispatchEvent(new CustomEvent("ofertas:enlaces-principales-cargados", { detail: enlacesPrincipales }));
 
     const labels = {
-      textoDescriptivo:
-        config.texto_descriptivo ||
-        "Cupones, promociones y novedades todos los días.",
+      textoDescriptivo: config.texto_descriptivo || "Cupones, promociones y novedades todos los días.",
       botonTienda: config.nombre_boton_tienda || "Tienda",
       seccionTienda: config.nombre_seccion_tienda || "Cupones de tienda",
       botonBancarios: config.nombre_boton_bancarios || "Bancarios",
