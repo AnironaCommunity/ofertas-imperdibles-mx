@@ -180,6 +180,7 @@ function mostrarCantidadSeccion(elemento, cantidad, tipo) {
 function actualizarContadoresSecciones() {
   const cantidadTienda = todosLosCupones.filter(
     (cupon) =>
+      cupon.activo !== false &&
       normalizarCategoria(cupon) === "tienda" &&
       couponTimeState(cupon).state !== "finalizado"
   ).length;
@@ -213,6 +214,7 @@ function actualizarContadoresSecciones() {
 
   const cantidadBancarios = todosLosCupones.filter(
     (cupon) =>
+      cupon.activo !== false &&
       normalizarCategoria(cupon) === "bancarios" &&
       couponTimeState(cupon).state !== "finalizado"
   ).length;
