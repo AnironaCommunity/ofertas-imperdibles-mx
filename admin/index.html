@@ -8,7 +8,7 @@
   <title>Administrador | Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="../img/logo.png" />
-  <link rel="stylesheet" href="admin.css?v=72.5" />
+  <link rel="stylesheet" href="admin.css?v=75.0" />
 </head>
 
 <body>
@@ -98,6 +98,59 @@
             </button>
           </div>
         </div>
+
+        <section class="panel panel-resumen-compartir" aria-labelledby="resumen-compartir-titulo">
+          <div class="cabecera-panel resumen-compartir-cabecera">
+            <div>
+              <h3 id="resumen-compartir-titulo">📸 Resumen para compartir</h3>
+              <p>Genera una imagen y un texto con los cupones activos, sin mostrar sus códigos.</p>
+            </div>
+          </div>
+
+          <div class="resumen-compartir-controles">
+            <div class="campo resumen-campo-liga">
+              <label for="resumen-liga">Liga para consultar los cupones</label>
+              <input id="resumen-liga" type="url" value="https://ofertasimperdiblesmx.vercel.app/" inputmode="url" />
+            </div>
+
+            <div class="campo">
+              <label for="resumen-limite">Cupones en la imagen</label>
+              <select id="resumen-limite">
+                <option value="all">Todos los activos</option>
+                <option value="6">Primeros 6</option>
+                <option value="8">Primeros 8</option>
+                <option value="10">Primeros 10</option>
+              </select>
+            </div>
+
+            <label class="switch-row resumen-switch">
+              <input id="resumen-incluir-vigencia" type="checkbox" checked />
+              <span>Incluir vigencia</span>
+            </label>
+          </div>
+
+          <div class="acciones resumen-compartir-acciones">
+            <button id="generar-resumen" class="boton-principal" type="button">Generar resumen</button>
+            <button id="copiar-resumen-texto" class="boton-secundario" type="button" disabled>Copiar texto</button>
+            <button id="descargar-resumen-imagen" class="boton-secundario" type="button" disabled>Descargar imagen</button>
+            <button id="compartir-resumen-imagen" class="boton-secundario" type="button" disabled>Compartir imagen</button>
+          </div>
+
+          <p id="resumen-compartir-mensaje" class="mensaje" aria-live="polite"></p>
+
+          <div id="resumen-compartir-resultado" class="resumen-compartir-resultado" hidden>
+            <div class="resumen-texto-columna">
+              <label for="resumen-texto">Texto resumido</label>
+              <textarea id="resumen-texto" rows="10" readonly></textarea>
+            </div>
+            <div class="resumen-imagen-columna">
+              <span class="resumen-preview-etiqueta">Vista previa</span>
+              <img id="resumen-imagen-preview" alt="Resumen de cupones activos listo para compartir" />
+            </div>
+          </div>
+
+          <canvas id="resumen-canvas" hidden></canvas>
+        </section>
 
         <section id="importador-panel" class="panel importador-panel" hidden>
           <div class="cabecera-panel importador-cabecera">
@@ -904,6 +957,6 @@ Descuento máximo: $180"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=72.5"></script>
+  <script type="module" src="admin.js?v=75.0"></script>
 </body>
 </html>

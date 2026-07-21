@@ -83,6 +83,21 @@ const refreshCoupons = document.querySelector("#actualizar-cupones");
 const couponList = document.querySelector("#coupon-list");
 const couponListMessage = document.querySelector("#coupon-list-message");
 
+/* Resumen para compartir */
+const shareSummaryLink = document.querySelector("#resumen-liga");
+const shareSummaryLimit = document.querySelector("#resumen-limite");
+const shareSummaryIncludeExpiration = document.querySelector("#resumen-incluir-vigencia");
+const generateShareSummary = document.querySelector("#generar-resumen");
+const copyShareSummaryText = document.querySelector("#copiar-resumen-texto");
+const downloadShareSummaryImage = document.querySelector("#descargar-resumen-imagen");
+const shareShareSummaryImage = document.querySelector("#compartir-resumen-imagen");
+const shareSummaryMessage = document.querySelector("#resumen-compartir-mensaje");
+const shareSummaryResult = document.querySelector("#resumen-compartir-resultado");
+const shareSummaryText = document.querySelector("#resumen-texto");
+const shareSummaryPreview = document.querySelector("#resumen-imagen-preview");
+const shareSummaryCanvas = document.querySelector("#resumen-canvas");
+let shareSummaryBlob = null;
+
 /* Importador */
 const importerPanel = document.querySelector("#importador-panel");
 const showImporter = document.querySelector("#mostrar-importador");
@@ -493,6 +508,295 @@ async function loadCoupons() {
   } finally {
     refreshCoupons.disabled = false;
   }
+}
+
+
+function activeCouponsForSharing() {
+  return coupons.filter((coupon) => couponAutomaticStatus(coupon).key === "activo");
+}
+
+function shareSummaryDate() {
+  return new Intl.DateTimeFormat("es-MX", {
+    timeZone: MEXICO_TIME_ZONE,
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date());
+}
+
+function shareSummaryExpiration(coupon) {
+  if (!coupon.fecha_fin) return "Sin hora de vencimiento definida";
+  return new Intl.DateTimeFormat("es-MX", {
+    timeZone: MEXICO_TIME_ZONE,
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(coupon.fecha_fin));
+}
+
+function couponSummaryLines(coupon, includeExpiration) {
+  const lines = [];
+  lines.push(String(coupon.titulo || "Cupón disponible").trim());
+  if (coupon.compra_minima) lines.push(`Compra mínima: ${coupon.compra_minima}`);
+  if (coupon.ahorro_maximo) lines.push(`Ahorra hasta: ${coupon.ahorro_maximo}`);
+  if (includeExpiration) lines.push(`Vigencia: ${shareSummaryExpiration(coupon)}`);
+  return lines;
+}
+
+function buildShareSummaryText(selectedCoupons, link, includeExpiration, totalActive) {
+  const date = shareSummaryDate();
+  const lines = [
+    `🔥 CUPONES DISPONIBLES HOY · ${date}`,
+    "",
+  ];
+
+  selectedCoupons.forEach((coupon, index) => {
+    const details = couponSummaryLines(coupon, includeExpiration);
+    lines.push(`✅ ${details[0]}`);
+    details.slice(1).forEach((detail) => lines.push(detail));
+    if (index < selectedCoupons.length - 1) lines.push("");
+  });
+
+  if (selectedCoupons.length < totalActive) {
+    lines.push("", `Y ${totalActive - selectedCoupons.length} cupones activos más disponibles en la página.`);
+  }
+
+  lines.push(
+    "",
+    "Consulta los cupones y canjéalos aquí 👇",
+    link,
+    "",
+    "Ingresa desde nuestra página para copiar y canjear el cupón en Mercado Libre."
+  );
+
+  return lines.join("\n");
+}
+
+function roundedRect(context, x, y, width, height, radius) {
+  const r = Math.min(radius, width / 2, height / 2);
+  context.beginPath();
+  context.moveTo(x + r, y);
+  context.arcTo(x + width, y, x + width, y + height, r);
+  context.arcTo(x + width, y + height, x, y + height, r);
+  context.arcTo(x, y + height, x, y, r);
+  context.arcTo(x, y, x + width, y, r);
+  context.closePath();
+}
+
+function wrapCanvasText(context, text, maxWidth) {
+  const words = String(text || "").split(/\s+/).filter(Boolean);
+  const lines = [];
+  let line = "";
+  for (const word of words) {
+    const test = line ? `${line} ${word}` : word;
+    if (context.measureText(test).width > maxWidth && line) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = test;
+    }
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+async function loadShareLogo() {
+  const image = new Image();
+  image.decoding = "async";
+  image.src = "../img/logo-ofertas-horizontal.png";
+  try {
+    await image.decode();
+    return image;
+  } catch {
+    return null;
+  }
+}
+
+async function drawShareSummaryImage(selectedCoupons, link, includeExpiration, totalActive) {
+  const canvas = shareSummaryCanvas;
+  const context = canvas.getContext("2d");
+  const width = 1080;
+  const headerHeight = 280;
+  const cardGap = 22;
+  const cardHeight = includeExpiration ? 188 : 154;
+  const footerHeight = 290;
+  const side = 70;
+  const height = headerHeight + selectedCoupons.length * (cardHeight + cardGap) + footerHeight;
+
+  canvas.width = width;
+  canvas.height = height;
+
+  context.fillStyle = "#f4f8f5";
+  context.fillRect(0, 0, width, height);
+
+  const gradient = context.createLinearGradient(0, 0, width, 0);
+  gradient.addColorStop(0, "#15a56d");
+  gradient.addColorStop(1, "#9edc78");
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, width, headerHeight);
+
+  const logo = await loadShareLogo();
+  if (logo) {
+    const logoWidth = 330;
+    const ratio = logo.naturalHeight / logo.naturalWidth;
+    context.drawImage(logo, side, 38, logoWidth, logoWidth * ratio);
+  }
+
+  context.fillStyle = "#ffffff";
+  context.font = "700 54px Arial, sans-serif";
+  context.fillText("CUPONES DISPONIBLES HOY", side, 170);
+  context.font = "400 29px Arial, sans-serif";
+  context.fillText(shareSummaryDate(), side, 218);
+  context.font = "600 25px Arial, sans-serif";
+  context.fillText(`${totalActive} cupones activos disponibles`, side, 258);
+
+  let y = headerHeight + cardGap;
+  selectedCoupons.forEach((coupon, index) => {
+    roundedRect(context, side, y, width - side * 2, cardHeight, 24);
+    context.fillStyle = "#ffffff";
+    context.fill();
+    context.strokeStyle = "#dce9e1";
+    context.lineWidth = 2;
+    context.stroke();
+
+    context.fillStyle = coupon.categoria === "bancarios" ? "#243b63" : "#16a36c";
+    roundedRect(context, side + 24, y + 24, 58, 58, 16);
+    context.fill();
+    context.fillStyle = "#ffffff";
+    context.font = "700 25px Arial, sans-serif";
+    context.textAlign = "center";
+    context.fillText(String(index + 1), side + 53, y + 62);
+    context.textAlign = "left";
+
+    const textX = side + 105;
+    const maxTextWidth = width - side - textX - 30;
+    context.fillStyle = "#14221b";
+    context.font = "700 34px Arial, sans-serif";
+    const titleLines = wrapCanvasText(context, coupon.titulo || "Cupón disponible", maxTextWidth).slice(0, 2);
+    titleLines.forEach((line, lineIndex) => context.fillText(line, textX, y + 55 + lineIndex * 38));
+
+    const detailY = y + (titleLines.length > 1 ? 125 : 100);
+    context.fillStyle = "#4c5d54";
+    context.font = "400 25px Arial, sans-serif";
+    const details = [];
+    if (coupon.compra_minima) details.push(`Compra mínima: ${coupon.compra_minima}`);
+    if (coupon.ahorro_maximo) details.push(`Ahorra hasta: ${coupon.ahorro_maximo}`);
+    context.fillText(details.join("   •   ") || "Consulta las condiciones en la página", textX, detailY);
+
+    if (includeExpiration) {
+      context.fillStyle = "#64736b";
+      context.font = "400 22px Arial, sans-serif";
+      context.fillText(`Vigencia: ${shareSummaryExpiration(coupon)}`, textX, detailY + 38);
+    }
+
+    y += cardHeight + cardGap;
+  });
+
+  const footerY = height - footerHeight;
+  context.fillStyle = "#ffffff";
+  context.fillRect(0, footerY, width, footerHeight);
+  context.fillStyle = "#17221d";
+  context.font = "700 34px Arial, sans-serif";
+  context.textAlign = "center";
+  context.fillText("Consulta y canjea los cupones aquí", width / 2, footerY + 72);
+
+  context.fillStyle = "#16a36c";
+  context.font = "700 31px Arial, sans-serif";
+  const linkLines = wrapCanvasText(context, link, width - 150).slice(0, 2);
+  linkLines.forEach((line, index) => context.fillText(line, width / 2, footerY + 125 + index * 38));
+
+  context.fillStyle = "#56655d";
+  context.font = "400 23px Arial, sans-serif";
+  context.fillText("Ingresa desde nuestra página para copiar y canjear en Mercado Libre.", width / 2, footerY + 225);
+  context.textAlign = "left";
+
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error("No fue posible crear la imagen.")), "image/png", 1);
+  });
+}
+
+function validShareLink(value) {
+  const text = String(value || "").trim();
+  try {
+    const url = new URL(text);
+    if (!["http:", "https:"].includes(url.protocol)) throw new Error();
+    return url.toString();
+  } catch {
+    throw new Error("Ingresa una liga válida para consultar los cupones.");
+  }
+}
+
+async function createShareSummary() {
+  generateShareSummary.disabled = true;
+  setMessage(shareSummaryMessage, "Generando resumen...");
+  try {
+    if (!coupons.length) await loadCoupons();
+    const active = activeCouponsForSharing();
+    if (!active.length) throw new Error("No hay cupones activos y vigentes para incluir.");
+
+    const link = validShareLink(shareSummaryLink.value);
+    const limitValue = shareSummaryLimit.value;
+    const limit = limitValue === "all" ? active.length : Number(limitValue);
+    const selected = active.slice(0, limit);
+    const includeExpiration = shareSummaryIncludeExpiration.checked;
+
+    shareSummaryText.value = buildShareSummaryText(selected, link, includeExpiration, active.length);
+    shareSummaryBlob = await drawShareSummaryImage(selected, link, includeExpiration, active.length);
+    if (shareSummaryPreview.src) URL.revokeObjectURL(shareSummaryPreview.src);
+    shareSummaryPreview.src = URL.createObjectURL(shareSummaryBlob);
+    shareSummaryResult.hidden = false;
+    copyShareSummaryText.disabled = false;
+    downloadShareSummaryImage.disabled = false;
+    shareShareSummaryImage.disabled = false;
+    setMessage(shareSummaryMessage, `✅ Resumen generado con ${selected.length} de ${active.length} cupones activos. Los códigos no se incluyen.`);
+  } catch (error) {
+    setMessage(shareSummaryMessage, readableError(error), true);
+  } finally {
+    generateShareSummary.disabled = false;
+  }
+}
+
+async function copyGeneratedShareText() {
+  if (!shareSummaryText.value) return;
+  try {
+    await navigator.clipboard.writeText(shareSummaryText.value);
+  } catch {
+    shareSummaryText.focus();
+    shareSummaryText.select();
+    document.execCommand("copy");
+  }
+  setMessage(shareSummaryMessage, "✅ Texto copiado. No contiene códigos de cupón.");
+}
+
+function downloadGeneratedShareImage() {
+  if (!shareSummaryBlob) return;
+  const url = URL.createObjectURL(shareSummaryBlob);
+  const anchor = document.createElement("a");
+  const day = new Intl.DateTimeFormat("es-MX", { timeZone: MEXICO_TIME_ZONE, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date()).replaceAll("/", "-");
+  anchor.href = url;
+  anchor.download = `cupones-disponibles-${day}.png`;
+  anchor.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+async function shareGeneratedImage() {
+  if (!shareSummaryBlob) return;
+  const file = new File([shareSummaryBlob], "cupones-disponibles.png", { type: "image/png" });
+  if (navigator.share && (!navigator.canShare || navigator.canShare({ files: [file] }))) {
+    try {
+      await navigator.share({
+        title: "Cupones disponibles hoy",
+        text: "Consulta los cupones activos desde nuestra página.",
+        files: [file],
+      });
+      return;
+    } catch (error) {
+      if (error?.name === "AbortError") return;
+    }
+  }
+  downloadGeneratedShareImage();
+  setMessage(shareSummaryMessage, "Tu navegador no permite compartir la imagen directamente; se descargó para que puedas enviarla.");
 }
 
 async function uploadCouponImage() {
@@ -1834,6 +2138,10 @@ tabAppearance.addEventListener("click", () => showSection("apariencia"));
 couponForm.addEventListener("submit", saveCoupon);
 couponList.addEventListener("click", handleCouponList);
 refreshCoupons.addEventListener("click", loadCoupons);
+generateShareSummary?.addEventListener("click", createShareSummary);
+copyShareSummaryText?.addEventListener("click", copyGeneratedShareText);
+downloadShareSummaryImage?.addEventListener("click", downloadGeneratedShareImage);
+shareShareSummaryImage?.addEventListener("click", shareGeneratedImage);
 newCoupon.addEventListener("click", resetCouponForm);
 cancelCoupon.addEventListener("click", resetCouponForm);
 

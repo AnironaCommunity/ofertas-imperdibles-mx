@@ -1477,3 +1477,136 @@ table td {
     flex: 1 1 100%;
   }
 }
+
+/* V75.0 · Resumen visual para compartir cupones activos */
+.panel-resumen-compartir {
+  padding: 14px 16px;
+  border-color: #d9e9df;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fcf9 100%);
+}
+
+.resumen-compartir-cabecera {
+  margin-bottom: 10px;
+}
+
+.resumen-compartir-cabecera h3 {
+  margin: 0 0 2px;
+}
+
+.resumen-compartir-cabecera p {
+  margin: 0;
+  font-size: 12px;
+  color: #64736b;
+}
+
+.resumen-compartir-controles {
+  display: grid;
+  grid-template-columns: minmax(260px, 2fr) minmax(160px, 1fr) auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.resumen-compartir-controles .campo {
+  margin: 0;
+}
+
+.resumen-switch {
+  min-height: 38px;
+  margin: 0;
+  padding: 7px 10px;
+  border: 1px solid #dce8e3;
+  border-radius: 10px;
+  background: #ffffff;
+  white-space: nowrap;
+}
+
+.resumen-compartir-acciones {
+  margin-top: 10px;
+  gap: 7px;
+}
+
+.resumen-compartir-acciones button {
+  min-height: 36px;
+  padding: 7px 12px;
+}
+
+.resumen-compartir-resultado {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.9fr) minmax(300px, 1.1fr);
+  gap: 14px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e2ece6;
+}
+
+.resumen-texto-columna,
+.resumen-imagen-columna {
+  min-width: 0;
+}
+
+.resumen-texto-columna label,
+.resumen-preview-etiqueta {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #34483e;
+}
+
+#resumen-texto {
+  min-height: 280px;
+  resize: vertical;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.resumen-imagen-columna {
+  padding: 9px;
+  border: 1px solid #dce8e3;
+  border-radius: 12px;
+  background: #eef5f0;
+}
+
+#resumen-imagen-preview {
+  display: block;
+  width: 100%;
+  max-height: 540px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(25, 63, 43, 0.1);
+}
+
+@media (max-width: 760px) {
+  .resumen-compartir-controles,
+  .resumen-compartir-resultado {
+    grid-template-columns: 1fr;
+  }
+
+  .resumen-switch {
+    min-height: 36px;
+  }
+
+  .resumen-compartir-acciones {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .resumen-compartir-acciones button {
+    width: 100%;
+  }
+
+  #resumen-texto {
+    min-height: 230px;
+  }
+}
+
+@media (max-width: 430px) {
+  .panel-resumen-compartir {
+    padding: 12px;
+  }
+
+  .resumen-compartir-acciones {
+    grid-template-columns: 1fr;
+  }
+}
