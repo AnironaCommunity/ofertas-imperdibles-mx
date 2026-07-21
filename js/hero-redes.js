@@ -17,27 +17,6 @@
   const CONFIG_CACHE_KEY = "ofertas_imperdibles_config_cache";
   const ONE_DAY = 24 * 60 * 60 * 1000;
 
-  function obtenerTextoFechaActual() {
-    const partes = new Intl.DateTimeFormat("es-MX", {
-      timeZone: "America/Mexico_City",
-      day: "numeric",
-      month: "long",
-    }).formatToParts(new Date());
-
-    const dia = partes.find((parte) => parte.type === "day")?.value || "";
-    const mes = partes.find((parte) => parte.type === "month")?.value || "";
-
-    return `Cupones de Mercado Libre | Hoy ${dia} de ${mes}`;
-  }
-
-  function actualizarTextoFechaActual() {
-    if (!barDescription) return;
-    barDescription.textContent = obtenerTextoFechaActual();
-    barDescription.hidden = false;
-  }
-
-  actualizarTextoFechaActual();
-
   function formatNumber(value) {
     const number = Number(value);
     return Number.isFinite(number)
@@ -109,7 +88,12 @@
       mainSlogan.hidden = config.mostrar_eslogan === false;
     }
 
-    actualizarTextoFechaActual();
+    if (barDescription) {
+      barDescription.textContent =
+        config.texto_descriptivo ||
+        "Cupones, promociones y novedades todos los días.";
+      barDescription.hidden = false;
+    }
 
     const whatsappButton = hero.querySelector(".hero-redes-whatsapp");
     const facebookButton = hero.querySelector(".hero-redes-facebook");
@@ -132,7 +116,9 @@
     document.dispatchEvent(new CustomEvent("ofertas:enlaces-principales-cargados", { detail: enlacesPrincipales }));
 
     const labels = {
-      textoDescriptivo: obtenerTextoFechaActual(),
+      textoDescriptivo:
+        config.texto_descriptivo ||
+        "Cupones, promociones y novedades todos los días.",
       botonTienda: config.nombre_boton_tienda || "Tienda",
       seccionTienda: config.nombre_seccion_tienda || "Cupones de tienda",
       botonBancarios: config.nombre_boton_bancarios || "Bancarios",
