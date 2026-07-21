@@ -1481,8 +1481,8 @@ table td {
 /* V75.0 · Resumen visual para compartir cupones activos */
 .panel-resumen-compartir {
   padding: 14px 16px;
-  border-color: #d9e9df;
-  background: linear-gradient(180deg, #ffffff 0%, #f8fcf9 100%);
+  border-color: #eadb31;
+  background: linear-gradient(180deg, #ffffff 0%, #fffdf0 100%);
 }
 
 .resumen-compartir-cabecera {
@@ -1501,7 +1501,7 @@ table td {
 
 .resumen-compartir-controles {
   display: grid;
-  grid-template-columns: minmax(260px, 2fr) minmax(160px, 1fr) auto;
+  grid-template-columns: minmax(260px, 2fr) minmax(160px, 1fr);
   gap: 10px;
   align-items: end;
 }
@@ -1564,7 +1564,7 @@ table td {
   padding: 9px;
   border: 1px solid #dce8e3;
   border-radius: 12px;
-  background: #eef5f0;
+  background: #fff9c7;
 }
 
 #resumen-imagen-preview {
