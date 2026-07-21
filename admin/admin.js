@@ -612,21 +612,28 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
   const canvas = shareSummaryCanvas;
   const context = canvas.getContext("2d");
   const width = 1080;
+  const side = 40;
   const topImageHeight = 150;
-  const headerHeight = 118;
-  const cardGap = 16;
-  const cardHeight = 142;
-  const columnGap = 18;
-  const footerHeight = 220;
-  const side = 42;
-  const columns = 2;
-  const rows = Math.ceil(selectedCoupons.length / columns);
-  const cardsAreaHeight = rows * cardHeight + Math.max(0, rows - 1) * cardGap;
-  const height = topImageHeight + headerHeight + 16 + cardsAreaHeight + 18 + footerHeight;
+  const headerHeight = 142;
+  const sectionTitleHeight = 56;
+  const columns = 4;
+  const columnGap = 16;
+  const rowGap = 18;
+  const cardHeight = 230;
+  const bankCardHeight = 190;
+  const footerHeight = 210;
+
+  const storeCoupons = selectedCoupons.filter((coupon) => coupon.categoria !== "bancarios");
+  const bankCoupons = selectedCoupons.filter((coupon) => coupon.categoria === "bancarios");
+  const storeRows = Math.ceil(storeCoupons.length / columns);
+  const bankRows = Math.ceil(bankCoupons.length / columns);
+  const storeAreaHeight = storeRows ? storeRows * cardHeight + Math.max(0, storeRows - 1) * rowGap : 0;
+  const bankAreaHeight = bankRows ? sectionTitleHeight + bankRows * bankCardHeight + Math.max(0, bankRows - 1) * rowGap : 0;
+  const contentGap = storeCoupons.length && bankCoupons.length ? 26 : 0;
+  const height = topImageHeight + headerHeight + 20 + storeAreaHeight + contentGap + bankAreaHeight + 24 + footerHeight;
 
   canvas.width = width;
   canvas.height = height;
-
   context.fillStyle = "#ffffff";
   context.fillRect(0, 0, width, height);
 
@@ -635,150 +642,220 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
     loadShareImage("../img/logo-ofertas-transparente.png"),
   ]);
 
-  // Imagen superior de Mercado Libre.
   context.fillStyle = "#ffe600";
   context.fillRect(0, 0, width, topImageHeight);
-  if (marketplaceLogo) {
-    drawImageContain(context, marketplaceLogo, 0, 0, width, topImageHeight);
-  }
+  if (marketplaceLogo) drawImageContain(context, marketplaceLogo, 0, 0, width, topImageHeight);
 
-  // Encabezado compacto.
   const headerY = topImageHeight;
   context.fillStyle = "#ffffff";
   context.fillRect(0, headerY, width, headerHeight);
-
-  context.fillStyle = "#ffe600";
-  context.font = "900 52px Arial, sans-serif";
+  context.fillStyle = "#f5c400";
+  context.font = "900 56px Arial, sans-serif";
   context.textAlign = "left";
-  context.fillText("⚡", side, headerY + 58);
-
-  context.fillStyle = "#101820";
-  context.font = "900 42px Arial, sans-serif";
-  context.fillText("CUPONES DISPONIBLES HOY", side + 70, headerY + 52);
-
-  context.fillStyle = "#1b3a6f";
-  context.font = "700 26px Arial, sans-serif";
-  context.fillText(`Mercado Libre  |  ${shareSummaryDate()}`, side + 72, headerY + 91);
-
-  context.fillStyle = "#ffe600";
-  roundedRect(context, side, headerY + 105, width - side * 2, 5, 3);
+  context.fillText("⚡", side + 8, headerY + 66);
+  context.fillStyle = "#102a6b";
+  context.font = "900 43px Arial, sans-serif";
+  context.fillText("CUPONES DISPONIBLES HOY", side + 78, headerY + 62);
+  context.fillStyle = "#15377d";
+  roundedRect(context, side + 80, headerY + 80, 220, 42, 21);
   context.fill();
+  context.fillStyle = "#ffffff";
+  context.font = "700 24px Arial, sans-serif";
+  context.textAlign = "center";
+  context.fillText("Mercado Libre", side + 190, headerY + 109);
+  context.fillStyle = "#102a6b";
+  context.font = "700 23px Arial, sans-serif";
+  context.textAlign = "left";
+  context.fillText(`📅  ${shareSummaryDate()}`, side + 330, headerY + 109);
+  context.fillStyle = "#f3c800";
+  context.fillRect(side, headerY + 134, width - side * 2, 4);
 
   const contentWidth = width - side * 2;
-  const cardWidth = (contentWidth - columnGap) / columns;
-  const cardsStartY = topImageHeight + headerHeight + 16;
+  const cardWidth = (contentWidth - columnGap * (columns - 1)) / columns;
+  let currentY = topImageHeight + headerHeight + 20;
 
-  selectedCoupons.forEach((coupon, index) => {
+  function normalizeDiscount(coupon) {
+    const raw = String(coupon.titulo || "Cupón disponible").trim();
+    if (/\boff\b/i.test(raw)) return raw.replace(/\boff\b/i, "OFF");
+    if (/^(?:\$\s*)?[\d,.]+\s*%?$/.test(raw)) return `${raw} OFF`;
+    return raw;
+  }
+
+  function bankInfo(coupon) {
+    const source = `${coupon.titulo || ""} ${coupon.codigo || ""}`.toLowerCase();
+    const banks = [
+      { keys: ["bbva", "bancomer"], name: "BBVA", color: "#ffffff", accent: "#35a8e0" },
+      { keys: ["hsbc"], name: "HSBC", color: "#ffffff", accent: "#db0011" },
+      { keys: ["banorte"], name: "BANORTE", color: "#ffffff", accent: "#e30613" },
+      { keys: ["citibanamex", "banamex", "bnmx"], name: "citibanamex", color: "#ffffff", accent: "#ef3340" },
+      { keys: ["santander"], name: "Santander", color: "#ffffff", accent: "#ec0000" },
+      { keys: ["american express", "amex"], name: "AMERICAN EXPRESS", color: "#ffffff", accent: "#2e77bb" },
+      { keys: ["scotiabank", "scotia"], name: "Scotiabank", color: "#ffffff", accent: "#ed1b2f" },
+      { keys: ["inbursa"], name: "INBURSA", color: "#ffffff", accent: "#ffffff" },
+      { keys: ["hsbc"], name: "HSBC", color: "#ffffff", accent: "#db0011" },
+      { keys: ["mifel"], name: "MIFEL", color: "#ffffff", accent: "#ffffff" },
+      { keys: ["afirme"], name: "AFIRME", color: "#ffffff", accent: "#ffffff" },
+      { keys: ["mercado pago", "melimas", "meli+"], name: "Mercado Pago", color: "#ffffff", accent: "#ffe600" },
+    ];
+    return banks.find((bank) => bank.keys.some((key) => source.includes(key))) || {
+      name: "Cupón bancario",
+      color: "#ffffff",
+      accent: "#ffe600",
+    };
+  }
+
+  function drawButton(x, y, widthValue, label) {
+    roundedRect(context, x, y, widthValue, 42, 10);
+    context.fillStyle = "#ffffff";
+    context.fill();
+    context.fillStyle = "#102a6b";
+    context.font = "900 21px Arial, sans-serif";
+    context.textAlign = "center";
+    context.fillText(label, x + widthValue / 2, y + 29);
+  }
+
+  function drawStoreCard(coupon, index) {
     const column = index % columns;
     const row = Math.floor(index / columns);
     const x = side + column * (cardWidth + columnGap);
-    const y = cardsStartY + row * (cardHeight + cardGap);
-
-    // Tarjeta blanca y compacta.
+    const y = currentY + row * (cardHeight + rowGap);
+    const gradient = context.createLinearGradient(x, y, x, y + cardHeight);
+    gradient.addColorStop(0, "#2350b8");
+    gradient.addColorStop(1, "#071f6f");
     context.save();
-    context.shadowColor = "rgba(17, 24, 39, 0.10)";
+    context.shadowColor = "rgba(13, 39, 112, .18)";
     context.shadowBlur = 12;
-    context.shadowOffsetY = 4;
-    roundedRect(context, x, y, cardWidth, cardHeight, 20);
-    context.fillStyle = "#ffffff";
+    context.shadowOffsetY = 5;
+    roundedRect(context, x, y, cardWidth, cardHeight, 18);
+    context.fillStyle = gradient;
     context.fill();
     context.restore();
-    context.strokeStyle = "#e7e7e7";
-    context.lineWidth = 2;
-    roundedRect(context, x, y, cardWidth, cardHeight, 20);
-    context.stroke();
 
-    // Círculo amarillo con el descuento.
-    const circleX = x + 76;
-    const circleY = y + cardHeight / 2;
-    const radius = 54;
-    context.beginPath();
-    context.arc(circleX, circleY, radius, 0, Math.PI * 2);
-    context.fillStyle = "#ffe600";
-    context.fill();
-    context.strokeStyle = "#f4c900";
-    context.lineWidth = 3;
-    context.stroke();
-
-    const title = String(coupon.titulo || "Cupón disponible").trim();
-    context.fillStyle = "#163177";
+    const discount = normalizeDiscount(coupon);
     context.textAlign = "center";
-    context.font = title.length > 11 ? "900 24px Arial, sans-serif" : "900 29px Arial, sans-serif";
-    const badgeLines = wrapCanvasText(context, title, radius * 1.55).slice(0, 2);
-    const badgeStartY = circleY - ((badgeLines.length - 1) * 14) + 9;
-    badgeLines.forEach((line, lineIndex) => context.fillText(line, circleX, badgeStartY + lineIndex * 29));
-
-    // Estructura solicitada: descuento, compra mínima y ahorro máximo.
-    const textX = x + 150;
-    const maxTextWidth = cardWidth - 170;
-    context.textAlign = "left";
-    context.fillStyle = "#111827";
-    context.font = "900 29px Arial, sans-serif";
-    const titleLines = wrapCanvasText(context, title, maxTextWidth).slice(0, 1);
-    context.fillText(titleLines[0] || "Cupón disponible", textX, y + 39);
-
-    context.strokeStyle = "#d9d9d9";
+    context.fillStyle = "#ffe600";
+    context.font = discount.length > 12 ? "900 31px Arial, sans-serif" : "900 38px Arial, sans-serif";
+    context.fillText(discount, x + cardWidth / 2, y + 54);
+    context.strokeStyle = "rgba(255,255,255,.75)";
     context.lineWidth = 2;
-    context.setLineDash([5, 5]);
+    context.setLineDash([7, 7]);
     context.beginPath();
-    context.moveTo(textX, y + 54);
-    context.lineTo(x + cardWidth - 22, y + 54);
+    context.moveTo(x + 18, y + 76);
+    context.lineTo(x + cardWidth - 18, y + 76);
     context.stroke();
     context.setLineDash([]);
 
-    context.fillStyle = "#263238";
-    context.font = "600 21px Arial, sans-serif";
-    const minimum = coupon.compra_minima || "Consulta condiciones";
-    context.fillText(`Compra mínima: ${minimum}`, textX, y + 88);
-
-    const saving = coupon.ahorro_maximo || "Consulta condiciones";
-    context.fillStyle = "#263238";
-    context.fillText("Ahorra hasta:", textX, y + 120);
+    context.textAlign = "left";
+    context.fillStyle = "#ffffff";
+    context.font = "700 18px Arial, sans-serif";
+    context.fillText(`Compra mínima: ${coupon.compra_minima || "Consulta"}`, x + 18, y + 112);
+    context.fillText("Ahorra hasta:", x + 18, y + 146);
     const labelWidth = context.measureText("Ahorra hasta:").width;
-    context.fillStyle = "#0a9b48";
-    context.font = "800 22px Arial, sans-serif";
-    context.fillText(String(saving), textX + labelWidth + 8, y + 120);
-  });
+    context.fillStyle = "#78df28";
+    context.font = "900 22px Arial, sans-serif";
+    context.fillText(String(coupon.ahorro_maximo || "Consulta"), x + 24 + labelWidth, y + 146);
+    drawButton(x + 14, y + cardHeight - 55, cardWidth - 28, "VER CUPÓN");
+  }
 
-  const footerY = cardsStartY + cardsAreaHeight + 18;
-  context.fillStyle = "#ffffff";
-  context.fillRect(0, footerY, width, footerHeight);
+  storeCoupons.forEach(drawStoreCard);
+  currentY += storeAreaHeight;
 
+  if (bankCoupons.length) {
+    if (storeCoupons.length) currentY += contentGap;
+    context.strokeStyle = "#f0c400";
+    context.lineWidth = 3;
+    context.beginPath();
+    context.moveTo(side, currentY + 27);
+    context.lineTo(width / 2 - 190, currentY + 27);
+    context.moveTo(width / 2 + 190, currentY + 27);
+    context.lineTo(width - side, currentY + 27);
+    context.stroke();
+    context.fillStyle = "#102a6b";
+    context.font = "900 32px Arial, sans-serif";
+    context.textAlign = "center";
+    context.fillText("🏦  CUPONES BANCARIOS", width / 2, currentY + 38);
+    currentY += sectionTitleHeight;
+
+    bankCoupons.forEach((coupon, index) => {
+      const column = index % columns;
+      const row = Math.floor(index / columns);
+      const x = side + column * (cardWidth + columnGap);
+      const y = currentY + row * (bankCardHeight + rowGap);
+      const gradient = context.createLinearGradient(x, y, x, y + bankCardHeight);
+      gradient.addColorStop(0, "#214bb0");
+      gradient.addColorStop(1, "#071d69");
+      context.save();
+      context.shadowColor = "rgba(13, 39, 112, .16)";
+      context.shadowBlur = 10;
+      context.shadowOffsetY = 4;
+      roundedRect(context, x, y, cardWidth, bankCardHeight, 16);
+      context.fillStyle = gradient;
+      context.fill();
+      context.restore();
+
+      const bank = bankInfo(coupon);
+      context.fillStyle = bank.color;
+      context.font = bank.name.length > 13 ? "900 17px Arial, sans-serif" : "900 24px Arial, sans-serif";
+      context.textAlign = "center";
+      context.fillText(bank.name, x + cardWidth / 2, y + 34);
+      context.fillStyle = bank.accent;
+      context.fillRect(x + 26, y + 43, cardWidth - 52, 3);
+
+      context.fillStyle = "#ffe600";
+      context.font = "900 31px Arial, sans-serif";
+      context.fillText(normalizeDiscount(coupon), x + cardWidth / 2, y + 82);
+      context.strokeStyle = "rgba(255,255,255,.72)";
+      context.lineWidth = 2;
+      context.setLineDash([6, 6]);
+      context.beginPath();
+      context.moveTo(x + 20, y + 98);
+      context.lineTo(x + cardWidth - 20, y + 98);
+      context.stroke();
+      context.setLineDash([]);
+
+      context.fillStyle = "#ffffff";
+      context.font = "700 17px Arial, sans-serif";
+      context.fillText("Cupón Bancario", x + cardWidth / 2, y + 124);
+      drawButton(x + 12, y + bankCardHeight - 50, cardWidth - 24, "VER CUPÓN");
+    });
+    currentY += bankRows * bankCardHeight + Math.max(0, bankRows - 1) * rowGap;
+  }
+
+  const footerY = currentY + 24;
   context.fillStyle = "#ffe600";
-  roundedRect(context, side, footerY + 4, width - side * 2, 104, 22);
+  roundedRect(context, side, footerY, width - side * 2, 96, 22);
   context.fill();
-
-  context.fillStyle = "#14213d";
+  context.fillStyle = "#102a6b";
   context.font = "900 30px Arial, sans-serif";
   context.textAlign = "center";
-  context.fillText("Consulta todos los cupones ingresando aquí", width / 2, footerY + 43);
-
-  context.fillStyle = "#17347a";
-  roundedRect(context, side + 150, footerY + 58, width - (side + 150) * 2, 36, 18);
+  context.fillText("Consulta todos los cupones aquí", width / 2, footerY + 38);
+  context.fillStyle = "#15377d";
+  roundedRect(context, side + 215, footerY + 50, width - (side + 215) * 2, 34, 17);
   context.fill();
   context.fillStyle = "#ffe600";
-  context.font = "800 22px Arial, sans-serif";
-  const linkLines = wrapCanvasText(context, link, width - 380).slice(0, 1);
-  context.fillText(linkLines[0] || link, width / 2, footerY + 84);
+  context.font = "800 20px Arial, sans-serif";
+  context.fillText(wrapCanvasText(context, link, width - 500)[0] || link, width / 2, footerY + 74);
 
-  // Nota inferior sin el círculo verde ni el carrito.
+  context.fillStyle = "#f7f7f7";
+  roundedRect(context, side, footerY + 112, width - side * 2, 78, 16);
+  context.fill();
   context.textAlign = "left";
-  context.fillStyle = "#4b5563";
-  context.font = "400 18px Arial, sans-serif";
-  context.fillText("Los códigos se muestran al ingresar desde nuestra página.", side, footerY + 146);
-  context.fillText("Así podrás copiarlos y canjearlos directamente en Mercado Libre.", side, footerY + 173);
+  context.fillStyle = "#334155";
+  context.font = "400 16px Arial, sans-serif";
+  context.fillText("Los códigos se muestran al ingresar desde nuestra página.", side + 28, footerY + 143);
+  context.fillText("Así podrás copiarlos y canjearlos directamente en Mercado Libre.", side + 28, footerY + 168);
 
   if (offersLogo) {
-    const logoWidth = 230;
+    const logoWidth = 215;
     const logoHeight = logoWidth * (offersLogo.naturalHeight / offersLogo.naturalWidth);
-    context.drawImage(offersLogo, width - side - logoWidth, footerY + 130, logoWidth, logoHeight);
+    context.drawImage(offersLogo, width - side - logoWidth, footerY + 125, logoWidth, logoHeight);
   }
 
   if (selectedCoupons.length < totalActive) {
-    context.fillStyle = "#14213d";
-    context.font = "700 17px Arial, sans-serif";
+    context.fillStyle = "#102a6b";
+    context.font = "700 16px Arial, sans-serif";
     context.textAlign = "right";
-    context.fillText(`+ ${totalActive - selectedCoupons.length} cupones más disponibles`, width - side, footerY + 205);
+    context.fillText(`+ ${totalActive - selectedCoupons.length} cupones más disponibles`, width - side, footerY + 206);
   }
 
   return new Promise((resolve, reject) => {
