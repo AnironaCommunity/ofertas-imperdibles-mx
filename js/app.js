@@ -152,7 +152,7 @@ const SECCIONES_URL = {
 };
 
 const TITULOS_SECCION = {
-  tienda: null,
+  tienda: "Cupones Tienda | Ofertas Imperdibles MX",
   bancarios: "Cupones Bancarios | Ofertas Imperdibles MX",
   mercadolibre: "Ofertas Mercado Libre | Ofertas Imperdibles MX",
   amazon: "Ofertas Amazon | Ofertas Imperdibles MX",
@@ -229,24 +229,10 @@ function actualizarContadoresSecciones() {
   );
 }
 
-function obtenerTituloCuponesHoy() {
-  const partes = new Intl.DateTimeFormat("es-MX", {
-    timeZone: "America/Mexico_City",
-    day: "numeric",
-    month: "long",
-  }).formatToParts(new Date());
-
-  const dia = partes.find((parte) => parte.type === "day")?.value || "";
-  const mes = partes.find((parte) => parte.type === "month")?.value || "";
-
-  return `Cupones de Mercado Libre | Hoy ${dia} de ${mes}`;
-}
-
 function actualizarTituloSeccion(seccion) {
   document.title =
-    seccion === "tienda"
-      ? obtenerTituloCuponesHoy()
-      : TITULOS_SECCION[seccion] || "Ofertas Imperdibles MX";
+    TITULOS_SECCION[seccion] ||
+    "Ofertas Imperdibles MX";
 }
 
 const VISTA_A_SECCION_URL = {
@@ -897,6 +883,8 @@ function renderizarCategoria() {
   limpiarVista();
 
   const cuponesCategoria = todosLosCupones
+    /* La activación manual tiene prioridad sobre la vigencia. */
+    .filter((cupon) => cupon.activo !== false)
     .filter((cupon) => normalizarCategoria(cupon) === categoriaActiva)
     .filter((cupon) => couponTimeState(cupon).state !== "finalizado")
     .sort((a, b) => {
