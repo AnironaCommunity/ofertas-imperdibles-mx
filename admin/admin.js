@@ -675,10 +675,38 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
   let currentY = topImageHeight + headerHeight + 20;
 
   function normalizeDiscount(coupon) {
-    const raw = String(coupon.titulo || "Cupón disponible").trim();
+    const raw = String(coupon.titulo || "Cupón disponible")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    // Extrae únicamente el beneficio para evitar textos largos como
+    // “15% OFF BANORTE” dentro de las tarjetas bancarias.
+    const percentage = raw.match(/(\d+(?:[.,]\d+)?)\s*%/i);
+    if (percentage) return `${percentage[1]}% OFF`;
+
+    const money = raw.match(/\$\s*([\d,.]+)/i);
+    if (money) return `$${money[1]} OFF`;
+
+    const numericOff = raw.match(/(?:^|\s)([\d,.]+)\s*OFF\b/i);
+    if (numericOff) return `${numericOff[1]} OFF`;
+
     if (/\boff\b/i.test(raw)) return raw.replace(/\boff\b/i, "OFF");
     if (/^(?:\$\s*)?[\d,.]+\s*%?$/.test(raw)) return `${raw} OFF`;
     return raw;
+  }
+
+  function drawFittedText(text, x, y, maxWidth, preferredSize, minimumSize, weight = 900) {
+    const safeText = String(text || "").trim();
+    let fontSize = preferredSize;
+
+    while (fontSize > minimumSize) {
+      context.font = `${weight} ${fontSize}px Arial, sans-serif`;
+      if (context.measureText(safeText).width <= maxWidth) break;
+      fontSize -= 1;
+    }
+
+    context.fillText(safeText, x, y);
+    return fontSize;
   }
 
   function bankInfo(coupon) {
@@ -734,8 +762,7 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
     const discount = normalizeDiscount(coupon);
     context.textAlign = "center";
     context.fillStyle = "#ffe600";
-    context.font = discount.length > 12 ? "900 31px Arial, sans-serif" : "900 38px Arial, sans-serif";
-    context.fillText(discount, x + cardWidth / 2, y + 54);
+    drawFittedText(discount, x + cardWidth / 2, y + 54, cardWidth - 34, 38, 23);
     context.strokeStyle = "rgba(255,255,255,.75)";
     context.lineWidth = 2;
     context.setLineDash([7, 7]);
@@ -795,15 +822,20 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
 
       const bank = bankInfo(coupon);
       context.fillStyle = bank.color;
-      context.font = bank.name.length > 13 ? "900 17px Arial, sans-serif" : "900 24px Arial, sans-serif";
       context.textAlign = "center";
-      context.fillText(bank.name, x + cardWidth / 2, y + 34);
+      drawFittedText(bank.name, x + cardWidth / 2, y + 34, cardWidth - 34, 24, 14);
       context.fillStyle = bank.accent;
       context.fillRect(x + 26, y + 43, cardWidth - 52, 3);
 
       context.fillStyle = "#ffe600";
-      context.font = "900 31px Arial, sans-serif";
-      context.fillText(normalizeDiscount(coupon), x + cardWidth / 2, y + 82);
+      drawFittedText(
+        normalizeDiscount(coupon),
+        x + cardWidth / 2,
+        y + 82,
+        cardWidth - 30,
+        31,
+        18
+      );
       context.strokeStyle = "rgba(255,255,255,.72)";
       context.lineWidth = 2;
       context.setLineDash([6, 6]);
