@@ -694,6 +694,60 @@ Descuento máximo: $180"
           </div>
         </section>
 
+        <section class="panel panel-lista-comunidad">
+          <div class="cabecera-panel">
+            <div>
+              <h3>Lista para compartir · Comunidad Anirona</h3>
+              <p class="descripcion-panel">
+                Genera una lista con todos los productos activos publicados en
+                Comunidad Anirona.
+              </p>
+            </div>
+
+            <button
+              id="generar-lista-comunidad"
+              class="boton-principal"
+              type="button"
+            >
+              Generar lista
+            </button>
+          </div>
+
+          <textarea
+            id="texto-lista-comunidad"
+            class="texto-lista-comunidad"
+            rows="14"
+            readonly
+            placeholder="Aquí aparecerá la lista de productos de Comunidad Anirona."
+          ></textarea>
+
+          <div class="acciones acciones-lista-comunidad">
+            <button
+              id="copiar-lista-comunidad"
+              class="boton-secundario"
+              type="button"
+              disabled
+            >
+              📋 Copiar lista
+            </button>
+
+            <button
+              id="descargar-lista-comunidad"
+              class="boton-secundario"
+              type="button"
+              disabled
+            >
+              📄 Descargar TXT
+            </button>
+          </div>
+
+          <p
+            id="mensaje-lista-comunidad"
+            class="mensaje"
+            aria-live="polite"
+          ></p>
+        </section>
+
         <section class="panel">
           <div class="cabecera-panel">
             <h3>Publicidades registradas</h3>

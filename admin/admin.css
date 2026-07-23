@@ -1610,3 +1610,49 @@ table td {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ================= LISTA PARA COMPARTIR · COMUNIDAD ANIRONA ================= */
+.panel-lista-comunidad .cabecera-panel {
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.texto-lista-comunidad {
+  width: 100%;
+  min-height: 270px;
+  margin-top: 16px;
+  padding: 16px;
+  resize: vertical;
+  border: 1px solid #d9dee8;
+  border-radius: 12px;
+  background: #f8fafc;
+  color: #172033;
+  font: inherit;
+  line-height: 1.55;
+  box-sizing: border-box;
+}
+
+.texto-lista-comunidad:focus {
+  outline: 2px solid rgba(16, 185, 129, 0.2);
+  border-color: #10b981;
+}
+
+.acciones-lista-comunidad {
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 700px) {
+  .panel-lista-comunidad .cabecera-panel {
+    flex-direction: column;
+  }
+
+  .panel-lista-comunidad .cabecera-panel > button {
+    width: 100%;
+  }
+
+  .acciones-lista-comunidad button {
+    flex: 1 1 100%;
+  }
+}

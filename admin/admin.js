@@ -151,6 +151,21 @@ const newAd = document.querySelector("#nueva-publicidad");
 const refreshAds = document.querySelector("#actualizar-publicidad");
 const adList = document.querySelector("#ad-list");
 const adListMessage = document.querySelector("#ad-list-message");
+const generateCommunityList = document.querySelector(
+  "#generar-lista-comunidad"
+);
+const communityListText = document.querySelector(
+  "#texto-lista-comunidad"
+);
+const copyCommunityList = document.querySelector(
+  "#copiar-lista-comunidad"
+);
+const downloadCommunityList = document.querySelector(
+  "#descargar-lista-comunidad"
+);
+const communityListMessage = document.querySelector(
+  "#mensaje-lista-comunidad"
+);
 
 let adminPassword = sessionStorage.getItem("adminPassword") || "";
 let coupons = [];
@@ -2006,6 +2021,115 @@ function renderAds() {
   }
 }
 
+function communityProducts() {
+  return ads
+    .filter((ad) => {
+      const sections = normalizarSeccionesPublicidad(
+        ad.secciones,
+        ad.categoria
+      );
+
+      return Boolean(ad.activo) && sections.includes("comunidad_anirona");
+    })
+    .sort((a, b) => {
+      const orderDifference = Number(a.orden || 0) - Number(b.orden || 0);
+
+      if (orderDifference !== 0) return orderDifference;
+
+      return String(a.titulo || "").localeCompare(
+        String(b.titulo || ""),
+        "es",
+        { sensitivity: "base" }
+      );
+    });
+}
+
+function buildCommunityListText() {
+  const products = communityProducts();
+
+  if (!products.length) return "";
+
+  return products
+    .map((product) => {
+      const publishedPrice = product.precio_publicado || "No disponible";
+      const couponPrice = product.precio_cupon || "No aplica";
+      const couponCode = product.codigo_cupon || "No aplica";
+      const link = product.enlace || "No disponible";
+
+      return [
+        `Nombre del producto: ${product.titulo || "Sin nombre"}`,
+        `Precio publicado: ${publishedPrice}`,
+        `Precio con cupón: ${couponPrice}`,
+        `Utiliza el cupón: ${couponCode}`,
+        `Link del producto: ${link}`,
+      ].join("\n");
+    })
+    .join("\n--\n");
+}
+
+function generateCommunityProductsList() {
+  const text = buildCommunityListText();
+  const total = communityProducts().length;
+
+  communityListText.value = text;
+  copyCommunityList.disabled = !text;
+  downloadCommunityList.disabled = !text;
+
+  if (!text) {
+    setMessage(
+      communityListMessage,
+      "No hay productos activos publicados en Comunidad Anirona.",
+      true
+    );
+    return;
+  }
+
+  setMessage(
+    communityListMessage,
+    `${total} producto${total === 1 ? "" : "s"} incluido${
+      total === 1 ? "" : "s"
+    } en la lista.`
+  );
+}
+
+async function copyCommunityProductsList() {
+  const text = communityListText.value.trim();
+
+  if (!text) return;
+
+  try {
+    await navigator.clipboard.writeText(text);
+    setMessage(communityListMessage, "Lista copiada al portapapeles.");
+  } catch {
+    communityListText.focus();
+    communityListText.select();
+    document.execCommand("copy");
+    setMessage(communityListMessage, "Lista copiada al portapapeles.");
+  }
+}
+
+function downloadCommunityProductsList() {
+  const text = communityListText.value.trim();
+
+  if (!text) return;
+
+  const blob = new Blob([`\ufeff${text}`], {
+    type: "text/plain;charset=utf-8",
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  const date = new Date().toISOString().slice(0, 10);
+
+  link.href = url;
+  link.download = `productos-comunidad-anirona-${date}.txt`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+
+  setMessage(communityListMessage, "Archivo TXT descargado.");
+}
+
 async function loadAds() {
   refreshAds.disabled = true;
   setMessage(adListMessage, "Cargando publicidad...");
@@ -2311,6 +2435,16 @@ tabCoupons.addEventListener("click", () => showSection("cupones"));
 tabAds.addEventListener("click", () => showSection("publicidad"));
 tabEvents?.addEventListener("click", () => showSection("eventos"));
 tabAppearance.addEventListener("click", () => showSection("apariencia"));
+
+generateCommunityList?.addEventListener(
+  "click",
+  generateCommunityProductsList
+);
+copyCommunityList?.addEventListener("click", copyCommunityProductsList);
+downloadCommunityList?.addEventListener(
+  "click",
+  downloadCommunityProductsList
+);
 
 couponForm.addEventListener("submit", saveCoupon);
 couponList.addEventListener("click", handleCouponList);
