@@ -4993,3 +4993,37 @@ body {
     max-width: 90%;
   }
 }
+
+
+/* V76.6 — Iconos de marketplaces realmente simétricos */
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 5px !important;
+}
+
+.tarjeta-oferta-anirona .oferta-logo-marketplace,
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre .oferta-logo-marketplace,
+.tarjeta-oferta-anirona .oferta-ver-amazon .oferta-logo-marketplace {
+  display: block !important;
+  width: 32px !important;
+  height: 32px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
+  margin: 0 auto !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  transform: none !important;
+}
+
+@media (max-width: 520px) {
+  .tarjeta-oferta-anirona .oferta-logo-marketplace,
+  .tarjeta-oferta-anirona .oferta-ver-mercado-libre .oferta-logo-marketplace,
+  .tarjeta-oferta-anirona .oferta-ver-amazon .oferta-logo-marketplace {
+    width: 30px !important;
+    height: 30px !important;
+    max-width: 30px !important;
+    max-height: 30px !important;
+  }
+}
