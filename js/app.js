@@ -1379,13 +1379,13 @@ function crearTarjetaOferta(publicidad, categoria) {
   const accionesAnirona = `
     ${enlaceMercadoLibre ? `
       <button class="oferta-ver oferta-ver-mercado-libre" type="button" aria-label="Ver en Mercado Libre" title="Ver en Mercado Libre">
-        <img class="oferta-logo-marketplace" src="img/mercado-libre-boton.png" alt="" aria-hidden="true" />
+        <img class="oferta-logo-marketplace" src="img/mercado-libre-logo.png" alt="" aria-hidden="true" />
         <span class="texto-accesible">Ver en Mercado Libre</span>
       </button>
     ` : ""}
     ${enlaceAmazon ? `
       <button class="oferta-ver oferta-ver-amazon" type="button" aria-label="Ver en Amazon" title="Ver en Amazon">
-        <img class="oferta-logo-marketplace" src="img/amazon-boton.png" alt="" aria-hidden="true" />
+        <img class="oferta-logo-marketplace" src="img/amazon-logo.png" alt="" aria-hidden="true" />
         <span class="texto-accesible">Ver en Amazon</span>
       </button>
     ` : ""}

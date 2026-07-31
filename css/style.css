@@ -4959,3 +4959,37 @@ body {
     min-width: 38px !important;
   }
 }
+
+
+/* V76.5 — Logos simétricos y centrados en acciones Anirona */
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver {
+  position: relative;
+  overflow: hidden;
+}
+
+.tarjeta-oferta-anirona .oferta-logo-marketplace {
+  display: block;
+  width: auto;
+  max-width: 88%;
+  height: 27px;
+  max-height: 27px;
+  margin: auto;
+  object-fit: contain;
+  object-position: center;
+}
+
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre .oferta-logo-marketplace,
+.tarjeta-oferta-anirona .oferta-ver-amazon .oferta-logo-marketplace {
+  height: 27px;
+  max-height: 27px;
+}
+
+@media (max-width: 520px) {
+  .tarjeta-oferta-anirona .oferta-logo-marketplace,
+  .tarjeta-oferta-anirona .oferta-ver-mercado-libre .oferta-logo-marketplace,
+  .tarjeta-oferta-anirona .oferta-ver-amazon .oferta-logo-marketplace {
+    height: 24px;
+    max-height: 24px;
+    max-width: 90%;
+  }
+}
