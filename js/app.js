@@ -19,6 +19,11 @@ const modalCodigo = document.querySelector("#modal-codigo");
 const modalCodigoBloque = document.querySelector("#modal-codigo-bloque");
 const modalCuponOculto = document.querySelector("#modal-cupon-oculto");
 
+const modalCuponesAnirona = document.querySelector("#modal-cupones-anirona");
+const listaCuponesAnirona = document.querySelector("#lista-cupones-anirona");
+const continuarAnirona = document.querySelector("#continuar-anirona");
+const cerrarModalAnirona = document.querySelector("#cerrar-modal-anirona");
+
 const tabTienda = document.querySelector("#tab-tienda");
 const tabBancarios = document.querySelector("#tab-bancarios");
 const vistaCupones = document.querySelector("#vista-cupones");
@@ -130,6 +135,7 @@ let vistaActiva = "cupones";
 let todosLosCupones = [];
 let todasLasPublicidades = [];
 let temporizadorEstados = null;
+let publicidadAnironaPendiente = null;
 
 const SECCIONES_URL = {
   tienda: {
@@ -1363,9 +1369,12 @@ function crearTarjetaOferta(publicidad, categoria) {
   articulo.dataset.publicidadId = String(publicidad.id || "");
 
   const plataforma = datosPlataformaPublicidad(publicidad);
+  const esComunidadAnirona = categoria === "comunidad_anirona";
   const precioPublicado = String(publicidad.precio_publicado || "").trim();
   const precioCupon = String(publicidad.precio_cupon || "").trim();
   const codigo = String(publicidad.codigo_cupon || "").trim();
+
+  if (esComunidadAnirona) articulo.classList.add("tarjeta-oferta-anirona");
 
   articulo.innerHTML = `
     <button
@@ -1386,12 +1395,14 @@ function crearTarjetaOferta(publicidad, categoria) {
       <h3>${escaparHtml(publicidad.titulo || "Oferta destacada")}</h3>
       ${publicidad.descripcion ? `<p class="oferta-descripcion">${escaparHtml(publicidad.descripcion)}</p>` : ""}
 
-      <div class="oferta-precios ${precioCupon ? "con-cupon" : ""}">
-        ${precioPublicado ? `<div><span>Precio publicado</span><strong>${escaparHtml(precioPublicado)}</strong></div>` : ""}
-        ${precioCupon ? `<div class="precio-destacado"><span>Precio con cupón</span><strong>${escaparHtml(precioCupon)}</strong></div>` : ""}
-      </div>
+      ${!esComunidadAnirona ? `
+        <div class="oferta-precios ${precioCupon ? "con-cupon" : ""}">
+          ${precioPublicado ? `<div><span>Precio publicado</span><strong>${escaparHtml(precioPublicado)}</strong></div>` : ""}
+          ${precioCupon ? `<div class="precio-destacado"><span>Precio con cupón</span><strong>${escaparHtml(precioCupon)}</strong></div>` : ""}
+        </div>
 
-      ${codigo ? `<p class="oferta-cupon">ℹ️ Al dar clic en <strong>${`Ver en ${plataforma.nombre}`}</strong>, el cupón se copiará automáticamente.</p>` : ""}
+        ${codigo ? `<p class="oferta-cupon">ℹ️ Al dar clic en <strong>${`Ver en ${plataforma.nombre}`}</strong>, el cupón se copiará automáticamente.</p>` : ""}
+      ` : ""}
 
       <div class="oferta-meta">
         <span class="oferta-visitas" data-visitas-id="${Number(publicidad.id) || 0}">👁️ ${Number(publicidad.visitas) || 0} visitas</span>
@@ -1413,8 +1424,17 @@ function crearTarjetaOferta(publicidad, categoria) {
   const botonVer = articulo.querySelector(".oferta-ver");
   const botonImagen = articulo.querySelector(".oferta-imagen-contenedor");
 
-  botonVer.addEventListener("click", () => abrirPublicidad(publicidad));
-  botonImagen.addEventListener("click", () => abrirPublicidad(publicidad));
+  const abrirOferta = () => {
+    if (esComunidadAnirona && obtenerPlataformaPublicidad(publicidad) === "mercadolibre") {
+      abrirModalCuponesAnirona(publicidad);
+      return;
+    }
+
+    abrirPublicidad(publicidad);
+  };
+
+  botonVer.addEventListener("click", abrirOferta);
+  botonImagen.addEventListener("click", abrirOferta);
 
   articulo.querySelector(".oferta-compartir").addEventListener("click", () => {
     compartirPublicidad(publicidad, { mensaje });
@@ -1853,13 +1873,125 @@ async function compartirPublicidad(publicidad, control) {
   setTimeout(() => { control.mensaje.textContent = ""; }, 3500);
 }
 
-async function abrirPublicidad(publicidad) {
+function valorNumericoMoneda(valor) {
+  const limpio = String(valor ?? "")
+    .replace(/[^0-9.,-]/g, "")
+    .replace(/,/g, "");
+  const numero = Number.parseFloat(limpio);
+  return Number.isFinite(numero) ? numero : Number.POSITIVE_INFINITY;
+}
+
+function obtenerCuponesSugeridosAnirona() {
+  return todosLosCupones
+    .filter((cupon) => cupon?.activo !== false)
+    .filter((cupon) => normalizarCategoria(cupon) === "tienda")
+    .filter((cupon) => couponTimeState(cupon).enabled)
+    .filter((cupon) => String(cupon.codigo || "").trim())
+    .filter((cupon) => Number.isFinite(valorNumericoMoneda(cupon.compra_minima)))
+    .sort((a, b) => {
+      const diferenciaMinimo =
+        valorNumericoMoneda(a.compra_minima) -
+        valorNumericoMoneda(b.compra_minima);
+
+      if (diferenciaMinimo !== 0) return diferenciaMinimo;
+
+      return (
+        valorNumericoMoneda(b.ahorro_maximo) -
+        valorNumericoMoneda(a.ahorro_maximo)
+      );
+    })
+    .slice(0, 3);
+}
+
+function cerrarCuponesAnirona() {
+  if (!modalCuponesAnirona) return;
+  modalCuponesAnirona.hidden = true;
+  publicidadAnironaPendiente = null;
+}
+
+function abrirModalCuponesAnirona(publicidad) {
+  if (!modalCuponesAnirona || !listaCuponesAnirona) {
+    abrirPublicidad(publicidad);
+    return;
+  }
+
+  publicidadAnironaPendiente = publicidad;
+  const cupones = obtenerCuponesSugeridosAnirona();
+
+  listaCuponesAnirona.innerHTML = cupones.length
+    ? cupones
+        .map(
+          (cupon) => `
+            <article class="cupon-sugerido-anirona">
+              <div class="cupon-sugerido-datos">
+                <strong>${escaparHtml(cupon.codigo)}</strong>
+                <span>Ahorra ${escaparHtml(cupon.ahorro_maximo || "Consultar")}</span>
+                <small>Compra mínima: ${escaparHtml(cupon.compra_minima || "Consultar")}</small>
+              </div>
+              <button
+                class="copiar-cupon-anirona"
+                type="button"
+                data-codigo="${escaparHtml(cupon.codigo)}"
+              >
+                📋 Copiar
+              </button>
+            </article>
+          `
+        )
+        .join("")
+    : `<p class="sin-cupones-anirona">Por el momento no hay cupones generales disponibles. Puedes continuar para revisar el producto.</p>`;
+
+  listaCuponesAnirona
+    .querySelectorAll(".copiar-cupon-anirona")
+    .forEach((boton) => {
+      boton.addEventListener("click", async () => {
+        const codigo = String(boton.dataset.codigo || "").trim();
+        if (!codigo) return;
+
+        const textoOriginal = boton.textContent;
+        await copiarTexto(codigo);
+        boton.textContent = `✓ ${codigo} copiado`;
+        boton.classList.add("copiado");
+
+        window.setTimeout(() => {
+          boton.textContent = textoOriginal;
+          boton.classList.remove("copiado");
+        }, 2500);
+      });
+    });
+
+  modalCuponesAnirona.hidden = false;
+  continuarAnirona?.focus();
+}
+
+continuarAnirona?.addEventListener("click", () => {
+  const publicidad = publicidadAnironaPendiente;
+  if (!publicidad) return;
+
+  modalCuponesAnirona.hidden = true;
+  publicidadAnironaPendiente = null;
+  abrirPublicidad(publicidad, { copiarCuponAsignado: false });
+});
+
+cerrarModalAnirona?.addEventListener("click", cerrarCuponesAnirona);
+
+modalCuponesAnirona?.addEventListener("click", (evento) => {
+  if (evento.target === modalCuponesAnirona) cerrarCuponesAnirona();
+});
+
+document.addEventListener("keydown", (evento) => {
+  if (evento.key === "Escape" && !modalCuponesAnirona?.hidden) {
+    cerrarCuponesAnirona();
+  }
+});
+
+async function abrirPublicidad(publicidad, { copiarCuponAsignado = true } = {}) {
   const enlace = String(publicidad.enlace || "").trim();
   if (!enlace) return;
   const codigo = String(publicidad.codigo_cupon || "").trim();
   const precioCupon = String(publicidad.precio_cupon || "").trim();
   try {
-    if (codigo) await copiarTexto(codigo);
+    if (copiarCuponAsignado && codigo) await copiarTexto(codigo);
     registrarVisitaPublicidad(publicidad);
     registrarClicPublicidad(publicidad.id);
     window.location.assign(enlace);
