@@ -4853,33 +4853,45 @@ body {
   }
 }
 
+/* V76.3 — Botones Anirona con logos de cada marketplace */
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 5px 8px;
+  overflow: hidden;
+}
 
-/* v76.3 Botones Marketplace con logos */
-.anirona-actions{
- display:grid !important;
- grid-template-columns:1fr 1fr;
- gap:10px;
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: 25px;
+  max-height: 100%;
+  object-fit: contain;
+  pointer-events: none;
 }
-.anirona-actions a{
- min-height:46px;
- display:flex;
- align-items:center;
- justify-content:center;
- font-size:0 !important;
+
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre img {
+  height: 27px;
 }
-.anirona-actions a::before{
- content:"";
- display:block;
- width:34px;
- height:34px;
- background-repeat:no-repeat;
- background-position:center;
- background-size:contain;
+
+.tarjeta-oferta-anirona .oferta-ver-amazon img {
+  height: 23px;
 }
-.anirona-actions .btn-ml::before{
- background-image:url('https://upload.wikimedia.org/wikipedia/commons/7/76/Mercado_Libre_Logo.png');
-}
-.anirona-actions .btn-amazon::before{
- background-image:url('https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg');
- width:72px;
+
+@media (max-width: 520px) {
+  .tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver {
+    min-height: 42px;
+    padding: 5px 6px;
+  }
+
+  .tarjeta-oferta-anirona .oferta-ver-mercado-libre img {
+    height: 25px;
+  }
+
+  .tarjeta-oferta-anirona .oferta-ver-amazon img {
+    height: 22px;
+  }
 }

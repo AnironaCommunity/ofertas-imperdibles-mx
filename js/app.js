@@ -1377,8 +1377,8 @@ function crearTarjetaOferta(publicidad, categoria) {
   if (esComunidadAnirona) articulo.classList.add("tarjeta-oferta-anirona");
 
   const accionesAnirona = `
-    ${enlaceMercadoLibre ? `<button class="oferta-ver oferta-ver-mercado-libre" type="button">🛒 Ver en Mercado Libre</button>` : ""}
-    ${enlaceAmazon ? `<button class="oferta-ver oferta-ver-amazon" type="button">📦 Ver en Amazon</button>` : ""}
+    ${enlaceMercadoLibre ? `<button class="oferta-ver oferta-ver-mercado-libre" type="button" aria-label="Ver en Mercado Libre" title="Ver en Mercado Libre"><img src="img/mercado-libre-boton.png" alt="Mercado Libre" loading="lazy" /></button>` : ""}
+    ${enlaceAmazon ? `<button class="oferta-ver oferta-ver-amazon" type="button" aria-label="Ver en Amazon" title="Ver en Amazon"><img src="img/amazon-boton.png" alt="Amazon" loading="lazy" /></button>` : ""}
   `;
 
   articulo.innerHTML = `
