@@ -4782,3 +4782,73 @@ body {
     width: 100%;
   }
 }
+
+/* V76.2 — Botones Anirona equilibrados y vistas fijas sobre las acciones */
+.tarjeta-oferta-anirona .oferta-contenido {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.tarjeta-oferta-anirona .oferta-descripcion {
+  display: block;
+  overflow: visible;
+  white-space: normal;
+  -webkit-box-orient: initial;
+  -webkit-line-clamp: initial;
+}
+
+.tarjeta-oferta-anirona .oferta-meta {
+  order: 3;
+  margin-top: auto;
+  margin-bottom: 7px;
+  padding-top: 10px;
+}
+
+.tarjeta-oferta-anirona .oferta-acciones-anirona {
+  order: 4;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 6px;
+  width: 100%;
+  margin-top: 0;
+  padding-top: 0;
+  align-items: stretch;
+}
+
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver {
+  width: 100%;
+  min-width: 0;
+  min-height: 38px;
+  padding: 6px 4px;
+  font-size: 8.6px;
+  line-height: 1.15;
+  white-space: normal;
+  overflow-wrap: normal;
+}
+
+/* Cuando solo existe un enlace de compra, el botón ocupa todo el ancho. */
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver:first-child:nth-last-child(2) {
+  grid-column: 1 / -1;
+}
+
+/* Compartir queda debajo y no reduce el ancho de los botones de compra. */
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-compartir {
+  grid-column: 1 / -1;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 32px;
+}
+
+@media (max-width: 520px) {
+  .tarjeta-oferta-anirona .oferta-acciones-anirona {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver {
+    min-height: 40px;
+    padding-right: 3px;
+    padding-left: 3px;
+    font-size: 8px;
+  }
+}
