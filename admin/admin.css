@@ -1369,6 +1369,8 @@ table td {
 .campo-ad-plataforma { grid-column: span 1; }
 .campo-ad-descripcion { grid-column: span 2; }
 .campo-ad-enlace { grid-column: span 2; }
+.campo-ad-enlace-ml,
+.campo-ad-enlace-amazon { grid-column: span 2; }
 .campo-ad-precio { grid-column: span 1; }
 .campo-ad-cupon { grid-column: span 2; }
 .campo-ad-imagen { grid-column: span 2; }
@@ -1432,6 +1434,8 @@ table td {
   .campo-ad-plataforma,
   .campo-ad-descripcion,
   .campo-ad-enlace,
+  .campo-ad-enlace-ml,
+  .campo-ad-enlace-amazon,
   .campo-ad-cupon,
   .campo-ad-imagen,
   .campo-ad-activo {

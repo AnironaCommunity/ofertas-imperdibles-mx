@@ -126,6 +126,8 @@ const adPlatforms = [
   ...document.querySelectorAll('input[name="ad-platform"]'),
 ];
 const adLink = document.querySelector("#ad-link");
+const adLinkMercadoLibre = document.querySelector("#ad-link-mercado-libre");
+const adLinkAmazon = document.querySelector("#ad-link-amazon");
 const adPricePublished = document.querySelector("#ad-price-published");
 const adPriceCoupon = document.querySelector("#ad-price-coupon");
 const adCouponCode = document.querySelector("#ad-coupon-code");
@@ -1913,6 +1915,8 @@ function resetAdForm() {
   adForm.reset();
   adId.value = "";
   adImageUrl.value = "";
+  adLinkMercadoLibre.value = "";
+  adLinkAmazon.value = "";
   adPricePublished.value = "";
   adPriceCoupon.value = "";
   adCouponCode.value = "";
@@ -1939,6 +1943,8 @@ function editAd(ad) {
   adTitle.value = ad.titulo || "";
   adDescription.value = ad.descripcion || "";
   adLink.value = ad.enlace || "";
+  adLinkMercadoLibre.value = ad.enlace_mercado_libre || (ad.plataforma !== "amazon" ? ad.enlace || "" : "");
+  adLinkAmazon.value = ad.enlace_amazon || (ad.plataforma === "amazon" ? ad.enlace || "" : "");
   adPricePublished.value = ad.precio_publicado || "";
   adPriceCoupon.value = ad.precio_cupon || "";
   adCouponCode.value = ad.codigo_cupon || "";
@@ -2209,14 +2215,21 @@ async function saveAd(event) {
 
     const secciones = selectedAdSections();
 
+    if (!adLink.value.trim() && !adLinkMercadoLibre.value.trim() && !adLinkAmazon.value.trim()) {
+      setMessage(adFormMessage, "Agrega al menos un enlace: principal, Mercado Libre o Amazon.", true);
+      return;
+    }
+
     if (!secciones.length) {
       throw new Error("Selecciona por lo menos una sección.");
     }
 
     const payload = {
       titulo: adTitle.value.trim(),
-      descripcion: adDescription.value.trim(),
-      enlace: adLink.value.trim(),
+      descripcion: adDescription.value.trim().slice(0, 250),
+      enlace: adLink.value.trim() || adLinkMercadoLibre.value.trim() || adLinkAmazon.value.trim(),
+      enlace_mercado_libre: adLinkMercadoLibre.value.trim(),
+      enlace_amazon: adLinkAmazon.value.trim(),
       precio_publicado: adPricePublished.value.trim(),
       precio_cupon: adPriceCoupon.value.trim(),
       codigo_cupon: adCouponCode.value.trim(),

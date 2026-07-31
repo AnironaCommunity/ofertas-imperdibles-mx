@@ -93,7 +93,7 @@ export default async function handler(request, response) {
   try {
     if (request.method === "GET") {
       const data = await requestSupabase(
-        "publicidades?select=id,titulo,descripcion,imagen_url,enlace,precio_publicado,precio_cupon,codigo_cupon,plataforma,categoria,secciones,activo,orden,clics,visitas,fecha_creacion&order=orden.asc,id.asc"
+        "publicidades?select=id,titulo,descripcion,imagen_url,enlace,enlace_mercado_libre,enlace_amazon,precio_publicado,precio_cupon,codigo_cupon,plataforma,categoria,secciones,activo,orden,clics,visitas,fecha_creacion&order=orden.asc,id.asc"
       );
 
       return response.status(200).json(data);
@@ -110,6 +110,8 @@ export default async function handler(request, response) {
         descripcion: String(request.body?.descripcion || "").trim(),
         imagen_url: String(request.body?.imagen_url || "").trim(),
         enlace: String(request.body?.enlace || "").trim(),
+        enlace_mercado_libre: String(request.body?.enlace_mercado_libre || "").trim(),
+        enlace_amazon: String(request.body?.enlace_amazon || "").trim(),
         precio_publicado: String(request.body?.precio_publicado || "").trim(),
         precio_cupon: String(request.body?.precio_cupon || "").trim(),
         codigo_cupon: String(request.body?.codigo_cupon || "").trim(),
@@ -130,9 +132,9 @@ export default async function handler(request, response) {
         payload.codigo_cupon = "";
       }
 
-      if (!payload.titulo || !payload.imagen_url || !payload.enlace) {
+      if (!payload.titulo || !payload.imagen_url || !(payload.enlace || payload.enlace_mercado_libre || payload.enlace_amazon)) {
         return response.status(400).json({
-          error: "Título, imagen y enlace son obligatorios.",
+          error: "Título, imagen y al menos un enlace son obligatorios.",
         });
       }
 
@@ -163,6 +165,8 @@ export default async function handler(request, response) {
         "descripcion",
         "imagen_url",
         "enlace",
+        "enlace_mercado_libre",
+        "enlace_amazon",
         "precio_publicado",
         "precio_cupon",
         "codigo_cupon",

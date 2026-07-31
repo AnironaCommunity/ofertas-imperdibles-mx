@@ -8,7 +8,7 @@
   <title>Administrador | Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="../img/logo.png" />
-  <link rel="stylesheet" href="admin.css?v=75.0" />
+  <link rel="stylesheet" href="admin.css?v=76.1.0" />
 </head>
 
 <body>
@@ -549,19 +549,40 @@ Descuento máximo: $180"
                 <label for="ad-description">Descripción</label>
                 <textarea
                   id="ad-description"
-                  rows="3"
-                  placeholder="Descripción breve del producto"
+                  rows="5"
+                  maxlength="250"
+                  placeholder="Descripción del producto (máximo 250 caracteres)"
                 ></textarea>
+                <small>Máximo 250 caracteres. En Comunidad Anirona se mostrará completa.</small>
               </div>
 
               <div class="campo campo-ad-enlace">
-                <label for="ad-link">Enlace del producto</label>
+                <label for="ad-link">Enlace principal</label>
                 <input
                   id="ad-link"
                   type="url"
-                  placeholder="https://meli.la/... o https://amzn.to/..."
-                  required
+                  placeholder="Para las demás secciones (opcional)"
                 />
+              </div>
+
+              <div class="campo campo-ad-enlace-ml">
+                <label for="ad-link-mercado-libre">Enlace de Mercado Libre</label>
+                <input
+                  id="ad-link-mercado-libre"
+                  type="url"
+                  placeholder="https://meli.la/..."
+                />
+                <small>Mostrará el botón amarillo en Comunidad Anirona.</small>
+              </div>
+
+              <div class="campo campo-ad-enlace-amazon">
+                <label for="ad-link-amazon">Enlace de Amazon</label>
+                <input
+                  id="ad-link-amazon"
+                  type="url"
+                  placeholder="https://amzn.to/... o https://amazon.com.mx/..."
+                />
+                <small>Mostrará el botón azul oscuro de Amazon en Comunidad Anirona.</small>
               </div>
 
               <div class="campo campo-ad-precio">
@@ -1007,6 +1028,6 @@ Descuento máximo: $180"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=76.1"></script>
+  <script type="module" src="admin.js?v=76.1.0"></script>
 </body>
 </html>

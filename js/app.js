@@ -19,10 +19,6 @@ const modalCodigo = document.querySelector("#modal-codigo");
 const modalCodigoBloque = document.querySelector("#modal-codigo-bloque");
 const modalCuponOculto = document.querySelector("#modal-cupon-oculto");
 
-const modalCuponesAnirona = document.querySelector("#modal-cupones-anirona");
-const listaCuponesAnirona = document.querySelector("#lista-cupones-anirona");
-const continuarAnirona = document.querySelector("#continuar-anirona");
-const cerrarModalAnirona = document.querySelector("#cerrar-modal-anirona");
 
 const tabTienda = document.querySelector("#tab-tienda");
 const tabBancarios = document.querySelector("#tab-bancarios");
@@ -135,7 +131,6 @@ let vistaActiva = "cupones";
 let todosLosCupones = [];
 let todasLasPublicidades = [];
 let temporizadorEstados = null;
-let publicidadAnironaPendiente = null;
 
 const SECCIONES_URL = {
   tienda: {
@@ -1373,15 +1368,25 @@ function crearTarjetaOferta(publicidad, categoria) {
   const precioPublicado = String(publicidad.precio_publicado || "").trim();
   const precioCupon = String(publicidad.precio_cupon || "").trim();
   const codigo = String(publicidad.codigo_cupon || "").trim();
+  const enlacePrincipal = String(publicidad.enlace || "").trim();
+  const enlaceMercadoLibre = String(publicidad.enlace_mercado_libre || "").trim() ||
+    (obtenerPlataformaPublicidad(publicidad) === "mercadolibre" ? enlacePrincipal : "");
+  const enlaceAmazon = String(publicidad.enlace_amazon || "").trim() ||
+    (obtenerPlataformaPublicidad(publicidad) === "amazon" ? enlacePrincipal : "");
 
   if (esComunidadAnirona) articulo.classList.add("tarjeta-oferta-anirona");
+
+  const accionesAnirona = `
+    ${enlaceMercadoLibre ? `<button class="oferta-ver oferta-ver-mercado-libre" type="button">🛒 Ver en Mercado Libre</button>` : ""}
+    ${enlaceAmazon ? `<button class="oferta-ver oferta-ver-amazon" type="button">📦 Ver en Amazon</button>` : ""}
+  `;
 
   articulo.innerHTML = `
     <button
       class="oferta-imagen-contenedor"
       type="button"
-      aria-label="${escaparHtml(`Abrir ${publicidad.titulo || "oferta"} en ${plataforma.nombre}`)}"
-      title="${`Ver en ${plataforma.nombre}`}"
+      aria-label="${escaparHtml(`Abrir ${publicidad.titulo || "oferta"}`)}"
+      title="Ver producto"
     >
       <img
         class="oferta-imagen"
@@ -1408,10 +1413,8 @@ function crearTarjetaOferta(publicidad, categoria) {
         <span class="oferta-visitas" data-visitas-id="${Number(publicidad.id) || 0}">👁️ ${Number(publicidad.visitas) || 0} visitas</span>
       </div>
 
-      <div class="oferta-acciones">
-        <button class="oferta-ver" type="button">
-          ${plataforma.textoBoton}
-        </button>
+      <div class="oferta-acciones ${esComunidadAnirona ? "oferta-acciones-anirona" : ""}">
+        ${esComunidadAnirona ? accionesAnirona : `<button class="oferta-ver" type="button">${plataforma.textoBoton}</button>`}
         <button class="boton-compartir oferta-compartir" type="button" aria-label="Compartir oferta" title="Compartir">
           ${iconoCompartir()}
         </button>
@@ -1421,20 +1424,34 @@ function crearTarjetaOferta(publicidad, categoria) {
   `;
 
   const mensaje = articulo.querySelector(".oferta-mensaje");
-  const botonVer = articulo.querySelector(".oferta-ver");
   const botonImagen = articulo.querySelector(".oferta-imagen-contenedor");
 
-  const abrirOferta = () => {
-    if (esComunidadAnirona && obtenerPlataformaPublicidad(publicidad) === "mercadolibre") {
-      abrirModalCuponesAnirona(publicidad);
-      return;
-    }
-
-    abrirPublicidad(publicidad);
+  const abrirEnlace = (enlace, plataformaDestino) => {
+    if (!enlace) return;
+    abrirPublicidad({
+      ...publicidad,
+      enlace,
+      plataforma: plataformaDestino,
+      codigo_cupon: esComunidadAnirona ? "" : publicidad.codigo_cupon,
+    });
   };
 
-  botonVer.addEventListener("click", abrirOferta);
-  botonImagen.addEventListener("click", abrirOferta);
+  if (esComunidadAnirona) {
+    articulo.querySelector(".oferta-ver-mercado-libre")?.addEventListener("click", () => {
+      abrirEnlace(enlaceMercadoLibre, "mercadolibre");
+    });
+    articulo.querySelector(".oferta-ver-amazon")?.addEventListener("click", () => {
+      abrirEnlace(enlaceAmazon, "amazon");
+    });
+    botonImagen.addEventListener("click", () => {
+      abrirEnlace(enlaceMercadoLibre || enlaceAmazon, enlaceMercadoLibre ? "mercadolibre" : "amazon");
+    });
+  } else {
+    const botonVer = articulo.querySelector(".oferta-ver");
+    const abrirOferta = () => abrirPublicidad(publicidad);
+    botonVer?.addEventListener("click", abrirOferta);
+    botonImagen.addEventListener("click", abrirOferta);
+  }
 
   articulo.querySelector(".oferta-compartir").addEventListener("click", () => {
     compartirPublicidad(publicidad, { mensaje });
@@ -1448,7 +1465,6 @@ function crearTarjetaOferta(publicidad, categoria) {
 
   return articulo;
 }
-
 
 
 function crearTarjetaCanalAnirona() {
@@ -1872,118 +1888,6 @@ async function compartirPublicidad(publicidad, control) {
   }
   setTimeout(() => { control.mensaje.textContent = ""; }, 3500);
 }
-
-function valorNumericoMoneda(valor) {
-  const limpio = String(valor ?? "")
-    .replace(/[^0-9.,-]/g, "")
-    .replace(/,/g, "");
-  const numero = Number.parseFloat(limpio);
-  return Number.isFinite(numero) ? numero : Number.POSITIVE_INFINITY;
-}
-
-function obtenerCuponesSugeridosAnirona() {
-  return todosLosCupones
-    .filter((cupon) => cupon?.activo !== false)
-    .filter((cupon) => normalizarCategoria(cupon) === "tienda")
-    .filter((cupon) => couponTimeState(cupon).enabled)
-    .filter((cupon) => String(cupon.codigo || "").trim())
-    .filter((cupon) => Number.isFinite(valorNumericoMoneda(cupon.compra_minima)))
-    .sort((a, b) => {
-      const diferenciaMinimo =
-        valorNumericoMoneda(a.compra_minima) -
-        valorNumericoMoneda(b.compra_minima);
-
-      if (diferenciaMinimo !== 0) return diferenciaMinimo;
-
-      return (
-        valorNumericoMoneda(b.ahorro_maximo) -
-        valorNumericoMoneda(a.ahorro_maximo)
-      );
-    })
-    .slice(0, 3);
-}
-
-function cerrarCuponesAnirona() {
-  if (!modalCuponesAnirona) return;
-  modalCuponesAnirona.hidden = true;
-  publicidadAnironaPendiente = null;
-}
-
-function abrirModalCuponesAnirona(publicidad) {
-  if (!modalCuponesAnirona || !listaCuponesAnirona) {
-    abrirPublicidad(publicidad);
-    return;
-  }
-
-  publicidadAnironaPendiente = publicidad;
-  const cupones = obtenerCuponesSugeridosAnirona();
-
-  listaCuponesAnirona.innerHTML = cupones.length
-    ? cupones
-        .map(
-          (cupon) => `
-            <article class="cupon-sugerido-anirona">
-              <div class="cupon-sugerido-datos">
-                <strong>${escaparHtml(cupon.codigo)}</strong>
-                <span>Ahorra ${escaparHtml(cupon.ahorro_maximo || "Consultar")}</span>
-                <small>Compra mínima: ${escaparHtml(cupon.compra_minima || "Consultar")}</small>
-              </div>
-              <button
-                class="copiar-cupon-anirona"
-                type="button"
-                data-codigo="${escaparHtml(cupon.codigo)}"
-              >
-                📋 Copiar
-              </button>
-            </article>
-          `
-        )
-        .join("")
-    : `<p class="sin-cupones-anirona">Por el momento no hay cupones generales disponibles. Puedes continuar para revisar el producto.</p>`;
-
-  listaCuponesAnirona
-    .querySelectorAll(".copiar-cupon-anirona")
-    .forEach((boton) => {
-      boton.addEventListener("click", async () => {
-        const codigo = String(boton.dataset.codigo || "").trim();
-        if (!codigo) return;
-
-        const textoOriginal = boton.textContent;
-        await copiarTexto(codigo);
-        boton.textContent = `✓ ${codigo} copiado`;
-        boton.classList.add("copiado");
-
-        window.setTimeout(() => {
-          boton.textContent = textoOriginal;
-          boton.classList.remove("copiado");
-        }, 2500);
-      });
-    });
-
-  modalCuponesAnirona.hidden = false;
-  continuarAnirona?.focus();
-}
-
-continuarAnirona?.addEventListener("click", () => {
-  const publicidad = publicidadAnironaPendiente;
-  if (!publicidad) return;
-
-  modalCuponesAnirona.hidden = true;
-  publicidadAnironaPendiente = null;
-  abrirPublicidad(publicidad, { copiarCuponAsignado: false });
-});
-
-cerrarModalAnirona?.addEventListener("click", cerrarCuponesAnirona);
-
-modalCuponesAnirona?.addEventListener("click", (evento) => {
-  if (evento.target === modalCuponesAnirona) cerrarCuponesAnirona();
-});
-
-document.addEventListener("keydown", (evento) => {
-  if (evento.key === "Escape" && !modalCuponesAnirona?.hidden) {
-    cerrarCuponesAnirona();
-  }
-});
 
 async function abrirPublicidad(publicidad, { copiarCuponAsignado = true } = {}) {
   const enlace = String(publicidad.enlace || "").trim();
