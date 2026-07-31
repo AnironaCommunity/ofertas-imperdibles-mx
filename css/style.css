@@ -4852,3 +4852,34 @@ body {
     font-size: 8px;
   }
 }
+
+
+/* v76.3 Botones Marketplace con logos */
+.anirona-actions{
+ display:grid !important;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
+}
+.anirona-actions a{
+ min-height:46px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:0 !important;
+}
+.anirona-actions a::before{
+ content:"";
+ display:block;
+ width:34px;
+ height:34px;
+ background-repeat:no-repeat;
+ background-position:center;
+ background-size:contain;
+}
+.anirona-actions .btn-ml::before{
+ background-image:url('https://upload.wikimedia.org/wikipedia/commons/7/76/Mercado_Libre_Logo.png');
+}
+.anirona-actions .btn-amazon::before{
+ background-image:url('https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg');
+ width:72px;
+}
