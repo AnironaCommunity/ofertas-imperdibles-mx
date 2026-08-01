@@ -1383,10 +1383,13 @@ function crearTarjetaOferta(publicidad, categoria) {
   const precioCupon = String(publicidad.precio_cupon || "").trim();
   const codigo = String(publicidad.codigo_cupon || "").trim();
   const enlacePrincipal = String(publicidad.enlace || "").trim();
-  const enlaceMercadoLibre = String(publicidad.enlace_mercado_libre || "").trim() ||
-    (obtenerPlataformaPublicidad(publicidad) === "mercadolibre" ? enlacePrincipal : "");
-  const enlaceAmazon = String(publicidad.enlace_amazon || "").trim() ||
-    (obtenerPlataformaPublicidad(publicidad) === "amazon" ? enlacePrincipal : "");
+  const enlaceMercadoLibreGuardado = String(publicidad.enlace_mercado_libre || "").trim();
+  const enlaceAmazonGuardado = String(publicidad.enlace_amazon || "").trim();
+  const usaSoloEnlaceLegacy = !enlaceMercadoLibreGuardado && !enlaceAmazonGuardado && enlacePrincipal;
+  const enlaceMercadoLibre = enlaceMercadoLibreGuardado ||
+    (usaSoloEnlaceLegacy && obtenerPlataformaPublicidad(publicidad) === "mercadolibre" ? enlacePrincipal : "");
+  const enlaceAmazon = enlaceAmazonGuardado ||
+    (usaSoloEnlaceLegacy && obtenerPlataformaPublicidad(publicidad) === "amazon" ? enlacePrincipal : "");
   const disponibleMercadoLibre = publicidad.disponible_mercado_libre !== false;
   const disponibleAmazon = publicidad.disponible_amazon !== false;
   const productoNuevo = esProductoNuevoVigente(publicidad);
@@ -1946,12 +1949,13 @@ function textoCompartirPublicidad(publicidad) {
   const titulo = String(publicidad?.titulo || "Producto Anirona").trim();
   const enlacePrincipal = String(publicidad?.enlace || "").trim();
   const plataformaPrincipal = obtenerPlataformaPublicidad(publicidad);
-  const enlaceMercadoLibre =
-    String(publicidad?.enlace_mercado_libre || "").trim() ||
-    (plataformaPrincipal === "mercadolibre" ? enlacePrincipal : "");
-  const enlaceAmazon =
-    String(publicidad?.enlace_amazon || "").trim() ||
-    (plataformaPrincipal === "amazon" ? enlacePrincipal : "");
+  const enlaceMercadoLibreGuardado = String(publicidad?.enlace_mercado_libre || "").trim();
+  const enlaceAmazonGuardado = String(publicidad?.enlace_amazon || "").trim();
+  const usaSoloEnlaceLegacy = !enlaceMercadoLibreGuardado && !enlaceAmazonGuardado && enlacePrincipal;
+  const enlaceMercadoLibre = enlaceMercadoLibreGuardado ||
+    (usaSoloEnlaceLegacy && plataformaPrincipal === "mercadolibre" ? enlacePrincipal : "");
+  const enlaceAmazon = enlaceAmazonGuardado ||
+    (usaSoloEnlaceLegacy && plataformaPrincipal === "amazon" ? enlacePrincipal : "");
 
   const lineas = [titulo];
   if (enlaceMercadoLibre) {

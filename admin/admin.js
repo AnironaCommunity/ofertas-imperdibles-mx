@@ -125,7 +125,6 @@ const adSections = [...document.querySelectorAll(".ad-section")];
 const adPlatforms = [
   ...document.querySelectorAll('input[name="ad-platform"]'),
 ];
-const adLink = document.querySelector("#ad-link");
 const adLinkMercadoLibre = document.querySelector("#ad-link-mercado-libre");
 const adLinkAmazon = document.querySelector("#ad-link-amazon");
 const adDisponibleMercadoLibre = document.querySelector("#ad-disponible-mercado-libre");
@@ -1962,9 +1961,15 @@ function editAd(ad) {
   adId.value = ad.id;
   adTitle.value = ad.titulo || "";
   adDescription.value = ad.descripcion || "";
-  adLink.value = ad.enlace || "";
-  adLinkMercadoLibre.value = ad.enlace_mercado_libre || (ad.plataforma !== "amazon" ? ad.enlace || "" : "");
-  adLinkAmazon.value = ad.enlace_amazon || (ad.plataforma === "amazon" ? ad.enlace || "" : "");
+  const enlaceLegacy = String(ad.enlace || "").trim();
+  const enlaceMercadoLibreGuardado = String(ad.enlace_mercado_libre || "").trim();
+  const enlaceAmazonGuardado = String(ad.enlace_amazon || "").trim();
+  const usaSoloEnlaceLegacy = !enlaceMercadoLibreGuardado && !enlaceAmazonGuardado && enlaceLegacy;
+
+  adLinkMercadoLibre.value = enlaceMercadoLibreGuardado ||
+    (usaSoloEnlaceLegacy && ad.plataforma !== "amazon" ? enlaceLegacy : "");
+  adLinkAmazon.value = enlaceAmazonGuardado ||
+    (usaSoloEnlaceLegacy && ad.plataforma === "amazon" ? enlaceLegacy : "");
   adDisponibleMercadoLibre.checked = ad.disponible_mercado_libre !== false;
   adDisponibleAmazon.checked = ad.disponible_amazon !== false;
   adEsNuevo.checked = productoNuevoVigente(ad);
@@ -2244,8 +2249,11 @@ async function saveAd(event) {
 
     const secciones = selectedAdSections();
 
-    if (!adLink.value.trim() && !adLinkMercadoLibre.value.trim() && !adLinkAmazon.value.trim()) {
-      setMessage(adFormMessage, "Agrega al menos un enlace: principal, Mercado Libre o Amazon.", true);
+    const enlaceMercadoLibre = adLinkMercadoLibre.value.trim();
+    const enlaceAmazon = adLinkAmazon.value.trim();
+
+    if (!enlaceMercadoLibre && !enlaceAmazon) {
+      setMessage(adFormMessage, "Agrega al menos un enlace de Mercado Libre o Amazon.", true);
       return;
     }
 
@@ -2253,12 +2261,20 @@ async function saveAd(event) {
       throw new Error("Selecciona por lo menos una sección.");
     }
 
+    let plataforma = selectedAdPlatform();
+    if (enlaceAmazon && !enlaceMercadoLibre) plataforma = "amazon";
+    if (enlaceMercadoLibre && !enlaceAmazon) plataforma = "mercadolibre";
+
+    const enlaceCompatibilidad = plataforma === "amazon"
+      ? (enlaceAmazon || enlaceMercadoLibre)
+      : (enlaceMercadoLibre || enlaceAmazon);
+
     const payload = {
       titulo: adTitle.value.trim(),
       descripcion: adDescription.value.trim().slice(0, 250),
-      enlace: adLink.value.trim() || adLinkMercadoLibre.value.trim() || adLinkAmazon.value.trim(),
-      enlace_mercado_libre: adLinkMercadoLibre.value.trim(),
-      enlace_amazon: adLinkAmazon.value.trim(),
+      enlace: enlaceCompatibilidad,
+      enlace_mercado_libre: enlaceMercadoLibre,
+      enlace_amazon: enlaceAmazon,
       disponible_mercado_libre: adDisponibleMercadoLibre.checked,
       disponible_amazon: adDisponibleAmazon.checked,
       es_nuevo: adEsNuevo.checked,
@@ -2270,7 +2286,7 @@ async function saveAd(event) {
       precio_publicado: adPricePublished.value.trim(),
       precio_cupon: adPriceCoupon.value.trim(),
       codigo_cupon: adCouponCode.value.trim(),
-      plataforma: selectedAdPlatform(),
+      plataforma,
       secciones: [...secciones],
       categoria: secciones[0] || "ofertas_dia",
       imagen_url: imageUrl,

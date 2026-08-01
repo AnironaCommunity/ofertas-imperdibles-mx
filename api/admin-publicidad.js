@@ -105,13 +105,22 @@ export default async function handler(request, response) {
         [request.body?.categoria || "ofertas_dia"]
       );
 
+      const enlaceMercadoLibre = String(request.body?.enlace_mercado_libre || "").trim();
+      const enlaceAmazon = String(request.body?.enlace_amazon || "").trim();
+      let plataforma = request.body?.plataforma === "amazon" ? "amazon" : "mercadolibre";
+      if (enlaceAmazon && !enlaceMercadoLibre) plataforma = "amazon";
+      if (enlaceMercadoLibre && !enlaceAmazon) plataforma = "mercadolibre";
+      const enlaceCompatibilidad = plataforma === "amazon"
+        ? (enlaceAmazon || enlaceMercadoLibre)
+        : (enlaceMercadoLibre || enlaceAmazon);
+
       const payload = {
         titulo: String(request.body?.titulo || "").trim(),
         descripcion: String(request.body?.descripcion || "").trim(),
         imagen_url: String(request.body?.imagen_url || "").trim(),
-        enlace: String(request.body?.enlace || "").trim(),
-        enlace_mercado_libre: String(request.body?.enlace_mercado_libre || "").trim(),
-        enlace_amazon: String(request.body?.enlace_amazon || "").trim(),
+        enlace: enlaceCompatibilidad,
+        enlace_mercado_libre: enlaceMercadoLibre,
+        enlace_amazon: enlaceAmazon,
         disponible_mercado_libre: request.body?.disponible_mercado_libre !== false,
         disponible_amazon: request.body?.disponible_amazon !== false,
         es_nuevo: request.body?.es_nuevo === true,
@@ -123,10 +132,7 @@ export default async function handler(request, response) {
         precio_publicado: String(request.body?.precio_publicado || "").trim(),
         precio_cupon: String(request.body?.precio_cupon || "").trim(),
         codigo_cupon: String(request.body?.codigo_cupon || "").trim(),
-        plataforma:
-          request.body?.plataforma === "amazon"
-            ? "amazon"
-            : "mercadolibre",
+        plataforma,
         secciones,
         categoria: secciones[0] || "ofertas_dia",
         activo: request.body?.activo !== false,
@@ -219,6 +225,22 @@ export default async function handler(request, response) {
         } else {
           payload[field] = String(request.body[field] || "").trim();
         }
+      }
+
+      if (Object.hasOwn(request.body || {}, "enlace_mercado_libre") ||
+          Object.hasOwn(request.body || {}, "enlace_amazon")) {
+        const enlaceMercadoLibre = String(request.body?.enlace_mercado_libre || "").trim();
+        const enlaceAmazon = String(request.body?.enlace_amazon || "").trim();
+        let plataforma = request.body?.plataforma === "amazon" ? "amazon" : "mercadolibre";
+        if (enlaceAmazon && !enlaceMercadoLibre) plataforma = "amazon";
+        if (enlaceMercadoLibre && !enlaceAmazon) plataforma = "mercadolibre";
+
+        payload.enlace_mercado_libre = enlaceMercadoLibre;
+        payload.enlace_amazon = enlaceAmazon;
+        payload.plataforma = plataforma;
+        payload.enlace = plataforma === "amazon"
+          ? (enlaceAmazon || enlaceMercadoLibre)
+          : (enlaceMercadoLibre || enlaceAmazon);
       }
 
       if (payload.plataforma === "amazon") {
