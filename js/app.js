@@ -1072,7 +1072,7 @@ async function registrarClic(id) {
       "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: JSON.stringify({ id }),
+    body: JSON.stringify({ id, plataforma: destino }),
   });
 
   if (!respuesta.ok) {
@@ -1721,12 +1721,13 @@ function renderizarModuloOfertas(categoria, contenedor, seccion) {
 
 const DURACION_VISITA_PRODUCTO_MS = 24 * 60 * 60 * 1000;
 
-function claveVisitaPublicidad(id) {
-  return `visita-publicidad-${id}`;
+function claveVisitaPublicidad(id, plataforma = "general") {
+  const destino = plataforma === "amazon" ? "amazon" : plataforma === "mercadolibre" ? "mercadolibre" : "general";
+  return `visita-publicidad-${id}-${destino}`;
 }
 
-function visitaPublicidadVigente(id) {
-  const clave = claveVisitaPublicidad(id);
+function visitaPublicidadVigente(id, plataforma) {
+  const clave = claveVisitaPublicidad(id, plataforma);
   const registro = Number(localStorage.getItem(clave));
 
   if (!Number.isFinite(registro) || registro <= 0) {
@@ -1749,13 +1750,14 @@ function actualizarVisitasEnPantalla(id, visitas) {
   });
 }
 
-async function registrarVisitaPublicidad(publicidad) {
+async function registrarVisitaPublicidad(publicidad, plataforma = "general") {
   const id = Number(publicidad?.id);
   if (!Number.isInteger(id) || id <= 0) return;
 
-  if (visitaPublicidadVigente(id)) return;
+  const destino = plataforma === "amazon" ? "amazon" : plataforma === "mercadolibre" ? "mercadolibre" : "general";
+  if (visitaPublicidadVigente(id, destino)) return;
 
-  const clave = claveVisitaPublicidad(id);
+  const clave = claveVisitaPublicidad(id, destino);
   localStorage.setItem(clave, String(Date.now()));
 
   try {
@@ -1772,6 +1774,8 @@ async function registrarVisitaPublicidad(publicidad) {
 
     const datos = await respuesta.json();
     publicidad.visitas = Number(datos.visitas) || 0;
+    publicidad.visitas_mercado_libre = Number(datos.visitas_mercado_libre) || 0;
+    publicidad.visitas_amazon = Number(datos.visitas_amazon) || 0;
     actualizarVisitasEnPantalla(id, publicidad.visitas);
   } catch (error) {
     localStorage.removeItem(clave);
@@ -1999,7 +2003,7 @@ async function abrirPublicidad(publicidad, { copiarCuponAsignado = true } = {}) 
   const precioCupon = String(publicidad.precio_cupon || "").trim();
   try {
     if (copiarCuponAsignado && codigo) await copiarTexto(codigo);
-    registrarVisitaPublicidad(publicidad);
+    registrarVisitaPublicidad(publicidad, publicidad.plataforma);
     registrarClicPublicidad(publicidad.id);
     window.location.assign(enlace);
   } catch (error) {

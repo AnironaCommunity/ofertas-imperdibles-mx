@@ -2030,6 +2030,7 @@ function renderAds() {
           )} ·
           Orden: ${Number(ad.orden || 0)} ·
           Clics: ${Number(ad.clics || 0)} ·
+          Visitas: ${Number(ad.visitas || 0)} (ML: ${Number(ad.visitas_mercado_libre || 0)} · Amazon: ${Number(ad.visitas_amazon || 0)}) ·
           ML: ${ad.disponible_mercado_libre !== false ? "Disponible" : "No disponible"} ·
           Amazon: ${ad.disponible_amazon !== false ? "Disponible" : "No disponible"} ·
           ${productoNuevoVigente(ad) ? "Nuevo · " : ""}${ad.es_mas_vendido ? "Más vendido · " : ""}${ad.es_otra_recomendacion ? "Otra recomendación · " : ""}${ad.activo ? "Activa" : "Inactiva"}

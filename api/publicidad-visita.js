@@ -5,6 +5,7 @@ export default async function handler(request, response) {
   }
 
   const id = Number(request.body?.id);
+  const plataforma = request.body?.plataforma === "amazon" ? "amazon" : "mercadolibre";
   if (!Number.isInteger(id) || id <= 0) {
     return response.status(400).json({ error: "ID no válido." });
   }
@@ -24,14 +25,20 @@ export default async function handler(request, response) {
         Authorization: `Bearer ${key}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ p_id: id }),
+      body: JSON.stringify({ p_id: id, p_plataforma: plataforma }),
     });
 
     if (!result.ok) {
       return response.status(502).json({ error: "No fue posible registrar la visita." });
     }
 
-    return response.status(200).json({ visitas: Number(await result.json()) });
+    const data = await result.json();
+    const registro = Array.isArray(data) ? data[0] : data;
+    return response.status(200).json({
+      visitas: Number(registro?.visitas ?? registro ?? 0),
+      visitas_mercado_libre: Number(registro?.visitas_mercado_libre || 0),
+      visitas_amazon: Number(registro?.visitas_amazon || 0),
+    });
   } catch (error) {
     return response.status(500).json({ error: "Error interno del servidor." });
   }
