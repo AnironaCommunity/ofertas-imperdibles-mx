@@ -5413,3 +5413,123 @@ body {
   margin-top: 0;
   padding-top: 4px;
 }
+
+/* ============================================================
+   V77.4 LTS — Ajustes finales de tarjetas y canal Anirona
+   ============================================================ */
+
+/* Mantener Mercado Libre con el mismo ancho cuando es el único marketplace. */
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver:first-child:nth-last-child(2) {
+  grid-column: 1 !important;
+}
+
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-compartir {
+  grid-column: 3 !important;
+}
+
+/* Eliminar cualquier línea o borde interno visible en los botones. */
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre,
+.tarjeta-oferta-anirona .oferta-ver-amazon {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre::before,
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre::after,
+.tarjeta-oferta-anirona .oferta-ver-amazon::before,
+.tarjeta-oferta-anirona .oferta-ver-amazon::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Etiqueta Nuevo igual al estilo verde usado en cupones. */
+.etiqueta-producto-nuevo {
+  min-height: 20px;
+  margin: 0 0 6px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(135deg, #08b984, #22c99a);
+  box-shadow: 0 3px 8px rgba(29, 45, 38, .10);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Reducir a la mitad el espacio inferior de las tarjetas. */
+.tarjeta-oferta-anirona .oferta-contenido {
+  padding-bottom: 5px;
+}
+
+.tarjeta-oferta-anirona .oferta-mensaje:empty {
+  display: none;
+}
+
+/* Botón único de WhatsApp a todo el ancho del catálogo. */
+.tarjeta-canal-anirona-simple {
+  grid-column: 1 / -1;
+  display: block !important;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.canal-anirona-boton-ancho {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 48px;
+  margin: 0;
+  padding: 11px 48px;
+  border: 0;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.canal-anirona-boton-ancho svg {
+  width: 22px;
+  height: 22px;
+}
+
+.canal-anirona-boton-flecha {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  font-size: 21px;
+  line-height: 1;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 520px) {
+  .tarjeta-oferta-anirona .oferta-contenido {
+    padding-bottom: 4px;
+  }
+
+  .etiqueta-producto-nuevo {
+    min-height: 18px;
+    padding: 3px 6px;
+    font-size: 8.5px;
+  }
+
+  .canal-anirona-boton-ancho {
+    min-height: 44px;
+    padding: 9px 38px;
+    border-radius: 10px;
+    font-size: 11px;
+  }
+
+  .canal-anirona-boton-ancho svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .canal-anirona-boton-flecha {
+    right: 13px;
+    font-size: 18px;
+  }
+}
