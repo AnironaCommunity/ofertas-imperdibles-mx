@@ -1958,12 +1958,23 @@ function detenerRotacionPublicidad(control) {
 }
 
 function textoCompartirPublicidad(publicidad) {
-  const lineas = [publicidad.titulo || "Oferta destacada"];
-  if (publicidad.descripcion) lineas.push(publicidad.descripcion);
-  if (publicidad.precio_publicado) lineas.push(`Precio publicado: ${publicidad.precio_publicado}`);
-  if (publicidad.precio_cupon) lineas.push(`Precio con cupón: ${publicidad.precio_cupon}`);
-  if (publicidad.codigo_cupon) lineas.push(`Cupón: ${publicidad.codigo_cupon}`);
-  if (publicidad.enlace) lineas.push(publicidad.enlace);
+  const titulo = String(publicidad?.titulo || "Producto Anirona").trim();
+  const enlacePrincipal = String(publicidad?.enlace || "").trim();
+  const plataformaPrincipal = obtenerPlataformaPublicidad(publicidad);
+  const enlaceMercadoLibre =
+    String(publicidad?.enlace_mercado_libre || "").trim() ||
+    (plataformaPrincipal === "mercadolibre" ? enlacePrincipal : "");
+  const enlaceAmazon =
+    String(publicidad?.enlace_amazon || "").trim() ||
+    (plataformaPrincipal === "amazon" ? enlacePrincipal : "");
+
+  const lineas = [titulo];
+  if (enlaceMercadoLibre) {
+    lineas.push(`Enlace Mercado Libre: ${enlaceMercadoLibre}`);
+  }
+  if (enlaceAmazon) {
+    lineas.push(`Enlace Amazon: ${enlaceAmazon}`);
+  }
   lineas.push("", `Más ofertas y cupones aquí ${URL_PAGINA}`);
   return lineas.join("\n");
 }
@@ -1987,7 +1998,7 @@ async function compartirPublicidad(publicidad, control) {
       if (archivoImagen && navigator.canShare?.({ files: [archivoImagen] })) {
         await navigator.share({ title: publicidad.titulo || "Oferta", text: texto, files: [archivoImagen] });
       } else {
-        await navigator.share({ title: publicidad.titulo || "Oferta", text: texto, url: publicidad.enlace || URL_PAGINA });
+        await navigator.share({ title: publicidad.titulo || "Oferta", text: texto });
       }
       control.mensaje.textContent = "Oferta compartida.";
     } else {
