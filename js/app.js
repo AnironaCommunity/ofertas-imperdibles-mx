@@ -1642,18 +1642,23 @@ function renderizarCatalogoAnirona() {
     publicidadPerteneceASeccion(item, "comunidad_anirona")
   );
   const consulta = normalizarTextoBusqueda(buscarCatalogoAnirona?.value || "");
-  const filtrados = consulta
-    ? todos.filter((item) => normalizarTextoBusqueda([
-        item?.titulo,
-        item?.descripcion,
-        item?.modelo,
-      ].filter(Boolean).join(" ")).includes(consulta))
-    : todos;
-  const ordenados = ordenarCatalogoAnirona(filtrados);
+  const coincideBusqueda = (item) => !consulta || normalizarTextoBusqueda([
+    item?.titulo,
+    item?.descripcion,
+    item?.modelo,
+  ].filter(Boolean).join(" ")).includes(consulta);
+
+  const catalogoAnirona = ordenarCatalogoAnirona(
+    todos.filter((item) => item?.es_otra_recomendacion !== true && coincideBusqueda(item))
+  );
+  const otrasRecomendaciones = ordenarCatalogoAnirona(
+    todos.filter((item) => item?.es_otra_recomendacion === true && coincideBusqueda(item))
+  );
+  const totalMostrados = catalogoAnirona.length + otrasRecomendaciones.length;
 
   ofertasComunidadAnirona.replaceChildren();
 
-  if (!ordenados.length) {
+  if (!totalMostrados) {
     const mensaje = document.createElement("div");
     mensaje.className = "sin-ofertas-categoria sin-resultados-busqueda";
     mensaje.innerHTML = consulta
@@ -1661,13 +1666,26 @@ function renderizarCatalogoAnirona() {
       : `<div aria-hidden="true">🛍️</div><h3>No hay productos disponibles</h3><p>Pronto agregaremos nuevos productos en esta sección.</p>`;
     ofertasComunidadAnirona.appendChild(mensaje);
   } else {
-    ordenados.forEach((item) => {
+    catalogoAnirona.forEach((item) => {
       ofertasComunidadAnirona.appendChild(crearTarjetaOferta(item, "comunidad_anirona"));
     });
+
+    if (otrasRecomendaciones.length) {
+      const separador = document.createElement("div");
+      separador.className = "separador-otras-recomendaciones";
+      separador.innerHTML = `<h2>OTRAS RECOMENDACIONES</h2>`;
+      ofertasComunidadAnirona.appendChild(separador);
+
+      otrasRecomendaciones.forEach((item) => {
+        const tarjeta = crearTarjetaOferta(item, "comunidad_anirona");
+        tarjeta.classList.add("tarjeta-otra-recomendacion");
+        ofertasComunidadAnirona.appendChild(tarjeta);
+      });
+    }
   }
 
   ofertasComunidadAnirona.appendChild(crearTarjetaCanalAnirona());
-  actualizarResumenCatalogoAnirona(ordenados.length, todos.length, consulta);
+  actualizarResumenCatalogoAnirona(totalMostrados, todos.length, consulta);
 
   if (limpiarBusquedaAnirona) limpiarBusquedaAnirona.hidden = !consulta;
 }

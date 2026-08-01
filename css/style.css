@@ -5856,3 +5856,37 @@ html.tutorial-en-curso { scroll-behavior: smooth; }
     font-size: 7.5px;
   }
 }
+
+
+/* ============================================================
+   V77.9 LTS — Otras recomendaciones debajo del catálogo Anirona
+   ============================================================ */
+.separador-otras-recomendaciones {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin: 12px 0 2px;
+  padding-top: 14px;
+  border-top: 1px dashed #aebbb2;
+  text-align: center;
+}
+.separador-otras-recomendaciones h2 {
+  margin: 0;
+  color: #56635b;
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: .12em;
+  line-height: 1.3;
+}
+.tarjeta-otra-recomendacion {
+  border-color: #dfe6e1;
+}
+@media (max-width: 520px) {
+  .separador-otras-recomendaciones {
+    margin-top: 8px;
+    padding-top: 11px;
+  }
+  .separador-otras-recomendaciones h2 {
+    font-size: 10px;
+    letter-spacing: .1em;
+  }
+}

@@ -1752,3 +1752,19 @@ table td {
 @media (max-width: 560px) {
   #seccion-publicidad .campo-ad-mas-vendido { grid-column: 1 / -1; }
 }
+
+
+/* V77.9 LTS — Otras recomendaciones */
+.campo-ad-otra-recomendacion {
+  grid-column: span 3;
+  align-self: stretch;
+  padding: 8px 10px;
+  margin: 0;
+}
+.campo-ad-otra-recomendacion strong { color: #53645a; }
+@media (max-width: 900px) {
+  #seccion-publicidad .campo-ad-otra-recomendacion { grid-column: span 1; }
+}
+@media (max-width: 560px) {
+  #seccion-publicidad .campo-ad-otra-recomendacion { grid-column: 1 / -1; }
+}
