@@ -1670,3 +1670,69 @@ table td {
   .campo-ad-disponibilidad, .campo-ad-nuevo { grid-column: 1 / -1; }
   .opciones-disponibilidad { grid-template-columns: 1fr; }
 }
+
+
+/* V77.5 LTS — Publicidad más compacta */
+#seccion-publicidad .cabecera-seccion { margin-bottom: 10px; }
+#seccion-publicidad .panel-publicidad-compacta { padding: 14px; }
+#seccion-publicidad .panel-publicidad-compacta h3 { margin: 0 0 10px; }
+#seccion-publicidad .form-grid-publicidad {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 9px 10px;
+  align-items: start;
+}
+#seccion-publicidad .formulario-compacto .campo,
+#seccion-publicidad .formulario-compacto fieldset,
+#seccion-publicidad .formulario-compacto .switch-row { margin: 0; }
+#seccion-publicidad .campo input,
+#seccion-publicidad .campo select { min-height: 36px; padding: 7px 10px; }
+#seccion-publicidad .campo textarea { min-height: 66px; padding: 8px 10px; }
+#seccion-publicidad .campo small,
+#seccion-publicidad .ayuda-secciones { margin-top: 3px; line-height: 1.25; }
+#seccion-publicidad .campo-ad-titulo { grid-column: span 4; }
+#seccion-publicidad .campo-ad-orden { grid-column: span 2; }
+#seccion-publicidad .campo-ad-secciones { grid-column: span 4; }
+#seccion-publicidad .campo-ad-plataforma { grid-column: span 2; }
+#seccion-publicidad .campo-ad-descripcion { grid-column: span 6; }
+#seccion-publicidad .campo-ad-enlace { grid-column: span 3; }
+#seccion-publicidad .campo-ad-enlace-ml { grid-column: span 3; }
+#seccion-publicidad .campo-ad-enlace-amazon { grid-column: span 3; }
+#seccion-publicidad .campo-ad-disponibilidad { grid-column: span 3; }
+#seccion-publicidad .campo-ad-nuevo { grid-column: span 3; align-self: stretch; }
+#seccion-publicidad .campo-ad-imagen { grid-column: span 4; }
+#seccion-publicidad .preview-wrapper { grid-column: span 2; min-height: 68px; }
+#seccion-publicidad .campo-ad-activo { grid-column: span 2; align-self: end; min-height: 48px; }
+#seccion-publicidad .grupo-secciones,
+#seccion-publicidad .plataforma-publicidad,
+#seccion-publicidad .campo-ad-disponibilidad,
+#seccion-publicidad .campo-ad-nuevo,
+#seccion-publicidad .campo-ad-activo { padding: 8px 10px; }
+#seccion-publicidad .opciones-secciones,
+#seccion-publicidad .opciones-plataforma,
+#seccion-publicidad .opciones-disponibilidad { gap: 6px; }
+#seccion-publicidad .opciones-secciones label,
+#seccion-publicidad .opciones-plataforma label { min-height: 36px; padding: 6px 9px; }
+#seccion-publicidad .acciones { margin-top: 10px; }
+
+@media (max-width: 900px) {
+  #seccion-publicidad .form-grid-publicidad { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #seccion-publicidad .campo-ad-titulo,
+  #seccion-publicidad .campo-ad-secciones,
+  #seccion-publicidad .campo-ad-descripcion,
+  #seccion-publicidad .campo-ad-enlace,
+  #seccion-publicidad .campo-ad-enlace-ml,
+  #seccion-publicidad .campo-ad-enlace-amazon,
+  #seccion-publicidad .campo-ad-imagen { grid-column: 1 / -1; }
+  #seccion-publicidad .campo-ad-orden,
+  #seccion-publicidad .campo-ad-plataforma,
+  #seccion-publicidad .campo-ad-disponibilidad,
+  #seccion-publicidad .campo-ad-nuevo,
+  #seccion-publicidad .campo-ad-activo,
+  #seccion-publicidad .preview-wrapper { grid-column: span 1; }
+}
+
+@media (max-width: 560px) {
+  #seccion-publicidad .panel-publicidad-compacta { padding: 11px; }
+  #seccion-publicidad .form-grid-publicidad { grid-template-columns: 1fr; gap: 8px; }
+  #seccion-publicidad .form-grid-publicidad > * { grid-column: 1 / -1 !important; }
+}

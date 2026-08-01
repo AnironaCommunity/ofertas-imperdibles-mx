@@ -1028,6 +1028,7 @@ async function cargarCupones() {
     todosLosCupones = Array.isArray(cupones) ? cupones : [];
     renderizarCategoria();
     actualizarContadoresSecciones();
+    revisarAvisosNovedades();
   } catch (error) {
     console.error(error);
 
@@ -1777,6 +1778,7 @@ async function cargarPublicidad() {
     const datos = await respuesta.json();
     todasLasPublicidades = Array.isArray(datos) ? datos : [];
     actualizarContadoresSecciones();
+    revisarAvisosNovedades();
 
     renderizarModuloOfertas(
       "comunidad_anirona",
@@ -1995,6 +1997,213 @@ async function registrarClicPublicidad(id) {
   }
 }
 
+
+
+/* ================= AVISOS DE NOVEDADES V77.5 ================= */
+const CLAVE_AVISOS_ACTIVOS = "oi-avisos-novedades-activos";
+const CLAVE_ULTIMO_CUPON = "oi-avisos-ultimo-cupon";
+const CLAVE_ULTIMO_ANIRONA = "oi-avisos-ultimo-anirona";
+let avisosNovedadesInicializados = false;
+let avisoNovedadesToastTimer = null;
+
+function maxId(items) {
+  return items.reduce((maximo, item) => {
+    const id = Number(item?.id) || 0;
+    return Math.max(maximo, id);
+  }, 0);
+}
+
+function cuponesNotificables() {
+  return todosLosCupones.filter((cupon) => {
+    if (cupon?.activo === false) return false;
+    try {
+      return couponTimeState(cupon).state !== "finalizado";
+    } catch {
+      return true;
+    }
+  });
+}
+
+function productosAnironaNotificables() {
+  return todasLasPublicidades.filter(
+    (publicidad) =>
+      publicidad?.activo !== false &&
+      publicidadPerteneceASeccion(publicidad, "comunidad_anirona")
+  );
+}
+
+function crearControlesAvisosNovedades() {
+  if (document.querySelector("#boton-avisos-novedades")) return;
+
+  const contenedor = document.querySelector(".hero-redes-botones");
+  if (!contenedor) return;
+
+  const boton = document.createElement("button");
+  boton.id = "boton-avisos-novedades";
+  boton.type = "button";
+  boton.className = "boton-avisos-novedades";
+  boton.innerHTML = "<span aria-hidden=\"true\">🔔</span><span>Activar avisos</span>";
+  contenedor.appendChild(boton);
+
+  const toast = document.createElement("aside");
+  toast.id = "aviso-novedades-toast";
+  toast.className = "aviso-novedades-toast";
+  toast.hidden = true;
+  toast.setAttribute("aria-live", "polite");
+  document.body.appendChild(toast);
+
+  boton.addEventListener("click", activarAvisosNovedades);
+  actualizarBotonAvisosNovedades();
+}
+
+function avisosNovedadesActivos() {
+  return localStorage.getItem(CLAVE_AVISOS_ACTIVOS) === "1";
+}
+
+function actualizarBotonAvisosNovedades() {
+  const boton = document.querySelector("#boton-avisos-novedades");
+  if (!boton) return;
+  const activos = avisosNovedadesActivos();
+  boton.classList.toggle("activo", activos);
+  boton.querySelector("span:last-child").textContent = activos
+    ? "Avisos activados"
+    : "Activar avisos";
+  boton.title = activos
+    ? "Recibirás avisos al detectar nuevos cupones o productos"
+    : "Activa avisos de nuevos cupones y productos Anirona";
+}
+
+function guardarReferenciaActualAvisos() {
+  localStorage.setItem(CLAVE_ULTIMO_CUPON, String(maxId(cuponesNotificables())));
+  localStorage.setItem(CLAVE_ULTIMO_ANIRONA, String(maxId(productosAnironaNotificables())));
+}
+
+async function activarAvisosNovedades() {
+  if (avisosNovedadesActivos()) {
+    localStorage.removeItem(CLAVE_AVISOS_ACTIVOS);
+    actualizarBotonAvisosNovedades();
+    mostrarToastNovedades({
+      titulo: "Avisos desactivados",
+      mensaje: "Puedes volver a activarlos cuando quieras.",
+    });
+    return;
+  }
+
+  if ("Notification" in window && Notification.permission === "default") {
+    try {
+      await Notification.requestPermission();
+    } catch (error) {
+      console.warn("No fue posible solicitar permiso de notificaciones.", error);
+    }
+  }
+
+  localStorage.setItem(CLAVE_AVISOS_ACTIVOS, "1");
+  guardarReferenciaActualAvisos();
+  actualizarBotonAvisosNovedades();
+  mostrarToastNovedades({
+    titulo: "Avisos activados",
+    mensaje: "Te avisaremos al detectar un nuevo cupón o producto Anirona cuando visites o mantengas abierta la página.",
+  });
+}
+
+function mostrarToastNovedades({ titulo, mensaje, seccion = "" }) {
+  const toast = document.querySelector("#aviso-novedades-toast");
+  if (!toast) return;
+
+  window.clearTimeout(avisoNovedadesToastTimer);
+  toast.innerHTML = `
+    <strong>${titulo}</strong>
+    <p>${mensaje}</p>
+    <div class="aviso-novedades-toast-acciones">
+      ${seccion ? '<button class="aviso-novedades-ver" type="button">Ver ahora</button>' : ""}
+      <button class="aviso-novedades-cerrar" type="button">Cerrar</button>
+    </div>
+  `;
+  toast.hidden = false;
+
+  toast.querySelector(".aviso-novedades-cerrar")?.addEventListener("click", () => {
+    toast.hidden = true;
+  });
+  toast.querySelector(".aviso-novedades-ver")?.addEventListener("click", () => {
+    if (seccion === "cupones") {
+      tabTienda?.click();
+    } else {
+      const botonSeccion = document.querySelector(`[data-vista="${seccion}"]`);
+      botonSeccion?.click();
+    }
+    toast.hidden = true;
+  });
+
+  avisoNovedadesToastTimer = window.setTimeout(() => {
+    toast.hidden = true;
+  }, 10000);
+}
+
+function lanzarNotificacionNavegador(titulo, cuerpo) {
+  if (!("Notification" in window) || Notification.permission !== "granted") return;
+  try {
+    new Notification(titulo, {
+      body: cuerpo,
+      icon: "/img/logo.png",
+      badge: "/img/logo.png",
+      tag: "ofertas-imperdibles-novedades",
+    });
+  } catch (error) {
+    console.warn("No fue posible mostrar la notificación del navegador.", error);
+  }
+}
+
+function revisarAvisosNovedades() {
+  crearControlesAvisosNovedades();
+  if (!todosLosCupones.length && !todasLasPublicidades.length) return;
+
+  const ultimoCuponActual = maxId(cuponesNotificables());
+  const ultimoAnironaActual = maxId(productosAnironaNotificables());
+  const ultimoCuponVisto = Number(localStorage.getItem(CLAVE_ULTIMO_CUPON) || 0);
+  const ultimoAnironaVisto = Number(localStorage.getItem(CLAVE_ULTIMO_ANIRONA) || 0);
+
+  if (!avisosNovedadesInicializados) {
+    avisosNovedadesInicializados = true;
+  }
+
+  if (!ultimoCuponVisto && ultimoCuponActual) {
+    localStorage.setItem(CLAVE_ULTIMO_CUPON, String(ultimoCuponActual));
+  }
+  if (!ultimoAnironaVisto && ultimoAnironaActual) {
+    localStorage.setItem(CLAVE_ULTIMO_ANIRONA, String(ultimoAnironaActual));
+  }
+
+  if (!avisosNovedadesActivos()) return;
+
+  const referenciaCupon = Number(localStorage.getItem(CLAVE_ULTIMO_CUPON) || 0);
+  const referenciaAnirona = Number(localStorage.getItem(CLAVE_ULTIMO_ANIRONA) || 0);
+  const hayCuponNuevo = referenciaCupon > 0 && ultimoCuponActual > referenciaCupon;
+  const hayProductoNuevo = referenciaAnirona > 0 && ultimoAnironaActual > referenciaAnirona;
+  if (!hayCuponNuevo && !hayProductoNuevo) return;
+
+  let titulo = "Hay novedades en Ofertas Imperdibles";
+  let mensaje = "";
+  let seccion = "";
+
+  if (hayCuponNuevo && hayProductoNuevo) {
+    mensaje = "Se agregó un nuevo cupón y un nuevo producto en Comunidad Anirona.";
+    seccion = "comunidad_anirona";
+  } else if (hayCuponNuevo) {
+    titulo = "Nuevo cupón disponible";
+    mensaje = "Se agregó un nuevo cupón. Revísalo antes de que termine.";
+    seccion = "cupones";
+  } else {
+    titulo = "Nuevo producto Anirona";
+    mensaje = "Se agregó un nuevo producto al catálogo de Comunidad Anirona.";
+    seccion = "comunidad_anirona";
+  }
+
+  mostrarToastNovedades({ titulo, mensaje, seccion });
+  lanzarNotificacionNavegador(titulo, mensaje);
+  localStorage.setItem(CLAVE_ULTIMO_CUPON, String(ultimoCuponActual));
+  localStorage.setItem(CLAVE_ULTIMO_ANIRONA, String(ultimoAnironaActual));
+}
+
 setInterval(() => {
   if (
     document.hidden ||
@@ -2044,6 +2253,7 @@ window.addEventListener("popstate", () => {
 
 inicializarAyudaCupones();
 inicializarCarruselesPublicidad();
+crearControlesAvisosNovedades();
 
 const urlInicialTieneSeccion =
   new URLSearchParams(window.location.search).has("seccion");

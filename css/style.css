@@ -5619,15 +5619,53 @@ body {
 }
 
 
-/* v77.4.3 LTS - Logos marketplaces más grandes en móvil */
-@media (max-width:768px){
-  .marketplace-btn img,
-  .btn-marketplace img,
-  .marketplace-buttons img{
-    transform: scale(1.35);
-    transform-origin:center center;
-    max-width:90% !important;
-    max-height:90% !important;
-    object-fit:contain;
-  }
+/* V77.5 LTS — Avisos de nuevos cupones y productos */
+.boton-avisos-novedades {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 8px 13px;
+  border: 1px solid rgba(22, 133, 101, .24);
+  border-radius: 999px;
+  background: #fff;
+  color: #126b53;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.boton-avisos-novedades:hover { background: #eff9f5; }
+.boton-avisos-novedades.activo { background: #eaf8f2; }
+.aviso-novedades-toast {
+  position: fixed;
+  z-index: 10020;
+  right: 16px;
+  bottom: 82px;
+  width: min(360px, calc(100vw - 32px));
+  padding: 14px 15px;
+  border: 1px solid rgba(22, 133, 101, .24);
+  border-radius: 16px;
+  background: #fff;
+  color: #24332e;
+  box-shadow: 0 14px 40px rgba(20, 60, 47, .18);
+}
+.aviso-novedades-toast[hidden] { display: none !important; }
+.aviso-novedades-toast strong { display: block; margin-bottom: 4px; color: #0d7254; }
+.aviso-novedades-toast p { margin: 0; line-height: 1.4; }
+.aviso-novedades-toast-acciones { display: flex; gap: 8px; margin-top: 10px; }
+.aviso-novedades-toast button {
+  min-height: 34px;
+  padding: 7px 11px;
+  border: 0;
+  border-radius: 9px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.aviso-novedades-ver { background: #168565; color: #fff; }
+.aviso-novedades-cerrar { background: #edf2ef; color: #33473f; }
+@media (max-width: 600px) {
+  .boton-avisos-novedades { min-height: 34px; padding: 7px 10px; font-size: 12px; }
+  .aviso-novedades-toast { right: 10px; bottom: 72px; width: calc(100vw - 20px); }
 }
