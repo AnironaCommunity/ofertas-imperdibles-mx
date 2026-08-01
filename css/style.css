@@ -5245,3 +5245,88 @@ body {
 .oferta-ver-mercado-libre .oferta-logo-marketplace {
   transform: scale(1.1) !important;
 }
+
+/* ============================================================
+   V77.2 LTS — Buscador y catálogo por popularidad
+   ============================================================ */
+.buscador-catalogo-anirona {
+  margin: 0 0 14px;
+}
+
+.buscador-catalogo-campo {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 5px 7px 5px 13px;
+  border: 1px solid #d8e2dc;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgba(25, 61, 39, .06);
+}
+
+.buscador-catalogo-campo:focus-within {
+  border-color: #48a43c;
+  box-shadow: 0 0 0 3px rgba(72, 164, 60, .13);
+}
+
+.buscador-catalogo-campo input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  padding: 9px 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.buscador-catalogo-campo input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.buscador-catalogo-campo button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 9px;
+  background: #eef5ef;
+  color: #36563b;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.resultados-catalogo-anirona {
+  margin: 7px 4px 0;
+  color: #647067;
+  font-size: 12px;
+  text-align: right;
+}
+
+#ofertas-comunidad-anirona .sin-resultados-busqueda {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 520px) {
+  .buscador-catalogo-anirona {
+    margin-bottom: 10px;
+  }
+
+  .buscador-catalogo-campo {
+    border-radius: 12px;
+    padding-left: 10px;
+  }
+
+  .buscador-catalogo-campo input {
+    font-size: 13px;
+  }
+
+  .resultados-catalogo-anirona {
+    font-size: 10.5px;
+  }
+}

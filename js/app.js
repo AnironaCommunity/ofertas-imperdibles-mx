@@ -49,6 +49,9 @@ const seccionComunidadAnirona = document.querySelector("#seccion-comunidad-aniro
 const seccionOfertasAmazon = document.querySelector("#seccion-ofertas-amazon");
 const seccionOfertasMercadoLibre = document.querySelector("#seccion-ofertas-mercado-libre");
 const ofertasComunidadAnirona = document.querySelector("#ofertas-comunidad-anirona");
+const buscarCatalogoAnirona = document.querySelector("#buscar-catalogo-anirona");
+const limpiarBusquedaAnirona = document.querySelector("#limpiar-busqueda-anirona");
+const resultadosCatalogoAnirona = document.querySelector("#resultados-catalogo-anirona");
 const ofertasAmazon = document.querySelector("#ofertas-amazon");
 const ofertasMercadoLibre = document.querySelector("#ofertas-mercado-libre");
 
@@ -1623,7 +1626,99 @@ function publicidadPerteneceASeccion(publicidad, seccion) {
   return secciones.includes(seccion);
 }
 
+
+function normalizarTextoBusqueda(valor = "") {
+  return String(valor)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
+function esPublicidadTop(publicidad) {
+  return Boolean(
+    publicidad?.top === true ||
+    publicidad?.es_top === true ||
+    publicidad?.destacado === true ||
+    String(publicidad?.etiqueta || "").toLowerCase() === "top"
+  );
+}
+
+function fechaPublicidad(publicidad) {
+  const fecha = publicidad?.fecha_publicacion || publicidad?.created_at || publicidad?.fecha_creacion;
+  const tiempo = fecha ? new Date(fecha).getTime() : Number(publicidad?.id) || 0;
+  return Number.isFinite(tiempo) ? tiempo : 0;
+}
+
+function ordenarCatalogoAnirona(items) {
+  return [...items].sort((a, b) => {
+    const diferenciaTop = Number(esPublicidadTop(b)) - Number(esPublicidadTop(a));
+    if (diferenciaTop) return diferenciaTop;
+
+    const diferenciaVisitas = (Number(b?.visitas) || 0) - (Number(a?.visitas) || 0);
+    if (diferenciaVisitas) return diferenciaVisitas;
+
+    return fechaPublicidad(b) - fechaPublicidad(a);
+  });
+}
+
+function actualizarResumenCatalogoAnirona(mostrados, total, consulta = "") {
+  if (!resultadosCatalogoAnirona) return;
+
+  if (consulta) {
+    resultadosCatalogoAnirona.textContent = mostrados === 1
+      ? "1 producto encontrado"
+      : `${mostrados} productos encontrados`;
+  } else {
+    resultadosCatalogoAnirona.textContent = total === 1
+      ? "1 producto en el catálogo"
+      : `${total} productos en el catálogo · ordenados por popularidad`;
+  }
+}
+
+function renderizarCatalogoAnirona() {
+  if (!ofertasComunidadAnirona) return;
+
+  const todos = todasLasPublicidades.filter((item) =>
+    publicidadPerteneceASeccion(item, "comunidad_anirona")
+  );
+  const consulta = normalizarTextoBusqueda(buscarCatalogoAnirona?.value || "");
+  const filtrados = consulta
+    ? todos.filter((item) => normalizarTextoBusqueda([
+        item?.titulo,
+        item?.descripcion,
+        item?.modelo,
+      ].filter(Boolean).join(" ")).includes(consulta))
+    : todos;
+  const ordenados = ordenarCatalogoAnirona(filtrados);
+
+  ofertasComunidadAnirona.replaceChildren();
+
+  if (!ordenados.length) {
+    const mensaje = document.createElement("div");
+    mensaje.className = "sin-ofertas-categoria sin-resultados-busqueda";
+    mensaje.innerHTML = consulta
+      ? `<div aria-hidden="true">🔎</div><h3>No encontramos coincidencias</h3><p>Prueba con otra palabra, modelo o característica.</p>`
+      : `<div aria-hidden="true">🛍️</div><h3>No hay productos disponibles</h3><p>Pronto agregaremos nuevos productos en esta sección.</p>`;
+    ofertasComunidadAnirona.appendChild(mensaje);
+  } else {
+    ordenados.forEach((item) => {
+      ofertasComunidadAnirona.appendChild(crearTarjetaOferta(item, "comunidad_anirona"));
+    });
+  }
+
+  ofertasComunidadAnirona.appendChild(crearTarjetaCanalAnirona());
+  actualizarResumenCatalogoAnirona(ordenados.length, todos.length, consulta);
+
+  if (limpiarBusquedaAnirona) limpiarBusquedaAnirona.hidden = !consulta;
+}
+
 function renderizarModuloOfertas(categoria, contenedor, seccion) {
+  if (categoria === "comunidad_anirona") {
+    renderizarCatalogoAnirona();
+    return;
+  }
+
   const items = todasLasPublicidades.filter((item) =>
     publicidadPerteneceASeccion(item, categoria)
   );
@@ -1645,9 +1740,6 @@ function renderizarModuloOfertas(categoria, contenedor, seccion) {
     });
   }
 
-  if (categoria === "comunidad_anirona") {
-    contenedor.appendChild(crearTarjetaCanalAnirona());
-  }
 }
 
 const DURACION_VISITA_PRODUCTO_MS = 24 * 60 * 60 * 1000;
@@ -1709,6 +1801,18 @@ async function registrarVisitaPublicidad(publicidad) {
     console.warn("No fue posible registrar la visita del producto.", error);
   }
 }
+
+
+buscarCatalogoAnirona?.addEventListener("input", () => {
+  renderizarCatalogoAnirona();
+});
+
+limpiarBusquedaAnirona?.addEventListener("click", () => {
+  if (!buscarCatalogoAnirona) return;
+  buscarCatalogoAnirona.value = "";
+  buscarCatalogoAnirona.focus();
+  renderizarCatalogoAnirona();
+});
 
 async function cargarPublicidad() {
   try {

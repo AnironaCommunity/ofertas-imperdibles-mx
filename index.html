@@ -343,6 +343,21 @@
       <div class="titulo-fila titulo-con-separador">
         <h2 class="titulo-seccion titulo-seccion-con-logo"><img src="img/anirona.png" alt="" aria-hidden="true" /><span id="nombre-seccion-comunidad">Comunidad Anirona</span></h2>
       </div>
+      <div class="buscador-catalogo-anirona" role="search" aria-label="Buscar productos del catálogo Anirona">
+        <label class="texto-accesible" for="buscar-catalogo-anirona">Buscar producto del catálogo</label>
+        <div class="buscador-catalogo-campo">
+          <span aria-hidden="true">🔍</span>
+          <input
+            id="buscar-catalogo-anirona"
+            type="search"
+            inputmode="search"
+            autocomplete="off"
+            placeholder="Buscar herramienta, modelo o característica..."
+          />
+          <button id="limpiar-busqueda-anirona" type="button" aria-label="Limpiar búsqueda" title="Limpiar búsqueda" hidden>×</button>
+        </div>
+        <p id="resultados-catalogo-anirona" class="resultados-catalogo-anirona" aria-live="polite"></p>
+      </div>
       <div
         id="ofertas-comunidad-anirona"
         class="ofertas-grid-compacta"
