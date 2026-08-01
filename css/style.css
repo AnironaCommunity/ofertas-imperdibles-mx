@@ -5533,3 +5533,47 @@ body {
     font-size: 18px;
   }
 }
+
+/* ============================================================
+   V77.4.1 LTS — Logos de marketplaces normalizados
+   - Mercado Libre y Amazon usan el mismo lienzo
+   - Logos centrados vertical y horizontalmente
+   - Sin franja blanca en Mercado Libre
+   - Separación uniforme entre disponibilidad, vistas y acciones
+   ============================================================ */
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre,
+.tarjeta-oferta-anirona .oferta-ver-amazon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  background-clip: padding-box !important;
+}
+
+.tarjeta-oferta-anirona .oferta-logo-marketplace,
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre .oferta-logo-marketplace,
+.tarjeta-oferta-anirona .oferta-ver-amazon .oferta-logo-marketplace {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  object-fit: fill !important;
+  object-position: center center !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.tarjeta-oferta-anirona .disponibilidad-marketplaces {
+  margin-bottom: 0 !important;
+}
+
+.tarjeta-oferta-anirona .oferta-meta {
+  min-height: 22px !important;
+  margin: 0 0 6px !important;
+  padding-top: 5px !important;
+}
