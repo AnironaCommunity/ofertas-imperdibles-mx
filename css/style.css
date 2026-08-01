@@ -5027,3 +5027,200 @@ body {
     max-height: 30px !important;
   }
 }
+
+
+/* ============================================================
+   V77 LTS — Comunidad Anirona terminada y estable
+   - Orden: Mercado Libre, Amazon y Compartir
+   - Botones oficiales y simétricos
+   - Vistas encima de acciones
+   - Título máximo 3 líneas y descripción uniforme
+   - Imágenes de altura uniforme
+   - Optimización móvil sin romper las dos columnas
+   ============================================================ */
+
+.tarjeta-oferta-anirona {
+  overflow: hidden;
+}
+
+.tarjeta-oferta-anirona .oferta-imagen-contenedor {
+  width: 100%;
+  aspect-ratio: 4 / 3 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 7px;
+  background: #fff;
+}
+
+.tarjeta-oferta-anirona .oferta-imagen {
+  width: 100%;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+}
+
+.tarjeta-oferta-anirona .oferta-contenido {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  padding: 10px;
+}
+
+.tarjeta-oferta-anirona .oferta-contenido h3 {
+  display: -webkit-box !important;
+  min-height: calc(1.3em * 3);
+  max-height: calc(1.3em * 3);
+  margin: 0 0 6px;
+  overflow: hidden !important;
+  font-size: 14px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 3 !important;
+}
+
+.tarjeta-oferta-anirona .oferta-descripcion {
+  display: -webkit-box;
+  min-height: calc(1.4em * 3);
+  max-height: calc(1.4em * 3);
+  margin: 0 0 8px;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #5c655f;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.tarjeta-oferta-anirona .oferta-meta {
+  order: 2;
+  display: flex;
+  align-items: center;
+  min-height: 22px;
+  margin: auto 0 6px;
+}
+
+.tarjeta-oferta-anirona .oferta-visitas {
+  width: 100%;
+  font-size: 11px;
+  line-height: 1.2;
+  color: #727b75;
+  text-align: left;
+}
+
+.tarjeta-oferta-anirona .oferta-acciones-anirona {
+  order: 3;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 42px !important;
+  gap: 6px !important;
+  align-items: stretch;
+  width: 100%;
+  margin-top: 0;
+}
+
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver,
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-compartir {
+  min-height: 42px !important;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre,
+.tarjeta-oferta-anirona .oferta-ver-amazon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,.08);
+}
+
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre {
+  background: #ffe600 !important;
+}
+
+.tarjeta-oferta-anirona .oferta-ver-amazon {
+  background: #232f3e !important;
+}
+
+.tarjeta-oferta-anirona .oferta-logo-marketplace,
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre .oferta-logo-marketplace,
+.tarjeta-oferta-anirona .oferta-ver-amazon .oferta-logo-marketplace {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  transform: none !important;
+}
+
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-compartir {
+  grid-column: auto !important;
+  width: 42px !important;
+  min-width: 42px !important;
+  padding: 0 !important;
+}
+
+/* Una sola tienda: ocupa las dos columnas y compartir conserva su lugar. */
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver:first-child:nth-last-child(2) {
+  grid-column: 1 / 3 !important;
+}
+
+.tarjeta-oferta-anirona .oferta-mensaje {
+  order: 4;
+}
+
+@media (max-width: 520px) {
+  .tarjeta-oferta-anirona .oferta-imagen-contenedor {
+    padding: 5px;
+  }
+
+  .tarjeta-oferta-anirona .oferta-contenido {
+    padding: 8px;
+  }
+
+  .tarjeta-oferta-anirona .oferta-contenido h3 {
+    min-height: calc(1.28em * 3);
+    max-height: calc(1.28em * 3);
+    font-size: 12px;
+    line-height: 1.28;
+  }
+
+  .tarjeta-oferta-anirona .oferta-descripcion {
+    min-height: calc(1.35em * 3);
+    max-height: calc(1.35em * 3);
+    font-size: 10.5px;
+    line-height: 1.35;
+  }
+
+  .tarjeta-oferta-anirona .oferta-visitas {
+    font-size: 9.5px;
+  }
+
+  .tarjeta-oferta-anirona .oferta-acciones-anirona {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 36px !important;
+    gap: 4px !important;
+  }
+
+  .tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver,
+  .tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-compartir {
+    min-height: 36px !important;
+    border-radius: 8px;
+  }
+
+  .tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-compartir {
+    width: 36px !important;
+    min-width: 36px !important;
+  }
+
+  .tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-compartir svg {
+    width: 17px;
+    height: 17px;
+  }
+}
