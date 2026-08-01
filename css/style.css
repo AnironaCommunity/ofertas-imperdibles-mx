@@ -5705,3 +5705,111 @@ body {
     font-size: 8.5px !important;
   }
 }
+
+
+/* ============================================================
+   V77.7 LTS — Tutorial guiado interactivo
+   ============================================================ */
+.hero-redes-botones .boton-ver-tutorial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 29px;
+  min-height: 29px;
+  padding: 5px 9px;
+  gap: 6px;
+  border: 1px solid rgba(79, 56, 90, .10);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .72);
+  color: #111;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+}
+.hero-redes-botones .boton-ver-tutorial:hover,
+.hero-redes-botones .boton-ver-tutorial:focus-visible {
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(69, 45, 79, .09);
+}
+.tutorial-foco {
+  position: fixed;
+  z-index: 30000;
+  border: 3px solid #17a673;
+  border-radius: 14px;
+  background: transparent;
+  box-shadow: 0 0 0 9999px rgba(18, 27, 24, .67), 0 0 0 5px rgba(23, 166, 115, .20);
+  pointer-events: none;
+  transition: left .22s ease, top .22s ease, width .22s ease, height .22s ease;
+}
+.tutorial-foco[hidden],
+.tutorial-tarjeta[hidden] { display: none !important; }
+.tutorial-tarjeta {
+  position: fixed;
+  z-index: 30010;
+  width: min(360px, calc(100vw - 24px));
+  padding: 16px;
+  border: 1px solid rgba(21, 119, 86, .22);
+  border-radius: 18px;
+  background: #fff;
+  color: #26332e;
+  box-shadow: 0 18px 50px rgba(5, 25, 18, .28);
+}
+.tutorial-tarjeta.tutorial-centrada {
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%);
+}
+.tutorial-tarjeta:not(.tutorial-centrada) { transform: none; }
+.tutorial-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+.tutorial-contador {
+  color: #168565;
+  font-size: 12px;
+  font-weight: 800;
+}
+.tutorial-cerrar {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+  background: #edf3f0;
+  color: #34463f;
+  font-size: 21px;
+  line-height: 1;
+  cursor: pointer;
+}
+.tutorial-icono { margin-bottom: 5px; font-size: 25px; }
+.tutorial-tarjeta h2 { margin: 0 0 7px; color: #145f49; font-size: 19px; line-height: 1.2; }
+.tutorial-tarjeta p { margin: 0; font-size: 14px; line-height: 1.48; }
+.tutorial-acciones { display: flex; justify-content: flex-end; gap: 8px; margin-top: 15px; }
+.tutorial-acciones button {
+  min-height: 38px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+.tutorial-anterior { background: #edf2ef; color: #34463f; }
+.tutorial-siguiente { background: #168565; color: #fff; }
+html.tutorial-en-curso { scroll-behavior: smooth; }
+@media (max-width: 600px) {
+  .hero-redes-botones .boton-ver-tutorial {
+    height: 25px;
+    min-height: 25px;
+    padding: 4px 7px;
+    gap: 4px;
+    font-size: 8.5px;
+  }
+  .tutorial-tarjeta { padding: 14px; border-radius: 15px; }
+  .tutorial-tarjeta h2 { font-size: 17px; }
+  .tutorial-tarjeta p { font-size: 13px; }
+  .tutorial-acciones button { min-height: 36px; padding: 7px 12px; }
+}

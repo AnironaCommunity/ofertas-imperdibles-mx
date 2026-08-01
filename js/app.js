@@ -2345,3 +2345,260 @@ load();
 document.addEventListener("ofertas:etiquetas-cargadas", () => {
   if (vistaActiva === "cupones") renderizarCategoria();
 });
+
+
+/* ================= TUTORIAL GUIADO V77.7 LTS ================= */
+const CLAVE_TUTORIAL_COMPLETADO = "oi-tutorial-v77-7-completado";
+let tutorialActivo = false;
+let tutorialPasoActual = 0;
+let tutorialElementos = null;
+
+const esperarTutorial = (ms = 450) => new Promise((resolve) => window.setTimeout(resolve, ms));
+
+function crearBotonTutorial() {
+  if (document.querySelector("#boton-ver-tutorial")) return;
+  const contenedor = document.querySelector(".hero-redes-botones");
+  if (!contenedor) return;
+
+  const boton = document.createElement("button");
+  boton.id = "boton-ver-tutorial";
+  boton.type = "button";
+  boton.className = "boton-ver-tutorial";
+  boton.innerHTML = '<span aria-hidden="true">📖</span><span>Ver tutorial</span>';
+  boton.title = "Conoce las funciones principales de la página";
+  boton.addEventListener("click", () => iniciarTutorialGuiado(false));
+
+  const botonAvisos = contenedor.querySelector("#boton-avisos-novedades");
+  if (botonAvisos) botonAvisos.insertAdjacentElement("afterend", boton);
+  else contenedor.appendChild(boton);
+}
+
+function crearInterfazTutorial() {
+  if (tutorialElementos) return tutorialElementos;
+
+  const foco = document.createElement("div");
+  foco.className = "tutorial-foco";
+  foco.hidden = true;
+
+  const tarjeta = document.createElement("section");
+  tarjeta.className = "tutorial-tarjeta";
+  tarjeta.hidden = true;
+  tarjeta.setAttribute("role", "dialog");
+  tarjeta.setAttribute("aria-modal", "true");
+  tarjeta.setAttribute("aria-labelledby", "tutorial-titulo");
+  tarjeta.innerHTML = `
+    <div class="tutorial-cabecera">
+      <span id="tutorial-contador" class="tutorial-contador"></span>
+      <button class="tutorial-cerrar" type="button" aria-label="Cerrar tutorial">×</button>
+    </div>
+    <div class="tutorial-icono" aria-hidden="true">✨</div>
+    <h2 id="tutorial-titulo"></h2>
+    <p id="tutorial-texto"></p>
+    <div class="tutorial-acciones">
+      <button class="tutorial-anterior" type="button">Anterior</button>
+      <button class="tutorial-siguiente" type="button">Siguiente</button>
+    </div>
+  `;
+
+  document.body.append(foco, tarjeta);
+  tutorialElementos = {
+    foco,
+    tarjeta,
+    titulo: tarjeta.querySelector("#tutorial-titulo"),
+    texto: tarjeta.querySelector("#tutorial-texto"),
+    contador: tarjeta.querySelector("#tutorial-contador"),
+    anterior: tarjeta.querySelector(".tutorial-anterior"),
+    siguiente: tarjeta.querySelector(".tutorial-siguiente"),
+    cerrar: tarjeta.querySelector(".tutorial-cerrar"),
+  };
+
+  tutorialElementos.anterior.addEventListener("click", () => mostrarPasoTutorial(tutorialPasoActual - 1));
+  tutorialElementos.siguiente.addEventListener("click", () => {
+    if (tutorialPasoActual >= pasosTutorial.length - 1) finalizarTutorialGuiado(true);
+    else mostrarPasoTutorial(tutorialPasoActual + 1);
+  });
+  tutorialElementos.cerrar.addEventListener("click", () => finalizarTutorialGuiado(true));
+
+  window.addEventListener("resize", () => {
+    if (tutorialActivo) posicionarTutorial(pasosTutorial[tutorialPasoActual]);
+  });
+  window.addEventListener("scroll", () => {
+    if (tutorialActivo) posicionarTutorial(pasosTutorial[tutorialPasoActual]);
+  }, { passive: true });
+
+  return tutorialElementos;
+}
+
+const pasosTutorial = [
+  {
+    titulo: "¡Bienvenido a Ofertas Imperdibles MX!",
+    texto: "Te mostraremos en menos de un minuto cómo encontrar cupones, ofertas y productos Anirona.",
+    icono: "👋",
+  },
+  {
+    selector: ".menu-ofertas",
+    titulo: "Ofertas por marketplace",
+    texto: "Desde aquí puedes consultar las promociones publicadas para Mercado Libre y Amazon.",
+    preparar: async () => window.scrollTo({ top: 0, behavior: "smooth" }),
+  },
+  {
+    selector: ".acceso-comunidad-anirona",
+    titulo: "Comunidad Anirona",
+    texto: "Entra al catálogo de herramientas, rifas, novedades y publicaciones de la comunidad.",
+    preparar: async () => window.scrollTo({ top: 0, behavior: "smooth" }),
+  },
+  {
+    selector: ".tarjeta-cupon .boton-canjear, .cupon-card .boton-canjear, .boton-canjear",
+    titulo: "Copiar y canjear",
+    texto: "Este botón copia el cupón y te dirige a Mercado Libre para que puedas aplicarlo en tu compra.",
+    preparar: async () => { tabTienda?.click(); await esperarTutorial(650); },
+  },
+  {
+    selector: "#tab-tienda",
+    titulo: "Tienda",
+    texto: "Aquí se muestran los cupones principales y generales disponibles en la página.",
+    preparar: async () => { tabTienda?.click(); await esperarTutorial(350); },
+  },
+  {
+    selector: "#tab-bancarios",
+    titulo: "Cupones bancarios",
+    texto: "Consulta aquí los descuentos exclusivos de bancos y métodos de pago participantes.",
+  },
+  {
+    selector: "#buscar-catalogo-anirona",
+    titulo: "Buscador del catálogo",
+    texto: "Escribe el nombre, modelo o característica de una herramienta y los productos se filtrarán mientras escribes.",
+    preparar: async () => {
+      document.querySelector('[data-vista="comunidad_anirona"]')?.click();
+      await esperarTutorial(750);
+    },
+  },
+  {
+    selector: ".tarjeta-oferta-anirona .disponibilidad-marketplaces",
+    titulo: "Disponibilidad",
+    texto: "El punto verde indica que el producto está disponible; el punto rojo indica que actualmente no lo está.",
+  },
+  {
+    selector: ".tarjeta-oferta-anirona .oferta-acciones-anirona",
+    titulo: "Elige dónde comprar",
+    texto: "Usa los botones de Mercado Libre o Amazon para abrir el producto en tu marketplace preferido.",
+  },
+  {
+    selector: ".tarjeta-oferta-anirona .oferta-compartir",
+    titulo: "Compartir productos",
+    texto: "Comparte rápidamente el nombre del producto y sus enlaces con tus contactos.",
+  },
+  {
+    selector: "#boton-avisos-novedades",
+    titulo: "Activar avisos",
+    texto: "Activa las alertas para enterarte cuando publiquemos un nuevo cupón o un nuevo producto Anirona.",
+    preparar: async () => window.scrollTo({ top: 0, behavior: "smooth" }),
+  },
+  {
+    selector: ".hero-redes-whatsapp, .hero-redes-facebook",
+    titulo: "Síguenos",
+    texto: "Únete a WhatsApp y Facebook para recibir promociones y novedades de la comunidad.",
+    preparar: async () => window.scrollTo({ top: 0, behavior: "smooth" }),
+  },
+  {
+    titulo: "¡Listo!",
+    texto: "Ya conoces las funciones principales. Puedes repetir este recorrido cuando quieras desde el botón Ver tutorial.",
+    icono: "🎉",
+  },
+];
+
+function obtenerObjetivoTutorial(paso) {
+  if (!paso?.selector) return null;
+  return document.querySelector(paso.selector);
+}
+
+function posicionarTutorial(paso) {
+  if (!tutorialActivo || !tutorialElementos) return;
+  const objetivo = obtenerObjetivoTutorial(paso);
+  const { foco, tarjeta } = tutorialElementos;
+
+  if (!objetivo) {
+    foco.hidden = true;
+    tarjeta.classList.add("tutorial-centrada");
+    tarjeta.style.removeProperty("left");
+    tarjeta.style.removeProperty("top");
+    return;
+  }
+
+  const rect = objetivo.getBoundingClientRect();
+  const margen = 7;
+  foco.hidden = false;
+  foco.style.left = `${Math.max(4, rect.left - margen)}px`;
+  foco.style.top = `${Math.max(4, rect.top - margen)}px`;
+  foco.style.width = `${Math.min(window.innerWidth - 8, rect.width + margen * 2)}px`;
+  foco.style.height = `${Math.min(window.innerHeight - 8, rect.height + margen * 2)}px`;
+
+  tarjeta.classList.remove("tutorial-centrada");
+  const anchoTarjeta = Math.min(360, window.innerWidth - 24);
+  const altoTarjeta = tarjeta.offsetHeight || 240;
+  let left = rect.left + rect.width / 2 - anchoTarjeta / 2;
+  left = Math.max(12, Math.min(left, window.innerWidth - anchoTarjeta - 12));
+  let top = rect.bottom + 14;
+  if (top + altoTarjeta > window.innerHeight - 10) top = rect.top - altoTarjeta - 14;
+  if (top < 10) top = Math.max(12, window.innerHeight / 2 - altoTarjeta / 2);
+  tarjeta.style.width = `${anchoTarjeta}px`;
+  tarjeta.style.left = `${left}px`;
+  tarjeta.style.top = `${top}px`;
+}
+
+async function mostrarPasoTutorial(indice) {
+  if (!tutorialActivo) return;
+  indice = Math.max(0, Math.min(indice, pasosTutorial.length - 1));
+  tutorialPasoActual = indice;
+  const paso = pasosTutorial[indice];
+  const ui = crearInterfazTutorial();
+
+  ui.foco.hidden = true;
+  ui.tarjeta.style.visibility = "hidden";
+  if (typeof paso.preparar === "function") {
+    try { await paso.preparar(); } catch (error) { console.warn("No fue posible preparar un paso del tutorial.", error); }
+  }
+
+  let objetivo = obtenerObjetivoTutorial(paso);
+  if (objetivo) {
+    objetivo.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+    await esperarTutorial(500);
+    objetivo = obtenerObjetivoTutorial(paso);
+  }
+
+  ui.titulo.textContent = paso.titulo;
+  ui.texto.textContent = paso.texto;
+  ui.tarjeta.querySelector(".tutorial-icono").textContent = paso.icono || "💡";
+  ui.contador.textContent = `${indice + 1} de ${pasosTutorial.length}`;
+  ui.anterior.hidden = indice === 0;
+  ui.siguiente.textContent = indice === pasosTutorial.length - 1 ? "Finalizar" : "Siguiente";
+  ui.tarjeta.hidden = false;
+  ui.tarjeta.style.visibility = "visible";
+  posicionarTutorial(paso);
+}
+
+function iniciarTutorialGuiado(automatico = false) {
+  if (tutorialActivo) return;
+  tutorialActivo = true;
+  tutorialPasoActual = 0;
+  document.documentElement.classList.add("tutorial-en-curso");
+  crearInterfazTutorial();
+  mostrarPasoTutorial(0);
+  if (!automatico) localStorage.setItem(CLAVE_TUTORIAL_COMPLETADO, "1");
+}
+
+function finalizarTutorialGuiado(completado = false) {
+  tutorialActivo = false;
+  document.documentElement.classList.remove("tutorial-en-curso");
+  if (tutorialElementos) {
+    tutorialElementos.foco.hidden = true;
+    tutorialElementos.tarjeta.hidden = true;
+  }
+  if (completado) localStorage.setItem(CLAVE_TUTORIAL_COMPLETADO, "1");
+}
+
+crearBotonTutorial();
+window.setTimeout(() => {
+  crearBotonTutorial();
+  if (!localStorage.getItem(CLAVE_TUTORIAL_COMPLETADO)) iniciarTutorialGuiado(true);
+}, 1800);
