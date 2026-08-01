@@ -93,7 +93,7 @@ export default async function handler(request, response) {
   try {
     if (request.method === "GET") {
       const data = await requestSupabase(
-        "publicidades?select=id,titulo,descripcion,imagen_url,enlace,enlace_mercado_libre,enlace_amazon,precio_publicado,precio_cupon,codigo_cupon,plataforma,categoria,secciones,activo,orden,clics,visitas,fecha_creacion&order=orden.asc,id.asc"
+        "publicidades?select=id,titulo,descripcion,imagen_url,enlace,enlace_mercado_libre,enlace_amazon,precio_publicado,precio_cupon,codigo_cupon,plataforma,categoria,secciones,activo,orden,clics,visitas,fecha_creacion,disponible_mercado_libre,disponible_amazon,es_nuevo,fecha_nuevo&order=orden.asc,id.asc"
       );
 
       return response.status(200).json(data);
@@ -112,6 +112,12 @@ export default async function handler(request, response) {
         enlace: String(request.body?.enlace || "").trim(),
         enlace_mercado_libre: String(request.body?.enlace_mercado_libre || "").trim(),
         enlace_amazon: String(request.body?.enlace_amazon || "").trim(),
+        disponible_mercado_libre: request.body?.disponible_mercado_libre !== false,
+        disponible_amazon: request.body?.disponible_amazon !== false,
+        es_nuevo: request.body?.es_nuevo === true,
+        fecha_nuevo: request.body?.es_nuevo === true
+          ? (String(request.body?.fecha_nuevo || "").trim() || new Date().toISOString())
+          : null,
         precio_publicado: String(request.body?.precio_publicado || "").trim(),
         precio_cupon: String(request.body?.precio_cupon || "").trim(),
         codigo_cupon: String(request.body?.codigo_cupon || "").trim(),
@@ -167,6 +173,10 @@ export default async function handler(request, response) {
         "enlace",
         "enlace_mercado_libre",
         "enlace_amazon",
+        "disponible_mercado_libre",
+        "disponible_amazon",
+        "es_nuevo",
+        "fecha_nuevo",
         "precio_publicado",
         "precio_cupon",
         "codigo_cupon",
@@ -178,8 +188,12 @@ export default async function handler(request, response) {
       ]) {
         if (!Object.hasOwn(request.body || {}, field)) continue;
 
-        if (field === "activo") {
+        if (["activo", "disponible_mercado_libre", "disponible_amazon", "es_nuevo"].includes(field)) {
           payload[field] = Boolean(request.body[field]);
+        } else if (field === "fecha_nuevo") {
+          payload[field] = request.body[field]
+            ? String(request.body[field]).trim()
+            : null;
         } else if (field === "secciones") {
           payload.secciones = normalizeSections(
             request.body.secciones,

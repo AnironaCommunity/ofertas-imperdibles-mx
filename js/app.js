@@ -1361,6 +1361,14 @@ function datosPlataformaPublicidad(publicidad) {
       };
 }
 
+const DURACION_NUEVO_CATALOGO_MS = 5 * 24 * 60 * 60 * 1000;
+
+function esProductoNuevoVigente(publicidad) {
+  if (!publicidad?.es_nuevo || !publicidad?.fecha_nuevo) return false;
+  const fecha = new Date(publicidad.fecha_nuevo).getTime();
+  return Number.isFinite(fecha) && Date.now() - fecha < DURACION_NUEVO_CATALOGO_MS;
+}
+
 function crearTarjetaOferta(publicidad, categoria) {
   const articulo = document.createElement("article");
   articulo.className = "tarjeta-oferta";
@@ -1376,6 +1384,9 @@ function crearTarjetaOferta(publicidad, categoria) {
     (obtenerPlataformaPublicidad(publicidad) === "mercadolibre" ? enlacePrincipal : "");
   const enlaceAmazon = String(publicidad.enlace_amazon || "").trim() ||
     (obtenerPlataformaPublicidad(publicidad) === "amazon" ? enlacePrincipal : "");
+  const disponibleMercadoLibre = publicidad.disponible_mercado_libre !== false;
+  const disponibleAmazon = publicidad.disponible_amazon !== false;
+  const productoNuevo = esProductoNuevoVigente(publicidad);
 
   if (esComunidadAnirona) articulo.classList.add("tarjeta-oferta-anirona");
 
@@ -1410,8 +1421,16 @@ function crearTarjetaOferta(publicidad, categoria) {
     </button>
 
     <div class="oferta-contenido">
+      ${esComunidadAnirona && productoNuevo ? `<span class="etiqueta-producto-nuevo">✨ Nuevo</span>` : ""}
       <h3>${escaparHtml(publicidad.titulo || "Oferta destacada")}</h3>
       ${publicidad.descripcion ? `<p class="oferta-descripcion">${escaparHtml(publicidad.descripcion)}</p>` : ""}
+      ${esComunidadAnirona ? `
+        <div class="disponibilidad-marketplaces" aria-label="Disponibilidad del producto">
+          <span class="disponibilidad-titulo">Disponible en:</span>
+          ${enlaceMercadoLibre ? `<span class="estado-marketplace"><i class="punto-disponibilidad ${disponibleMercadoLibre ? "disponible" : "no-disponible"}" aria-hidden="true"></i> Mercado Libre</span>` : ""}
+          ${enlaceAmazon ? `<span class="estado-marketplace"><i class="punto-disponibilidad ${disponibleAmazon ? "disponible" : "no-disponible"}" aria-hidden="true"></i> Amazon</span>` : ""}
+        </div>
+      ` : ""}
 
       ${!esComunidadAnirona ? `
         <div class="oferta-precios ${precioCupon ? "con-cupon" : ""}">
@@ -1652,8 +1671,8 @@ function fechaPublicidad(publicidad) {
 
 function ordenarCatalogoAnirona(items) {
   return [...items].sort((a, b) => {
-    const diferenciaTop = Number(esPublicidadTop(b)) - Number(esPublicidadTop(a));
-    if (diferenciaTop) return diferenciaTop;
+    const diferenciaNuevo = Number(esProductoNuevoVigente(b)) - Number(esProductoNuevoVigente(a));
+    if (diferenciaNuevo) return diferenciaNuevo;
 
     const diferenciaVisitas = (Number(b?.visitas) || 0) - (Number(a?.visitas) || 0);
     if (diferenciaVisitas) return diferenciaVisitas;
@@ -1672,7 +1691,7 @@ function actualizarResumenCatalogoAnirona(mostrados, total, consulta = "") {
   } else {
     resultadosCatalogoAnirona.textContent = total === 1
       ? "1 producto en el catálogo"
-      : `${total} productos en el catálogo · ordenados por popularidad`;
+      : `${total} productos en el catálogo · nuevos primero y después por popularidad`;
   }
 }
 

@@ -5330,3 +5330,74 @@ body {
     font-size: 10.5px;
   }
 }
+
+
+/* ============================================================
+   V77.3 LTS — Disponibilidad y productos nuevos
+   ============================================================ */
+.etiqueta-producto-nuevo {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0 6px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #fff1b8;
+  color: #7a5700;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.disponibilidad-marketplaces {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px 11px;
+  margin: 2px 0 7px;
+  font-size: 11px;
+  color: #535d57;
+}
+
+.disponibilidad-titulo {
+  width: 100%;
+  font-weight: 700;
+  color: #303a34;
+}
+
+.estado-marketplace {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.punto-disponibilidad {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  flex: 0 0 9px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(0,0,0,.05);
+}
+
+.punto-disponibilidad.disponible { background: #20a447; }
+.punto-disponibilidad.no-disponible { background: #d93434; }
+
+@media (max-width: 520px) {
+  .etiqueta-producto-nuevo {
+    margin-bottom: 4px;
+    padding: 3px 6px;
+    font-size: 8.5px;
+  }
+  .disponibilidad-marketplaces {
+    gap: 4px 8px;
+    margin-bottom: 6px;
+    font-size: 9px;
+  }
+  .punto-disponibilidad {
+    width: 7px;
+    height: 7px;
+    flex-basis: 7px;
+  }
+}

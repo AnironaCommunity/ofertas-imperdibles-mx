@@ -585,6 +585,27 @@ Descuento máximo: $180"
                 <small>Mostrará el botón azul oscuro de Amazon en Comunidad Anirona.</small>
               </div>
 
+              <fieldset class="campo campo-ad-disponibilidad">
+                <legend>Disponibilidad en el catálogo Anirona</legend>
+                <p class="ayuda-secciones">El punto será verde cuando esté disponible y rojo cuando no lo esté.</p>
+                <div class="opciones-disponibilidad">
+                  <label class="switch-row">
+                    <input id="ad-disponible-mercado-libre" type="checkbox" checked />
+                    <span>Disponible en Mercado Libre</span>
+                  </label>
+                  <label class="switch-row">
+                    <input id="ad-disponible-amazon" type="checkbox" checked />
+                    <span>Disponible en Amazon</span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <label class="switch-row campo-ad-nuevo">
+                <input id="ad-es-nuevo" type="checkbox" />
+                <span>Mostrar etiqueta <strong>Nuevo</strong> durante 5 días</span>
+              </label>
+              <input id="ad-fecha-nuevo" type="hidden" />
+
               <div class="campo campo-ad-precio" hidden>
                 <label for="ad-price-published">Precio publicado</label>
                 <input

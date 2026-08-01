@@ -1660,3 +1660,13 @@ table td {
     flex: 1 1 100%;
   }
 }
+
+
+/* V77.3 LTS — disponibilidad y etiqueta Nuevo */
+.campo-ad-disponibilidad { grid-column: span 2; }
+.opciones-disponibilidad { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.campo-ad-nuevo { grid-column: span 2; }
+@media (max-width: 760px) {
+  .campo-ad-disponibilidad, .campo-ad-nuevo { grid-column: 1 / -1; }
+  .opciones-disponibilidad { grid-template-columns: 1fr; }
+}

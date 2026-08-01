@@ -128,6 +128,10 @@ const adPlatforms = [
 const adLink = document.querySelector("#ad-link");
 const adLinkMercadoLibre = document.querySelector("#ad-link-mercado-libre");
 const adLinkAmazon = document.querySelector("#ad-link-amazon");
+const adDisponibleMercadoLibre = document.querySelector("#ad-disponible-mercado-libre");
+const adDisponibleAmazon = document.querySelector("#ad-disponible-amazon");
+const adEsNuevo = document.querySelector("#ad-es-nuevo");
+const adFechaNuevo = document.querySelector("#ad-fecha-nuevo");
 const adPricePublished = document.querySelector("#ad-price-published");
 const adPriceCoupon = document.querySelector("#ad-price-coupon");
 const adCouponCode = document.querySelector("#ad-coupon-code");
@@ -1911,12 +1915,24 @@ async function saveAllBulkPrices() {
 let adPriceTimer = null;
 
 /* ================= PUBLICIDAD ================= */
+const DURACION_NUEVO_PRODUCTO_MS = 5 * 24 * 60 * 60 * 1000;
+
+function productoNuevoVigente(ad) {
+  if (!ad?.es_nuevo || !ad?.fecha_nuevo) return false;
+  const fecha = new Date(ad.fecha_nuevo).getTime();
+  return Number.isFinite(fecha) && Date.now() - fecha < DURACION_NUEVO_PRODUCTO_MS;
+}
+
 function resetAdForm() {
   adForm.reset();
   adId.value = "";
   adImageUrl.value = "";
   adLinkMercadoLibre.value = "";
   adLinkAmazon.value = "";
+  adDisponibleMercadoLibre.checked = true;
+  adDisponibleAmazon.checked = true;
+  adEsNuevo.checked = false;
+  adFechaNuevo.value = "";
   adPricePublished.value = "";
   adPriceCoupon.value = "";
   adCouponCode.value = "";
@@ -1945,6 +1961,10 @@ function editAd(ad) {
   adLink.value = ad.enlace || "";
   adLinkMercadoLibre.value = ad.enlace_mercado_libre || (ad.plataforma !== "amazon" ? ad.enlace || "" : "");
   adLinkAmazon.value = ad.enlace_amazon || (ad.plataforma === "amazon" ? ad.enlace || "" : "");
+  adDisponibleMercadoLibre.checked = ad.disponible_mercado_libre !== false;
+  adDisponibleAmazon.checked = ad.disponible_amazon !== false;
+  adEsNuevo.checked = productoNuevoVigente(ad);
+  adFechaNuevo.value = adEsNuevo.checked ? String(ad.fecha_nuevo || "") : "";
   adPricePublished.value = ad.precio_publicado || "";
   adPriceCoupon.value = ad.precio_cupon || "";
   adCouponCode.value = ad.codigo_cupon || "";
@@ -2004,7 +2024,9 @@ function renderAds() {
           )} ·
           Orden: ${Number(ad.orden || 0)} ·
           Clics: ${Number(ad.clics || 0)} ·
-          ${ad.activo ? "Activa" : "Inactiva"}
+          ML: ${ad.disponible_mercado_libre !== false ? "Disponible" : "No disponible"} ·
+          Amazon: ${ad.disponible_amazon !== false ? "Disponible" : "No disponible"} ·
+          ${productoNuevoVigente(ad) ? "Nuevo · " : ""}${ad.activo ? "Activa" : "Inactiva"}
         </small>
       </div>
 
@@ -2230,6 +2252,12 @@ async function saveAd(event) {
       enlace: adLink.value.trim() || adLinkMercadoLibre.value.trim() || adLinkAmazon.value.trim(),
       enlace_mercado_libre: adLinkMercadoLibre.value.trim(),
       enlace_amazon: adLinkAmazon.value.trim(),
+      disponible_mercado_libre: adDisponibleMercadoLibre.checked,
+      disponible_amazon: adDisponibleAmazon.checked,
+      es_nuevo: adEsNuevo.checked,
+      fecha_nuevo: adEsNuevo.checked
+        ? (adFechaNuevo.value || new Date().toISOString())
+        : null,
       precio_publicado: adPricePublished.value.trim(),
       precio_cupon: adPriceCoupon.value.trim(),
       codigo_cupon: adCouponCode.value.trim(),
