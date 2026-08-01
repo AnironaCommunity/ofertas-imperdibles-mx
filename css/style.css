@@ -5890,3 +5890,40 @@ html.tutorial-en-curso { scroll-behavior: smooth; }
     letter-spacing: .1em;
   }
 }
+
+
+/* ============================================================
+   V77.10 LTS — Navegación y resaltado de novedades
+   ============================================================ */
+.cupon.novedad-resaltada,
+.tarjeta-oferta.novedad-resaltada {
+  position: relative;
+  z-index: 3;
+  animation: resaltar-novedad-v7710 4.6s ease-out both;
+}
+@keyframes resaltar-novedad-v7710 {
+  0%, 12% {
+    outline: 3px solid #20a84b;
+    outline-offset: 4px;
+    box-shadow: 0 0 0 8px rgba(32, 168, 75, .20), 0 12px 30px rgba(23, 95, 46, .24);
+    transform: translateY(-2px);
+  }
+  45% {
+    outline-color: #39bd61;
+    box-shadow: 0 0 0 5px rgba(32, 168, 75, .12), 0 8px 22px rgba(23, 95, 46, .16);
+  }
+  100% {
+    outline-color: transparent;
+    outline-offset: 0;
+    box-shadow: inherit;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cupon.novedad-resaltada,
+  .tarjeta-oferta.novedad-resaltada {
+    animation: none;
+    outline: 3px solid #20a84b;
+    outline-offset: 3px;
+  }
+}

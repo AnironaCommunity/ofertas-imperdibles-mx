@@ -1029,6 +1029,8 @@ async function cargarCupones() {
     renderizarCategoria();
     actualizarContadoresSecciones();
     revisarAvisosNovedades();
+    procesarNovedadDesdeUrl();
+    revisarAvisosNovedades();
   } catch (error) {
     console.error(error);
 
@@ -1828,6 +1830,7 @@ async function cargarPublicidad() {
       moverAlInicio: false,
       desplazamiento: "auto",
     });
+    procesarNovedadDesdeUrl();
 
     for (const control of carruselesPublicidad) {
       control.items = todasLasPublicidades.filter((item) =>
@@ -2115,7 +2118,7 @@ async function registrarServiceWorkerAvisos() {
 
   try {
     registroServiceWorkerAvisos = await navigator.serviceWorker.register(
-      "/sw-notificaciones.js?v=77.6.0",
+      "/sw-notificaciones.js?v=77.10.0",
       { scope: "/" }
     );
     return registroServiceWorkerAvisos;
@@ -2154,16 +2157,133 @@ async function activarAvisosNovedades() {
   });
 }
 
-function mostrarToastNovedades({ titulo, mensaje, seccion = "" }) {
+function crearDestinoNovedad(tipo, item) {
+  if (!item?.id) return null;
+  if (tipo === "cupon") {
+    return {
+      tipo: "cupon",
+      id: Number(item.id),
+      categoria: normalizarCategoria(item),
+      etiqueta: "Ver nuevo cupón",
+    };
+  }
+  return {
+    tipo: "producto",
+    id: Number(item.id),
+    seccion: "comunidad_anirona",
+    etiqueta: "Ver nuevo producto",
+  };
+}
+
+function urlDestinoNovedad(destino) {
+  const url = new URL(window.location.href);
+  url.searchParams.set("seccion", destino.tipo === "cupon" ? destino.categoria : "comunidad_anirona");
+  url.searchParams.set("novedad_tipo", destino.tipo);
+  url.searchParams.set("novedad_id", String(destino.id));
+  if (destino.categoria) url.searchParams.set("novedad_categoria", destino.categoria);
+  else url.searchParams.delete("novedad_categoria");
+  return url.toString();
+}
+
+function limpiarParametrosNovedad() {
+  const url = new URL(window.location.href);
+  url.searchParams.delete("novedad_tipo");
+  url.searchParams.delete("novedad_id");
+  url.searchParams.delete("novedad_categoria");
+  window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+}
+
+async function esperarElementoNovedad(selector, intentos = 35) {
+  for (let intento = 0; intento < intentos; intento += 1) {
+    const elemento = document.querySelector(selector);
+    if (elemento) return elemento;
+    await new Promise((resolve) => window.setTimeout(resolve, 120));
+  }
+  return null;
+}
+
+async function irANovedad(destino, { limpiarUrl = false } = {}) {
+  if (!destino?.id || !destino?.tipo) return false;
+
+  let selector = "";
+  if (destino.tipo === "cupon") {
+    cambiarCategoria(destino.categoria || "tienda", {
+      actualizarHistorial: false,
+      desplazamiento: "auto",
+    });
+    selector = `.cupon[data-id="${CSS.escape(String(destino.id))}"]`;
+  } else {
+    if (buscarCatalogoAnirona) buscarCatalogoAnirona.value = "";
+    cambiarVista("comunidad_anirona", {
+      actualizarHistorial: false,
+      desplazamiento: "auto",
+      moverAlInicio: false,
+    });
+    renderizarCatalogoAnirona();
+    selector = `.tarjeta-oferta[data-publicidad-id="${CSS.escape(String(destino.id))}"]`;
+  }
+
+  const elemento = await esperarElementoNovedad(selector);
+  if (!elemento) return false;
+
+  elemento.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+  window.setTimeout(() => {
+    elemento.classList.remove("novedad-resaltada");
+    void elemento.offsetWidth;
+    elemento.classList.add("novedad-resaltada");
+    window.setTimeout(() => elemento.classList.remove("novedad-resaltada"), 4800);
+  }, 450);
+
+  if (limpiarUrl) limpiarParametrosNovedad();
+  return true;
+}
+
+function obtenerNovedadDesdeUrl() {
+  const parametros = new URLSearchParams(window.location.search);
+  const tipo = parametros.get("novedad_tipo");
+  const id = Number(parametros.get("novedad_id") || 0);
+  if (!id || !["cupon", "producto"].includes(tipo)) return null;
+  return {
+    tipo,
+    id,
+    categoria: parametros.get("novedad_categoria") || "tienda",
+  };
+}
+
+let procesandoNovedadUrl = false;
+async function procesarNovedadDesdeUrl() {
+  if (procesandoNovedadUrl) return;
+  const destino = obtenerNovedadDesdeUrl();
+  if (!destino) return;
+  procesandoNovedadUrl = true;
+  try {
+    await irANovedad(destino, { limpiarUrl: true });
+  } finally {
+    procesandoNovedadUrl = false;
+  }
+}
+
+function mostrarToastNovedades({ titulo, mensaje, seccion = "", acciones = [] }) {
   const toast = document.querySelector("#aviso-novedades-toast");
   if (!toast) return;
+
+  const accionesNormalizadas = acciones.length
+    ? acciones.filter((accion) => accion?.destino)
+    : seccion
+      ? [{
+          etiqueta: "Ver ahora",
+          destino: seccion === "cupones"
+            ? { tipo: "cupon", id: maxId(cuponesNotificables()), categoria: "tienda" }
+            : { tipo: "producto", id: maxId(productosAnironaNotificables()), seccion },
+        }]
+      : [];
 
   window.clearTimeout(avisoNovedadesToastTimer);
   toast.innerHTML = `
     <strong>${titulo}</strong>
     <p>${mensaje}</p>
     <div class="aviso-novedades-toast-acciones">
-      ${seccion ? '<button class="aviso-novedades-ver" type="button">Ver ahora</button>' : ""}
+      ${accionesNormalizadas.map((accion, indice) => `<button class="aviso-novedades-ver" type="button" data-accion-indice="${indice}">${accion.etiqueta || "Ver ahora"}</button>`).join("")}
       <button class="aviso-novedades-cerrar" type="button">Cerrar</button>
     </div>
   `;
@@ -2172,22 +2292,20 @@ function mostrarToastNovedades({ titulo, mensaje, seccion = "" }) {
   toast.querySelector(".aviso-novedades-cerrar")?.addEventListener("click", () => {
     toast.hidden = true;
   });
-  toast.querySelector(".aviso-novedades-ver")?.addEventListener("click", () => {
-    if (seccion === "cupones") {
-      tabTienda?.click();
-    } else {
-      const botonSeccion = document.querySelector(`[data-vista="${seccion}"]`);
-      botonSeccion?.click();
-    }
-    toast.hidden = true;
+  toast.querySelectorAll(".aviso-novedades-ver").forEach((boton) => {
+    boton.addEventListener("click", async () => {
+      const accion = accionesNormalizadas[Number(boton.dataset.accionIndice) || 0];
+      toast.hidden = true;
+      if (accion?.destino) await irANovedad(accion.destino);
+    });
   });
 
   avisoNovedadesToastTimer = window.setTimeout(() => {
     toast.hidden = true;
-  }, 10000);
+  }, 14000);
 }
 
-async function lanzarNotificacionNavegador(titulo, cuerpo) {
+async function lanzarNotificacionNavegador(titulo, cuerpo, destino = null) {
   if (!("Notification" in window) || Notification.permission !== "granted") return;
 
   const opciones = {
@@ -2196,7 +2314,7 @@ async function lanzarNotificacionNavegador(titulo, cuerpo) {
     badge: "/img/logo.png",
     tag: "ofertas-imperdibles-novedades",
     renotify: true,
-    data: { url: window.location.href },
+    data: { url: destino ? urlDestinoNovedad(destino) : window.location.href },
   };
 
   try {
@@ -2216,14 +2334,14 @@ function revisarAvisosNovedades() {
   crearControlesAvisosNovedades();
   if (!todosLosCupones.length && !todasLasPublicidades.length) return;
 
-  const ultimoCuponActual = maxId(cuponesNotificables());
-  const ultimoAnironaActual = maxId(productosAnironaNotificables());
+  const cuponesActuales = cuponesNotificables();
+  const productosActuales = productosAnironaNotificables();
+  const ultimoCuponActual = maxId(cuponesActuales);
+  const ultimoAnironaActual = maxId(productosActuales);
   const ultimoCuponVisto = Number(localStorage.getItem(CLAVE_ULTIMO_CUPON) || 0);
   const ultimoAnironaVisto = Number(localStorage.getItem(CLAVE_ULTIMO_ANIRONA) || 0);
 
-  if (!avisosNovedadesInicializados) {
-    avisosNovedadesInicializados = true;
-  }
+  if (!avisosNovedadesInicializados) avisosNovedadesInicializados = true;
 
   if (!ultimoCuponVisto && ultimoCuponActual) {
     localStorage.setItem(CLAVE_ULTIMO_CUPON, String(ultimoCuponActual));
@@ -2236,29 +2354,35 @@ function revisarAvisosNovedades() {
 
   const referenciaCupon = Number(localStorage.getItem(CLAVE_ULTIMO_CUPON) || 0);
   const referenciaAnirona = Number(localStorage.getItem(CLAVE_ULTIMO_ANIRONA) || 0);
-  const hayCuponNuevo = referenciaCupon > 0 && ultimoCuponActual > referenciaCupon;
-  const hayProductoNuevo = referenciaAnirona > 0 && ultimoAnironaActual > referenciaAnirona;
-  if (!hayCuponNuevo && !hayProductoNuevo) return;
+  const cuponNuevo = [...cuponesActuales]
+    .filter((item) => Number(item.id) > referenciaCupon)
+    .sort((a, b) => Number(b.id) - Number(a.id))[0] || null;
+  const productoNuevo = [...productosActuales]
+    .filter((item) => Number(item.id) > referenciaAnirona)
+    .sort((a, b) => Number(b.id) - Number(a.id))[0] || null;
+
+  if (!cuponNuevo && !productoNuevo) return;
+
+  const destinoCupon = crearDestinoNovedad("cupon", cuponNuevo);
+  const destinoProducto = crearDestinoNovedad("producto", productoNuevo);
+  const acciones = [];
+  if (destinoCupon) acciones.push({ etiqueta: "Ver nuevo cupón", destino: destinoCupon });
+  if (destinoProducto) acciones.push({ etiqueta: "Ver nuevo producto", destino: destinoProducto });
 
   let titulo = "Hay novedades en Ofertas Imperdibles";
   let mensaje = "";
-  let seccion = "";
-
-  if (hayCuponNuevo && hayProductoNuevo) {
+  if (cuponNuevo && productoNuevo) {
     mensaje = "Se agregó un nuevo cupón y un nuevo producto en Comunidad Anirona.";
-    seccion = "comunidad_anirona";
-  } else if (hayCuponNuevo) {
+  } else if (cuponNuevo) {
     titulo = "Nuevo cupón disponible";
     mensaje = "Se agregó un nuevo cupón. Revísalo antes de que termine.";
-    seccion = "cupones";
   } else {
     titulo = "Nuevo producto Anirona";
     mensaje = "Se agregó un nuevo producto al catálogo de Comunidad Anirona.";
-    seccion = "comunidad_anirona";
   }
 
-  mostrarToastNovedades({ titulo, mensaje, seccion });
-  lanzarNotificacionNavegador(titulo, mensaje);
+  mostrarToastNovedades({ titulo, mensaje, acciones });
+  lanzarNotificacionNavegador(titulo, mensaje, destinoProducto || destinoCupon);
   localStorage.setItem(CLAVE_ULTIMO_CUPON, String(ultimoCuponActual));
   localStorage.setItem(CLAVE_ULTIMO_ANIRONA, String(ultimoAnironaActual));
 }

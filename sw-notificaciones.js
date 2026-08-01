@@ -1,4 +1,4 @@
-const CACHE_VERSION = "oi-avisos-v77.6";
+const CACHE_VERSION = "oi-avisos-v77.10";
 
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (event) => {
