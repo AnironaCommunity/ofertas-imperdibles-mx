@@ -5602,3 +5602,18 @@ body {
     height: 36px !important;
   }
 }
+
+/* ============================================================
+   V77.4.3 LTS — Logos más legibles en móvil
+   - Incremento visual aproximado del 35%
+   - Conserva proporción y centrado
+   - No modifica la vista de escritorio
+   ============================================================ */
+@media (max-width: 520px) {
+  .tarjeta-oferta-anirona .oferta-logo-marketplace,
+  .tarjeta-oferta-anirona .oferta-ver-mercado-libre .oferta-logo-marketplace,
+  .tarjeta-oferta-anirona .oferta-ver-amazon .oferta-logo-marketplace {
+    transform: scale(1.35) !important;
+    transform-origin: center center !important;
+  }
+}
