@@ -5577,3 +5577,28 @@ body {
   margin: 0 0 6px !important;
   padding-top: 5px !important;
 }
+
+/* ============================================================
+   V77.4.2 LTS — Corrección proporcional de logos en móvil
+   - Evita deformación horizontal/vertical
+   - Conserva el diseño de escritorio
+   - Centra Mercado Libre y Amazon dentro de su botón
+   ============================================================ */
+@media (max-width: 520px) {
+  .tarjeta-oferta-anirona .oferta-logo-marketplace,
+  .tarjeta-oferta-anirona .oferta-ver-mercado-libre .oferta-logo-marketplace,
+  .tarjeta-oferta-anirona .oferta-ver-amazon .oferta-logo-marketplace {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+  }
+
+  .tarjeta-oferta-anirona .oferta-ver-mercado-libre,
+  .tarjeta-oferta-anirona .oferta-ver-amazon {
+    min-height: 36px !important;
+    height: 36px !important;
+  }
+}
