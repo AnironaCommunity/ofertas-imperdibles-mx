@@ -5224,3 +5224,24 @@ body {
     height: 17px;
   }
 }
+
+
+/* ============================================================
+   V77.1 LTS — Ajustes finales de Comunidad Anirona
+   ============================================================ */
+
+/* Mostrar completa la descripción capturada (hasta 250 caracteres). */
+.tarjeta-oferta-anirona .oferta-descripcion {
+  display: block !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+  -webkit-line-clamp: unset !important;
+  -webkit-box-orient: initial !important;
+}
+
+/* Mercado Libre 10% más grande únicamente cuando comparte fila con Amazon. */
+.tarjeta-oferta-anirona .oferta-acciones-anirona.ambos-marketplaces
+.oferta-ver-mercado-libre .oferta-logo-marketplace {
+  transform: scale(1.1) !important;
+}

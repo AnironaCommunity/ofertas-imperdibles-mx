@@ -1423,7 +1423,7 @@ function crearTarjetaOferta(publicidad, categoria) {
         <span class="oferta-visitas" data-visitas-id="${Number(publicidad.id) || 0}">👁️ ${Number(publicidad.visitas) || 0} visitas</span>
       </div>
 
-      <div class="oferta-acciones ${esComunidadAnirona ? "oferta-acciones-anirona" : ""}">
+      <div class="oferta-acciones ${esComunidadAnirona ? `oferta-acciones-anirona${enlaceMercadoLibre && enlaceAmazon ? " ambos-marketplaces" : ""}` : ""}">
         ${esComunidadAnirona ? accionesAnirona : `<button class="oferta-ver" type="button">${plataforma.textoBoton}</button>`}
         <button class="boton-compartir oferta-compartir" type="button" aria-label="Compartir oferta" title="Compartir">
           ${iconoCompartir()}
