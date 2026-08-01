@@ -5617,3 +5617,17 @@ body {
     transform-origin: center center !important;
   }
 }
+
+
+/* v77.4.3 LTS - Logos marketplaces más grandes en móvil */
+@media (max-width:768px){
+  .marketplace-btn img,
+  .btn-marketplace img,
+  .marketplace-buttons img{
+    transform: scale(1.35);
+    transform-origin:center center;
+    max-width:90% !important;
+    max-height:90% !important;
+    object-fit:contain;
+  }
+}
