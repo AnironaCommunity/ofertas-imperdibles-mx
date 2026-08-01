@@ -5669,3 +5669,39 @@ body {
   .boton-avisos-novedades { min-height: 34px; padding: 7px 10px; font-size: 12px; }
   .aviso-novedades-toast { right: 10px; bottom: 72px; width: calc(100vw - 20px); }
 }
+
+
+/* ============================================================
+   V77.6 LTS — Avisos automáticos y botón igual a redes sociales
+   ============================================================ */
+.hero-redes-botones .boton-avisos-novedades {
+  height: 29px !important;
+  min-height: 29px !important;
+  padding: 5px 9px !important;
+  gap: 6px !important;
+  border: 1px solid rgba(79, 56, 90, .10) !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, .72) !important;
+  color: #111 !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+}
+.hero-redes-botones .boton-avisos-novedades:hover,
+.hero-redes-botones .boton-avisos-novedades:focus-visible {
+  background: #fff !important;
+  box-shadow: 0 4px 10px rgba(69, 45, 79, .09) !important;
+}
+.hero-redes-botones .boton-avisos-novedades.activo {
+  background: #eaf8f2 !important;
+  color: #111 !important;
+}
+@media (max-width: 600px) {
+  .hero-redes-botones .boton-avisos-novedades {
+    height: 25px !important;
+    min-height: 25px !important;
+    padding: 4px 7px !important;
+    gap: 4px !important;
+    font-size: 8.5px !important;
+  }
+}

@@ -2005,6 +2005,9 @@ const CLAVE_ULTIMO_CUPON = "oi-avisos-ultimo-cupon";
 const CLAVE_ULTIMO_ANIRONA = "oi-avisos-ultimo-anirona";
 let avisosNovedadesInicializados = false;
 let avisoNovedadesToastTimer = null;
+let sondeoNovedadesEnCurso = false;
+const MILISEGUNDOS_SONDEO_NOVEDADES = 10000;
+let registroServiceWorkerAvisos = null;
 
 function maxId(items) {
   return items.reduce((maximo, item) => {
@@ -2078,6 +2081,22 @@ function guardarReferenciaActualAvisos() {
   localStorage.setItem(CLAVE_ULTIMO_ANIRONA, String(maxId(productosAnironaNotificables())));
 }
 
+async function registrarServiceWorkerAvisos() {
+  if (!("serviceWorker" in navigator)) return null;
+  if (registroServiceWorkerAvisos) return registroServiceWorkerAvisos;
+
+  try {
+    registroServiceWorkerAvisos = await navigator.serviceWorker.register(
+      "/sw-notificaciones.js?v=77.6.0",
+      { scope: "/" }
+    );
+    return registroServiceWorkerAvisos;
+  } catch (error) {
+    console.warn("No fue posible registrar el servicio de avisos.", error);
+    return null;
+  }
+}
+
 async function activarAvisosNovedades() {
   if (avisosNovedadesActivos()) {
     localStorage.removeItem(CLAVE_AVISOS_ACTIVOS);
@@ -2097,12 +2116,13 @@ async function activarAvisosNovedades() {
     }
   }
 
+  await registrarServiceWorkerAvisos();
   localStorage.setItem(CLAVE_AVISOS_ACTIVOS, "1");
   guardarReferenciaActualAvisos();
   actualizarBotonAvisosNovedades();
   mostrarToastNovedades({
     titulo: "Avisos activados",
-    mensaje: "Te avisaremos al detectar un nuevo cupón o producto Anirona cuando visites o mantengas abierta la página.",
+    mensaje: "Revisaremos automáticamente cada 10 segundos y mostraremos una notificación cuando el navegador lo permita.",
   });
 }
 
@@ -2139,15 +2159,26 @@ function mostrarToastNovedades({ titulo, mensaje, seccion = "" }) {
   }, 10000);
 }
 
-function lanzarNotificacionNavegador(titulo, cuerpo) {
+async function lanzarNotificacionNavegador(titulo, cuerpo) {
   if (!("Notification" in window) || Notification.permission !== "granted") return;
+
+  const opciones = {
+    body: cuerpo,
+    icon: "/img/logo.png",
+    badge: "/img/logo.png",
+    tag: "ofertas-imperdibles-novedades",
+    renotify: true,
+    data: { url: window.location.href },
+  };
+
   try {
-    new Notification(titulo, {
-      body: cuerpo,
-      icon: "/img/logo.png",
-      badge: "/img/logo.png",
-      tag: "ofertas-imperdibles-novedades",
-    });
+    const registro = await registrarServiceWorkerAvisos();
+    if (registro?.showNotification) {
+      await registro.showNotification(titulo, opciones);
+      return;
+    }
+
+    new Notification(titulo, opciones);
   } catch (error) {
     console.warn("No fue posible mostrar la notificación del navegador.", error);
   }
@@ -2204,6 +2235,27 @@ function revisarAvisosNovedades() {
   localStorage.setItem(CLAVE_ULTIMO_ANIRONA, String(ultimoAnironaActual));
 }
 
+async function sondearNovedadesAutomaticamente() {
+  if (
+    sondeoNovedadesEnCurso ||
+    document.hidden ||
+    !avisosNovedadesActivos() ||
+    redireccionEnProceso ||
+    !modalRedireccion.hidden
+  ) {
+    return;
+  }
+
+  sondeoNovedadesEnCurso = true;
+  try {
+    await Promise.allSettled([cargarCupones(), cargarPublicidad()]);
+  } finally {
+    sondeoNovedadesEnCurso = false;
+  }
+}
+
+window.setInterval(sondearNovedadesAutomaticamente, MILISEGUNDOS_SONDEO_NOVEDADES);
+
 setInterval(() => {
   if (
     document.hidden ||
@@ -2238,6 +2290,7 @@ document.addEventListener("visibilitychange", () => {
   if (!document.hidden) {
     reiniciarInteraccion();
     carruselesPublicidad.forEach(iniciarRotacionPublicidad);
+    sondearNovedadesAutomaticamente();
   } else {
     carruselesPublicidad.forEach(detenerRotacionPublicidad);
   }
@@ -2254,6 +2307,7 @@ window.addEventListener("popstate", () => {
 inicializarAyudaCupones();
 inicializarCarruselesPublicidad();
 crearControlesAvisosNovedades();
+registrarServiceWorkerAvisos();
 
 const urlInicialTieneSeccion =
   new URLSearchParams(window.location.search).has("seccion");
