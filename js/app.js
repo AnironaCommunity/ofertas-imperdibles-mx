@@ -1074,7 +1074,7 @@ async function registrarClic(id) {
       "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: JSON.stringify({ id, plataforma: destino }),
+    body: JSON.stringify({ id }),
   });
 
   if (!respuesta.ok) {
