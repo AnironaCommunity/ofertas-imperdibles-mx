@@ -132,6 +132,7 @@ const adDisponibleMercadoLibre = document.querySelector("#ad-disponible-mercado-
 const adDisponibleAmazon = document.querySelector("#ad-disponible-amazon");
 const adEsNuevo = document.querySelector("#ad-es-nuevo");
 const adFechaNuevo = document.querySelector("#ad-fecha-nuevo");
+const adEsMasVendido = document.querySelector("#ad-es-mas-vendido");
 const adPricePublished = document.querySelector("#ad-price-published");
 const adPriceCoupon = document.querySelector("#ad-price-coupon");
 const adCouponCode = document.querySelector("#ad-coupon-code");
@@ -1933,6 +1934,7 @@ function resetAdForm() {
   adDisponibleAmazon.checked = true;
   adEsNuevo.checked = false;
   adFechaNuevo.value = "";
+  adEsMasVendido.checked = false;
   adPricePublished.value = "";
   adPriceCoupon.value = "";
   adCouponCode.value = "";
@@ -1965,6 +1967,7 @@ function editAd(ad) {
   adDisponibleAmazon.checked = ad.disponible_amazon !== false;
   adEsNuevo.checked = productoNuevoVigente(ad);
   adFechaNuevo.value = adEsNuevo.checked ? String(ad.fecha_nuevo || "") : "";
+  adEsMasVendido.checked = ad.es_mas_vendido === true;
   adPricePublished.value = ad.precio_publicado || "";
   adPriceCoupon.value = ad.precio_cupon || "";
   adCouponCode.value = ad.codigo_cupon || "";
@@ -2026,7 +2029,7 @@ function renderAds() {
           Clics: ${Number(ad.clics || 0)} ·
           ML: ${ad.disponible_mercado_libre !== false ? "Disponible" : "No disponible"} ·
           Amazon: ${ad.disponible_amazon !== false ? "Disponible" : "No disponible"} ·
-          ${productoNuevoVigente(ad) ? "Nuevo · " : ""}${ad.activo ? "Activa" : "Inactiva"}
+          ${productoNuevoVigente(ad) ? "Nuevo · " : ""}${ad.es_mas_vendido ? "Más vendido · " : ""}${ad.activo ? "Activa" : "Inactiva"}
         </small>
       </div>
 
@@ -2258,6 +2261,7 @@ async function saveAd(event) {
       fecha_nuevo: adEsNuevo.checked
         ? (adFechaNuevo.value || new Date().toISOString())
         : null,
+      es_mas_vendido: adEsMasVendido.checked,
       precio_publicado: adPricePublished.value.trim(),
       precio_cupon: adPriceCoupon.value.trim(),
       codigo_cupon: adCouponCode.value.trim(),

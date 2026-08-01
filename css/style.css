@@ -5813,3 +5813,46 @@ html.tutorial-en-curso { scroll-behavior: smooth; }
   .tutorial-tarjeta p { font-size: 13px; }
   .tutorial-acciones button { min-height: 36px; padding: 7px 12px; }
 }
+
+
+/* ============================================================
+   V77.8 LTS — Etiqueta Más vendido en Comunidad Anirona
+   ============================================================ */
+.etiquetas-producto-anirona {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  min-height: 20px;
+  margin: 0 0 6px;
+}
+.etiquetas-producto-anirona .etiqueta-producto-nuevo {
+  margin: 0;
+}
+.etiqueta-producto-mas-vendido {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  color: #fff;
+  background: linear-gradient(135deg, #ff7a2f, #f35f18);
+  box-shadow: 0 3px 8px rgba(205, 78, 15, .16);
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+@media (max-width: 520px) {
+  .etiquetas-producto-anirona {
+    min-height: 17px;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+  .etiqueta-producto-mas-vendido {
+    min-height: 17px;
+    padding: 3px 6px;
+    font-size: 7.5px;
+  }
+}

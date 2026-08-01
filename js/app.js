@@ -1388,6 +1388,7 @@ function crearTarjetaOferta(publicidad, categoria) {
   const disponibleMercadoLibre = publicidad.disponible_mercado_libre !== false;
   const disponibleAmazon = publicidad.disponible_amazon !== false;
   const productoNuevo = esProductoNuevoVigente(publicidad);
+  const productoMasVendido = publicidad.es_mas_vendido === true;
 
   if (esComunidadAnirona) articulo.classList.add("tarjeta-oferta-anirona");
 
@@ -1422,7 +1423,12 @@ function crearTarjetaOferta(publicidad, categoria) {
     </button>
 
     <div class="oferta-contenido">
-      ${esComunidadAnirona && productoNuevo ? `<span class="etiqueta-producto-nuevo">✨ Nuevo</span>` : ""}
+      ${esComunidadAnirona && (productoNuevo || productoMasVendido) ? `
+        <div class="etiquetas-producto-anirona">
+          ${productoMasVendido ? `<span class="etiqueta-producto-mas-vendido">MÁS VENDIDO</span>` : ""}
+          ${productoNuevo ? `<span class="etiqueta-producto-nuevo">✨ Nuevo</span>` : ""}
+        </div>
+      ` : ""}
       <h3>${escaparHtml(publicidad.titulo || "Oferta destacada")}</h3>
       ${publicidad.descripcion ? `<p class="oferta-descripcion">${escaparHtml(publicidad.descripcion)}</p>` : ""}
       ${esComunidadAnirona ? `

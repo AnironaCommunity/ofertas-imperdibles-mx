@@ -93,7 +93,7 @@ export default async function handler(request, response) {
   try {
     if (request.method === "GET") {
       const data = await requestSupabase(
-        "publicidades?select=id,titulo,descripcion,imagen_url,enlace,enlace_mercado_libre,enlace_amazon,precio_publicado,precio_cupon,codigo_cupon,plataforma,categoria,secciones,activo,orden,clics,visitas,fecha_creacion,disponible_mercado_libre,disponible_amazon,es_nuevo,fecha_nuevo&order=orden.asc,id.asc"
+        "publicidades?select=id,titulo,descripcion,imagen_url,enlace,enlace_mercado_libre,enlace_amazon,precio_publicado,precio_cupon,codigo_cupon,plataforma,categoria,secciones,activo,orden,clics,visitas,fecha_creacion,disponible_mercado_libre,disponible_amazon,es_nuevo,fecha_nuevo,es_mas_vendido&order=orden.asc,id.asc"
       );
 
       return response.status(200).json(data);
@@ -118,6 +118,7 @@ export default async function handler(request, response) {
         fecha_nuevo: request.body?.es_nuevo === true
           ? (String(request.body?.fecha_nuevo || "").trim() || new Date().toISOString())
           : null,
+        es_mas_vendido: request.body?.es_mas_vendido === true,
         precio_publicado: String(request.body?.precio_publicado || "").trim(),
         precio_cupon: String(request.body?.precio_cupon || "").trim(),
         codigo_cupon: String(request.body?.codigo_cupon || "").trim(),
@@ -177,6 +178,7 @@ export default async function handler(request, response) {
         "disponible_amazon",
         "es_nuevo",
         "fecha_nuevo",
+        "es_mas_vendido",
         "precio_publicado",
         "precio_cupon",
         "codigo_cupon",
@@ -188,7 +190,7 @@ export default async function handler(request, response) {
       ]) {
         if (!Object.hasOwn(request.body || {}, field)) continue;
 
-        if (["activo", "disponible_mercado_libre", "disponible_amazon", "es_nuevo"].includes(field)) {
+        if (["activo", "disponible_mercado_libre", "disponible_amazon", "es_nuevo", "es_mas_vendido"].includes(field)) {
           payload[field] = Boolean(request.body[field]);
         } else if (field === "fecha_nuevo") {
           payload[field] = request.body[field]
