@@ -2503,11 +2503,14 @@ document.addEventListener("ofertas:etiquetas-cargadas", () => {
 });
 
 
-/* ================= TUTORIAL DE CUPONES V77.11 LTS ================= */
+/* ================= TUTORIAL DE CUPONES V77.11.1 LTS ================= */
 const CLAVE_TUTORIAL_COMPLETADO = "oi-tutorial-cupones-v77-11-completado";
 let tutorialActivo = false;
 let tutorialPasoActual = 0;
 let tutorialElementos = null;
+let tutorialCuponObjetivo = null;
+let tutorialCuponEsEjemplo = false;
+let tutorialEstadoVista = null;
 
 const esperarTutorial = (ms = 400) => new Promise((resolve) => window.setTimeout(resolve, ms));
 
@@ -2528,42 +2531,99 @@ function crearBotonTutorial() {
 }
 
 function crearCuponEjemploTutorial() {
-  const ejemplo = document.createElement("section");
-  ejemplo.id = "tutorial-cupon-ejemplo";
-  ejemplo.className = "tutorial-cupon-ejemplo";
-  ejemplo.hidden = true;
-  ejemplo.setAttribute("aria-label", "Cupón de ejemplo para el tutorial");
-  ejemplo.innerHTML = `
-    <article class="cupon tutorial-cupon-demo" data-color="0">
-      <div class="cupon-encabezado">
-        <h2 class="descuento">10% de descuento</h2>
-      </div>
-      <div class="cupon-contenido">
-        <div class="cupon-etiquetas"><span class="etiqueta-cupon etiqueta-nuevo">✨ Nuevo</span></div>
-        <div id="tutorial-info-cupon">
-          <p class="descuento-maximo">Descuento máximo de <strong>$250</strong></p>
-          <p class="compra-minima">Compra mínima: $1,000</p>
+  const articulo = document.createElement("article");
+  articulo.id = "tutorial-cupon-ejemplo";
+  articulo.className = "cupon tutorial-cupon-demo";
+  articulo.dataset.color = "0";
+  articulo.setAttribute("aria-label", "Cupón de ejemplo para el tutorial");
+  articulo.innerHTML = `
+    <div class="cupon-encabezado">
+      <h2 class="descuento">10% de descuento</h2>
+    </div>
+    <div class="cupon-contenido">
+      <div class="cupon-etiquetas"><span class="etiqueta-cupon etiqueta-nuevo">✨ Nuevo</span></div>
+      <p class="descuento-maximo">Descuento máximo de <strong>$250</strong></p>
+      <p class="compra-minima">Compra mínima: $1,000</p>
+      <div class="estado-programacion" hidden></div>
+      <div class="acciones-bloque">
+        <div class="acciones-cupon">
+          <button class="boton-canjear" type="button" tabindex="-1">📋 Copiar y Canjear</button>
         </div>
-        <div class="acciones-bloque">
-          <div class="acciones-cupon">
-            <button id="tutorial-boton-canjear" class="boton-canjear" type="button" tabindex="-1">📋 Copiar y Canjear</button>
-          </div>
-          <div class="acciones-secundarias">
-            <button id="tutorial-boton-like" class="boton-like" type="button" tabindex="-1" aria-label="Me gusta">${iconoMeGusta()}</button>
-            <button id="tutorial-boton-compartir" class="boton-compartir" type="button" tabindex="-1" aria-label="Compartir">${iconoCompartir()}</button>
-            <div class="estadisticas-cupon">
-              <span class="estadistica-item estadistica-likes">${iconoMeGusta()} <span>325</span></span>
-              <span class="estadistica-item estadistica-usos">${iconoCopias()} <span>1,245</span></span>
-            </div>
+        <div class="acciones-secundarias">
+          <button class="boton-like" type="button" tabindex="-1" aria-label="Me gusta">${iconoMeGusta()}</button>
+          <button class="boton-compartir" type="button" tabindex="-1" aria-label="Compartir">${iconoCompartir()}</button>
+          <div class="estadisticas-cupon">
+            <span class="estadistica-item estadistica-likes">${iconoMeGusta()} <span>325</span></span>
+            <span class="estadistica-item estadistica-usos">${iconoCopias()} <span>1,245</span></span>
           </div>
         </div>
       </div>
-    </article>
-    <p class="tutorial-ejemplo-aviso">Ejemplo visual: no copia ni canjea ningún cupón.</p>
+    </div>
+    <span class="tutorial-ejemplo-aviso">Ejemplo visual</span>
   `;
-  ejemplo.addEventListener("click", (evento) => evento.preventDefault());
-  document.body.appendChild(ejemplo);
-  return ejemplo;
+  articulo.addEventListener("click", (evento) => {
+    evento.preventDefault();
+    evento.stopPropagation();
+  });
+  return articulo;
+}
+
+function guardarEstadoVistaTutorial() {
+  if (tutorialEstadoVista) return;
+  tutorialEstadoVista = {
+    todosWrapperHidden: todosWrapper?.hidden,
+    sinCuponesHidden: sinCupones?.hidden,
+    estadoCargaHidden: estadoCarga?.hidden,
+  };
+}
+
+function restaurarEstadoVistaTutorial() {
+  if (!tutorialEstadoVista) return;
+  if (todosWrapper) todosWrapper.hidden = tutorialEstadoVista.todosWrapperHidden;
+  if (sinCupones) sinCupones.hidden = tutorialEstadoVista.sinCuponesHidden;
+  if (estadoCarga) estadoCarga.hidden = tutorialEstadoVista.estadoCargaHidden;
+  tutorialEstadoVista = null;
+}
+
+function limpiarCuponTutorial() {
+  if (tutorialCuponObjetivo) tutorialCuponObjetivo.classList.remove("tutorial-cupon-objetivo");
+  if (tutorialCuponEsEjemplo) document.querySelector("#tutorial-cupon-ejemplo")?.remove();
+  tutorialCuponObjetivo = null;
+  tutorialCuponEsEjemplo = false;
+  cuponesContainer?.classList.remove("tutorial-grid-con-ejemplo");
+  restaurarEstadoVistaTutorial();
+}
+
+async function prepararCuponTutorial() {
+  tabTienda?.click();
+  await esperarTutorial(450);
+  limpiarCuponTutorial();
+
+  const cuponReal = cuponesContainer?.querySelector(".cupon:not(.tutorial-cupon-demo)");
+  if (cuponReal) {
+    tutorialCuponObjetivo = cuponReal;
+    tutorialCuponEsEjemplo = false;
+  } else if (cuponesContainer) {
+    guardarEstadoVistaTutorial();
+    if (todosWrapper) todosWrapper.hidden = false;
+    if (sinCupones) sinCupones.hidden = true;
+    if (estadoCarga) estadoCarga.hidden = true;
+    tutorialCuponObjetivo = crearCuponEjemploTutorial();
+    tutorialCuponEsEjemplo = true;
+    cuponesContainer.classList.add("tutorial-grid-con-ejemplo");
+    cuponesContainer.appendChild(tutorialCuponObjetivo);
+  }
+
+  tutorialCuponObjetivo?.classList.add("tutorial-cupon-objetivo");
+  tutorialCuponObjetivo?.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+  await esperarTutorial(500);
+}
+
+function objetivoDentroCupon(selectorInterno) {
+  return () => {
+    if (!tutorialCuponObjetivo || !tutorialCuponObjetivo.isConnected) return null;
+    return selectorInterno ? tutorialCuponObjetivo.querySelector(selectorInterno) : tutorialCuponObjetivo;
+  };
 }
 
 function crearInterfazTutorial() {
@@ -2593,7 +2653,6 @@ function crearInterfazTutorial() {
   tutorialElementos = {
     foco,
     tarjeta,
-    ejemplo: crearCuponEjemploTutorial(),
     titulo: tarjeta.querySelector("#tutorial-titulo"),
     texto: tarjeta.querySelector("#tutorial-texto"),
     contador: tarjeta.querySelector("#tutorial-contador"),
@@ -2631,29 +2690,30 @@ const pasosTutorial = [
     texto: "En Bancarios se muestran los descuentos exclusivos de bancos y métodos de pago participantes.",
   },
   {
-    selector: "#tutorial-info-cupon",
-    demo: true,
+    objetivo: objetivoDentroCupon(null),
+    cupon: true,
     titulo: "Información del cupón",
     texto: "Cada tarjeta indica el descuento, la compra mínima, el ahorro máximo y si el cupón es nuevo, popular o destacado.",
     icono: "🎟️",
+    preparar: prepararCuponTutorial,
   },
   {
-    selector: "#tutorial-boton-canjear",
-    demo: true,
+    objetivo: objetivoDentroCupon(".boton-canjear"),
+    cupon: true,
     titulo: "Copiar y Canjear",
     texto: "Este botón copia el código y te lleva a Mercado Libre para que puedas pegarlo al momento de comprar.",
     icono: "📋",
   },
   {
-    selector: "#tutorial-boton-like",
-    demo: true,
+    objetivo: objetivoDentroCupon(".boton-like"),
+    cupon: true,
     titulo: "Me gusta",
     texto: "Marca Me gusta cuando un cupón te resulte útil. Así ayudas a la comunidad a reconocer las mejores oportunidades.",
     icono: "👍",
   },
   {
-    selector: "#tutorial-boton-compartir",
-    demo: true,
+    objetivo: objetivoDentroCupon(".boton-compartir"),
+    cupon: true,
     titulo: "Compartir",
     texto: "Envía el cupón rápidamente a familiares o amigos para que también puedan aprovecharlo.",
     icono: "🔗",
@@ -2663,7 +2723,7 @@ const pasosTutorial = [
     titulo: "Activa los avisos",
     texto: "Recibe una alerta cuando publiquemos un nuevo cupón, sin tener que revisar la página constantemente.",
     icono: "🔔",
-    preparar: async () => window.scrollTo({ top: 0, behavior: "smooth" }),
+    preparar: async () => { limpiarCuponTutorial(); window.scrollTo({ top: 0, behavior: "smooth" }); },
   },
   {
     selector: ".hero-redes-whatsapp, .hero-redes-facebook",
@@ -2681,6 +2741,7 @@ const pasosTutorial = [
 ];
 
 function obtenerObjetivoTutorial(paso) {
+  if (typeof paso?.objetivo === "function") return paso.objetivo();
   return paso?.selector ? document.querySelector(paso.selector) : null;
 }
 
@@ -2688,7 +2749,7 @@ function posicionarTutorial(paso) {
   if (!tutorialActivo || !tutorialElementos) return;
   const objetivo = obtenerObjetivoTutorial(paso);
   const { foco, tarjeta } = tutorialElementos;
-  tarjeta.classList.toggle("tutorial-demo-activo", Boolean(paso?.demo));
+  tarjeta.classList.toggle("tutorial-cupon-activo", Boolean(paso?.cupon));
   if (!objetivo) {
     foco.hidden = true;
     tarjeta.classList.add("tutorial-centrada");
@@ -2707,12 +2768,6 @@ function posicionarTutorial(paso) {
   tarjeta.classList.remove("tutorial-centrada");
   const anchoTarjeta = Math.min(360, window.innerWidth - 24);
   tarjeta.style.width = `${anchoTarjeta}px`;
-  if (paso?.demo) {
-    tarjeta.style.left = `${Math.max(12, (window.innerWidth - anchoTarjeta) / 2)}px`;
-    tarjeta.style.top = "auto";
-    tarjeta.style.bottom = "12px";
-    return;
-  }
   tarjeta.style.removeProperty("bottom");
   const altoTarjeta = tarjeta.offsetHeight || 240;
   let left = rect.left + rect.width / 2 - anchoTarjeta / 2;
@@ -2732,15 +2787,16 @@ async function mostrarPasoTutorial(indice) {
   const ui = crearInterfazTutorial();
   ui.foco.hidden = true;
   ui.tarjeta.style.visibility = "hidden";
-  ui.ejemplo.hidden = !paso.demo;
+  if (paso.cupon && (!tutorialCuponObjetivo || !tutorialCuponObjetivo.isConnected)) {
+    try { await prepararCuponTutorial(); } catch (error) { console.warn("No fue posible preparar el cupón del tutorial.", error); }
+  }
   if (typeof paso.preparar === "function") {
     try { await paso.preparar(); } catch (error) { console.warn("No fue posible preparar un paso del tutorial.", error); }
   }
-  if (paso.demo) await esperarTutorial(120);
   let objetivo = obtenerObjetivoTutorial(paso);
-  if (objetivo && !paso.demo) {
+  if (objetivo) {
     objetivo.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
-    await esperarTutorial(450);
+    await esperarTutorial(420);
     objetivo = obtenerObjetivoTutorial(paso);
   }
   ui.titulo.textContent = paso.titulo;
@@ -2767,15 +2823,15 @@ function iniciarTutorialGuiado(automatico = false) {
 function finalizarTutorialGuiado(completado = false, irATienda = false) {
   tutorialActivo = false;
   document.documentElement.classList.remove("tutorial-en-curso");
+  limpiarCuponTutorial();
   if (tutorialElementos) {
     tutorialElementos.foco.hidden = true;
     tutorialElementos.tarjeta.hidden = true;
-    tutorialElementos.ejemplo.hidden = true;
   }
   if (completado) localStorage.setItem(CLAVE_TUTORIAL_COMPLETADO, "1");
   if (irATienda) {
     tabTienda?.click();
-    window.setTimeout(() => document.querySelector("#contenedor-cupones, .contenedor-cupones")?.scrollIntoView({ behavior: "smooth", block: "start" }), 200);
+    window.setTimeout(() => cuponesContainer?.scrollIntoView({ behavior: "smooth", block: "start" }), 200);
   }
 }
 
@@ -2784,4 +2840,3 @@ window.setTimeout(() => {
   crearBotonTutorial();
   if (!localStorage.getItem(CLAVE_TUTORIAL_COMPLETADO)) iniciarTutorialGuiado(true);
 }, 1800);
-

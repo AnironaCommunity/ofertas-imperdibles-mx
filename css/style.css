@@ -5978,3 +5978,58 @@ html.tutorial-en-curso { scroll-behavior: smooth; }
     bottom: 8px !important;
   }
 }
+
+/* ============================================================
+   V77.11.1 LTS — Cupón real o ejemplo dentro de la cuadrícula
+   ============================================================ */
+#cupones.tutorial-grid-con-ejemplo {
+  display: grid !important;
+  grid-template-columns: minmax(250px, 360px) !important;
+  justify-content: center !important;
+}
+#cupones .tutorial-cupon-demo {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  pointer-events: none;
+  box-shadow: 0 10px 26px rgba(5, 25, 18, .16);
+}
+#cupones .tutorial-cupon-demo .boton-canjear,
+#cupones .tutorial-cupon-demo .boton-like,
+#cupones .tutorial-cupon-demo .boton-compartir {
+  pointer-events: none;
+}
+#cupones .tutorial-ejemplo-aviso {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  z-index: 3;
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .94);
+  color: #476057;
+  font-size: 9px;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .10);
+}
+.cupon.tutorial-cupon-objetivo {
+  position: relative;
+  z-index: 30008;
+}
+.tutorial-tarjeta.tutorial-cupon-activo {
+  max-height: min(42vh, 300px);
+  overflow-y: auto;
+}
+@media (max-width: 600px) {
+  #cupones.tutorial-grid-con-ejemplo {
+    grid-template-columns: minmax(0, 46vw) !important;
+  }
+  #cupones .tutorial-cupon-demo {
+    max-width: 100%;
+  }
+  .tutorial-tarjeta.tutorial-cupon-activo {
+    width: calc(100vw - 20px) !important;
+    max-height: 36vh;
+  }
+}
