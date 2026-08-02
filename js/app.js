@@ -2394,6 +2394,7 @@ function revisarAvisosNovedades() {
 async function sondearNovedadesAutomaticamente() {
   if (
     sondeoNovedadesEnCurso ||
+    tutorialActivo ||
     document.hidden ||
     !avisosNovedadesActivos() ||
     redireccionEnProceso ||
@@ -2414,6 +2415,7 @@ window.setInterval(sondearNovedadesAutomaticamente, MILISEGUNDOS_SONDEO_NOVEDADE
 
 setInterval(() => {
   if (
+    tutorialActivo ||
     document.hidden ||
     cargando ||
     redireccionEnProceso ||
@@ -2769,6 +2771,15 @@ function posicionarTutorial(paso) {
   const anchoTarjeta = Math.min(360, window.innerWidth - 24);
   tarjeta.style.width = `${anchoTarjeta}px`;
   tarjeta.style.removeProperty("bottom");
+
+  if (paso?.cupon) {
+    tarjeta.classList.add("tutorial-superior");
+    tarjeta.style.left = `${Math.max(12, (window.innerWidth - anchoTarjeta) / 2)}px`;
+    tarjeta.style.top = "12px";
+    return;
+  }
+
+  tarjeta.classList.remove("tutorial-superior");
   const altoTarjeta = tarjeta.offsetHeight || 240;
   let left = rect.left + rect.width / 2 - anchoTarjeta / 2;
   left = Math.max(12, Math.min(left, window.innerWidth - anchoTarjeta - 12));
@@ -2795,7 +2806,11 @@ async function mostrarPasoTutorial(indice) {
   }
   let objetivo = obtenerObjetivoTutorial(paso);
   if (objetivo) {
-    objetivo.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+    objetivo.scrollIntoView({
+      behavior: "smooth",
+      block: paso.cupon ? "end" : "center",
+      inline: "center",
+    });
     await esperarTutorial(420);
     objetivo = obtenerObjetivoTutorial(paso);
   }

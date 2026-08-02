@@ -6033,3 +6033,21 @@ html.tutorial-en-curso { scroll-behavior: smooth; }
     max-height: 36vh;
   }
 }
+
+
+/* ============================================================
+   V77.11.2 LTS — Tutorial estable y cuadro superior
+   ============================================================ */
+.tutorial-tarjeta.tutorial-superior {
+  position: fixed;
+  top: 12px !important;
+  max-height: min(34vh, 260px);
+  overflow-y: auto;
+}
+@media (max-width: 600px) {
+  .tutorial-tarjeta.tutorial-superior {
+    top: 8px !important;
+    width: calc(100vw - 20px) !important;
+    max-height: 31vh;
+  }
+}
