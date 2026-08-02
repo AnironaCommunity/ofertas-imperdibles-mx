@@ -5733,6 +5733,40 @@ body {
   background: #fff;
   box-shadow: 0 4px 10px rgba(69, 45, 79, .09);
 }
+
+/* V77.11.4 LTS — Invitación visible sin abrir el tutorial automáticamente */
+.hero-redes-botones .boton-ver-tutorial.tutorial-boton-destacado {
+  position: relative;
+  z-index: 4;
+  border-color: #14966d;
+  background: #effbf6;
+  color: #0c533d;
+  box-shadow: 0 0 0 0 rgba(20, 150, 109, .38);
+  animation: tutorialBotonEntrada 1.15s ease-in-out 5;
+}
+.hero-redes-botones .boton-ver-tutorial.tutorial-boton-destacado::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border: 2px solid rgba(20, 150, 109, .48);
+  border-radius: 999px;
+  pointer-events: none;
+  animation: tutorialBotonAro 1.15s ease-out 5;
+}
+@keyframes tutorialBotonEntrada {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-1px) scale(1.055); }
+}
+@keyframes tutorialBotonAro {
+  0% { opacity: .9; transform: scale(.94); }
+  100% { opacity: 0; transform: scale(1.16); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-redes-botones .boton-ver-tutorial.tutorial-boton-destacado,
+  .hero-redes-botones .boton-ver-tutorial.tutorial-boton-destacado::after {
+    animation: none;
+  }
+}
 .tutorial-foco {
   position: fixed;
   z-index: 30000;

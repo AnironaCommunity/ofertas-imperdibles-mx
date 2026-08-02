@@ -2861,8 +2861,16 @@ function finalizarTutorialGuiado(completado = false, irATienda = false) {
   }
 }
 
+function resaltarBotonTutorialAlEntrar() {
+  const boton = document.querySelector("#boton-ver-tutorial");
+  if (!boton || boton.classList.contains("tutorial-boton-destacado")) return;
+
+  boton.classList.add("tutorial-boton-destacado");
+  window.setTimeout(() => boton.classList.remove("tutorial-boton-destacado"), 6500);
+}
+
 crearBotonTutorial();
 window.setTimeout(() => {
   crearBotonTutorial();
-  if (!localStorage.getItem(CLAVE_TUTORIAL_COMPLETADO)) iniciarTutorialGuiado(true);
-}, 1800);
+  resaltarBotonTutorialAlEntrar();
+}, 1200);
