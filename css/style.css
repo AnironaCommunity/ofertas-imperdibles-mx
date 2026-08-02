@@ -5927,3 +5927,54 @@ html.tutorial-en-curso { scroll-behavior: smooth; }
     outline-offset: 3px;
   }
 }
+
+/* ============================================================
+   V77.11 LTS — Tutorial enfocado exclusivamente en cupones
+   ============================================================ */
+.tutorial-cupon-ejemplo {
+  position: fixed;
+  z-index: 30005;
+  top: clamp(16px, 8vh, 70px);
+  left: 50%;
+  width: min(380px, calc(100vw - 28px));
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.tutorial-cupon-ejemplo[hidden] { display: none !important; }
+.tutorial-cupon-demo {
+  width: 100%;
+  margin: 0;
+  box-shadow: 0 18px 50px rgba(5, 25, 18, .28);
+}
+.tutorial-cupon-demo .boton-canjear,
+.tutorial-cupon-demo .boton-like,
+.tutorial-cupon-demo .boton-compartir { pointer-events: none; }
+.tutorial-ejemplo-aviso {
+  margin: 7px 0 0;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .95);
+  color: #44534d;
+  font-size: 11px;
+  text-align: center;
+  box-shadow: 0 5px 16px rgba(5, 25, 18, .15);
+}
+.tutorial-foco { z-index: 30020; }
+.tutorial-tarjeta { z-index: 30030; }
+.tutorial-tarjeta.tutorial-demo-activo {
+  max-height: 42vh;
+  overflow-y: auto;
+}
+@media (max-width: 600px) {
+  .tutorial-cupon-ejemplo {
+    top: 10px;
+    width: min(330px, calc(100vw - 20px));
+  }
+  .tutorial-cupon-demo .descuento { font-size: 18px; }
+  .tutorial-cupon-demo .cupon-contenido { padding-bottom: 12px; }
+  .tutorial-tarjeta.tutorial-demo-activo {
+    width: calc(100vw - 20px) !important;
+    max-height: 38vh;
+    bottom: 8px !important;
+  }
+}
