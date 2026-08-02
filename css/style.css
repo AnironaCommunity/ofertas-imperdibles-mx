@@ -6051,3 +6051,21 @@ html.tutorial-en-curso { scroll-behavior: smooth; }
     max-height: 31vh;
   }
 }
+
+/* ============================================================
+   V77.11.3 LTS — Inicio centrado y cupón estable desde el paso 4
+   ============================================================ */
+.tutorial-tarjeta.tutorial-centrada {
+  left: 50% !important;
+  top: 50% !important;
+  bottom: auto !important;
+  max-height: calc(100vh - 24px);
+  transform: translate(-50%, -50%) !important;
+  overflow-y: auto;
+}
+@media (max-width: 600px) {
+  .tutorial-tarjeta.tutorial-centrada {
+    width: calc(100vw - 20px) !important;
+    max-height: calc(100vh - 20px);
+  }
+}

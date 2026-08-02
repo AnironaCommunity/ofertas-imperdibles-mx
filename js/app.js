@@ -2505,7 +2505,7 @@ document.addEventListener("ofertas:etiquetas-cargadas", () => {
 });
 
 
-/* ================= TUTORIAL DE CUPONES V77.11.1 LTS ================= */
+/* ================= TUTORIAL DE CUPONES V77.11.3 LTS ================= */
 const CLAVE_TUTORIAL_COMPLETADO = "oi-tutorial-cupones-v77-11-completado";
 let tutorialActivo = false;
 let tutorialPasoActual = 0;
@@ -2678,7 +2678,10 @@ const pasosTutorial = [
     titulo: "¡Bienvenido a Ofertas Imperdibles MX!",
     texto: "En menos de un minuto aprenderás a encontrar, copiar y compartir los cupones publicados.",
     icono: "👋",
-    preparar: async () => window.scrollTo({ top: 0, behavior: "smooth" }),
+    preparar: async () => {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      await esperarTutorial(60);
+    },
   },
   {
     selector: "#tab-tienda",
@@ -2697,7 +2700,6 @@ const pasosTutorial = [
     titulo: "Información del cupón",
     texto: "Cada tarjeta indica el descuento, la compra mínima, el ahorro máximo y si el cupón es nuevo, popular o destacado.",
     icono: "🎟️",
-    preparar: prepararCuponTutorial,
   },
   {
     objetivo: objetivoDentroCupon(".boton-canjear"),
@@ -2751,12 +2753,15 @@ function posicionarTutorial(paso) {
   if (!tutorialActivo || !tutorialElementos) return;
   const objetivo = obtenerObjetivoTutorial(paso);
   const { foco, tarjeta } = tutorialElementos;
+  const anchoTarjeta = Math.min(360, window.innerWidth - 24);
   tarjeta.classList.toggle("tutorial-cupon-activo", Boolean(paso?.cupon));
+  tarjeta.style.width = `${anchoTarjeta}px`;
   if (!objetivo) {
     foco.hidden = true;
+    tarjeta.classList.remove("tutorial-superior");
     tarjeta.classList.add("tutorial-centrada");
-    tarjeta.style.removeProperty("left");
-    tarjeta.style.removeProperty("top");
+    tarjeta.style.left = "50%";
+    tarjeta.style.top = "50%";
     tarjeta.style.removeProperty("bottom");
     return;
   }
@@ -2768,8 +2773,6 @@ function posicionarTutorial(paso) {
   foco.style.width = `${Math.min(window.innerWidth - 8, rect.width + margen * 2)}px`;
   foco.style.height = `${Math.min(window.innerHeight - 8, rect.height + margen * 2)}px`;
   tarjeta.classList.remove("tutorial-centrada");
-  const anchoTarjeta = Math.min(360, window.innerWidth - 24);
-  tarjeta.style.width = `${anchoTarjeta}px`;
   tarjeta.style.removeProperty("bottom");
 
   if (paso?.cupon) {
@@ -2830,8 +2833,16 @@ function iniciarTutorialGuiado(automatico = false) {
   tutorialActivo = true;
   tutorialPasoActual = 0;
   document.documentElement.classList.add("tutorial-en-curso");
-  crearInterfazTutorial();
-  mostrarPasoTutorial(0);
+  const ui = crearInterfazTutorial();
+  ui.foco.hidden = true;
+  ui.tarjeta.hidden = true;
+  ui.tarjeta.classList.remove("tutorial-superior", "tutorial-cupon-activo");
+  ui.tarjeta.classList.add("tutorial-centrada");
+  ui.tarjeta.style.left = "50%";
+  ui.tarjeta.style.top = "50%";
+  ui.tarjeta.style.removeProperty("bottom");
+  window.scrollTo({ top: 0, behavior: "auto" });
+  window.requestAnimationFrame(() => mostrarPasoTutorial(0));
   if (!automatico) localStorage.setItem(CLAVE_TUTORIAL_COMPLETADO, "1");
 }
 
