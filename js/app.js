@@ -22,6 +22,9 @@ const modalCuponOculto = document.querySelector("#modal-cupon-oculto");
 
 const tabTienda = document.querySelector("#tab-tienda");
 const tabBancarios = document.querySelector("#tab-bancarios");
+const navInicio = document.querySelector("#nav-inicio");
+const navTutorial = document.querySelector("#nav-tutorial");
+const navAvisos = document.querySelector("#nav-avisos");
 const vistaCupones = document.querySelector("#vista-cupones");
 const botonesMenuOfertas = document.querySelectorAll(".menu-ofertas [data-vista]");
 const botonComunidadAnirona = document.querySelector(".acceso-comunidad-anirona[data-vista]");
@@ -312,12 +315,43 @@ enlaceLogoInicio?.addEventListener("click", (event) => {
 });
 
 botonRecargar.addEventListener("click", cargarCupones);
-tabTienda.addEventListener("click", () =>
-  cambiarCategoria("tienda", { actualizarHistorial: true })
-);
-tabBancarios.addEventListener("click", () =>
-  cambiarCategoria("bancarios", { actualizarHistorial: true })
-);
+function actualizarNavegacionPrincipal(seccion) {
+  const mapa = {
+    inicio: navInicio,
+    tienda: tabTienda,
+    bancarios: tabBancarios,
+  };
+
+  [navInicio, tabTienda, tabBancarios].forEach((boton) => {
+    if (!boton) return;
+    const activo = boton === mapa[seccion];
+    boton.classList.toggle("activo", activo);
+    boton.setAttribute("aria-pressed", String(activo));
+  });
+}
+
+navInicio?.addEventListener("click", () => {
+  actualizarNavegacionPrincipal("inicio");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+tabTienda.addEventListener("click", () => {
+  cambiarCategoria("tienda", { actualizarHistorial: true });
+  actualizarNavegacionPrincipal("tienda");
+});
+
+tabBancarios.addEventListener("click", () => {
+  cambiarCategoria("bancarios", { actualizarHistorial: true });
+  actualizarNavegacionPrincipal("bancarios");
+});
+
+navTutorial?.addEventListener("click", () => {
+  document.querySelector("#boton-ver-tutorial")?.click();
+});
+
+navAvisos?.addEventListener("click", () => {
+  document.querySelector("#boton-avisos-novedades")?.click();
+});
 
 function abrirEnlacePrincipal(boton) {
   const vista = boton?.dataset?.vista;
@@ -871,6 +905,7 @@ function cambiarCategoria(
 
   tabTienda.setAttribute("aria-pressed", String(esTienda));
   tabBancarios.setAttribute("aria-pressed", String(!esTienda));
+  actualizarNavegacionPrincipal(esTienda ? "tienda" : "bancarios");
 
   renderizarCategoria();
 

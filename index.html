@@ -53,7 +53,8 @@
   <link rel="stylesheet" href="css/eventos-v68.css?v=70.0.0" />
   <link rel="stylesheet" href="css/header-dinamico-v68-3.css?v=70.0.0" />
   <link rel="stylesheet" href="css/estabilidad.css?v=72.1.0" />
-  <link rel="stylesheet" href="css/cabecera-inteligente.css?v=77.14.1" />  <script>
+  <link rel="stylesheet" href="css/cabecera-inteligente.css?v=77.14.1" />
+  <link rel="stylesheet" href="css/navegacion-principal.css?v=77.15.0" />  <script>
     try {
       const temaGuardado = JSON.parse(localStorage.getItem("ofertas_imperdibles_tema") || "null");
       if (temaGuardado?.inicio) document.documentElement.style.setProperty("--tema-color-inicio", temaGuardado.inicio);
@@ -195,18 +196,35 @@
       })();
     </script>
 
-    <div class="menu-ofertas-contenedor">
-      <nav class="menu-ofertas" aria-label="Secciones de ofertas">
-      <button type="button" data-vista="ofertas_mercado_libre" aria-pressed="false">
-        <img class="menu-ofertas-logo logo-mercado-libre" src="img/mercado-libre.png?v=72.1.0" alt="" aria-hidden="true" />
-        <span id="nombre-boton-mercado-libre">Ofertas Mercado Libre</span>
+    <nav class="navegacion-principal-oi" aria-label="Navegación principal">
+      <button id="nav-inicio" class="nav-principal-item activo" type="button" aria-pressed="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.2 12 3l9 8.2v9.3a.5.5 0 0 1-.5.5H15v-6H9v6H3.5a.5.5 0 0 1-.5-.5z"/></svg>
+        <span>Inicio</span>
       </button>
-      <button type="button" data-vista="ofertas_amazon" aria-pressed="false">
-        <img class="menu-ofertas-logo logo-amazon" src="img/amazon.png?v=72.1.0" alt="" aria-hidden="true" />
-        <span id="nombre-boton-amazon">Ofertas Amazon</span>
+
+      <button id="tab-tienda" class="nav-principal-item" type="button" data-categoria="tienda" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 4.5h11l4 4-9.5 9.5a2 2 0 0 1-2.8 0l-3.7-3.7a2 2 0 0 1 0-2.8L13 2h-8.5z"/><circle cx="8" cy="8" r="1.2"/></svg>
+        <span id="nombre-boton-tienda">Tienda</span>
+        <span id="contador-cupones-tienda" class="contador-seccion contador-seccion-inferior" aria-label="0 cupones" hidden>0</span>
+      </button>
+
+      <button id="tab-bancarios" class="nav-principal-item" type="button" data-categoria="bancarios" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M7 15h3"/></svg>
+        <span id="nombre-boton-bancarios">Bancarios</span>
+        <span id="contador-cupones-bancarios" class="contador-seccion contador-seccion-inferior" aria-label="0 cupones" hidden>0</span>
+      </button>
+
+      <button id="nav-tutorial" class="nav-principal-item" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11a3 3 0 0 1 3 3v14a3 3 0 0 0-3-3H6.5A2.5 2.5 0 0 0 4 19.5z"/><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H14v17a3 3 0 0 1 3-3h.5a2.5 2.5 0 0 1 2.5 2.5z"/></svg>
+        <span>Tutorial</span>
+      </button>
+
+      <button id="nav-avisos" class="nav-principal-item nav-principal-avisos" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9zM10 21h4"/></svg>
+        <span>Avisos</span>
+        <i class="nav-principal-alerta" aria-hidden="true"></i>
       </button>
     </nav>
-    </div>
 
     <button
       type="button"
@@ -472,42 +490,7 @@
 
   <footer></footer>
 
-  <nav class="navegacion-inferior" aria-label="Categorías de cupones">
-    <button
-      id="tab-tienda"
-      class="tab-inferior activo"
-      type="button"
-      data-categoria="tienda"
-      aria-pressed="true"
-    >
-      <span aria-hidden="true">🛒</span>
-      <strong id="nombre-boton-tienda">Tienda</strong>
-      <span
-        id="contador-cupones-tienda"
-        class="contador-seccion contador-seccion-inferior"
-        aria-label="0 cupones"
-        hidden
-      >0</span>
-    </button>
 
-    <button
-      id="tab-bancarios"
-      class="tab-inferior"
-      type="button"
-      data-categoria="bancarios"
-      aria-pressed="false"
-    >
-      <span aria-hidden="true">💳</span>
-      <strong id="nombre-boton-bancarios">Bancarios</strong>
-      <span
-        id="contador-cupones-bancarios"
-        class="contador-seccion contador-seccion-inferior"
-        aria-label="0 cupones"
-        hidden
-      >0</span>
-    </button>
-
-  </nav>
 
   <div
     id="modal-redireccion"
@@ -541,7 +524,7 @@
   </div>
 
 
-  <script type="module" src="js/app.js?v=77.6.0"></script>
+  <script type="module" src="js/app.js?v=77.15.0"></script>
   <script src="js/hero-redes.js?v=74.0" defer></script>
   <script src="js/header-dinamico-v68-3.js?v=70.0.0" defer></script>
   <script src="js/cabecera-inteligente.js?v=71.9.0" defer></script>
