@@ -52,9 +52,8 @@
   <link rel="stylesheet" href="css/ajustes-visuales-v67-16.css?v=70.0.0" />
   <link rel="stylesheet" href="css/eventos-v68.css?v=70.0.0" />
   <link rel="stylesheet" href="css/header-dinamico-v68-3.css?v=70.0.0" />
-  <link rel="stylesheet" href="css/estabilidad.css?v=72.1.0" />
-  <link rel="stylesheet" href="css/cabecera-inteligente.css?v=77.15.1" />
-  <link rel="stylesheet" href="css/navegacion-principal.css?v=77.15.4" />  <script>
+  <link rel="stylesheet" href="css/estabilidad.css?v=77.15.5" />
+  <link rel="stylesheet" href="css/cabecera-inteligente.css?v=77.15.1" />  <script>
     try {
       const temaGuardado = JSON.parse(localStorage.getItem("ofertas_imperdibles_tema") || "null");
       if (temaGuardado?.inicio) document.documentElement.style.setProperty("--tema-color-inicio", temaGuardado.inicio);
@@ -196,19 +195,40 @@
       })();
     </script>
 
-    <nav class="navegacion-principal-oi" aria-label="Navegación principal">
-      <button id="tab-tienda" class="nav-principal-item" type="button" data-categoria="tienda" aria-pressed="false">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 4.5h11l4 4-9.5 9.5a2 2 0 0 1-2.8 0l-3.7-3.7a2 2 0 0 1 0-2.8L13 2h-8.5z"/><circle cx="8" cy="8" r="1.2"/></svg>
-        <span id="nombre-boton-tienda">Tienda</span>
-        <span id="contador-cupones-tienda" class="contador-seccion contador-seccion-inferior" aria-label="0 cupones" hidden>0</span>
+    <nav class="navegacion-inferior" aria-label="Categorías de cupones">
+      <button
+        id="tab-tienda"
+        class="tab-inferior activo"
+        type="button"
+        data-categoria="tienda"
+        aria-pressed="true"
+      >
+        <span aria-hidden="true">🛒</span>
+        <strong id="nombre-boton-tienda">Tienda</strong>
+        <span
+          id="contador-cupones-tienda"
+          class="contador-seccion contador-seccion-inferior"
+          aria-label="0 cupones"
+          hidden
+        >0</span>
       </button>
 
-      <button id="tab-bancarios" class="nav-principal-item" type="button" data-categoria="bancarios" aria-pressed="false">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M7 15h3"/></svg>
-        <span id="nombre-boton-bancarios">Bancarios</span>
-        <span id="contador-cupones-bancarios" class="contador-seccion contador-seccion-inferior" aria-label="0 cupones" hidden>0</span>
+      <button
+        id="tab-bancarios"
+        class="tab-inferior"
+        type="button"
+        data-categoria="bancarios"
+        aria-pressed="false"
+      >
+        <span aria-hidden="true">💳</span>
+        <strong id="nombre-boton-bancarios">Bancarios</strong>
+        <span
+          id="contador-cupones-bancarios"
+          class="contador-seccion contador-seccion-inferior"
+          aria-label="0 cupones"
+          hidden
+        >0</span>
       </button>
-
     </nav>
 
     <button
