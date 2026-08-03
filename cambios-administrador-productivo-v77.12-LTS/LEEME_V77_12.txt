@@ -1,0 +1,17 @@
+V77.12 LTS - Administrador Productivo
+
+Reemplaza en tu repositorio:
+- admin/index.html
+- admin/admin.js
+- admin/admin.css
+
+Incluye:
+- Eliminación de precios en el listado de Publicaciones.
+- Buscador instantáneo.
+- Resumen de productos, nuevos, más vendidos y otras recomendaciones.
+- Accesos rápidos ML, AMZ y WEB.
+- Copiar enlace con prioridad Mercado Libre y respaldo Amazon.
+- Etiquetas visuales.
+- Duplicar publicación para precargar el formulario como un registro nuevo.
+
+No requiere SQL ni cambios en Supabase.
