@@ -6,7 +6,7 @@
   const navegacionPrincipal = encabezado?.querySelector(".navegacion-principal-oi");
   const comunidad = encabezado?.querySelector(".acceso-comunidad-anirona");
 
-  if (!encabezado || !hero || !navegacionPrincipal) return;
+  if (!encabezado || !hero) return;
 
   /* Limpia únicamente estructuras generadas por versiones anteriores. */
   document.querySelectorAll(".smart-header, .cabecera-hibrida, .cabecera-fija-original, .navegacion-principal-flujo").forEach((nodo) => nodo.remove());
@@ -30,15 +30,22 @@
 
   const flujo = document.createElement("div");
   flujo.className = "navegacion-principal-flujo";
-  flujo.setAttribute("aria-label", "Navegación y accesos principales");
+  flujo.setAttribute("aria-label", "Accesos principales");
 
   encabezado.insertAdjacentElement("afterend", centinela);
   centinela.insertAdjacentElement("afterend", barra);
-  barra.insertAdjacentElement("afterend", flujo);
 
   barra.append(hero);
-  flujo.append(navegacionPrincipal);
-  if (comunidad) flujo.append(comunidad);
+
+  /*
+    La navegación Tienda | Bancarios puede vivir al final del documento.
+    Solo se crea este flujo cuando todavía hay accesos dentro del encabezado.
+  */
+  if (navegacionPrincipal || comunidad) {
+    barra.insertAdjacentElement("afterend", flujo);
+    if (navegacionPrincipal) flujo.append(navegacionPrincipal);
+    if (comunidad) flujo.append(comunidad);
+  }
 
   const raiz = document.documentElement;
   let alturaAnterior = 0;
