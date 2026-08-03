@@ -323,3 +323,47 @@ html {
     height: 70px;
   }
 }
+
+
+/* V77.14.1 — Encabezado limpio: logo grande centrado, fondo blanco y sin estado. */
+.encabezado {
+  background: #fff !important;
+}
+
+.enlace-logo-inicio {
+  width: min(650px, 96vw) !important;
+  height: 136px;
+  margin: 0 auto !important;
+  background: #fff;
+}
+
+.enlace-logo-inicio::before {
+  display: none !important;
+  content: none !important;
+}
+
+.marca-principal {
+  padding: 4px 10px;
+}
+
+.estado-dinamico-cabecera {
+  display: none !important;
+}
+
+@media (max-width: 600px) {
+  .enlace-logo-inicio {
+    width: min(460px, 96vw) !important;
+    height: 104px;
+  }
+
+  .marca-principal {
+    padding: 3px 6px;
+  }
+}
+
+@media (max-width: 390px) {
+  .enlace-logo-inicio {
+    width: min(370px, 97vw) !important;
+    height: 92px;
+  }
+}
