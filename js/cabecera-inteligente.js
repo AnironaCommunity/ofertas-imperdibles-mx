@@ -3,43 +3,42 @@
 
   const encabezado = document.querySelector(".encabezado");
   const hero = encabezado?.querySelector(".hero-redes");
-  const menu = encabezado?.querySelector(".menu-ofertas-contenedor");
+  const navegacionPrincipal = encabezado?.querySelector(".navegacion-principal-oi");
   const comunidad = encabezado?.querySelector(".acceso-comunidad-anirona");
 
-  if (!encabezado || !hero || !menu || !comunidad) return;
+  if (!encabezado || !hero || !navegacionPrincipal) return;
 
-  /* Limpia cualquier cabecera generada por versiones anteriores. */
+  /* Limpia únicamente estructuras generadas por versiones anteriores. */
   document.querySelectorAll(".smart-header, .cabecera-hibrida, .cabecera-fija-original, .navegacion-principal-flujo").forEach((nodo) => nodo.remove());
   document.body.classList.remove("cabecera-compacta");
   encabezado.removeAttribute("data-compacta");
 
   /*
-    V71.9: únicamente la barra social permanece fija.
-
-    El logo sale naturalmente al desplazar. La barra original con imagen,
-    nombre, redes y visitantes se vuelve sticky al llegar arriba. Los botones
-    Mercado Libre, Amazon y Comunidad permanecen en el flujo normal, por lo
-    que desaparecen de la pantalla al continuar bajando.
+    V77.15.1
+    El logo principal permanece en el flujo y desaparece al bajar.
+    La barra verde original se vuelve sticky al alcanzar la parte superior.
+    La navegación simplificada y Comunidad Anirona permanecen en el flujo.
   */
   const barra = document.createElement("div");
   barra.className = "cabecera-fija-original";
   barra.setAttribute("data-cabecera-fija", "true");
-  barra.setAttribute("aria-label", "Barra de Ofertas Imperdibles MX");
+  barra.setAttribute("aria-label", "Barra de cupones de Mercado Libre");
 
   const centinela = document.createElement("span");
   centinela.className = "cabecera-fija-centinela";
   centinela.setAttribute("aria-hidden", "true");
 
-  const navegacion = document.createElement("div");
-  navegacion.className = "navegacion-principal-flujo";
-  navegacion.setAttribute("aria-label", "Accesos principales");
+  const flujo = document.createElement("div");
+  flujo.className = "navegacion-principal-flujo";
+  flujo.setAttribute("aria-label", "Navegación y accesos principales");
 
   encabezado.insertAdjacentElement("afterend", centinela);
   centinela.insertAdjacentElement("afterend", barra);
-  barra.insertAdjacentElement("afterend", navegacion);
+  barra.insertAdjacentElement("afterend", flujo);
 
   barra.append(hero);
-  navegacion.append(menu, comunidad);
+  flujo.append(navegacionPrincipal);
+  if (comunidad) flujo.append(comunidad);
 
   const raiz = document.documentElement;
   let alturaAnterior = 0;

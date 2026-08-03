@@ -138,3 +138,22 @@
   .nav-principal-item,
   .nav-principal-item::after { transition: none; }
 }
+
+/* v77.15.1 · Navegación simplificada: Inicio, Tienda y Bancarios */
+.navegacion-principal-oi {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.navegacion-principal-oi a.nav-principal-item {
+  text-decoration: none;
+}
+
+@media (max-width: 700px) {
+  .nav-principal-item {
+    min-height: 62px;
+  }
+
+  .nav-principal-item span:not(.contador-seccion) {
+    font-size: .68rem;
+  }
+}

@@ -367,3 +367,19 @@ html {
     height: 92px;
   }
 }
+
+/* V77.15.1 — Restaura la barra verde sticky sin fijar el logo ni la navegación. */
+.encabezado {
+  overflow: visible !important;
+}
+
+.encabezado > .cabecera-fija-original {
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+}
+
+/* La barra inferior móvil ocupa su propio espacio y no altera el sticky superior. */
+.navegacion-principal-oi {
+  z-index: 1150;
+}

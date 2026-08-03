@@ -23,8 +23,6 @@ const modalCuponOculto = document.querySelector("#modal-cupon-oculto");
 const tabTienda = document.querySelector("#tab-tienda");
 const tabBancarios = document.querySelector("#tab-bancarios");
 const navInicio = document.querySelector("#nav-inicio");
-const navTutorial = document.querySelector("#nav-tutorial");
-const navAvisos = document.querySelector("#nav-avisos");
 const vistaCupones = document.querySelector("#vista-cupones");
 const botonesMenuOfertas = document.querySelectorAll(".menu-ofertas [data-vista]");
 const botonComunidadAnirona = document.querySelector(".acceso-comunidad-anirona[data-vista]");
@@ -330,9 +328,9 @@ function actualizarNavegacionPrincipal(seccion) {
   });
 }
 
-navInicio?.addEventListener("click", () => {
-  actualizarNavegacionPrincipal("inicio");
-  window.scrollTo({ top: 0, behavior: "smooth" });
+navInicio?.addEventListener("click", (evento) => {
+  evento.preventDefault();
+  window.location.assign("https://ofertasimperdiblesmx.vercel.app/");
 });
 
 tabTienda.addEventListener("click", () => {
@@ -343,14 +341,6 @@ tabTienda.addEventListener("click", () => {
 tabBancarios.addEventListener("click", () => {
   cambiarCategoria("bancarios", { actualizarHistorial: true });
   actualizarNavegacionPrincipal("bancarios");
-});
-
-navTutorial?.addEventListener("click", () => {
-  document.querySelector("#boton-ver-tutorial")?.click();
-});
-
-navAvisos?.addEventListener("click", () => {
-  document.querySelector("#boton-avisos-novedades")?.click();
 });
 
 function abrirEnlacePrincipal(boton) {
