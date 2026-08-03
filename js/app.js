@@ -934,9 +934,16 @@ function renderizarCategoria() {
   const etiquetas = window.ofertasEtiquetas || {};
   const tituloCupones = document.querySelector("#titulo-seccion-cupones");
   if (tituloCupones) {
+    const filaTitulo = tituloCupones.closest(".titulo-fila");
+
+    filaTitulo?.classList.toggle("titulo-fila--tienda", esTienda);
+    filaTitulo?.classList.toggle("titulo-fila--bancarios", !esTienda);
+
     tituloCupones.textContent = esTienda
-      ? `🎟️ ${etiquetas.seccionTienda || "Cupones de tienda"}`
-      : `💳 ${etiquetas.seccionBancarios || "Cupones bancarios"}`;
+      ? ""
+      : (etiquetas.seccionBancarios || "Bancarios");
+
+    tituloCupones.setAttribute("aria-hidden", String(esTienda));
   }
 
   if (cuponesCategoria.length === 0) {

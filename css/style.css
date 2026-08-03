@@ -6103,3 +6103,47 @@ html.tutorial-en-curso { scroll-behavior: smooth; }
     max-height: calc(100vh - 20px);
   }
 }
+
+
+/* =========================================================
+   v77.15.8 · Encabezados compactos de cupones
+   ========================================================= */
+.titulo-fila--tienda {
+  padding-bottom: 0 !important;
+  margin-bottom: 4px !important;
+  grid-template-columns: 1fr auto !important;
+}
+
+.titulo-fila--tienda::after {
+  display: none !important;
+}
+
+.titulo-fila--tienda .titulo-seccion {
+  display: none !important;
+}
+
+.titulo-fila--bancarios {
+  padding-bottom: 8px !important;
+  margin-bottom: 10px !important;
+}
+
+.titulo-fila--bancarios .titulo-seccion {
+  display: block !important;
+  margin: 0 !important;
+  font-size: 14px !important;
+  line-height: 1.2 !important;
+  font-weight: 400 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+  color: #64748b !important;
+}
+
+@media (max-width: 640px) {
+  .titulo-fila--tienda {
+    margin-bottom: 2px !important;
+  }
+
+  .titulo-fila--bancarios .titulo-seccion {
+    font-size: 12px !important;
+  }
+}
