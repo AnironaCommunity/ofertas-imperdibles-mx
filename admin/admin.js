@@ -158,6 +158,11 @@ const newAd = document.querySelector("#nueva-publicidad");
 const refreshAds = document.querySelector("#actualizar-publicidad");
 const adList = document.querySelector("#ad-list");
 const adListMessage = document.querySelector("#ad-list-message");
+const adSearch = document.querySelector("#buscar-publicaciones");
+const adsTotal = document.querySelector("#ads-total");
+const adsNew = document.querySelector("#ads-nuevos");
+const adsBestSellers = document.querySelector("#ads-mas-vendidos");
+const adsRecommendations = document.querySelector("#ads-recomendaciones");
 const generateCommunityList = document.querySelector(
   "#generar-lista-comunidad"
 );
@@ -1995,70 +2000,157 @@ function editAd(ad) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+function adMarketplaceLinks(ad) {
+  const mercadoLibre = String(ad.enlace_mercado_libre || "").trim();
+  const amazon = String(ad.enlace_amazon || "").trim();
+  const legacy = String(ad.enlace || "").trim();
+  const plataforma = String(ad.plataforma || "").toLowerCase();
+
+  return {
+    mercadoLibre: mercadoLibre || (!amazon && plataforma !== "amazon" ? legacy : ""),
+    amazon: amazon || (!mercadoLibre && plataforma === "amazon" ? legacy : ""),
+  };
+}
+
+function productWebUrl(ad) {
+  const url = new URL("https://ofertasimperdiblesmx.vercel.app/");
+  url.searchParams.set("seccion", "anirona");
+  url.searchParams.set("novedad_tipo", "producto");
+  url.searchParams.set("novedad_id", String(ad.id));
+  return url.toString();
+}
+
+function updateAdsSummary() {
+  if (adsTotal) adsTotal.textContent = String(ads.length);
+  if (adsNew) adsNew.textContent = String(ads.filter(productoNuevoVigente).length);
+  if (adsBestSellers) adsBestSellers.textContent = String(ads.filter((ad) => ad.es_mas_vendido).length);
+  if (adsRecommendations) adsRecommendations.textContent = String(ads.filter((ad) => ad.es_otra_recomendacion).length);
+}
+
+function filteredAds() {
+  const query = String(adSearch?.value || "").trim().toLocaleLowerCase("es");
+  if (!query) return ads;
+
+  return ads.filter((ad) => {
+    const links = adMarketplaceLinks(ad);
+    return [
+      ad.titulo,
+      ad.descripcion,
+      links.mercadoLibre,
+      links.amazon,
+      ad.es_mas_vendido ? "más vendido" : "",
+      productoNuevoVigente(ad) ? "nuevo" : "",
+      ad.es_otra_recomendacion ? "otra recomendación" : "",
+    ].some((value) => String(value || "").toLocaleLowerCase("es").includes(query));
+  });
+}
+
+function renderAdBadges(ad) {
+  const badges = [];
+  if (productoNuevoVigente(ad)) badges.push('<span class="publicacion-badge badge-nuevo">NUEVO</span>');
+  if (ad.es_mas_vendido) badges.push('<span class="publicacion-badge badge-mas-vendido">MÁS VENDIDO</span>');
+  if (ad.es_otra_recomendacion) badges.push('<span class="publicacion-badge badge-recomendacion">OTRA RECOMENDACIÓN</span>');
+  if (!ad.activo) badges.push('<span class="publicacion-badge badge-inactivo">INACTIVA</span>');
+  return badges.join("");
+}
+
 function renderAds() {
   adList.replaceChildren();
+  updateAdsSummary();
 
-  if (!ads.length) {
-    adList.innerHTML = "<p>No hay publicidades registradas.</p>";
+  const visibleAds = filteredAds();
+  if (!visibleAds.length) {
+    adList.innerHTML = ads.length
+      ? "<p>No se encontraron publicaciones con ese criterio.</p>"
+      : "<p>No hay publicidades registradas.</p>";
     return;
   }
 
-  for (const ad of ads) {
+  const fragment = document.createDocumentFragment();
+  for (const ad of visibleAds) {
+    const links = adMarketplaceLinks(ad);
+    const preferredLink = links.mercadoLibre || links.amazon;
     const item = document.createElement("article");
+    item.className = "ad-item ad-item-productivo";
 
-    item.className = "ad-item";
+    const quickLinks = [
+      links.mercadoLibre
+        ? `<a class="acceso-rapido acceso-ml" href="${escapeHtml(links.mercadoLibre)}" target="_blank" rel="noopener noreferrer" aria-label="Abrir ${escapeHtml(ad.titulo)} en Mercado Libre">ML</a>`
+        : "",
+      links.amazon
+        ? `<a class="acceso-rapido acceso-amz" href="${escapeHtml(links.amazon)}" target="_blank" rel="noopener noreferrer" aria-label="Abrir ${escapeHtml(ad.titulo)} en Amazon">AMZ</a>`
+        : "",
+      `<a class="acceso-rapido acceso-web" href="${escapeHtml(productWebUrl(ad))}" target="_blank" rel="noopener noreferrer" aria-label="Ver ${escapeHtml(ad.titulo)} en la página">WEB</a>`,
+      preferredLink
+        ? `<button class="acceso-rapido acceso-copiar" data-action="copy-link" data-id="${ad.id}" type="button">Copiar</button>`
+        : "",
+    ].join("");
 
     item.innerHTML = `
-      <img src="${escapeHtml(ad.imagen_url)}" alt="" />
+      <img src="${escapeHtml(ad.imagen_url)}" alt="" loading="lazy" />
 
       <div class="ad-info">
-        <h3>${escapeHtml(ad.titulo)}</h3>
+        <div class="publicacion-titulo-fila">
+          <h3>${escapeHtml(ad.titulo)}</h3>
+          <div class="publicacion-badges">${renderAdBadges(ad)}</div>
+        </div>
         <p>${escapeHtml(ad.descripcion || "")}</p>
 
-        <div class="precio-admin">
-          ${ad.precio_publicado
-            ? `<span>Publicado: ${escapeHtml(ad.precio_publicado)}</span>`
-            : ""}
-          ${ad.precio_cupon
-            ? `<span class="precio-cupon-admin">Con cupón: ${escapeHtml(ad.precio_cupon)}</span>`
-            : ""}
-          ${ad.codigo_cupon
-            ? `<span>🔒 Cupón configurado</span>`
-            : ""}
+        <div class="accesos-rapidos" aria-label="Accesos rápidos">
+          ${quickLinks}
         </div>
 
         <small>
-          Secciones: ${escapeHtml(
-            normalizarSeccionesPublicidad(ad.secciones, ad.categoria)
-              .map((value) => AD_SECTION_LABELS[value] || value)
-              .join(", ")
-          )} ·
           Orden: ${Number(ad.orden || 0)} ·
           Clics: ${Number(ad.clics || 0)} ·
-          Visitas: ${Number(ad.visitas || 0)} (ML: ${Number(ad.visitas_mercado_libre || 0)} · Amazon: ${Number(ad.visitas_amazon || 0)}) ·
-          ML: ${ad.disponible_mercado_libre !== false ? "Disponible" : "No disponible"} ·
-          Amazon: ${ad.disponible_amazon !== false ? "Disponible" : "No disponible"} ·
-          ${productoNuevoVigente(ad) ? "Nuevo · " : ""}${ad.es_mas_vendido ? "Más vendido · " : ""}${ad.es_otra_recomendacion ? "Otra recomendación · " : ""}${ad.activo ? "Activa" : "Inactiva"}
+          Visitas: ${Number(ad.visitas || 0)} (ML: ${Number(ad.visitas_mercado_libre || 0)} · Amazon: ${Number(ad.visitas_amazon || 0)})
         </small>
       </div>
 
       <div class="ad-actions">
-        <button class="editar" data-action="edit" data-id="${ad.id}">
-          Editar
-        </button>
-
-        <button class="estado" data-action="toggle" data-id="${ad.id}">
+        <button class="editar" data-action="edit" data-id="${ad.id}" type="button">Editar</button>
+        <button class="duplicar" data-action="duplicate" data-id="${ad.id}" type="button">Duplicar</button>
+        <button class="estado" data-action="toggle" data-id="${ad.id}" type="button">
           ${ad.activo ? "Desactivar" : "Activar"}
         </button>
-
-        <button class="eliminar" data-action="delete" data-id="${ad.id}">
-          Eliminar
-        </button>
+        <button class="eliminar" data-action="delete" data-id="${ad.id}" type="button">Eliminar</button>
       </div>
     `;
 
-    adList.appendChild(item);
+    fragment.appendChild(item);
   }
+
+  adList.appendChild(fragment);
+}
+
+async function copyTextSafely(text) {
+  if (!text) throw new Error("Esta publicación no tiene enlace disponible.");
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+  const copied = document.execCommand("copy");
+  textarea.remove();
+  if (!copied) throw new Error("No fue posible copiar el enlace.");
+}
+
+function duplicateAd(ad) {
+  editAd(ad);
+  adId.value = "";
+  adFormTitle.textContent = `Duplicar: ${ad.titulo}`;
+  adTitle.value = `${ad.titulo} (copia)`;
+  cancelAd.hidden = false;
+  setMessage(adFormMessage, "Copia preparada. Cambia lo necesario y guarda como una publicación nueva.");
+  window.scrollTo({ top: adsSection.offsetTop, behavior: "smooth" });
+  adTitle.focus({ preventScroll: true });
+  adTitle.select();
 }
 
 function communityProducts() {
@@ -2322,6 +2414,22 @@ async function handleAdList(event) {
 
   if (button.dataset.action === "edit") {
     editAd(ad);
+    return;
+  }
+
+  if (button.dataset.action === "duplicate") {
+    duplicateAd(ad);
+    return;
+  }
+
+  if (button.dataset.action === "copy-link") {
+    const links = adMarketplaceLinks(ad);
+    try {
+      await copyTextSafely(links.mercadoLibre || links.amazon);
+      setMessage(adListMessage, `✅ Enlace copiado: ${ad.titulo}`);
+    } catch (error) {
+      setMessage(adListMessage, error.message, true);
+    }
     return;
   }
 
@@ -2589,6 +2697,7 @@ saveImport.addEventListener("click", publishImport);
 
 adForm.addEventListener("submit", saveAd);
 adList.addEventListener("click", handleAdList);
+adSearch?.addEventListener("input", renderAds);
 refreshAds.addEventListener("click", loadAds);
 newAd.addEventListener("click", resetAdForm);
 cancelAd.addEventListener("click", resetAdForm);
