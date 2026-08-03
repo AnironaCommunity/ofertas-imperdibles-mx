@@ -47,16 +47,40 @@ function getAttribute(item, id) {
   return item?.attributes?.find((attribute) => attribute.id === id)?.value_name || "";
 }
 
-async function fetchMl(path, token) {
+async function fetchMl(path, token = "") {
   const headers = { Accept: "application/json" };
   if (token) headers.Authorization = `Bearer ${token}`;
+
   const response = await fetch(`https://api.mercadolibre.com${path}`, { headers });
   const data = await response.json().catch(() => ({}));
+
   if (!response.ok) {
     const detail = data?.message || data?.error || `Error ${response.status}`;
-    throw new Error(`Mercado Libre respondió: ${detail}`);
+    const error = new Error(`Mercado Libre respondió: ${detail}`);
+    error.status = response.status;
+    error.detail = detail;
+    throw error;
   }
+
   return data;
+}
+
+function isUnauthorizedError(error) {
+  const detail = String(error?.detail || error?.message || "").toUpperCase();
+  return error?.status === 401 || error?.status === 403 || detail.includes("UNAUTHORIZED");
+}
+
+async function fetchPublicItem(itemId, token) {
+  if (!token) return fetchMl(`/items/${itemId}`);
+
+  try {
+    return await fetchMl(`/items/${itemId}`, token);
+  } catch (error) {
+    // Algunos tokens no tienen permiso sobre publicaciones de otros vendedores.
+    // La ficha pública del artículo se vuelve a consultar sin autorización.
+    if (isUnauthorizedError(error)) return fetchMl(`/items/${itemId}`);
+    throw error;
+  }
 }
 
 export default async function handler(req, res) {
@@ -74,7 +98,7 @@ export default async function handler(req, res) {
     }
 
     const token = process.env.MERCADOLIBRE_ACCESS_TOKEN || process.env.ML_ACCESS_TOKEN || "";
-    const item = await fetchMl(`/items/${itemId}`, token);
+    const item = await fetchPublicItem(itemId, token);
 
     let salePrice = null;
     let priceWarning = "";
@@ -82,7 +106,9 @@ export default async function handler(req, res) {
       try {
         salePrice = await fetchMl(`/items/${itemId}/sale_price?context=channel_marketplace`, token);
       } catch (error) {
-        priceWarning = error.message;
+        priceWarning = isUnauthorizedError(error)
+          ? "Producto encontrado. Mercado Libre no autorizó consultar el precio con el token configurado."
+          : error.message;
       }
     } else {
       priceWarning = "Para consultar siempre el precio actual configura MERCADOLIBRE_ACCESS_TOKEN en Vercel.";
