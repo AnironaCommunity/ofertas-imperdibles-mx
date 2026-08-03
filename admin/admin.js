@@ -2458,7 +2458,7 @@ async function handleAdList(event) {
 }
 
 
-/* ================= APARIENCIA ================= */
+/* ================= APARIENCIA / LOGO COMPLETO ================= */
 function updateHeroAdminPreview() {
   heroAdminPreview.style.background =
     `linear-gradient(135deg, ${heroColorStart.value}, ${heroColorEnd.value})`;
