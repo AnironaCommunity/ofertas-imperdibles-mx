@@ -126,9 +126,6 @@ const adPlatforms = [
   ...document.querySelectorAll('input[name="ad-platform"]'),
 ];
 const adLinkMercadoLibre = document.querySelector("#ad-link-mercado-libre");
-const consultarProductoMl = document.querySelector("#consultar-producto-ml");
-const pegarConsultarProductoMl = document.querySelector("#pegar-consultar-producto-ml");
-const resultadoConsultaMl = document.querySelector("#resultado-consulta-ml");
 const adLinkAmazon = document.querySelector("#ad-link-amazon");
 const adDisponibleMercadoLibre = document.querySelector("#ad-disponible-mercado-libre");
 const adDisponibleAmazon = document.querySelector("#ad-disponible-amazon");
@@ -2301,125 +2298,6 @@ async function optimizeImage(file) {
 
   return canvas.toDataURL("image/webp", 0.82);
 }
-
-
-function formatCurrencyMl(value, currency = "MXN") {
-  const amount = Number(value);
-  if (!Number.isFinite(amount)) return "No disponible";
-  try {
-    return new Intl.NumberFormat("es-MX", { style: "currency", currency }).format(amount);
-  } catch {
-    return `$${amount.toLocaleString("es-MX")}`;
-  }
-}
-
-function renderMercadoLibreResult(product) {
-  if (!resultadoConsultaMl) return;
-  const price = product.precio_actual != null
-    ? formatCurrencyMl(product.precio_actual, product.moneda || "MXN")
-    : "No disponible sin token";
-  const regular = product.precio_anterior != null
-    ? `<span>Antes: <s>${escapeHtml(formatCurrencyMl(product.precio_anterior, product.moneda || "MXN"))}</s></span>`
-    : "";
-  resultadoConsultaMl.innerHTML = `
-    <div class="resultado-consulta-ml-cabecera">
-      <strong>✅ Producto encontrado</strong>
-      <span>${escapeHtml(product.item_id || "")}</span>
-    </div>
-    <div class="resultado-consulta-ml-grid">
-      ${product.imagen ? `<img src="${escapeHtml(product.imagen)}" alt="" />` : ""}
-      <div>
-        <strong>${escapeHtml(product.titulo || "Sin título")}</strong>
-        <span>Precio: ${escapeHtml(price)}</span>
-        ${regular}
-        ${product.marca ? `<span>Marca: ${escapeHtml(product.marca)}</span>` : ""}
-        ${product.vendidos != null ? `<span>Vendidos: ${Number(product.vendidos).toLocaleString("es-MX")}</span>` : ""}
-      </div>
-    </div>
-    ${product.advertencia ? `<small>${escapeHtml(product.advertencia)}</small>` : ""}
-  `;
-  resultadoConsultaMl.hidden = false;
-}
-
-async function consultarProductoMercadoLibre() {
-  const enlace = adLinkMercadoLibre?.value.trim();
-  if (!enlace) {
-    setMessage(adFormMessage, "Pega primero un enlace de Mercado Libre.", true);
-    adLinkMercadoLibre?.focus();
-    return;
-  }
-
-  const buttons = [consultarProductoMl, pegarConsultarProductoMl].filter(Boolean);
-  buttons.forEach((button) => { button.disabled = true; });
-  if (resultadoConsultaMl) {
-    resultadoConsultaMl.hidden = false;
-    resultadoConsultaMl.textContent = "Consultando Mercado Libre…";
-  }
-
-  try {
-    const product = await api("/api/consultar-mercadolibre", {
-      method: "POST",
-      body: JSON.stringify({ enlace }),
-    });
-
-    adTitle.value = product.titulo || adTitle.value;
-    adLinkMercadoLibre.value = product.enlace || enlace;
-    adDisponibleMercadoLibre.checked = product.disponible !== false;
-    setSelectedAdPlatform("mercadolibre");
-
-    if (product.imagen) {
-      adImageUrl.value = product.imagen;
-      adPreview.src = product.imagen;
-      adPreviewWrapper.hidden = false;
-    }
-
-    if (product.precio_actual != null) {
-      adPricePublished.value = formatCurrencyMl(product.precio_actual, product.moneda || "MXN");
-    }
-    if (product.precio_anterior != null) {
-      adPriceCoupon.value = formatCurrencyMl(product.precio_anterior, product.moneda || "MXN");
-    }
-
-    const normalizedItemId = String(product.item_id || "").toLowerCase();
-    const duplicate = ads.find((item) => {
-      const links = getAdMarketplaceLinks(item);
-      return normalizedItemId && String(links.mercadoLibre || "").toLowerCase().includes(normalizedItemId);
-    });
-
-    if (duplicate) {
-      product.advertencia = `Este producto ya aparece en Publicaciones: ${duplicate.titulo}.`;
-    }
-
-    if (product.marca && !/anirona/i.test(product.marca)) {
-      adEsOtraRecomendacion.checked = true;
-    }
-
-    renderMercadoLibreResult(product);
-    setMessage(adFormMessage, duplicate
-      ? "Producto consultado. Revisa la advertencia de posible duplicado."
-      : "Datos de Mercado Libre cargados correctamente.");
-  } catch (error) {
-    if (resultadoConsultaMl) {
-      resultadoConsultaMl.hidden = false;
-      resultadoConsultaMl.textContent = error.message;
-    }
-    setMessage(adFormMessage, error.message, true);
-  } finally {
-    buttons.forEach((button) => { button.disabled = false; });
-  }
-}
-
-consultarProductoMl?.addEventListener("click", consultarProductoMercadoLibre);
-pegarConsultarProductoMl?.addEventListener("click", async () => {
-  try {
-    const text = await navigator.clipboard.readText();
-    if (!text.trim()) throw new Error("El portapapeles está vacío.");
-    adLinkMercadoLibre.value = text.trim();
-    await consultarProductoMercadoLibre();
-  } catch (error) {
-    setMessage(adFormMessage, error.message || "No fue posible leer el portapapeles.", true);
-  }
-});
 
 async function uploadAdImage() {
   const file = adImage.files[0];
