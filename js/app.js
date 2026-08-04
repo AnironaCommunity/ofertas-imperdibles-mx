@@ -119,7 +119,7 @@ window.addEventListener("resize", () => {
   }
 });
 
-const SEGUNDOS_ACTUALIZACION = 60;
+const SEGUNDOS_ACTUALIZACION = 5;
 const SEGUNDOS_REDIRECCION = 3;
 const MILISEGUNDOS_PUBLICIDAD = 8000;
 const URL_PAGINA = "https://ofertasimperdiblesmx.vercel.app/";
