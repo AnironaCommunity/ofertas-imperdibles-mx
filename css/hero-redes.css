@@ -337,7 +337,7 @@
   z-index: 0;
   inset: 0;
   pointer-events: none;
-  opacity: .34;
+  opacity: .28;
   background-image: url("../img/patron-ofertas.svg");
   background-repeat: repeat-x;
   background-position: center;
@@ -381,7 +381,7 @@
 
 @media (max-width: 600px) {
   .hero-redes::after {
-    opacity: .24;
+    opacity: .20;
     background-size: auto 118%;
     background-position: 44% center;
   }

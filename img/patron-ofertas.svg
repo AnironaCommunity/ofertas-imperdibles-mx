@@ -51,10 +51,11 @@
       <path d="M34 59h30M49 44v30"/>
     </g>
 
-    <!-- Moneda / ahorro -->
-    <g transform="translate(618 137) rotate(-8 42 42)">
-      <circle cx="42" cy="42" r="36"/>
-      <path d="M54 27c-4-5-10-7-16-5-7 2-10 8-8 13 2 6 8 7 14 9 7 2 13 4 14 11 1 7-5 13-13 14-7 1-14-2-18-7M42 15v54"/>
+    <!-- Megáfono de promoción -->
+    <g transform="translate(612 139) rotate(-8 48 42)">
+      <path d="M14 39h18l42-20v46L32 48H14V39Z"/>
+      <path d="M31 48 38 79H23l-7-31"/>
+      <path d="M80 30l12-8M83 43h14M80 56l12 8"/>
     </g>
   </g>
 </svg>
