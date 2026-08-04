@@ -6478,3 +6478,169 @@ html.tutorial-en-curso { scroll-behavior: smooth; }
   }
 }
 
+
+/* v77.17.5 — Banner final compacto aprobado */
+.invitacion-canal-final {
+  width: min(1120px, calc(100% - 24px));
+  margin-top: 16px;
+  border-radius: 20px;
+}
+
+.invitacion-canal-final-enlace {
+  position: relative;
+  min-height: 104px;
+  padding: 16px 30px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: "icono texto boton";
+  align-items: center;
+  gap: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.42);
+  border-radius: 20px;
+  background: linear-gradient(100deg, rgba(34,197,94,.96), rgba(22,196,104,.93));
+  box-shadow: 0 9px 20px rgba(15,118,110,.18);
+  line-height: normal;
+}
+
+.invitacion-canal-final-enlace::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: url("../img/patron-ofertas.svg") center / auto 185% repeat-x;
+  opacity: .14;
+}
+
+.invitacion-canal-final-enlace::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(255,255,255,.05), rgba(255,255,255,0));
+}
+
+.invitacion-canal-final-enlace > * {
+  position: relative;
+  z-index: 1;
+}
+
+.invitacion-canal-final-icono-whatsapp {
+  grid-area: icono;
+  display: grid;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  color: #fff;
+  flex: 0 0 68px;
+}
+
+.invitacion-canal-final-icono-whatsapp svg {
+  width: 100%;
+  height: 100%;
+}
+
+.invitacion-canal-final-texto {
+  grid-area: texto;
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+  color: #fff;
+  text-align: left;
+}
+
+.invitacion-canal-final-texto strong {
+  max-width: none;
+  font-size: clamp(1.18rem, 2vw, 1.65rem);
+  line-height: 1.12;
+  letter-spacing: -.02em;
+}
+
+.invitacion-canal-final-texto small {
+  max-width: none;
+  color: rgba(255,255,255,.95);
+  font-size: clamp(.86rem, 1.15vw, 1.02rem);
+  line-height: 1.35;
+}
+
+.invitacion-canal-final-cta {
+  grid-area: boton;
+  min-height: 54px;
+  padding: 0 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  background: #fff;
+  color: #22b956;
+  font-size: clamp(.96rem, 1.18vw, 1.12rem);
+  font-weight: 850;
+  white-space: nowrap;
+  box-shadow: 0 7px 16px rgba(15,118,110,.18);
+}
+
+@media (max-width: 720px) {
+  .invitacion-canal-final {
+    width: calc(100% - 16px);
+    margin-top: 12px;
+    border-radius: 17px;
+  }
+
+  .invitacion-canal-final-enlace {
+    min-height: 116px;
+    padding: 14px 15px;
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+    grid-template-areas: "icono texto boton";
+    gap: 10px;
+    text-align: left;
+    border-radius: 17px;
+  }
+
+  .invitacion-canal-final-icono-whatsapp {
+    width: 46px;
+    height: 46px;
+  }
+
+  .invitacion-canal-final-texto {
+    justify-items: start;
+  }
+
+  .invitacion-canal-final-texto strong {
+    font-size: clamp(.98rem, 4.3vw, 1.2rem);
+  }
+
+  .invitacion-canal-final-texto small {
+    font-size: clamp(.72rem, 3vw, .86rem);
+  }
+
+  .invitacion-canal-final-cta {
+    min-height: 44px;
+    width: auto;
+    justify-self: end;
+    padding: 0 13px;
+    border-radius: 12px;
+    font-size: .82rem;
+  }
+}
+
+@media (max-width: 440px) {
+  .invitacion-canal-final-enlace {
+    grid-template-columns: 42px minmax(0, 1fr);
+    grid-template-areas:
+      "icono texto"
+      "boton boton";
+    min-height: 132px;
+    gap: 8px 10px;
+  }
+
+  .invitacion-canal-final-icono-whatsapp {
+    width: 40px;
+    height: 40px;
+  }
+
+  .invitacion-canal-final-cta {
+    justify-self: center;
+    min-height: 42px;
+    padding: 0 22px;
+  }
+}

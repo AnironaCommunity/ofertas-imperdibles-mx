@@ -420,3 +420,30 @@
     transition: none;
   }
 }
+
+/* v77.17.5 — acceso directo al sorteo en la barra principal */
+.hero-redes-sorteo {
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: none;
+}
+
+.hero-redes-sorteo svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: 0 0 17px;
+}
+
+@media (max-width: 600px) {
+  .hero-redes-sorteo svg {
+    width: 14px;
+    height: 14px;
+    flex-basis: 14px;
+  }
+}
