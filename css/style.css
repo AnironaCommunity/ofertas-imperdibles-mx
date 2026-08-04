@@ -6147,3 +6147,122 @@ html.tutorial-en-curso { scroll-behavior: smooth; }
     font-size: 12px !important;
   }
 }
+
+
+/* v77.15.9 — limpieza de encabezados y cierre de comunidad */
+.separador-contenido {
+  width: 100%;
+  border-top: 1px dashed rgba(31, 41, 55, 0.28);
+}
+
+.separador-despues-ayuda {
+  margin: 12px 0 10px;
+}
+
+#vista-cupones > #estado-carga:empty {
+  display: none;
+}
+
+#seccion-comunidad-anirona > .buscador-catalogo-anirona {
+  margin-top: 0;
+}
+
+.invitacion-canal-final {
+  width: min(1120px, calc(100% - 24px));
+  margin: 22px auto calc(88px + env(safe-area-inset-bottom));
+  padding: 16px 18px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid rgba(109, 40, 217, 0.12);
+  border-radius: 18px;
+  background: linear-gradient(100deg, #faf5ff 0%, #f3e8ff 54%, #ede9fe 100%);
+  box-shadow: 0 10px 24px rgba(76, 29, 149, 0.08);
+}
+
+.invitacion-canal-final-icono {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(126, 34, 206, 0.12);
+  font-size: 28px;
+}
+
+.invitacion-canal-final-contenido {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  color: #3b0764;
+}
+
+.invitacion-canal-final-contenido strong {
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.invitacion-canal-final-contenido span {
+  color: #4c1d95;
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+
+.invitacion-canal-final-boton {
+  min-height: 46px;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #6b21a8, #4c1d95);
+  color: #fff;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 8px 18px rgba(76, 29, 149, 0.18);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.invitacion-canal-final-boton:hover,
+.invitacion-canal-final-boton:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(76, 29, 149, 0.24);
+}
+
+@media (max-width: 640px) {
+  .separador-despues-ayuda {
+    margin: 10px 0 8px;
+  }
+
+  .invitacion-canal-final {
+    width: calc(100% - 20px);
+    margin-top: 16px;
+    padding: 13px;
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 10px;
+    border-radius: 15px;
+  }
+
+  .invitacion-canal-final-icono {
+    width: 46px;
+    height: 46px;
+    font-size: 23px;
+  }
+
+  .invitacion-canal-final-contenido strong {
+    font-size: 0.9rem;
+  }
+
+  .invitacion-canal-final-contenido span {
+    font-size: 0.76rem;
+  }
+
+  .invitacion-canal-final-boton {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-height: 43px;
+  }
+}

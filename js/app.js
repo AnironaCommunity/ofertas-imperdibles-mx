@@ -311,7 +311,7 @@ enlaceLogoInicio?.addEventListener("click", (event) => {
   window.location.replace(inicio.toString());
 });
 
-botonRecargar.addEventListener("click", cargarCupones);
+botonRecargar?.addEventListener("click", cargarCupones);
 function actualizarNavegacionPrincipal(seccion) {
   const mapa = {
     tienda: tabTienda,
@@ -1034,7 +1034,7 @@ async function cargarCupones() {
     estadoCarga.textContent = "";
   }
 
-  botonRecargar.disabled = true;
+  if (botonRecargar) botonRecargar.disabled = true;
 
   try {
     const respuesta = await fetch("/api/cupones", {
@@ -1069,7 +1069,7 @@ async function cargarCupones() {
     }
   } finally {
     cargando = false;
-    botonRecargar.disabled = false;
+    if (botonRecargar) botonRecargar.disabled = false;
     reiniciarContadorActualizacion();
   }
 }
