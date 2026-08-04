@@ -1,4 +1,4 @@
-/* V78.3 — Selector integrado: caja blanca y color heredado de la barra principal */
+/* V78.4 — Selector blanco sincronizado directamente con el color de la barra principal */
 .navegacion-inferior.selector-cupones-oscuro {
   --selector-color-inicio: var(--tema-color-inicio, #e9cdff);
   --selector-color-fin: var(--tema-color-fin, #fae8fa);
@@ -59,12 +59,12 @@
 .navegacion-inferior.selector-cupones-oscuro #tab-bancarios.activo,
 .navegacion-inferior.selector-cupones-oscuro #tab-bancarios[aria-pressed="true"] {
   color: #27312c !important;
-  border-color: color-mix(in srgb, var(--selector-color-inicio) 42%, #dce4df) !important;
-  background-color: color-mix(in srgb, var(--selector-color-inicio) 20%, #ffffff) !important;
+  border-color: color-mix(in srgb, var(--selector-color-inicio) 58%, #dce4df) !important;
+  background-color: color-mix(in srgb, var(--selector-color-inicio) 34%, #ffffff) !important;
   background-image: linear-gradient(
     135deg,
-    color-mix(in srgb, var(--selector-color-inicio) 42%, #ffffff),
-    color-mix(in srgb, var(--selector-color-fin) 48%, #ffffff)
+    color-mix(in srgb, var(--selector-color-inicio) 58%, #ffffff),
+    color-mix(in srgb, var(--selector-color-fin) 62%, #ffffff)
   ) !important;
   box-shadow: none !important;
 }
@@ -90,7 +90,7 @@
 
 .navegacion-inferior.selector-cupones-oscuro .tab-inferior.activo .tab-icono,
 .navegacion-inferior.selector-cupones-oscuro .tab-inferior[aria-pressed="true"] .tab-icono {
-  color: color-mix(in srgb, var(--selector-color-inicio) 52%, #30473b);
+  color: color-mix(in srgb, var(--selector-color-inicio) 72%, #30473b);
 }
 
 .navegacion-inferior.selector-cupones-oscuro .tab-icono svg {

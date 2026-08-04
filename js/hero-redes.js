@@ -44,6 +44,13 @@
       : "0";
   }
 
+  function sincronizarColorSelector(inicio, fin) {
+    const selector = document.querySelector(".navegacion-inferior.selector-cupones-oscuro");
+    if (!selector) return;
+    if (inicio) selector.style.setProperty("--selector-color-inicio", inicio);
+    if (fin) selector.style.setProperty("--selector-color-fin", fin);
+  }
+
   function renderMainSiteName(element, value) {
     if (!element) return;
     const words = String(value || "Ofertas Imperdibles").trim().split(/\s+/).filter(Boolean);
@@ -80,6 +87,11 @@
       hero.style.setProperty("--hero-color-fin", config.color_fin);
       document.documentElement.style.setProperty("--tema-color-fin", config.color_fin);
     }
+
+    sincronizarColorSelector(
+      config.color_inicio || getComputedStyle(document.documentElement).getPropertyValue("--tema-color-inicio").trim(),
+      config.color_fin || getComputedStyle(document.documentElement).getPropertyValue("--tema-color-fin").trim()
+    );
 
     try {
       localStorage.setItem(
