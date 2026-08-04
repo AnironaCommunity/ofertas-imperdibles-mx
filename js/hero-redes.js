@@ -143,9 +143,15 @@
 
     const labels = {
       textoDescriptivo: config.texto_descriptivo || "Cupones, promociones y novedades todos los días.",
-      botonTienda: config.nombre_boton_tienda || "Tienda",
+      botonTienda: (() => {
+        const valor = (config.nombre_boton_tienda || "").trim();
+        return !valor || valor.toLowerCase() === "tienda" ? "Para todos" : valor;
+      })(),
       seccionTienda: config.nombre_seccion_tienda || "Cupones de tienda",
-      botonBancarios: config.nombre_boton_bancarios || "Bancarios",
+      botonBancarios: (() => {
+        const valor = (config.nombre_boton_bancarios || "").trim();
+        return !valor || valor.toLowerCase() === "bancarios" ? "Con tarjeta" : valor;
+      })(),
       seccionBancarios: config.nombre_seccion_bancarios || "Cupones bancarios",
       botonComunidad: config.nombre_boton_comunidad || "Comunidad Anirona",
       descripcionComunidad: config.descripcion_boton_comunidad || "Rifas, novedades y publicaciones de la comunidad",
@@ -158,8 +164,10 @@
     const heroDescription = document.querySelector("#hero-texto-descriptivo");
     heroDescription?.replaceChildren(labels.textoDescriptivo);
     if (heroDescription) heroDescription.hidden = false;
-    document.querySelector("#nombre-boton-tienda")?.replaceChildren(labels.botonTienda);
-    document.querySelector("#nombre-boton-bancarios")?.replaceChildren(labels.botonBancarios);
+    const nombreBotonTienda = document.querySelector("#nombre-boton-tienda");
+    const nombreBotonBancarios = document.querySelector("#nombre-boton-bancarios");
+    if (nombreBotonTienda) nombreBotonTienda.textContent = labels.botonTienda;
+    if (nombreBotonBancarios) nombreBotonBancarios.textContent = labels.botonBancarios;
     document.querySelector("#nombre-boton-comunidad")?.replaceChildren(labels.botonComunidad);
     document.querySelector("#descripcion-boton-comunidad")?.replaceChildren(labels.descripcionComunidad);
     document.querySelector("#nombre-seccion-comunidad")?.replaceChildren(labels.seccionComunidad);

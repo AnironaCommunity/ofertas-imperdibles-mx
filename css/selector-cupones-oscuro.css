@@ -1,0 +1,241 @@
+/* V78.0 — Selector oscuro Para todos / Con tarjeta */
+.navegacion-inferior.selector-cupones-oscuro {
+  --selector-fondo: #07111e;
+  --selector-borde: rgba(148, 163, 184, .24);
+  --selector-verde: #35d485;
+  --selector-verde-fondo: #0b2a22;
+  --selector-azul: #3b82f6;
+  --selector-azul-fondo: #0b1f3a;
+  width: min(520px, calc(100% - 20px));
+  gap: 7px !important;
+  padding: 7px !important;
+  border: 1px solid var(--selector-borde) !important;
+  border-radius: 17px !important;
+  background: linear-gradient(180deg, rgba(16, 29, 46, .98), rgba(5, 13, 24, .98)) !important;
+  box-shadow:
+    0 15px 38px rgba(2, 8, 23, .34),
+    inset 0 1px 0 rgba(255, 255, 255, .06) !important;
+  backdrop-filter: blur(14px);
+}
+
+.navegacion-inferior.selector-cupones-oscuro .tab-inferior {
+  isolation: isolate;
+  min-width: 0;
+  min-height: 51px !important;
+  gap: 9px !important;
+  padding: 7px 12px !important;
+  overflow: hidden;
+  color: #b8c5d6 !important;
+  border: 1px solid rgba(148, 163, 184, .13) !important;
+  border-radius: 12px !important;
+  background: rgba(15, 29, 48, .86) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .035) !important;
+  transform: none;
+  transition: border-color .2s ease, background .2s ease, box-shadow .2s ease, transform .2s ease !important;
+}
+
+.navegacion-inferior.selector-cupones-oscuro .tab-inferior::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+
+.navegacion-inferior.selector-cupones-oscuro .tab-inferior:hover,
+.navegacion-inferior.selector-cupones-oscuro .tab-inferior:focus-visible {
+  color: #e5edf7 !important;
+  border-color: rgba(148, 163, 184, .35) !important;
+  background: rgba(20, 38, 62, .96) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06) !important;
+  transform: translateY(-1px);
+}
+
+.navegacion-inferior.selector-cupones-oscuro .tab-inferior:active {
+  transform: scale(.985);
+}
+
+.navegacion-inferior.selector-cupones-oscuro #tab-tienda.activo,
+.navegacion-inferior.selector-cupones-oscuro #tab-tienda[aria-pressed="true"] {
+  color: #eafff4 !important;
+  border-color: rgba(53, 212, 133, .72) !important;
+  background: linear-gradient(180deg, rgba(13, 47, 38, .98), rgba(7, 27, 24, .98)) !important;
+  box-shadow:
+    0 0 0 1px rgba(53, 212, 133, .12),
+    0 0 15px rgba(30, 215, 132, .24),
+    inset 0 1px 0 rgba(170, 255, 213, .09) !important;
+}
+
+.navegacion-inferior.selector-cupones-oscuro #tab-tienda.activo::before,
+.navegacion-inferior.selector-cupones-oscuro #tab-tienda[aria-pressed="true"]::before {
+  opacity: 1;
+  background: radial-gradient(circle at 50% 120%, rgba(53, 212, 133, .16), transparent 66%);
+}
+
+.navegacion-inferior.selector-cupones-oscuro #tab-bancarios.activo,
+.navegacion-inferior.selector-cupones-oscuro #tab-bancarios[aria-pressed="true"] {
+  color: #eef6ff !important;
+  border-color: rgba(59, 130, 246, .76) !important;
+  background: linear-gradient(180deg, rgba(12, 37, 72, .98), rgba(7, 21, 43, .98)) !important;
+  box-shadow:
+    0 0 0 1px rgba(59, 130, 246, .12),
+    0 0 15px rgba(59, 130, 246, .26),
+    inset 0 1px 0 rgba(180, 215, 255, .09) !important;
+}
+
+.navegacion-inferior.selector-cupones-oscuro #tab-bancarios.activo::before,
+.navegacion-inferior.selector-cupones-oscuro #tab-bancarios[aria-pressed="true"]::before {
+  opacity: 1;
+  background: radial-gradient(circle at 50% 120%, rgba(59, 130, 246, .18), transparent 66%);
+}
+
+.navegacion-inferior.selector-cupones-oscuro .tab-icono {
+  display: inline-grid;
+  width: 25px;
+  height: 25px;
+  flex: 0 0 25px;
+  place-items: center;
+  border-radius: 7px;
+  font-size: 0 !important;
+}
+
+.navegacion-inferior.selector-cupones-oscuro .tab-icono svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.navegacion-inferior.selector-cupones-oscuro .tab-icono-cupon {
+  color: var(--selector-verde);
+  background: rgba(53, 212, 133, .10);
+}
+
+.navegacion-inferior.selector-cupones-oscuro .tab-icono-cupon svg path:first-child {
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+.navegacion-inferior.selector-cupones-oscuro .tab-icono-cupon svg path:last-child {
+  stroke: #072117;
+}
+
+.navegacion-inferior.selector-cupones-oscuro .tab-icono-tarjeta {
+  color: var(--selector-azul);
+  background: rgba(59, 130, 246, .10);
+}
+
+.navegacion-inferior.selector-cupones-oscuro .tab-textos {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1px;
+  text-align: left;
+}
+
+.navegacion-inferior.selector-cupones-oscuro .tab-etiqueta-principal {
+  max-width: 100%;
+  overflow: hidden;
+  color: inherit !important;
+  font-size: 12.5px;
+  font-weight: 700 !important;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.navegacion-inferior.selector-cupones-oscuro .tab-textos small {
+  max-width: 100%;
+  overflow: hidden;
+  color: #7f91a8;
+  font-size: 8px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.navegacion-inferior.selector-cupones-oscuro #tab-tienda.activo .tab-textos small,
+.navegacion-inferior.selector-cupones-oscuro #tab-tienda[aria-pressed="true"] .tab-textos small {
+  color: rgba(190, 255, 222, .74);
+}
+
+.navegacion-inferior.selector-cupones-oscuro #tab-bancarios.activo .tab-textos small,
+.navegacion-inferior.selector-cupones-oscuro #tab-bancarios[aria-pressed="true"] .tab-textos small {
+  color: rgba(199, 222, 255, .76);
+}
+
+.navegacion-inferior.selector-cupones-oscuro .contador-seccion-inferior {
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  min-width: 17px !important;
+  height: 17px !important;
+  padding: 0 4px !important;
+  color: #eaf2fb !important;
+  border: 1px solid rgba(255,255,255,.14);
+  background: #18283c !important;
+  font-size: 7px !important;
+  box-shadow: 0 3px 8px rgba(0,0,0,.22) !important;
+}
+
+/* En otras vistas conserva el comportamiento contextual existente. */
+.navegacion-inferior.selector-cupones-oscuro.modo-contextual {
+  grid-template-columns: .82fr 1.18fr !important;
+}
+
+@media (max-width: 480px) {
+  .navegacion-inferior.selector-cupones-oscuro {
+    bottom: 8px;
+    width: calc(100% - 14px);
+    gap: 5px !important;
+    padding: 5px !important;
+    border-radius: 15px !important;
+  }
+
+  .navegacion-inferior.selector-cupones-oscuro .tab-inferior {
+    min-height: 47px !important;
+    gap: 6px !important;
+    padding: 6px 7px !important;
+    border-radius: 10px !important;
+  }
+
+  .navegacion-inferior.selector-cupones-oscuro .tab-icono {
+    width: 22px;
+    height: 22px;
+    flex-basis: 22px;
+    border-radius: 6px;
+  }
+
+  .navegacion-inferior.selector-cupones-oscuro .tab-icono svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .navegacion-inferior.selector-cupones-oscuro .tab-etiqueta-principal {
+    font-size: 11px;
+  }
+
+  .navegacion-inferior.selector-cupones-oscuro .tab-textos small {
+    font-size: 7px;
+  }
+}
+
+@media (max-width: 350px) {
+  .navegacion-inferior.selector-cupones-oscuro .tab-textos small {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navegacion-inferior.selector-cupones-oscuro .tab-inferior,
+  .navegacion-inferior.selector-cupones-oscuro .tab-inferior::before {
+    transition: none !important;
+  }
+}

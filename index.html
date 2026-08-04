@@ -53,7 +53,9 @@
   <link rel="stylesheet" href="css/eventos-v68.css?v=70.0.0" />
   <link rel="stylesheet" href="css/header-dinamico-v68-3.css?v=70.0.0" />
   <link rel="stylesheet" href="css/estabilidad.css?v=77.15.5" />
-  <link rel="stylesheet" href="css/cabecera-inteligente.css?v=77.15.1" />  <script>
+  <link rel="stylesheet" href="css/cabecera-inteligente.css?v=77.15.1" />
+  <link rel="stylesheet" href="css/selector-cupones-oscuro.css?v=78.0.0" />
+  <script>
     try {
       const temaGuardado = JSON.parse(localStorage.getItem("ofertas_imperdibles_tema") || "null");
       if (temaGuardado?.inicio) document.documentElement.style.setProperty("--tema-color-inicio", temaGuardado.inicio);
@@ -467,16 +469,25 @@
   <footer></footer>
 
 
-  <nav class="navegacion-inferior" aria-label="Categorías de cupones">
+  <nav class="navegacion-inferior selector-cupones-oscuro" aria-label="Tipos de descuentos">
     <button
       id="tab-tienda"
       class="tab-inferior activo"
       type="button"
       data-categoria="tienda"
       aria-pressed="true"
+      aria-label="Mostrar descuentos para todos"
     >
-      <span aria-hidden="true">🛒</span>
-      <strong id="nombre-boton-tienda">Tienda</strong>
+      <span class="tab-icono tab-icono-cupon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path d="M21 12a3 3 0 0 0-3-3V5H6v4a3 3 0 0 0 0 6v4h12v-4a3 3 0 0 0 3-3Z" />
+          <path d="M13 7.5v1.4M13 11.3v1.4M13 15.1v1.4" />
+        </svg>
+      </span>
+      <span class="tab-textos">
+        <strong id="nombre-boton-tienda" class="tab-etiqueta-principal">Para todos</strong>
+        <small>Descuentos generales</small>
+      </span>
       <span
         id="contador-cupones-tienda"
         class="contador-seccion contador-seccion-inferior"
@@ -491,9 +502,18 @@
       type="button"
       data-categoria="bancarios"
       aria-pressed="false"
+      aria-label="Mostrar descuentos con tarjeta"
     >
-      <span aria-hidden="true">💳</span>
-      <strong id="nombre-boton-bancarios">Bancarios</strong>
+      <span class="tab-icono tab-icono-tarjeta" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <rect x="2.5" y="5" width="19" height="14" rx="2.5" />
+          <path d="M3 9h18M6.5 15h4" />
+        </svg>
+      </span>
+      <span class="tab-textos">
+        <strong id="nombre-boton-bancarios" class="tab-etiqueta-principal">Con tarjeta</strong>
+        <small>Descuentos con bancos</small>
+      </span>
       <span
         id="contador-cupones-bancarios"
         class="contador-seccion contador-seccion-inferior"
