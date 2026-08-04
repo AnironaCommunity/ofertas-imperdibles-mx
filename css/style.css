@@ -6266,3 +6266,58 @@ html.tutorial-en-curso { scroll-behavior: smooth; }
     min-height: 43px;
   }
 }
+
+/* v77.16 — banner final de WhatsApp con diseño oficial */
+.invitacion-canal-final {
+  width: min(1180px, calc(100% - 24px));
+  margin: 22px auto calc(88px + env(safe-area-inset-bottom));
+  padding: 0;
+  display: block;
+  border: 0;
+  border-radius: 22px;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.invitacion-canal-final-enlace {
+  display: block;
+  width: 100%;
+  border-radius: 22px;
+  text-decoration: none;
+  line-height: 0;
+  transition: transform 160ms ease, filter 160ms ease;
+}
+
+.invitacion-canal-final-enlace:hover,
+.invitacion-canal-final-enlace:focus-visible {
+  transform: translateY(-2px);
+  filter: brightness(1.02);
+  outline: none;
+}
+
+.invitacion-canal-final-enlace:focus-visible {
+  box-shadow: 0 0 0 4px rgba(37, 211, 102, 0.28);
+}
+
+.invitacion-canal-final-imagen {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: contain;
+  border-radius: 22px;
+}
+
+@media (max-width: 640px) {
+  .invitacion-canal-final {
+    width: calc(100% - 16px);
+    margin: 16px auto calc(82px + env(safe-area-inset-bottom));
+    border-radius: 15px;
+  }
+
+  .invitacion-canal-final-enlace,
+  .invitacion-canal-final-imagen {
+    border-radius: 15px;
+  }
+}
