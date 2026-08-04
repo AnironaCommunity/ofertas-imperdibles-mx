@@ -207,6 +207,11 @@
             document.documentElement.style.setProperty("--tema-color-fin", cache.color_fin);
             document.querySelector(".hero-redes")?.style.setProperty("--hero-color-fin", cache.color_fin);
           }
+          const heroBarra = document.querySelector(".hero-redes");
+          if (heroBarra) {
+            heroBarra.dataset.patronVisible = cache.mostrar_patron_ofertas === false ? "false" : "true";
+            heroBarra.dataset.patronPosicion = cache.posicion_patron_ofertas || "centro";
+          }
         } catch {}
       })();
     </script>

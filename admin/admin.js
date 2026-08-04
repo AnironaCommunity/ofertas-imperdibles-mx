@@ -49,6 +49,8 @@ const heroAmazonUrl = document.querySelector("#hero-amazon-url");
 const heroWhatsappUrl = document.querySelector("#hero-whatsapp-url");
 const heroFacebookUrl = document.querySelector("#hero-facebook-url");
 const heroBannerWhatsappUrl = document.querySelector("#hero-banner-whatsapp-url");
+const heroShowPattern = document.querySelector("#hero-show-pattern");
+const heroPatternPosition = document.querySelector("#hero-pattern-position");
 const heroAdminPreviewText = document.querySelector("#hero-admin-preview-text");
 const heroAdminPreviewName = document.querySelector("#hero-admin-preview-name");
 
@@ -2510,6 +2512,8 @@ async function loadHeroConfig() {
     heroWhatsappUrl.value = config.enlace_whatsapp || "https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n";
     heroFacebookUrl.value = config.enlace_facebook || "https://www.facebook.com/OfertasImperdiblesView";
     heroBannerWhatsappUrl.value = config.enlace_banner_whatsapp || config.enlace_whatsapp || "https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n";
+    heroShowPattern.checked = config.mostrar_patron_ofertas !== false;
+    heroPatternPosition.value = ["izquierda", "centro", "derecha"].includes(config.posicion_patron_ofertas) ? config.posicion_patron_ofertas : "centro";
 
     heroPreview.src = config.imagen_url || "";
     heroPreviewWrapper.hidden = !config.imagen_url;
@@ -2580,6 +2584,8 @@ async function saveHeroConfig(event) {
         enlace_whatsapp: heroWhatsappUrl.value.trim(),
         enlace_facebook: heroFacebookUrl.value.trim(),
         enlace_banner_whatsapp: heroBannerWhatsappUrl.value.trim(),
+        mostrar_patron_ofertas: heroShowPattern.checked,
+        posicion_patron_ofertas: heroPatternPosition.value,
       }),
     });
 

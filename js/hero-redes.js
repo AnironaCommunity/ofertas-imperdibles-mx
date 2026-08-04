@@ -121,6 +121,10 @@
     if (facebookButton && config.enlace_facebook) {
       facebookButton.href = config.enlace_facebook;
     }
+    hero.dataset.patronVisible = config.mostrar_patron_ofertas === false ? "false" : "true";
+    hero.dataset.patronPosicion = ["izquierda", "centro", "derecha"].includes(config.posicion_patron_ofertas)
+      ? config.posicion_patron_ofertas
+      : "centro";
     const bannerWhatsapp = document.querySelector("#enlace-banner-whatsapp");
     if (bannerWhatsapp) {
       bannerWhatsapp.href = config.enlace_banner_whatsapp || config.enlace_whatsapp || bannerWhatsapp.href;

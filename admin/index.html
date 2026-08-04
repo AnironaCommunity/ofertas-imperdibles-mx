@@ -1007,7 +1007,7 @@ Descuento máximo: $180"
             <div class="campo campo-completo">
               <label for="hero-banner-whatsapp-url">Liga del banner final de WhatsApp</label>
               <input id="hero-banner-whatsapp-url" type="url" maxlength="500" placeholder="https://whatsapp.com/channel/..." />
-              <small>Esta liga se usa únicamente en el banner con la mascota al final de la página.</small>
+              <small>Esta liga se usa únicamente en el banner final de la página.</small>
             </div>
 
             <div class="campo">
@@ -1018,6 +1018,21 @@ Descuento máximo: $180"
             <div class="campo">
               <label for="hero-color-end">Color derecho</label>
               <input id="hero-color-end" type="color" value="#fae8fa" />
+            </div>
+            <div class="campo campo-completo hero-patron-controles">
+              <label class="control-check hero-patron-check" for="hero-show-pattern">
+                <input id="hero-show-pattern" type="checkbox" checked />
+                <span>Mostrar iconos de ofertas en el fondo de la barra principal</span>
+              </label>
+            </div>
+            <div class="campo">
+              <label for="hero-pattern-position">Posición de los iconos de fondo</label>
+              <select id="hero-pattern-position">
+                <option value="izquierda">Izquierda</option>
+                <option value="centro" selected>Centro</option>
+                <option value="derecha">Derecha</option>
+              </select>
+              <small>Cambia la zona donde se concentra el patrón sin alterar el degradado.</small>
             </div>
 
             <div

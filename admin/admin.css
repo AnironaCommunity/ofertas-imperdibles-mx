@@ -2006,3 +2006,21 @@ table td {
 @media (max-width: 640px) {
   .evento-enlace-directo-fila { grid-template-columns: 1fr; }
 }
+
+/* v77.17.4 — controles del patrón decorativo */
+.hero-patron-controles {
+  padding: 10px 12px;
+  border: 1px solid #dbe9e1;
+  border-radius: 12px;
+  background: #f8fcf9;
+}
+.hero-patron-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+}
+.hero-patron-check input {
+  width: 18px;
+  height: 18px;
+}

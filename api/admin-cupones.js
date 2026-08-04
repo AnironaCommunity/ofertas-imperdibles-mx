@@ -108,7 +108,7 @@ export default async function handler(request, response) {
     if (request.query?.action === "hero-config") {
       if (request.method === "GET") {
         const config = await requestSupabase(
-          "configuracion_web?select=logo_icono_url,nombre_sitio,eslogan,mostrar_eslogan,nombre_barra,imagen_url,color_inicio,color_fin,texto_descriptivo,nombre_boton_tienda,nombre_seccion_tienda,nombre_boton_bancarios,nombre_seccion_bancarios,nombre_boton_comunidad,descripcion_boton_comunidad,nombre_seccion_comunidad,nombre_boton_mercado_libre,nombre_boton_amazon,enlace_mercado_libre,enlace_amazon,enlace_whatsapp,enlace_facebook,enlace_banner_whatsapp&id=eq.hero_redes&limit=1"
+          "configuracion_web?select=logo_icono_url,nombre_sitio,eslogan,mostrar_eslogan,nombre_barra,imagen_url,color_inicio,color_fin,texto_descriptivo,nombre_boton_tienda,nombre_seccion_tienda,nombre_boton_bancarios,nombre_seccion_bancarios,nombre_boton_comunidad,descripcion_boton_comunidad,nombre_seccion_comunidad,nombre_boton_mercado_libre,nombre_boton_amazon,enlace_mercado_libre,enlace_amazon,enlace_whatsapp,enlace_facebook,enlace_banner_whatsapp,mostrar_patron_ofertas,posicion_patron_ofertas&id=eq.hero_redes&limit=1"
         );
 
         response.setHeader("Cache-Control", "no-store");
@@ -138,6 +138,8 @@ export default async function handler(request, response) {
             enlace_whatsapp: "https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n",
             enlace_facebook: "https://www.facebook.com/OfertasImperdiblesView",
             enlace_banner_whatsapp: "https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n",
+            mostrar_patron_ofertas: true,
+            posicion_patron_ofertas: "centro",
           }
         );
       }
@@ -179,6 +181,8 @@ export default async function handler(request, response) {
           enlace_whatsapp: cleanText(request.body?.enlace_whatsapp).slice(0, 500) || "https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n",
           enlace_facebook: cleanText(request.body?.enlace_facebook).slice(0, 500) || "https://www.facebook.com/OfertasImperdiblesView",
           enlace_banner_whatsapp: cleanText(request.body?.enlace_banner_whatsapp).slice(0, 500) || cleanText(request.body?.enlace_whatsapp).slice(0, 500) || "https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n",
+          mostrar_patron_ofertas: request.body?.mostrar_patron_ofertas !== false,
+          posicion_patron_ofertas: ["izquierda", "centro", "derecha"].includes(String(request.body?.posicion_patron_ofertas || "")) ? String(request.body.posicion_patron_ofertas) : "centro",
           actualizado_en: new Date().toISOString(),
         };
 

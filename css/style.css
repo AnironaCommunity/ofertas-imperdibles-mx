@@ -6348,28 +6348,30 @@ html.tutorial-en-curso { scroll-behavior: smooth; }
 }
 
 
-/* v77.17.3 — banner final compacto sin mascota */
+/* v77.17.4 — banner final original, sin mascota */
 .invitacion-canal-final {
   width: min(1120px, calc(100% - 24px));
-  margin-top: 16px;
-  border-radius: 16px;
+  margin-top: 18px;
+  border-radius: 24px;
 }
 
 .invitacion-canal-final-enlace {
   position: relative;
-  min-height: 78px;
-  padding: 13px 18px;
+  min-height: 205px;
+  padding: 30px 8% 28px;
   display: grid;
-  grid-template-columns: 46px minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "texto boton";
   align-items: center;
-  gap: 13px;
+  gap: 34px;
   overflow: hidden;
-  border: 1px solid rgba(34, 197, 94, .20);
-  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.42);
+  border-radius: 24px;
   background:
-    linear-gradient(100deg, rgba(236, 253, 245, .94), rgba(240, 253, 250, .90)),
-    url("../img/patron-ofertas.svg") center / auto 165%;
-  box-shadow: 0 7px 18px rgba(15, 118, 110, .08);
+    linear-gradient(100deg, rgba(34,197,94,.96), rgba(22,196,104,.92)),
+    url("../img/patron-ofertas.svg") right center / auto 150%;
+  box-shadow: 0 10px 24px rgba(15,118,110,.18);
   line-height: normal;
 }
 
@@ -6378,7 +6380,7 @@ html.tutorial-en-curso { scroll-behavior: smooth; }
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(90deg, rgba(34,197,94,.06), rgba(255,255,255,.28));
+  background: linear-gradient(90deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
 }
 
 .invitacion-canal-final-enlace > * {
@@ -6387,97 +6389,92 @@ html.tutorial-en-curso { scroll-behavior: smooth; }
 }
 
 .invitacion-canal-final-icono-whatsapp {
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: #22c55e;
-  color: #fff;
-  box-shadow: 0 5px 12px rgba(34, 197, 94, .22);
-}
-
-.invitacion-canal-final-icono-whatsapp svg {
-  width: 27px;
-  height: 27px;
+  display: none;
 }
 
 .invitacion-canal-final-texto {
+  grid-area: texto;
   min-width: 0;
   display: grid;
-  gap: 3px;
-  color: #143d2b;
+  gap: 12px;
+  color: #fff;
 }
 
 .invitacion-canal-final-texto strong {
-  font-size: .98rem;
-  line-height: 1.15;
+  max-width: 640px;
+  font-size: clamp(2rem, 3.3vw, 3.35rem);
+  line-height: 1.04;
+  letter-spacing: -.035em;
 }
 
 .invitacion-canal-final-texto small {
-  color: #48695b;
-  font-size: .78rem;
-  line-height: 1.25;
+  max-width: 690px;
+  color: rgba(255,255,255,.94);
+  font-size: clamp(1rem, 1.45vw, 1.38rem);
+  line-height: 1.35;
 }
 
 .invitacion-canal-final-cta {
-  min-height: 40px;
-  padding: 0 17px;
+  grid-area: boton;
+  min-height: 70px;
+  padding: 0 30px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  background: #22c55e;
-  color: #fff;
-  font-size: .86rem;
-  font-weight: 800;
+  border-radius: 18px;
+  background: #fff;
+  color: #22b956;
+  font-size: clamp(1rem, 1.35vw, 1.3rem);
+  font-weight: 850;
   white-space: nowrap;
-  box-shadow: 0 6px 14px rgba(34, 197, 94, .20);
+  box-shadow: 0 9px 20px rgba(15,118,110,.20);
 }
 
 .invitacion-canal-final-enlace:hover,
 .invitacion-canal-final-enlace:focus-visible {
-  filter: none;
+  filter: brightness(1.015);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 720px) {
   .invitacion-canal-final {
     width: calc(100% - 16px);
-    margin-top: 12px;
-    border-radius: 14px;
+    margin-top: 13px;
+    border-radius: 18px;
   }
 
   .invitacion-canal-final-enlace {
-    min-height: 66px;
-    padding: 10px 11px;
-    grid-template-columns: 38px minmax(0, 1fr) auto;
-    gap: 9px;
-    border-radius: 14px;
-    background-size: auto 190%;
+    min-height: 150px;
+    padding: 20px 18px;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "texto"
+      "boton";
+    gap: 18px;
+    text-align: center;
+    border-radius: 18px;
+    background-size: auto 180%;
+    background-position: center;
   }
 
-  .invitacion-canal-final-icono-whatsapp {
-    width: 38px;
-    height: 38px;
-  }
-
-  .invitacion-canal-final-icono-whatsapp svg {
-    width: 23px;
-    height: 23px;
+  .invitacion-canal-final-texto {
+    justify-items: center;
   }
 
   .invitacion-canal-final-texto strong {
-    font-size: .82rem;
+    font-size: clamp(1.45rem, 7vw, 2rem);
   }
 
   .invitacion-canal-final-texto small {
-    display: none;
+    font-size: .92rem;
   }
 
   .invitacion-canal-final-cta {
-    min-height: 36px;
-    padding: 0 12px;
-    border-radius: 10px;
-    font-size: .75rem;
+    min-height: 52px;
+    width: min(100%, 280px);
+    justify-self: center;
+    padding: 0 20px;
+    border-radius: 14px;
+    font-size: .98rem;
   }
 }
+
