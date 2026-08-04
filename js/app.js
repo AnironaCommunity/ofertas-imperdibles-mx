@@ -262,6 +262,9 @@ function actualizarUrlSeccion(seccion, modo = "push") {
   const url = new URL(window.location.href);
 
   url.searchParams.set("seccion", seccion);
+  // Al navegar normalmente, retirar el acceso temporal al registro del sorteo.
+  // Así una recarga mantiene al usuario en la sección que eligió.
+  url.searchParams.delete("sorteo");
   actualizarTituloSeccion(seccion);
 
   const estado = { seccion };
@@ -2523,6 +2526,12 @@ function enfocarRegistroDesdeUrl(){
   if(String(params.get('sorteo')||'').toLowerCase()!=='registro')return;
   const target=document.querySelector('#evento-form')||root?.querySelector('.evento-card');
   if(!target)return;
+  // El parámetro solo sirve para la llegada inicial. Se limpia de inmediato
+  // para que actualizar la página no vuelva a enviar al formulario.
+  const urlLimpia=new URL(window.location.href);
+  urlLimpia.searchParams.delete('sorteo');
+  urlLimpia.searchParams.set('seccion','anirona');
+  window.history.replaceState({seccion:'anirona'},'',urlLimpia);
   window.setTimeout(()=>{
     target.scrollIntoView({behavior:'smooth',block:'center'});
     target.classList.add('evento-destacado-url');
