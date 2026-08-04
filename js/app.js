@@ -1071,7 +1071,6 @@ async function cargarCupones() {
     actualizarContadoresSecciones();
     revisarAvisosNovedades();
     procesarNovedadDesdeUrl();
-    revisarAvisosNovedades();
   } catch (error) {
     console.error(error);
 
@@ -2560,8 +2559,11 @@ load();
 }
 
 
+// Las etiquetas del administrador no cambian el contenido de los cupones.
+// Evitamos volver a renderizar las tarjetas al terminar de cargar la configuración,
+// ya que eso provocaba un segundo parpadeo durante la carga inicial.
 document.addEventListener("ofertas:etiquetas-cargadas", () => {
-  if (vistaActiva === "cupones") renderizarCategoria();
+  actualizarContadoresSecciones();
 });
 
 

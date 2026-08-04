@@ -48,7 +48,7 @@
   <link rel="apple-touch-icon" href="img/logo.png" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="stylesheet" href="css/style.css?v=77.17.5" />
-  <link rel="stylesheet" href="css/hero-redes.css?v=77.17.5" />
+  <link rel="stylesheet" href="css/hero-redes.css?v=77.17.6" />
   <link rel="stylesheet" href="css/ajustes-visuales-v67-16.css?v=70.0.0" />
   <link rel="stylesheet" href="css/eventos-v68.css?v=70.0.0" />
   <link rel="stylesheet" href="css/header-dinamico-v68-3.css?v=70.0.0" />
@@ -485,7 +485,7 @@
         </svg>
       </span>
       <span class="tab-textos">
-        <strong id="nombre-boton-tienda" class="tab-etiqueta-principal">Para todos</strong>
+        <strong id="nombre-boton-tienda" class="tab-etiqueta-principal">Cupones ML</strong>
         <small>Descuentos generales</small>
       </span>
       <span
@@ -511,7 +511,7 @@
         </svg>
       </span>
       <span class="tab-textos">
-        <strong id="nombre-boton-bancarios" class="tab-etiqueta-principal">Con tarjeta</strong>
+        <strong id="nombre-boton-bancarios" class="tab-etiqueta-principal">Cupones bancarios</strong>
         <small>Descuentos con bancos</small>
       </span>
       <span
@@ -522,6 +522,24 @@
       >0</span>
     </button>
   </nav>
+
+  <script>
+    /* V78.6 — Aplica los nombres guardados antes de mostrar el primer cuadro. */
+    (() => {
+      try {
+        const cache = JSON.parse(localStorage.getItem("ofertas_imperdibles_config_cache") || "null");
+        if (!cache || typeof cache !== "object") return;
+
+        const tienda = document.querySelector("#nombre-boton-tienda");
+        const bancarios = document.querySelector("#nombre-boton-bancarios");
+        const nombreTienda = String(cache.nombre_boton_tienda || "").trim();
+        const nombreBancarios = String(cache.nombre_boton_bancarios || "").trim();
+
+        if (tienda && nombreTienda) tienda.textContent = nombreTienda;
+        if (bancarios && nombreBancarios) bancarios.textContent = nombreBancarios;
+      } catch {}
+    })();
+  </script>
 
 
   <div
@@ -556,7 +574,7 @@
   </div>
 
 
-  <script type="module" src="js/app.js?v=77.17.2"></script>
+  <script type="module" src="js/app.js?v=78.6.0"></script>
   <script src="js/hero-redes.js?v=78.4.0" defer></script>
   <script src="js/header-dinamico-v68-3.js?v=70.0.0" defer></script>
   <script src="js/cabecera-inteligente.js?v=77.15.7" defer></script>
