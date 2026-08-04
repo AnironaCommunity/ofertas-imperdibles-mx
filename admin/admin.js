@@ -48,6 +48,7 @@ const heroAmazonButtonName = document.querySelector("#hero-amazon-button-name");
 const heroAmazonUrl = document.querySelector("#hero-amazon-url");
 const heroWhatsappUrl = document.querySelector("#hero-whatsapp-url");
 const heroFacebookUrl = document.querySelector("#hero-facebook-url");
+const heroBannerWhatsappUrl = document.querySelector("#hero-banner-whatsapp-url");
 const heroAdminPreviewText = document.querySelector("#hero-admin-preview-text");
 const heroAdminPreviewName = document.querySelector("#hero-admin-preview-name");
 
@@ -2508,6 +2509,7 @@ async function loadHeroConfig() {
     heroAmazonUrl.value = config.enlace_amazon || "https://www.amazon.com.mx/";
     heroWhatsappUrl.value = config.enlace_whatsapp || "https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n";
     heroFacebookUrl.value = config.enlace_facebook || "https://www.facebook.com/OfertasImperdiblesView";
+    heroBannerWhatsappUrl.value = config.enlace_banner_whatsapp || config.enlace_whatsapp || "https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n";
 
     heroPreview.src = config.imagen_url || "";
     heroPreviewWrapper.hidden = !config.imagen_url;
@@ -2577,6 +2579,7 @@ async function saveHeroConfig(event) {
         enlace_amazon: heroAmazonUrl.value.trim(),
         enlace_whatsapp: heroWhatsappUrl.value.trim(),
         enlace_facebook: heroFacebookUrl.value.trim(),
+        enlace_banner_whatsapp: heroBannerWhatsappUrl.value.trim(),
       }),
     });
 
@@ -2788,6 +2791,25 @@ if (adminPassword) {
   login();
 }
 
+
+/* ================= LIGA DIRECTA AL REGISTRO ================= */
+const eventoEnlaceRegistro = document.querySelector("#evento-enlace-registro");
+const eventoCopiarEnlace = document.querySelector("#evento-copiar-enlace");
+const eventoEnlaceMensaje = document.querySelector("#evento-enlace-mensaje");
+if (eventoEnlaceRegistro) {
+  eventoEnlaceRegistro.value = `${window.location.origin}/?sorteo=registro`;
+}
+eventoCopiarEnlace?.addEventListener("click", async () => {
+  const enlace = eventoEnlaceRegistro?.value || `${window.location.origin}/?sorteo=registro`;
+  try {
+    await navigator.clipboard.writeText(enlace);
+    if (eventoEnlaceMensaje) eventoEnlaceMensaje.textContent = "Liga copiada correctamente.";
+  } catch {
+    eventoEnlaceRegistro?.select();
+    document.execCommand("copy");
+    if (eventoEnlaceMensaje) eventoEnlaceMensaje.textContent = "Liga copiada correctamente.";
+  }
+});
 
 /* ================= EVENTOS Y RIFAS V68.0.1 ================= */
 {

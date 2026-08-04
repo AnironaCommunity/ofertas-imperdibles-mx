@@ -6321,3 +6321,28 @@ html.tutorial-en-curso { scroll-behavior: smooth; }
     border-radius: 15px;
   }
 }
+
+
+/* v77.16.1 — cierre compacto, separador final y enlace directo a sorteo */
+#separador-fin-cupones { display: none; }
+#todos-wrapper:not([hidden]) + #separador-fin-cupones {
+  display: block;
+  margin: 14px 0 6px;
+}
+.invitacion-canal-final {
+  margin-bottom: calc(62px + env(safe-area-inset-bottom)) !important;
+}
+.evento-destacado-url {
+  animation: evento-destacado-url 1s ease-in-out 3;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.24), 0 16px 35px rgba(15, 118, 110, 0.16) !important;
+}
+@keyframes evento-destacado-url {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@media (max-width: 640px) {
+  .invitacion-canal-final {
+    margin-bottom: calc(66px + env(safe-area-inset-bottom)) !important;
+  }
+  #todos-wrapper:not([hidden]) + #separador-fin-cupones { margin: 10px 0 4px; }
+}

@@ -121,6 +121,10 @@
     if (facebookButton && config.enlace_facebook) {
       facebookButton.href = config.enlace_facebook;
     }
+    const bannerWhatsapp = document.querySelector("#enlace-banner-whatsapp");
+    if (bannerWhatsapp) {
+      bannerWhatsapp.href = config.enlace_banner_whatsapp || config.enlace_whatsapp || bannerWhatsapp.href;
+    }
 
     const enlacesPrincipales = {
       mercadoLibre: config.enlace_mercado_libre || "https://www.mercadolibre.com.mx/",

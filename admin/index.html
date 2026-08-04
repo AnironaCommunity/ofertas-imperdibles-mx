@@ -801,6 +801,18 @@ Descuento máximo: $180"
           </div>
         </div>
 
+        <section class="panel evento-enlace-directo">
+          <div>
+            <strong>Liga directa al registro del sorteo</strong>
+            <small>Abre Comunidad Anirona y lleva al formulario del evento activo.</small>
+          </div>
+          <div class="evento-enlace-directo-fila">
+            <input id="evento-enlace-registro" type="url" readonly aria-label="Liga directa al registro del sorteo">
+            <button id="evento-copiar-enlace" class="boton-secundario" type="button">📋 Copiar liga</button>
+          </div>
+          <p id="evento-enlace-mensaje" class="mensaje" aria-live="polite"></p>
+        </section>
+
         <div class="eventos-admin-grid">
           <div>
             <section class="panel">
@@ -991,6 +1003,11 @@ Descuento máximo: $180"
             <div class="campo">
               <label for="hero-facebook-url">Liga de Facebook</label>
               <input id="hero-facebook-url" type="url" maxlength="500" placeholder="https://www.facebook.com/..." />
+            </div>
+            <div class="campo campo-completo">
+              <label for="hero-banner-whatsapp-url">Liga del banner final de WhatsApp</label>
+              <input id="hero-banner-whatsapp-url" type="url" maxlength="500" placeholder="https://whatsapp.com/channel/..." />
+              <small>Esta liga se usa únicamente en el banner con la mascota al final de la página.</small>
             </div>
 
             <div class="campo">

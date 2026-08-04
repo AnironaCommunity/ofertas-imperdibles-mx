@@ -1992,3 +1992,17 @@ table td {
   object-position: center;
   background: #fff;
 }
+
+
+/* v77.16.1 — liga directa de registro */
+.evento-enlace-directo {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.evento-enlace-directo > div:first-child { display: grid; gap: 3px; }
+.evento-enlace-directo-fila { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; }
+.evento-enlace-directo-fila input { min-width: 0; }
+@media (max-width: 640px) {
+  .evento-enlace-directo-fila { grid-template-columns: 1fr; }
+}
