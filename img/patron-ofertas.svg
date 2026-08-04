@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" fill="none">
+  <g stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Etiqueta -->
+    <g transform="translate(18 24) rotate(-12 48 42)">
+      <path d="M18 18h56l28 28-46 46L18 54V18Z"/>
+      <circle cx="39" cy="39" r="6"/>
+    </g>
+
+    <!-- Cupón / ticket -->
+    <g transform="translate(174 22) rotate(7 60 44)">
+      <path d="M12 20h104v24a14 14 0 0 0 0 28v24H12V72a14 14 0 0 0 0-28V20Z"/>
+      <path d="M62 31v54" stroke-dasharray="5 7"/>
+      <circle cx="83" cy="43" r="5"/>
+      <circle cx="98" cy="73" r="5"/>
+      <path d="m82 76 17-36"/>
+    </g>
+
+    <!-- Carrito -->
+    <g transform="translate(365 26) rotate(-5 55 45)">
+      <path d="M9 16h16l12 54h61l12-37H31"/>
+      <path d="M41 82h58"/>
+      <circle cx="48" cy="96" r="6"/>
+      <circle cx="91" cy="96" r="6"/>
+      <path d="M52 49h38M71 31v36"/>
+    </g>
+
+    <!-- Porcentaje -->
+    <g transform="translate(548 18) rotate(10 54 50)">
+      <circle cx="54" cy="54" r="44"/>
+      <circle cx="39" cy="39" r="7"/>
+      <circle cx="69" cy="69" r="7"/>
+      <path d="m35 75 38-42"/>
+    </g>
+
+    <!-- Regalo -->
+    <g transform="translate(92 134) rotate(6 55 43)">
+      <path d="M13 39h90v54H13z"/>
+      <path d="M8 25h100v22H8zM58 25v68"/>
+      <path d="M58 25c-16 0-28-7-28-17 0-7 6-12 13-12 10 0 15 11 15 29ZM58 25c16 0 28-7 28-17 0-7-6-12-13-12-10 0-15 11-15 29Z"/>
+    </g>
+
+    <!-- Estrella -->
+    <g transform="translate(292 137) rotate(-9 49 46)">
+      <path d="m49 5 13 27 30 4-22 21 5 30-26-14-27 14 5-30L5 36l31-4L49 5Z"/>
+    </g>
+
+    <!-- Bolsa de compra -->
+    <g transform="translate(450 132) rotate(5 48 48)">
+      <path d="M16 27h65l9 66H7l9-66Z"/>
+      <path d="M29 34V23a20 20 0 0 1 40 0v11"/>
+      <path d="M34 59h30M49 44v30"/>
+    </g>
+
+    <!-- Moneda / ahorro -->
+    <g transform="translate(618 137) rotate(-8 42 42)">
+      <circle cx="42" cy="42" r="36"/>
+      <path d="M54 27c-4-5-10-7-16-5-7 2-10 8-8 13 2 6 8 7 14 9 7 2 13 4 14 11 1 7-5 13-13 14-7 1-14-2-18-7M42 15v54"/>
+    </g>
+  </g>
+</svg>

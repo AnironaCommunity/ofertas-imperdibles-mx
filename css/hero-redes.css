@@ -324,7 +324,7 @@
 }
 
 
-/* V77.16.2 — Textura de ofertas sobre el degradado dinámico */
+/* V77.17 — Patrón vectorial profesional de ofertas sobre el degradado dinámico */
 .hero-redes {
   position: relative;
   isolation: isolate;
@@ -335,16 +335,14 @@
   content: "";
   position: absolute;
   z-index: 0;
-  top: 0;
-  right: 0;
-  width: min(43%, 430px);
-  height: 100%;
+  inset: 0;
   pointer-events: none;
-  opacity: .34;
-  background-repeat: no-repeat;
-  background-position: center right 14px;
-  background-size: auto 118%;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 420 190' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M226 35l35-15 22 52-35 15z'/%3E%3Cpath d='M244 44l20 18M265 38l-20 31'/%3E%3Cpath d='M308 39h70v42a13 13 0 0 0 0 26v42h-70a13 13 0 0 0-26 0h-70v-42a13 13 0 0 0 0-26V39h70a13 13 0 0 0 26 0z'/%3E%3Cpath d='M270 73l32 39M303 73l-34 39'/%3E%3Ccircle cx='273' cy='76' r='5'/%3E%3Ccircle cx='300' cy='109' r='5'/%3E%3Cpath d='M351 14l38 17-16 37-38-17z'/%3E%3Cpath d='M350 38h22M361 27v22'/%3E%3C/svg%3E");
+  opacity: .12;
+  background-image: url("../img/patron-ofertas.svg");
+  background-repeat: repeat-x;
+  background-position: center;
+  background-size: auto 122%;
+  mix-blend-mode: soft-light;
 }
 
 .hero-redes > * {
@@ -353,6 +351,8 @@
 }
 
 .hero-redes-anirona {
+  min-width: 46px;
+  padding-inline: 11px;
   border: 0;
   cursor: pointer;
   font-family: inherit;
@@ -360,18 +360,18 @@
 
 .hero-redes-anirona img {
   display: block;
-  width: 18px;
-  height: 18px;
-  flex: 0 0 18px;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
   object-fit: contain;
-  border-radius: 5px;
+  border-radius: 6px;
+  transition: transform .16s ease;
 }
 
-.hero-redes-anirona span {
-  display: inline !important;
-  margin: 0 !important;
-  color: inherit !important;
-  font: inherit;
+.hero-redes-anirona:hover img,
+.hero-redes-anirona:focus-visible img,
+.hero-redes-anirona.activo img {
+  transform: scale(1.06);
 }
 
 .hero-redes-anirona.activo {
@@ -381,15 +381,25 @@
 
 @media (max-width: 600px) {
   .hero-redes::after {
-    width: 50%;
-    opacity: .23;
-    background-position: center right -18px;
-    background-size: auto 110%;
+    opacity: .10;
+    background-size: auto 112%;
+    background-position: 44% center;
+  }
+
+  .hero-redes-anirona {
+    min-width: 39px;
+    padding-inline: 8px;
   }
 
   .hero-redes-anirona img {
-    width: 16px;
-    height: 16px;
-    flex-basis: 16px;
+    width: 21px;
+    height: 21px;
+    flex-basis: 21px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-redes-anirona img {
+    transition: none;
   }
 }
