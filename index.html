@@ -1,552 +1,6646 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta
-    name="description"
-    content="Descubre cupones, promociones y ofertas actualizadas para Mercado Libre, Amazon y más. Ahorra en tus compras desde un solo lugar."
-  />
-  <meta name="theme-color" content="#43b929" />
-  <meta name="color-scheme" content="light" />
+/*
+  Ofertas Imperdibles MX — V69.0 LTS
+  Hoja base consolidada.
 
-  <title>Ofertas Imperdibles MX | Cupones y ofertas de Mercado Libre y Amazon</title>
+  Mantiene exactamente el orden de cascada usado antes por @import,
+  pero evita solicitudes encadenadas y reduce el parpadeo de estilos.
+  No agregar parches al final: integrar cada corrección en su sección.
+*/
 
-  <meta property="og:type" content="website" />
-  <meta property="og:locale" content="es_MX" />
-  <meta property="og:url" content="https://ofertasimperdiblesmx.vercel.app/" />
-  <meta property="og:site_name" content="Ofertas Imperdibles MX" />
-  <meta property="og:title" content="Ofertas Imperdibles MX | Cupones y ofertas" />
-  <meta
-    property="og:description"
-    content="Descubre cupones, promociones y ofertas actualizadas para Mercado Libre, Amazon y más."
-  />
-  <meta
-    property="og:image"
-    content="https://ofertasimperdiblesmx.vercel.app/img/og-image-square.jpg?v=62.4"
-  />
-  <meta property="og:image:secure_url" content="https://ofertasimperdiblesmx.vercel.app/img/og-image-square.jpg?v=62.4" />
-  <meta property="og:image:type" content="image/jpeg" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="1200" />
-  <meta property="og:image:alt" content="Logo de Ofertas Imperdibles MX" />
+/* ============================================================
+   BASE GENERAL
+   Origen consolidado: css/base.css
+   ============================================================ */
+:root {
+  --fondo: #f5f7f8;
+  --blanco: #ffffff;
+  --texto: #17211b;
+  --gris: #66736c;
+  --borde: #e0e7e4;
+  --turquesa: #0f9f92;
+  --turquesa-oscuro: #08786f;
+  --turquesa-claro: #e8f7f4;
+  --whatsapp: #25d366;
+  --error: #a12626;
+}
 
-  <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Ofertas Imperdibles MX | Cupones y ofertas" />
-  <meta
-    name="twitter:description"
-    content="Descubre cupones, promociones y ofertas actualizadas para Mercado Libre, Amazon y más."
-  />
-  <meta
-    name="twitter:image"
-    content="https://ofertasimperdiblesmx.vercel.app/img/og-image-square.jpg?v=62.4"
-  />
-  <meta name="twitter:image:alt" content="Logo de Ofertas Imperdibles MX" />
+* {
+  box-sizing: border-box;
+}
 
-  <link rel="canonical" href="/" />
-  <link rel="icon" href="img/logo.png" />
-  <link rel="apple-touch-icon" href="img/logo.png" />
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="stylesheet" href="css/style.css?v=77.16" />
-  <link rel="stylesheet" href="css/hero-redes.css?v=77.17.2" />
-  <link rel="stylesheet" href="css/ajustes-visuales-v67-16.css?v=70.0.0" />
-  <link rel="stylesheet" href="css/eventos-v68.css?v=70.0.0" />
-  <link rel="stylesheet" href="css/header-dinamico-v68-3.css?v=70.0.0" />
-  <link rel="stylesheet" href="css/estabilidad.css?v=77.15.5" />
-  <link rel="stylesheet" href="css/cabecera-inteligente.css?v=77.15.1" />  <script>
-    try {
-      const temaGuardado = JSON.parse(localStorage.getItem("ofertas_imperdibles_tema") || "null");
-      if (temaGuardado?.inicio) document.documentElement.style.setProperty("--tema-color-inicio", temaGuardado.inicio);
-      if (temaGuardado?.fin) document.documentElement.style.setProperty("--tema-color-fin", temaGuardado.fin);
-    } catch {}
-  </script>
-</head>
+html {
+  scroll-behavior: smooth;
+}
 
-<body>
-  <header class="encabezado">
-    <a
-      id="enlace-logo-inicio"
-      class="enlace-logo-inicio"
-      href="https://ofertasimperdiblesmx.vercel.app/"
-      aria-label="Ir a la página principal de Ofertas Imperdibles MX"
-      title="Ir a la página principal"
-    >
-      <span class="marca-principal">
-        <img
-          id="logo-principal-icono"
-          class="marca-principal-icono marca-principal-logo-completo"
-          src="img/logo-ofertas-transparente.png?v=71.6"
-          alt=""
-          aria-hidden="true"
-        />
-        <span class="marca-principal-textos" hidden aria-hidden="true">
-          <strong id="nombre-sitio-principal" class="marca-principal-nombre"><span>Ofertas</span> <span class="marca-principal-destacado">Imperdibles</span></strong>
-          <span id="eslogan-sitio-principal" class="marca-principal-eslogan">Las mejores ofertas, siempre</span>
-        </span>
-      </span>
-    </a>
+body {
+  margin: 0;
+  padding-bottom: 82px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--texto);
+  background:
+    radial-gradient(circle at top left, rgba(52, 135, 233, 0.05), transparent 27%),
+    radial-gradient(circle at top right, rgba(139, 92, 230, 0.04), transparent 30%),
+    var(--fondo);
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.encabezado {
+  position: relative;
+  overflow:hidden;
+  padding:7px 14px 12px;
+}
+
+.logo {
+  display: block;
+  width: min(330px, 82vw);
+  height: auto;
+  margin: 0 auto 9px;
+}
+
+.whatsapp-cabecera {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 12px;
+  margin-bottom: 9px;
+  border: 1px solid rgba(37, 211, 102, 0.25);
+  border-radius: 999px;
+  color: #176a39;
+  background: #f1fff6;
+  text-decoration: none;
+}
+
+.whatsapp-cabecera strong,
+.whatsapp-cabecera small {
+  display: block;
+  text-align: left;
+}
+
+.whatsapp-cabecera strong {
+  font-size: 13px;
+}
+
+.whatsapp-cabecera small {
+  color: #52755e;
+  font-size: 11px;
+}
+
+.whatsapp-icono {
+  width: 31px;
+  height: 31px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: white;
+  background: var(--whatsapp);
+}
+
+.encabezado > p {
+  margin: 0;
+  color: var(--gris);
+  font-size: 14px;
+}
+
+.contenedor {
+  width: min(1120px, calc(100% - 28px));
+  margin: 20px auto 42px;
+}
+
+.instruccion-cupones {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 19px;
+  padding: 12px 14px;
+  border: 1px solid #bfd8f3;
+  border-radius: 13px;
+  color: #344b63;
+  background: #eef6ff;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.instruccion-cupones p {
+  margin: 0;
+}
+
+.titulo-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 11px;
+}
+
+.titulo-con-separador {
+  position: relative;
+  padding-bottom: 11px;
+}
+
+.titulo-con-separador::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  border-bottom: 1px dashed #b9c9c3;
+}
+
+.titulo-seccion {
+  margin: 0;
+  font-size: 24px;
+}
+
+.actualizacion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--gris);
+  font-size: 12px;
+}
+
+.boton-recargar {
+  padding: 8px 11px;
+  border: 1px solid var(--borde);
+  border-radius: 9px;
+  color: #267261;
+  background: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.estado-carga {
+  margin: 0 0 13px;
+  color: var(--gris);
+  font-size: 13px;
+}
+
+.estado-carga.error {
+  color: var(--error);
+  font-weight: 700;
+}
+
+.popular-wrapper {
+  margin-bottom: 19px;
+}
+
+.popular-titulo {
+  margin-bottom: 11px;
+}
+
+.popular-titulo h2 {
+  margin: 0 0 3px;
+  font-size: 21px;
+}
+
+.popular-titulo p {
+  margin: 0;
+  color: var(--gris);
+  font-size: 13px;
+}
+
+.subtitulo-lista {
+  margin: 0 0 12px;
+  font-size: 19px;
+}
+
+.cupones-lista {
+  display: grid;
+  gap: 12px;
+}
+
+.cupon {
+  --tono-1: #0f9f92;
+  --tono-2: #08786f;
+  --tono-suave: #e8f7f4;
+
+  display: grid;
+  grid-template-columns: minmax(190px, 28%) 1fr;
+  overflow: hidden;
+  min-height: 138px;
+  border: 1px solid color-mix(in srgb, var(--tono-1) 22%, white);
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 7px 20px rgba(27, 44, 38, 0.07);
+  animation: aparecer-cupon 0.24s ease-out;
+}
+
+@keyframes aparecer-cupon {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cupon[data-color="azul"] {
+  --tono-1: #3487e9;
+  --tono-2: #2464c3;
+  --tono-suave: #edf5ff;
+}
+
+.cupon[data-color="morado"] {
+  --tono-1: #8b5ce6;
+  --tono-2: #6840be;
+  --tono-suave: #f4efff;
+}
+
+.cupon[data-color="coral"] {
+  --tono-1: #f47763;
+  --tono-2: #ce5745;
+  --tono-suave: #fff0ed;
+}
+
+.cupon[data-color="oliva"] {
+  --tono-1: #78945f;
+  --tono-2: #56723f;
+  --tono-suave: #eff5eb;
+}
+
+.cupon.popular {
+  --tono-1: #e4ad27;
+  --tono-2: #b17c08;
+  --tono-suave: #fff7df;
+  border-color: rgba(196, 145, 22, 0.28);
+}
+
+.cupon-encabezado {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 18px 20px;
+  overflow: hidden;
+  color: white;
+  background: linear-gradient(135deg, var(--tono-2), var(--tono-1));
+}
+
+.cupon-encabezado::after {
+  content: "";
+  position: absolute;
+  width: 145px;
+  height: 145px;
+  top: -65px;
+  right: -48px;
+  border-radius: 45%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(22deg);
+}
+
+.etiqueta-popular,
+.descuento,
+.subtitulo {
+  position: relative;
+  z-index: 1;
+}
+
+.etiqueta-popular {
+  align-self: flex-start;
+  margin-bottom: 7px;
+  padding: 4px 8px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.descuento {
+  margin: 0;
+  font-size: 29px;
+}
+
+.subtitulo {
+  margin: 3px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.cupon-contenido {
+  display: grid;
+  grid-template-columns: 1fr minmax(195px, 31%);
+  align-items: center;
+  gap: 15px;
+  padding: 15px 17px;
+}
+
+.datos-cupon {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(120px, 1fr));
+  gap: 9px;
+}
+
+.dato {
+  margin: 0;
+  padding: 10px 11px;
+  border-radius: 10px;
+  color: #34413b;
+  background: var(--tono-suave);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.acciones-cupon {
+  display: grid;
+  grid-template-columns: 1fr 45px;
+  gap: 7px;
+}
+
+.boton-canjear,
+.boton-compartir {
+  border-radius: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.boton-canjear {
+  padding: 12px 9px;
+  border: 1px solid var(--tono-2);
+  color: white;
+  background: linear-gradient(135deg, var(--tono-2), var(--tono-1));
+  font-size: 14px;
+}
+
+.boton-compartir {
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--tono-1) 55%, white);
+  color: var(--tono-2);
+  background: white;
+}
+
+.boton-compartir svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.boton-canjear:disabled {
+  opacity: 0.85;
+  cursor: wait;
+}
+
+.mensaje {
+  min-height: 16px;
+  margin: 6px 0 0;
+  text-align: center;
+  color: var(--tono-2);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.contador {
+  margin: 2px 0 0;
+  text-align: center;
+  color: var(--gris);
+  font-size: 11px;
+}
+
+.sin-cupones {
+  padding: 32px 18px;
+  text-align: center;
+  border: 1px solid var(--borde);
+  border-radius: 17px;
+  background: white;
+}
+
+.sin-cupones-icono {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 13px;
+  border-radius: 50%;
+  background: #f0f4f8;
+  font-size: 27px;
+  filter: grayscale(1);
+  opacity: 0.65;
+}
+
+.sin-cupones h2 {
+  margin: 0 0 7px;
+  font-size: 21px;
+}
+
+.sin-cupones p {
+  margin: 0 0 5px;
+  color: var(--gris);
+}
+
+.aviso-inferior {
+  position: relative;
+  margin-top: 24px;
+  padding-top: 20px;
+}
+
+.aviso-inferior::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  border-top: 2px dashed #bcc9c4;
+}
+
+.aviso-inferior p {
+  margin: 0;
+  padding: 12px 15px;
+  border: 1px solid #ecd96a;
+  border-radius: 13px;
+  background: #fff9d7;
+  color: #4f554f;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+/* Publicidad rotativa */
+.publicidad-wrapper {
+  margin-top: 14px;
+}
+
+.publicidad-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 7px;
+  padding: 0 7px;
+  color: #8a9992;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+
+.publicidad-indicadores {
+  display: flex;
+  gap: 5px;
+}
+
+.publicidad-punto {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #ccd6d2;
+  cursor: pointer;
+}
+
+.publicidad-punto.activo {
+  width: 18px;
+  border-radius: 99px;
+  background: var(--turquesa);
+}
+
+.publicidad-carrusel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #d8e5dd;
+  border-radius: 18px;
+  background: linear-gradient(115deg, #ffffff, #f8fffa);
+  box-shadow: 0 7px 20px rgba(7, 149, 42, 0.06);
+  touch-action: pan-y;
+}
+
+.publicidad-contenido {
+  display: grid;
+  grid-template-columns: minmax(110px, 155px) 1fr;
+  align-items: center;
+  gap: 18px;
+  min-height: 150px;
+  padding: 15px 62px;
+  animation: publicidad-fade 0.3s ease;
+}
+
+@keyframes publicidad-fade {
+  from {
+    opacity: 0.25;
+    transform: translateX(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.publicidad-contenido img {
+  display: block;
+  width: 100%;
+  height: 120px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: white;
+}
+
+.publicidad-copy h2 {
+  margin: 0 0 5px;
+  font-size: 23px;
+}
+
+.publicidad-copy p {
+  margin: 0 0 12px;
+  max-width: 700px;
+  color: #4d5d54;
+  line-height: 1.45;
+  font-size: 14px;
+}
+
+.publicidad-boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: white;
+  background: linear-gradient(135deg, #067420, #07952a);
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.publicidad-flecha {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  width: 38px;
+  height: 48px;
+  border: 0;
+  border-radius: 11px;
+  color: #276441;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 12px rgba(30, 60, 45, 0.13);
+  font-size: 30px;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.publicidad-flecha-anterior {
+  left: 12px;
+}
+
+.publicidad-flecha-siguiente {
+  right: 12px;
+}
+
+/* Navegación inferior */
+.navegacion-inferior {
+  position: fixed;
+  left: 50%;
+  bottom: 10px;
+  z-index: 9000;
+  width: min(460px, calc(100% - 20px));
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 7px;
+  padding: 7px;
+  border: 1px solid rgba(23, 33, 27, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 12px 35px rgba(24, 45, 37, 0.18);
+  backdrop-filter: blur(12px);
+  transform: translateX(-50%);
+}
+
+.tab-inferior {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 48px;
+  border: 0;
+  border-radius: 13px;
+  color: #66736c;
+  background: transparent;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.tab-inferior span {
+  font-size: 19px;
+}
+
+.tab-inferior.activo {
+  color: white;
+  background: linear-gradient(135deg, #08786f, #0f9f92);
+  box-shadow: 0 5px 14px rgba(15, 159, 146, 0.24);
+}
+
+.tab-inferior.activo::after {
+  content: "";
+  position: absolute;
+  left: 30%;
+  right: 30%;
+  bottom: 5px;
+  height: 3px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* Modal */
+.modal-redireccion[hidden] {
+  display: none;
+}
+
+.modal-redireccion {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(11, 27, 22, 0.68);
+  backdrop-filter: blur(3px);
+}
+
+.modal-contenido {
+  width: min(430px, 100%);
+  padding: 26px 21px 23px;
+  border-radius: 20px;
+  background: white;
+  text-align: center;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.26);
+}
+
+.modal-icono {
+  margin-bottom: 8px;
+  font-size: 41px;
+}
+
+.modal-contenido h2 {
+  margin: 0 0 9px;
+  color: #08786f;
+}
+
+.modal-contenido p {
+  margin: 0;
+  color: #47565e;
+  line-height: 1.5;
+}
+
+.cronometro {
+  width: 80px;
+  height: 80px;
+  display: grid;
+  place-items: center;
+  margin: 18px auto 14px;
+  border: 6px solid #e2f5f1;
+  border-top-color: #0f9f92;
+  border-radius: 50%;
+}
+
+.cronometro span {
+  color: #08786f;
+  font-size: 33px;
+  font-weight: 900;
+}
+
+.modal-codigo {
+  padding: 9px 11px;
+  border-radius: 9px;
+  color: #08786f !important;
+  background: #e2f5f1;
+}
+
+footer {
+  padding: 0 18px 27px;
+  color: var(--gris);
+  text-align: center;
+  font-size: 12px;
+}
+
+@media (max-width: 760px) {
+  .titulo-fila {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .actualizacion {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .cupon {
+    grid-template-columns: 1fr;
+  }
+
+  .cupon-encabezado {
+    min-height: 108px;
+  }
+
+  .cupon-contenido {
+    grid-template-columns: 1fr;
+    gap: 11px;
+  }
+
+  .publicidad-contenido {
+    grid-template-columns: 95px 1fr;
+    gap: 12px;
+    min-height: 135px;
+    padding: 14px 48px;
+  }
+
+  .publicidad-contenido img {
+    height: 95px;
+  }
+
+  .publicidad-copy h2 {
+    font-size: 19px;
+  }
+
+  .publicidad-copy p {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    margin-bottom: 9px;
+    font-size: 12px;
+  }
+
+  .publicidad-flecha {
+    width: 31px;
+    height: 43px;
+  }
+
+  .publicidad-flecha-anterior {
+    left: 7px;
+  }
+
+  .publicidad-flecha-siguiente {
+    right: 7px;
+  }
+}
+
+@media (max-width: 430px) {
+  .logo {
+    width: min(290px, 88vw);
+  }
+
+  .titulo-seccion {
+    font-size: 21px;
+  }
+
+  .datos-cupon {
+    grid-template-columns: 1fr;
+  }
+
+  .publicidad-contenido {
+    grid-template-columns: 78px 1fr;
+    padding: 12px 39px;
+  }
+
+  .publicidad-contenido img {
+    height: 82px;
+  }
+
+  .publicidad-copy h2 {
+    font-size: 17px;
+  }
+
+  .publicidad-boton {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+}
 
 
-    <section class="hero-redes hero-redes-lista" aria-label="Redes sociales de Ofertas Imperdibles MX">
-      <div class="hero-redes-logo">
-        <img
-          src="img/logo-ofertas-transparente.png?v=63.6"
-          alt=""
-          aria-hidden="true"
-        />
-      </div>
+/* Precios de publicidad */
+.publicidad-precios {
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 10px;
+}
 
-      <div class="hero-redes-contenido">
-        <strong id="nombre-sitio">Ofertas Imperdibles MX</strong>
-        <span id="hero-texto-descriptivo">Cupones de Mercado Libre | Hoy</span>
+.precio-publicado-bloque,
+.precio-cupon-bloque {
+  min-width: 128px;
+  padding: 8px 10px;
+  border-radius: 10px;
+}
 
-        <div class="hero-redes-botones">
-          <a
-            class="hero-redes-boton hero-redes-whatsapp"
-            href="https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span aria-hidden="true">◉</span>
-            WhatsApp
-          </a>
+.precio-publicado-bloque {
+  border: 1px solid #e0e7e4;
+  background: #f6f8f7;
+}
 
-          <a
-            class="hero-redes-boton hero-redes-facebook"
-            href="https://www.facebook.com/OfertasImperdiblesView"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span aria-hidden="true">f</span>
-            Facebook
-          </a>
+.precio-cupon-bloque {
+  border: 1px solid #bce2c5;
+  background: #edf9f0;
+}
 
-          <span
-            id="hero-contador-visitantes"
-            class="hero-redes-visitantes"
-            title="Visitantes de Ofertas Imperdibles MX"
-            aria-label="Número de visitantes"
-          >
-            <span aria-hidden="true">👥</span>
-            <strong id="hero-total-visitantes">—</strong>
-          </span>
+.precio-publicado-bloque span,
+.precio-cupon-bloque span {
+  display: block;
+  margin-bottom: 2px;
+  color: #68756f;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.35px;
+}
 
-          <button
-            id="boton-anirona-hero"
-            type="button"
-            class="hero-redes-boton hero-redes-anirona"
-            data-vista="comunidad_anirona"
-            aria-pressed="false"
-            aria-label="Abrir Comunidad Anirona"
-            title="Abrir Comunidad Anirona"
-          >
-            <img src="img/anirona.png" alt="" aria-hidden="true" />
-          </button>
-        </div>
-      </div>
-    </section>
+.precio-publicado-bloque strong {
+  color: #59645f;
+  font-size: 16px;
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
 
-    <script>
-      /* V69.1 — Aplica la última configuración conocida antes del primer render. */
-      (() => {
-        try {
-          const cache = JSON.parse(localStorage.getItem("ofertas_imperdibles_config_cache") || "null");
-          if (!cache || typeof cache !== "object") return;
+.precio-cupon-bloque strong {
+  color: #067420;
+  font-size: 19px;
+}
 
-          const textoBarra = document.querySelector("#hero-texto-descriptivo");
-          const nombreBarra = document.querySelector("#nombre-sitio");
-          const iconoPrincipal = document.querySelector("#logo-principal-icono");
-          const nombrePrincipal = document.querySelector("#nombre-sitio-principal");
-          const esloganPrincipal = document.querySelector("#eslogan-sitio-principal");
-          const imagen = document.querySelector(".hero-redes-logo img");
-          const whatsapp = document.querySelector(".hero-redes-whatsapp");
-          const facebook = document.querySelector(".hero-redes-facebook");
-          const visitantes = document.querySelector("#hero-total-visitantes");
+.publicidad-aviso-cupon {
+  margin: 0 0 9px !important;
+  color: #42624c !important;
+  font-size: 11px !important;
+  line-height: 1.35 !important;
+}
 
-          if (textoBarra && cache.texto_descriptivo) textoBarra.textContent = cache.texto_descriptivo;
-          if (nombreBarra) nombreBarra.textContent = cache.nombre_barra || "Ofertas Imperdibles MX";
-          if (iconoPrincipal && cache.logo_icono_url) iconoPrincipal.src = cache.logo_icono_url;
-          if (nombrePrincipal && cache.nombre_sitio) {
-            const palabras = String(cache.nombre_sitio).trim().split(/\s+/).filter(Boolean);
-            const destacada = palabras.pop() || "Imperdibles";
-            nombrePrincipal.replaceChildren();
-            if (palabras.length) nombrePrincipal.append(document.createTextNode(`${palabras.join(" ")} `));
-            const parteDestacada = document.createElement("span");
-            parteDestacada.className = "marca-principal-destacado";
-            parteDestacada.textContent = destacada;
-            nombrePrincipal.append(parteDestacada);
-          }
-          if (esloganPrincipal) {
-            esloganPrincipal.textContent = cache.eslogan || esloganPrincipal.textContent;
-            esloganPrincipal.hidden = cache.mostrar_eslogan === false;
-          }
-          if (imagen && cache.imagen_url) imagen.src = cache.imagen_url;
-          if (whatsapp && cache.enlace_whatsapp) whatsapp.href = cache.enlace_whatsapp;
-          const bannerWhatsapp = document.querySelector("#enlace-banner-whatsapp");
-          if (bannerWhatsapp && (cache.enlace_banner_whatsapp || cache.enlace_whatsapp)) {
-            bannerWhatsapp.href = cache.enlace_banner_whatsapp || cache.enlace_whatsapp;
-          }
-          if (facebook && cache.enlace_facebook) facebook.href = cache.enlace_facebook;
-          const botonMercadoLibre = document.querySelector('[data-vista="ofertas_mercado_libre"]');
-          const botonAmazon = document.querySelector('[data-vista="ofertas_amazon"]');
-          if (botonMercadoLibre && cache.enlace_mercado_libre) botonMercadoLibre.dataset.enlaceExterno = cache.enlace_mercado_libre;
-          if (botonAmazon && cache.enlace_amazon) botonAmazon.dataset.enlaceExterno = cache.enlace_amazon;
-          const nombreBotonMercadoLibre = document.querySelector("#nombre-boton-mercado-libre");
-          const nombreBotonAmazon = document.querySelector("#nombre-boton-amazon");
-          const descripcionBotonComunidad = document.querySelector("#descripcion-boton-comunidad");
-          if (nombreBotonMercadoLibre && cache.nombre_boton_mercado_libre) nombreBotonMercadoLibre.textContent = cache.nombre_boton_mercado_libre;
-          if (nombreBotonAmazon && cache.nombre_boton_amazon) nombreBotonAmazon.textContent = cache.nombre_boton_amazon;
-          if (descripcionBotonComunidad && cache.descripcion_boton_comunidad) descripcionBotonComunidad.textContent = cache.descripcion_boton_comunidad;
-          if (visitantes && cache.total_visitantes != null) visitantes.textContent = cache.total_visitantes;
+.modal-cupon-oculto {
+  margin-top: 12px !important;
+  padding: 9px 11px;
+  border-radius: 9px;
+  color: #08786f !important;
+  background: #e2f5f1;
+  font-size: 13px;
+  font-weight: 700;
+}
 
-          if (cache.color_inicio) {
-            document.documentElement.style.setProperty("--tema-color-inicio", cache.color_inicio);
-            document.querySelector(".hero-redes")?.style.setProperty("--hero-color-inicio", cache.color_inicio);
-          }
-          if (cache.color_fin) {
-            document.documentElement.style.setProperty("--tema-color-fin", cache.color_fin);
-            document.querySelector(".hero-redes")?.style.setProperty("--hero-color-fin", cache.color_fin);
-          }
-          const heroBarra = document.querySelector(".hero-redes");
-          if (heroBarra) {
-            heroBarra.dataset.patronVisible = cache.mostrar_patron_ofertas === false ? "false" : "true";
-            heroBarra.dataset.patronPosicion = cache.posicion_patron_ofertas || "centro";
-          }
-        } catch {}
-      })();
-    </script>
+@media (max-width: 430px) {
+  .publicidad-precios {
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .precio-publicado-bloque,
+  .precio-cupon-bloque {
+    min-width: 105px;
+    padding: 7px 8px;
+  }
+
+  .precio-publicado-bloque strong {
+    font-size: 14px;
+  }
+
+  .precio-cupon-bloque strong {
+    font-size: 17px;
+  }
+
+  .publicidad-aviso-cupon {
+    font-size: 10px !important;
+  }
+}
 
 
+/* V60.6 — Aviso inferior eliminado */
+.aviso-inferior {
+  display: none !important;
+}
+
+.publicidad-wrapper {
+  margin-top: 16px !important;
+  padding-top: 14px;
+  border-top: 1px dashed #cbd5d0;
+}
 
 
-  </header>
-
-  <main class="contenedor">
-    <section id="vista-cupones" class="vista-principal vista-activa">
-<section id="ayuda-cupones" class="ayuda-cupones" aria-labelledby="ayuda-cupones-titulo">
-      <button id="ayuda-cupones-toggle" class="ayuda-cupones-toggle" type="button"
-        aria-expanded="false" aria-controls="ayuda-cupones-contenido">
-        <span class="ayuda-cupones-toggle-texto">
-          <span class="ayuda-cupones-icono" aria-hidden="true">💡</span>
-          <span id="ayuda-cupones-titulo">¿Cómo usar los cupones?</span>
-        </span>
-        <span id="ayuda-cupones-flecha" class="ayuda-cupones-flecha" aria-hidden="true">▼</span>
-      </button>
-
-      <div id="ayuda-cupones-contenido" class="ayuda-cupones-contenido" hidden>
-        <div class="ayuda-cupones-interior">
-                    <ol class="ayuda-cupones-pasos">
-            <li>
-              Elige el cupón que mejor se adapte al monto de tu compra
-              <strong>(revisa la compra mínima)</strong>.
-            </li>
-            <li>
-              Da clic en <strong>📋 Copiar y Canjear</strong>.
-            </li>
-            <li>
-              Se abrirá Mercado Libre y el código quedará copiado automáticamente.
-            </li>
-            <li>
-              Agrega tus productos al carrito y continúa hasta
-              <strong>“Elige cómo pagar”</strong>.
-            </li>
-            <li>
-  Pega tu cupón de cualquiera de estas dos formas:
-  <br>• En la sección <strong>"Cupones"</strong>, selecciona <strong>"Ingresar código"</strong>.
-  <br>• O al momento de pagar, en <strong>"Elige cómo pagar"</strong>, selecciona <strong>"Ingresar código"</strong>.
-  Después, pega el código y aplica tu descuento. 
-            </li>
-          </ol>
-
-          <p class="ayuda-cupones-tip">
-            <strong>Tip:</strong> Si ya tienes productos en tu carrito, también
-            puedes usar estos cupones. Solo ingresa a Mercado Libre desde el botón
-            <strong>📋 Copiar y Canjear</strong> y pega el código antes de finalizar
-            el pago.
-          </p>
-
-          <button id="ayuda-cupones-entendido" class="ayuda-cupones-entendido" type="button">
-            ✓ Entendido
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <div class="separador-contenido separador-despues-ayuda" aria-hidden="true"></div>
-
-    <p id="estado-carga" class="estado-carga" aria-live="polite">
-      Cargando cupones...
-    </p>
-    <section id="todos-wrapper" hidden>
-      <section
-        id="cupones"
-        class="cupones-grid-compacta"
-        aria-label="Lista de cupones"
-      ></section>
-    </section>
-    <div id="separador-fin-cupones" class="separador-contenido separador-fin-cupones" aria-hidden="true"></div>
-
-    <section id="sin-cupones" class="sin-cupones" hidden>
-      <div class="sin-cupones-icono" aria-hidden="true">🎟️</div>
-      <h2>No hay cupones disponibles</h2>
-      <p>Pronto agregaremos nuevas opciones.</p>
-      <strong>¡Vuelve pronto!</strong>
-    </section>
+/* Acciones y secciones de ofertas V61 */
+.seccion-ofertas-categoria { scroll-margin-top: 18px; }
+.publicidad-acciones { display: flex; align-items: stretch; gap: 8px; flex-wrap: wrap; }
+.publicidad-compartir {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 10px 14px; border: 1px solid #b9d4c4; border-radius: 10px;
+  color: #17633b; background: #fff; font-size: 13px; font-weight: 800; cursor: pointer;
+}
+.publicidad-compartir:hover { background: #edf8f1; }
+.publicidad-mensaje { min-height: 16px; margin: 6px 0 0 !important; color: #17633b !important; font-size: 11px !important; font-weight: 700; }
+@media (max-width: 430px) {
+  .publicidad-acciones { gap: 6px; }
+  .publicidad-compartir { padding: 8px 10px; font-size: 11px; }
+}
 
 
-    </section>
+/* V61.1 — Módulos de productos con estructura similar a cupones */
+.modulo-ofertas-categoria {
+  margin-top: 18px;
+  scroll-margin-top: 18px;
+}
 
-    <section
-      id="seccion-ofertas-mercado-libre"
-      class="modulo-ofertas-categoria vista-principal vista-oculta"
-      aria-label="Ofertas Mercado Libre"
-      hidden
-    >
-      <div class="titulo-fila titulo-con-separador">
-        <h2 class="titulo-seccion titulo-seccion-con-logo"><img src="img/mercado-libre.png?v=72.1.0" alt="" aria-hidden="true" /><span>Ofertas Mercado Libre</span></h2>
-      </div>
-      <div
-        id="ofertas-mercado-libre"
-        class="ofertas-grid-compacta"
-        aria-label="Productos en oferta de Mercado Libre"
-      ></div>
-    </section>
+.ofertas-grid-compacta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
 
-    <section
-      id="seccion-comunidad-anirona"
-      class="modulo-ofertas-categoria vista-principal vista-oculta"
-      aria-label="Ofertas de Anirona Community"
-      hidden
-    >
-      <div class="buscador-catalogo-anirona" role="search" aria-label="Buscar productos del catálogo Anirona">
-        <div class="buscador-catalogo-campo">
-          <span aria-hidden="true">🔍</span>
-          <input
-            id="buscar-catalogo-anirona"
-            type="search"
-            inputmode="search"
-            autocomplete="off"
-            aria-label="Buscar producto del catálogo Anirona"
-            placeholder="Buscar herramienta, modelo o característica..."
-          />
-          <button id="limpiar-busqueda-anirona" type="button" aria-label="Limpiar búsqueda" title="Limpiar búsqueda" hidden>×</button>
-        </div>
-        <p id="resultados-catalogo-anirona" class="resultados-catalogo-anirona" aria-live="polite"></p>
-      </div>
-      <div
-        id="ofertas-comunidad-anirona"
-        class="ofertas-grid-compacta"
-        aria-label="Productos de Anirona Community"
-      ></div>
-      <div id="eventos-comunidad" class="eventos-comunidad" aria-label="Eventos y rifas de Comunidad Anirona"></div>
-    </section>
+.tarjeta-oferta {
+  overflow: hidden;
+  border: 1px solid #d8e1dc;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(20, 45, 32, 0.07);
+}
 
-    <section
-      id="seccion-ofertas-amazon"
-      class="modulo-ofertas-categoria vista-principal vista-oculta"
-      aria-label="Ofertas Amazon"
-      hidden
-    >
-      <div class="titulo-fila titulo-con-separador">
-        <h2 class="titulo-seccion titulo-seccion-con-logo"><img src="img/amazon.png?v=72.1.0" alt="" aria-hidden="true" /><span>Ofertas Amazon</span></h2>
-      </div>
-      <div
-        id="ofertas-amazon"
-        class="ofertas-grid-compacta"
-        aria-label="Productos en oferta de Amazon"
-      ></div>
-    </section>
-<!-- Publicidad rotativa administrable -->
-    <section
-      id="publicidad-wrapper"
-      class="publicidad-wrapper"
-      data-categoria-publicidad="ofertas_dia"
-      aria-label="Publicidad"
-      hidden
-    >
-      <div class="publicidad-cabecera">
-        <span>OFERTAS DEL DÍA</span>
+.oferta-imagen-contenedor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  padding: 8px;
+  background: #f7f9f8;
+}
 
-        <div
-          id="publicidad-indicadores"
-          class="publicidad-indicadores"
-          aria-label="Indicadores de publicidad"
-        ></div>
-      </div>
+.oferta-imagen-contenedor.sin-imagen::after {
+  content: "Imagen no disponible";
+  color: #7a8780;
+  font-size: 12px;
+  font-weight: 700;
+}
 
-      <div
-        id="publicidad-carrusel"
-        class="publicidad-carrusel"
-        tabindex="0"
-      >
-        <button
-          id="publicidad-anterior"
-          class="publicidad-flecha publicidad-flecha-anterior"
-          type="button"
-          aria-label="Publicidad anterior"
-        >
-          ‹
-        </button>
+.oferta-imagen {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 10px;
+}
 
-        <article id="publicidad-contenido" class="publicidad-contenido">
-          <img id="publicidad-imagen" src="" alt="" />
+.oferta-contenido {
+  padding: 11px;
+}
 
-          <div class="publicidad-copy">
-            <h2 id="publicidad-titulo"></h2>
-            <p id="publicidad-descripcion"></p>
+.oferta-contenido h3 {
+  margin: 0;
+  color: #202a25;
+  font-size: 15px;
+  line-height: 1.25;
+}
 
-            <div class="publicidad-precios">
-              <div id="precio-publicado-bloque" class="precio-publicado-bloque" hidden>
-                <span>Precio publicado</span>
-                <strong id="publicidad-precio-publicado"></strong>
-              </div>
+.oferta-descripcion {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 6px 0 0;
+  color: #5d6963;
+  font-size: 12px;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
 
-              <div id="precio-cupon-bloque" class="precio-cupon-bloque" hidden>
-                <span>Precio con cupón</span>
-                <strong id="publicidad-precio-cupon"></strong>
-              </div>
-            </div>
+.oferta-precios {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+}
 
-            <p id="publicidad-aviso-cupon" class="publicidad-aviso-cupon" hidden>
-              📋 Al dar clic en <strong>Ver en Mercado Libre</strong>, el cupón
-              se copiará automáticamente.
-            </p>
+.oferta-precios.con-cupon {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
 
-            <div class="publicidad-acciones">
-              <a
-                id="publicidad-enlace"
-                class="publicidad-boton"
-                href="#"
-              >
-                🛒 Ver en Mercado Libre
-              </a>
+.oferta-precios > div {
+  min-width: 0;
+  padding: 7px 8px;
+  border-radius: 9px;
+  background: #f1f5f3;
+}
 
-              <button
-                id="publicidad-compartir"
-                class="boton-compartir publicidad-compartir"
-                type="button"
-                aria-label="Compartir oferta"
-                title="Compartir"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M18 16a3 3 0 0 0-2.39 1.19L8.91 13.7a3.1 3.1 0 0 0 0-3.4l6.7-3.49A3 3 0 1 0 15 5c0 .23.03.45.08.66l-6.7 3.49a3 3 0 1 0 0 5.7l6.7 3.49A3 3 0 1 0 18 16Z"/>
-                </svg>
-              </button>
-            </div>
-            <p id="publicidad-mensaje" class="publicidad-mensaje" aria-live="polite"></p>
-          </div>
-        </article>
+.oferta-precios span {
+  display: block;
+  color: #65716b;
+  font-size: 9px;
+  font-weight: 700;
+}
 
-        <button
-          id="publicidad-siguiente"
-          class="publicidad-flecha publicidad-flecha-siguiente"
-          type="button"
-          aria-label="Publicidad siguiente"
-        >
-          ›
-        </button>
-      </div>
-    </section>
-  </main>
+.oferta-precios strong {
+  display: block;
+  margin-top: 2px;
+  color: #25312b;
+  font-size: 14px;
+  line-height: 1.15;
+}
 
-  <section class="invitacion-canal-final" aria-label="Canal de WhatsApp de Ofertas Imperdibles MX">
-    <a
-      id="enlace-banner-whatsapp"
-      class="invitacion-canal-final-enlace"
-      href="https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Unirme al canal de WhatsApp de Ofertas Imperdibles MX"
-    >
-      <span class="invitacion-canal-final-icono-whatsapp" aria-hidden="true">
-        <svg viewBox="0 0 32 32" role="img">
-          <path d="M16 4.2A11.3 11.3 0 0 0 6.4 21.5L5 27l5.7-1.5A11.3 11.3 0 1 0 16 4.2Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M12 10.4c.4-.5.8-.5 1.2-.1l1.4 2.1c.3.4.2.8 0 1.2l-.8 1c-.2.3-.2.6 0 .9 1 1.8 2.4 3.2 4.2 4.2.3.2.6.2.9 0l1-.8c.4-.3.8-.3 1.2 0l2 1.4c.4.3.4.8.1 1.2-.8 1.2-2 1.8-3.5 1.6-4.9-.8-9.2-5.1-10-10-.2-1.3.3-2.2 1.3-3Z" fill="currentColor"/>
-        </svg>
-      </span>
-      <span class="invitacion-canal-final-texto">
-        <strong>Forma parte de nuestra comunidad</strong>
-        <small>Recibe cupones y ofertas directamente en WhatsApp.</small>
-      </span>
-      <span class="invitacion-canal-final-cta">Unirme al canal</span>
-    </a>
-  </section>
+.oferta-precios .precio-destacado {
+  background: #eaf7ef;
+}
 
-  <footer></footer>
+.oferta-precios .precio-destacado strong {
+  color: #14703f;
+}
 
+.oferta-cupon {
+  margin: 8px 0 0;
+  color: #3c4842;
+  font-size: 11px;
+}
 
-  <nav class="navegacion-inferior" aria-label="Categorías de cupones">
-    <button
-      id="tab-tienda"
-      class="tab-inferior activo"
-      type="button"
-      data-categoria="tienda"
-      aria-pressed="true"
-    >
-      <span aria-hidden="true">🛒</span>
-      <strong id="nombre-boton-tienda">Tienda</strong>
-      <span
-        id="contador-cupones-tienda"
-        class="contador-seccion contador-seccion-inferior"
-        aria-label="0 cupones"
-        hidden
-      >0</span>
-    </button>
+.oferta-acciones {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 7px;
+  margin-top: 10px;
+}
 
-    <button
-      id="tab-bancarios"
-      class="tab-inferior"
-      type="button"
-      data-categoria="bancarios"
-      aria-pressed="false"
-    >
-      <span aria-hidden="true">💳</span>
-      <strong id="nombre-boton-bancarios">Bancarios</strong>
-      <span
-        id="contador-cupones-bancarios"
-        class="contador-seccion contador-seccion-inferior"
-        aria-label="0 cupones"
-        hidden
-      >0</span>
-    </button>
-  </nav>
+.oferta-ver,
+.oferta-compartir {
+  min-height: 39px;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.oferta-ver {
+  border: 0;
+  color: #fff;
+  background: #16864c;
+}
+
+.oferta-compartir {
+  padding: 0 10px;
+  border: 1px solid #b9d4c4;
+  color: #17633b;
+  background: #fff;
+}
+
+.oferta-ver:hover { background: #11713f; }
+.oferta-compartir:hover { background: #edf8f1; }
+
+.oferta-mensaje {
+  min-height: 14px;
+  margin: 5px 0 0;
+  color: #17633b;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+@media (max-width: 620px) {
+  .ofertas-grid-compacta {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .tarjeta-oferta {
+    display: grid;
+    grid-template-columns: 112px minmax(0, 1fr);
+  }
+
+  .oferta-imagen-contenedor {
+    height: 100%;
+    min-height: 156px;
+    aspect-ratio: auto;
+    border-radius: 0;
+  }
+
+  .oferta-contenido {
+    min-width: 0;
+    padding: 10px;
+  }
+
+  .oferta-contenido h3 { font-size: 14px; }
+  .oferta-descripcion { font-size: 11px; }
+  .oferta-precios strong { font-size: 13px; }
+  .oferta-acciones { grid-template-columns: minmax(0, 1fr) 39px; }
+  .oferta-compartir { overflow: hidden; width: 39px; padding: 0; font-size: 0; }
+  .oferta-compartir::before { content: "↗"; font-size: 18px; }
+}
+
+/* V61.2 — vistas exclusivas de cupones y productos */
+.vista-principal[hidden] { display: none !important; }
+
+.sin-ofertas-categoria {
+  grid-column: 1 / -1;
+  padding: 32px 18px;
+  border: 1px dashed #cdd9d2;
+  border-radius: 14px;
+  text-align: center;
+  background: #fff;
+}
+.sin-ofertas-categoria div { font-size: 30px; }
+.sin-ofertas-categoria h3 { margin: 8px 0 4px; color: #25342c; font-size: 16px; }
+.sin-ofertas-categoria p { margin: 0; color: #6b7770; font-size: 13px; }
 
 
-  <div
-    id="modal-redireccion"
-    class="modal-redireccion"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="modal-titulo"
-    hidden
-  >
-    <div class="modal-contenido">
-      <div class="modal-icono" aria-hidden="true">✅</div>
-      <h2 id="modal-titulo">¡Cupón copiado!</h2>
-
-      <p>
-        Serás redireccionado a Mercado Libre en
-        <strong><span id="modal-contador">3</span> segundos</strong>.
-      </p>
-
-      <div class="cronometro" aria-hidden="true">
-        <span id="cronometro-numero">3</span>
-      </div>
-
-      <p id="modal-codigo-bloque" class="modal-codigo">
-        Código: <strong id="modal-codigo"></strong>
-      </p>
-
-      <p id="modal-cupon-oculto" class="modal-cupon-oculto" hidden>
-        El cupón se copió automáticamente.
-      </p>
-    </div>
-  </div>
+/* V61.3 — control robusto de vistas principales */
+[hidden] { display: none !important; }
+.vista-principal.vista-oculta { display: none !important; }
+.vista-principal.vista-activa { display: block; }
+#vista-cupones.vista-activa,
+#seccion-comunidad-anirona.vista-activa,
+#seccion-ofertas-amazon.vista-activa,
+#seccion-ofertas-mercado-libre.vista-activa {
+  margin-top: 0;
+}
 
 
-  <script type="module" src="js/app.js?v=77.17.2"></script>
-  <script src="js/hero-redes.js?v=74.0" defer></script>
-  <script src="js/header-dinamico-v68-3.js?v=70.0.0" defer></script>
-  <script src="js/cabecera-inteligente.js?v=77.15.7" defer></script>
-</body>
-</html>
+/* V61.4 — contador de visitas en ofertas */
+.oferta-meta {
+  display: flex;
+  align-items: center;
+  min-height: 20px;
+  margin-top: 7px;
+}
+.oferta-visitas {
+  color: #77827c;
+  font-size: 10.5px;
+  font-weight: 400;
+}
+
+
+/* V61.5 — Logos, compartir uniforme y acciones */
+.titulo-seccion-con-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.titulo-seccion-con-logo img {
+  display: block;
+  width: auto;
+  height: 22px;
+  max-width: 54px;
+  object-fit: contain;
+}
+
+.publicidad-acciones {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 45px;
+  align-items: stretch;
+  gap: 7px;
+}
+
+.publicidad-acciones .publicidad-boton {
+  min-width: 0;
+}
+
+.publicidad-acciones .publicidad-compartir,
+.oferta-acciones .oferta-compartir {
+  width: 45px;
+  min-width: 45px;
+  min-height: 39px;
+  padding: 9px;
+  border-radius: 11px;
+  font-size: 0;
+  font-weight: 400;
+}
+
+.publicidad-acciones .publicidad-compartir svg,
+.oferta-acciones .oferta-compartir svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.oferta-acciones {
+  grid-template-columns: minmax(0, 1fr) 45px;
+}
+
+@media (max-width: 430px) {
+  .titulo-seccion-con-logo img {
+    height: 19px;
+    max-width: 47px;
+  }
+
+  .publicidad-acciones {
+    grid-template-columns: minmax(0, 1fr) 42px;
+  }
+
+  .publicidad-acciones .publicidad-compartir,
+  .oferta-acciones .oferta-compartir {
+    width: 42px;
+    min-width: 42px;
+  }
+
+  .oferta-acciones {
+    grid-template-columns: minmax(0, 1fr) 42px;
+  }
+}
+
+
+/* V61.6 — Ajustes de acciones y encabezado */
+.publicidad-cabecera > span {
+  font-weight: 400;
+}
+
+.publicidad-acciones {
+  grid-template-columns: minmax(210px, 1fr) 40px;
+  gap: 5px;
+}
+
+.publicidad-acciones .publicidad-boton {
+  white-space: nowrap;
+  padding-left: 12px;
+  padding-right: 12px;
+  font-size: clamp(11px, 2.9vw, 13px);
+}
+
+.publicidad-acciones .publicidad-compartir {
+  width: 40px;
+  min-width: 40px;
+  padding: 8px;
+}
+
+.oferta-acciones .oferta-compartir {
+  /* Misma apariencia que el botón de OFERTAS DEL DÍA */
+  width: 40px;
+  min-width: 40px;
+  padding: 8px;
+  border-radius: 11px;
+}
+
+@media (max-width: 430px) {
+  .publicidad-acciones {
+    grid-template-columns: minmax(0, 1fr) 38px;
+    gap: 4px;
+  }
+
+  .publicidad-acciones .publicidad-compartir,
+  .oferta-acciones .oferta-compartir {
+    width: 38px;
+    min-width: 38px;
+    padding: 7px;
+  }
+
+  .publicidad-acciones .publicidad-boton {
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 11px;
+    letter-spacing: -0.01em;
+  }
+}
+
+
+/* V61.8 — Compartir unificado en todas las ofertas */
+.oferta-compartir::before {
+  content: none !important;
+  display: none !important;
+}
+
+.oferta-compartir svg,
+.publicidad-compartir svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.oferta-compartir,
+.publicidad-compartir {
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* V62.1 — Tarjetas compactas, dos por fila */
+.ofertas-grid-compacta {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 9px;
+}
+
+.tarjeta-oferta {
+  display: flex !important;
+  flex-direction: column;
+  min-width: 0;
+  border-radius: 13px;
+  box-shadow: 0 3px 11px rgba(20, 45, 32, 0.06);
+}
+
+.oferta-imagen-contenedor {
+  width: 100%;
+  height: auto !important;
+  min-height: 0 !important;
+  aspect-ratio: 1 / 0.72 !important;
+  padding: 6px;
+}
+
+.oferta-imagen {
+  border-radius: 8px;
+}
+
+.oferta-contenido {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  padding: 8px;
+}
+
+.oferta-contenido h3 {
+  display: -webkit-box;
+  overflow: hidden;
+  min-height: 30px;
+  font-size: 12.5px;
+  line-height: 1.2;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.oferta-descripcion {
+  margin-top: 4px;
+  font-size: 10px;
+  line-height: 1.25;
+  -webkit-line-clamp: 2;
+}
+
+.oferta-precios {
+  gap: 4px;
+  margin-top: 7px;
+}
+
+.oferta-precios.con-cupon {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.oferta-precios > div {
+  padding: 5px 6px;
+  border-radius: 8px;
+}
+
+.oferta-precios span {
+  font-size: 7.5px;
+  line-height: 1.15;
+}
+
+.oferta-precios strong {
+  margin-top: 1px;
+  font-size: 11.5px;
+}
+
+.oferta-cupon {
+  margin-top: 6px;
+  font-size: 8.8px;
+  line-height: 1.25;
+}
+
+.oferta-meta {
+  margin-top: 6px;
+}
+
+.oferta-visitas {
+  font-size: 9px;
+}
+
+.oferta-acciones {
+  grid-template-columns: minmax(0, 1fr) 34px !important;
+  gap: 5px;
+  margin-top: auto;
+  padding-top: 7px;
+}
+
+.oferta-ver,
+.oferta-compartir {
+  min-height: 34px;
+  border-radius: 9px;
+}
+
+.oferta-ver {
+  padding: 5px 6px;
+  font-size: 9.2px;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.oferta-acciones .oferta-compartir {
+  display: inline-flex;
+  width: 34px !important;
+  min-width: 34px !important;
+  padding: 7px !important;
+  border-radius: 9px;
+  font-size: 0;
+}
+
+.oferta-acciones .oferta-compartir::before {
+  content: none !important;
+  display: none !important;
+}
+
+.oferta-acciones .oferta-compartir svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.oferta-mensaje {
+  min-height: 10px;
+  margin-top: 3px;
+  font-size: 8px;
+}
+
+@media (max-width: 620px) {
+  .ofertas-grid-compacta {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 7px;
+  }
+
+  .tarjeta-oferta {
+    display: flex !important;
+    grid-template-columns: none !important;
+  }
+
+  .oferta-imagen-contenedor {
+    height: auto !important;
+    min-height: 0 !important;
+    aspect-ratio: 1 / 0.75 !important;
+  }
+
+  .oferta-contenido {
+    padding: 7px;
+  }
+
+  .oferta-contenido h3 {
+    min-height: 28px;
+    font-size: 11.5px;
+  }
+
+  .oferta-descripcion {
+    font-size: 9px;
+  }
+
+  .oferta-precios strong {
+    font-size: 10.5px;
+  }
+
+  .oferta-cupon {
+    font-size: 8px;
+  }
+
+  .oferta-acciones {
+    grid-template-columns: minmax(0, 1fr) 32px !important;
+    gap: 4px;
+  }
+
+  .oferta-ver {
+    min-height: 32px;
+    padding: 4px;
+    font-size: 8.5px;
+  }
+
+  .oferta-acciones .oferta-compartir {
+    width: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px;
+    padding: 6px !important;
+  }
+
+  .oferta-acciones .oferta-compartir svg {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+@media (max-width: 360px) {
+  .ofertas-grid-compacta {
+    gap: 6px;
+  }
+
+  .oferta-contenido {
+    padding: 6px;
+  }
+
+  .oferta-contenido h3 {
+    font-size: 10.8px;
+  }
+
+  .oferta-descripcion {
+    -webkit-line-clamp: 1;
+  }
+
+  .oferta-precios > div {
+    padding: 4px;
+  }
+
+  .oferta-precios span {
+    font-size: 7px;
+  }
+
+  .oferta-precios strong {
+    font-size: 9.8px;
+  }
+
+  .oferta-ver {
+    font-size: 8px;
+  }
+}
+
+
+/* V62.2 — Se elimina el aviso superior y se mejora la navegación de secciones */
+#vista-cupones > .titulo-fila:first-child {
+  margin-top: 0;
+}
+
+.menu-ofertas-contenedor {
+  position: relative;
+  width: min(930px, 100%);
+  margin: 9px auto 0;
+  padding: 0 34px 18px;
+}
+
+.menu-ofertas-contenedor::before,
+.menu-ofertas-contenedor::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 18px;
+  width: 28px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .18s ease;
+}
+
+.menu-ofertas-contenedor::before {
+  left: 31px;
+  background: linear-gradient(90deg, rgba(255,255,255,.96), rgba(255,255,255,0));
+}
+
+.menu-ofertas-contenedor::after {
+  right: 31px;
+  background: linear-gradient(270deg, rgba(255,255,255,.96), rgba(255,255,255,0));
+}
+
+.menu-ofertas-contenedor:has(.menu-ofertas.puede-desplazar-izquierda)::before {
+  opacity: 1;
+}
+
+.menu-ofertas-contenedor:has(.menu-ofertas.puede-desplazar-derecha)::after {
+  opacity: 1;
+}
+
+.menu-ofertas {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 3px 5px 5px !important;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.menu-ofertas button {
+  scroll-snap-align: center;
+}
+
+.menu-ofertas-flecha {
+  position: absolute;
+  z-index: 4;
+  top: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 29px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid rgba(21, 147, 106, .20);
+  border-radius: 10px;
+  color: #176d57;
+  background: rgba(255, 255, 255, .96);
+  box-shadow: 0 4px 13px rgba(29, 63, 49, .10);
+  font-size: 23px;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    transform .16s ease,
+    border-color .16s ease,
+    box-shadow .16s ease;
+}
+
+.menu-ofertas-flecha:hover,
+.menu-ofertas-flecha:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(21, 147, 106, .42);
+  box-shadow: 0 7px 16px rgba(29, 63, 49, .14);
+  outline: none;
+}
+
+.menu-ofertas-flecha:active {
+  transform: scale(.96);
+}
+
+.menu-ofertas-flecha-anterior {
+  left: 1px;
+}
+
+.menu-ofertas-flecha-siguiente {
+  right: 1px;
+}
+
+.menu-ofertas-flecha[hidden],
+.menu-ofertas-indicador[hidden] {
+  display: none !important;
+}
+
+.menu-ofertas-indicador {
+  position: absolute;
+  left: 50%;
+  bottom: 1px;
+  transform: translateX(-50%);
+  color: #718078;
+  font-size: 9.5px;
+  font-weight: 400;
+  letter-spacing: .015em;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: menu-ofertas-pulso 1.7s ease-in-out infinite;
+}
+
+@keyframes menu-ofertas-pulso {
+  0%, 100% {
+    opacity: .55;
+    transform: translateX(-50%);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(calc(-50% + 4px));
+  }
+}
+
+@media (min-width: 850px) {
+  .menu-ofertas-contenedor {
+    padding-bottom: 4px;
+  }
+
+  .menu-ofertas-indicador {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .menu-ofertas-contenedor {
+    width: 100%;
+    padding-right: 31px;
+    padding-left: 31px;
+  }
+
+  .menu-ofertas-flecha {
+    top: 3px;
+    width: 27px;
+    height: 33px;
+    border-radius: 9px;
+  }
+
+  .menu-ofertas-contenedor::before {
+    left: 28px;
+  }
+
+  .menu-ofertas-contenedor::after {
+    right: 28px;
+  }
+}
+
+
+/* V62.3 — Imágenes clicables con el mismo comportamiento del botón Ver */
+button.oferta-imagen-contenedor {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  overflow: hidden;
+}
+
+button.oferta-imagen-contenedor::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border: 2px solid transparent;
+  border-radius: inherit;
+  pointer-events: none;
+  transition:
+    border-color .18s ease,
+    background .18s ease;
+}
+
+button.oferta-imagen-contenedor .oferta-imagen {
+  transition:
+    transform .22s ease,
+    filter .22s ease;
+}
+
+button.oferta-imagen-contenedor:hover .oferta-imagen,
+button.oferta-imagen-contenedor:focus-visible .oferta-imagen {
+  transform: scale(1.035);
+  filter: brightness(.98);
+}
+
+button.oferta-imagen-contenedor:hover::before {
+  border-color: rgba(21, 147, 106, .20);
+}
+
+button.oferta-imagen-contenedor:focus-visible {
+  outline: none;
+}
+
+button.oferta-imagen-contenedor:focus-visible::before {
+  border-color: rgba(21, 147, 106, .55);
+  background: rgba(21, 147, 106, .025);
+}
+
+button.oferta-imagen-contenedor:active .oferta-imagen {
+  transform: scale(1.01);
+}
+
+@media (hover: none) {
+  button.oferta-imagen-contenedor:hover .oferta-imagen {
+    transform: none;
+    filter: none;
+  }
+}
+
+
+/* V62.5 — Tarjeta final para el canal de Comunidad Anirona */
+.tarjeta-canal-anirona {
+  grid-column: 1 / -1;
+  display: grid !important;
+  grid-template-columns: minmax(110px, 180px) minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  min-height: 190px;
+  padding: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(18, 139, 75, .18);
+  background:
+    radial-gradient(circle at 94% 8%, rgba(73, 202, 49, .14), transparent 31%),
+    linear-gradient(135deg, #ffffff 0%, #f5fbf6 100%);
+  box-shadow: 0 8px 24px rgba(27, 79, 49, .08);
+}
+
+.canal-anirona-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 130px;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .82);
+  box-shadow: inset 0 0 0 1px rgba(20, 80, 44, .07);
+}
+
+.canal-anirona-logo img {
+  display: block;
+  width: 100%;
+  max-width: 150px;
+  max-height: 72px;
+  object-fit: contain;
+}
+
+.canal-anirona-contenido {
+  min-width: 0;
+}
+
+.canal-anirona-etiqueta {
+  display: inline-flex;
+  margin-bottom: 5px;
+  color: #168544;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .12em;
+}
+
+.canal-anirona-contenido h3 {
+  min-height: auto;
+  margin: 0;
+  color: #1e3428;
+  font-size: clamp(19px, 3vw, 25px);
+  font-weight: 600;
+  line-height: 1.1;
+  -webkit-line-clamp: initial;
+}
+
+.canal-anirona-contenido > p {
+  max-width: 590px;
+  margin: 8px 0 0;
+  color: #52635a;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.canal-anirona-temas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 11px;
+}
+
+.canal-anirona-temas span {
+  padding: 5px 9px;
+  border: 1px solid rgba(22, 133, 68, .14);
+  border-radius: 999px;
+  color: #42604e;
+  background: rgba(255, 255, 255, .8);
+  font-size: 9.5px;
+  font-weight: 400;
+}
+
+.canal-anirona-boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 42px;
+  margin-top: 13px;
+  padding: 10px 16px;
+  border: 1px solid #159447;
+  border-radius: 11px;
+  color: #fff;
+  background: #159447;
+  box-shadow: 0 6px 15px rgba(21, 148, 71, .19);
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    transform .16s ease,
+    background .16s ease,
+    box-shadow .16s ease;
+}
+
+.canal-anirona-boton svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.canal-anirona-boton:hover,
+.canal-anirona-boton:focus-visible {
+  color: #fff;
+  background: #107d3b;
+  box-shadow: 0 9px 20px rgba(21, 148, 71, .25);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.canal-anirona-boton:active {
+  transform: scale(.98);
+}
+
+.canal-anirona-contenido small {
+  display: block;
+  margin-top: 8px;
+  color: #77857d;
+  font-size: 9px;
+}
+
+@media (max-width: 620px) {
+  .tarjeta-canal-anirona {
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 11px;
+    min-height: 0;
+    padding: 13px;
+    border-radius: 13px;
+  }
+
+  .canal-anirona-logo {
+    min-height: 88px;
+    padding: 8px;
+    border-radius: 12px;
+  }
+
+  .canal-anirona-logo img {
+    max-width: 72px;
+    max-height: 46px;
+  }
+
+  .canal-anirona-etiqueta {
+    font-size: 7.5px;
+  }
+
+  .canal-anirona-contenido h3 {
+    font-size: 16px;
+  }
+
+  .canal-anirona-contenido > p {
+    margin-top: 5px;
+    font-size: 10px;
+    line-height: 1.35;
+  }
+
+  .canal-anirona-temas {
+    display: none;
+  }
+
+  .canal-anirona-boton {
+    min-height: 36px;
+    margin-top: 9px;
+    padding: 8px 10px;
+    border-radius: 9px;
+    font-size: 10px;
+  }
+
+  .canal-anirona-boton svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .canal-anirona-contenido small {
+    font-size: 7.5px;
+  }
+}
+
+@media (max-width: 370px) {
+  .tarjeta-canal-anirona {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .canal-anirona-logo {
+    min-height: 66px;
+  }
+
+  .canal-anirona-contenido > p {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .canal-anirona-boton {
+    width: 100%;
+  }
+}
+
+
+/* V63.2 — Logo como enlace de inicio */
+.enlace-logo-inicio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform .18s ease,
+    opacity .18s ease,
+    filter .18s ease;
+}
+
+.enlace-logo-inicio:hover,
+.enlace-logo-inicio:focus-visible {
+  transform: scale(1.025);
+  filter: brightness(1.025);
+  outline: none;
+}
+
+.enlace-logo-inicio:focus-visible {
+  box-shadow: 0 0 0 3px rgba(22, 133, 101, .16);
+}
+
+.enlace-logo-inicio:active {
+  transform: scale(.99);
+}
+
+.enlace-logo-inicio .logo {
+  display: block;
+}
+
+
+/* V63.3 — Logo centrado y encabezado abstracto suave */
+.encabezado {
+  position: relative;
+  isolation: isolate;
+  padding-top: 12px;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(65, 185, 54, .12), transparent 30%),
+    radial-gradient(circle at 88% 2%, rgba(18, 153, 117, .09), transparent 27%),
+    linear-gradient(135deg, #ffffff 0%, #f7fcf7 54%, #f2faf5 100%) !important;
+}
+
+.encabezado::before,
+.encabezado::after {
+  content: "" !important;
+  position: absolute;
+  z-index: -1;
+  display: block !important;
+  border-radius: 999px;
+  pointer-events: none;
+  filter: blur(1px);
+}
+
+.encabezado::before {
+  width: 240px;
+  height: 72px;
+  top: -38px;
+  left: -70px;
+  border: 1px solid rgba(54, 176, 64, .10);
+  background: rgba(113, 208, 82, .045);
+  transform: rotate(-9deg);
+}
+
+.encabezado::after {
+  width: 210px;
+  height: 78px;
+  top: -35px;
+  right: -58px;
+  border: 1px solid rgba(14, 139, 111, .09);
+  background: rgba(17, 158, 124, .035);
+  transform: rotate(11deg);
+}
+
+.enlace-logo-inicio {
+  position: relative;
+  z-index: 2;
+  display: flex !important;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 5px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+}
+
+.enlace-logo-inicio .logo {
+  display: block;
+  width: min(315px, 78vw);
+  max-height: 92px;
+  margin: 0 auto !important;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 12px rgba(30, 72, 43, .08));
+}
+
+.enlace-logo-inicio:hover,
+.enlace-logo-inicio:focus-visible {
+  transform: scale(1.018);
+}
+
+.barra-redes-lineal {
+  position: relative;
+  z-index: 2;
+}
+
+.menu-ofertas-contenedor {
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 600px) {
+  .encabezado {
+    padding-top: 9px;
+  }
+
+  .enlace-logo-inicio {
+    margin-bottom: 3px;
+  }
+
+  .enlace-logo-inicio .logo {
+    width: min(270px, 76vw);
+    max-height: 78px;
+  }
+
+  .encabezado::before {
+    width: 170px;
+    height: 58px;
+    left: -68px;
+  }
+
+  .encabezado::after {
+    width: 160px;
+    height: 61px;
+    right: -58px;
+  }
+}
+
+
+/* V63.4 — Encabezado limpio, sin fondo abstracto */
+.encabezado {
+  isolation: auto;
+  background: #ffffff !important;
+}
+
+.encabezado::before,
+.encabezado::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Se conserva el logo centrado */
+.enlace-logo-inicio {
+  display: flex !important;
+  width: fit-content;
+  max-width: 100%;
+  margin-right: auto !important;
+  margin-left: auto !important;
+}
+
+.enlace-logo-inicio .logo {
+  margin-right: auto !important;
+  margin-left: auto !important;
+}
+
+
+/* V63.5 — Logo restaurado y centrado */
+.enlace-logo-inicio {
+  display: flex !important;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 4px !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.enlace-logo-inicio .logo {
+  display: block;
+  width: min(320px, 80vw);
+  max-height: 96px;
+  margin: 0 auto !important;
+  object-fit: contain;
+}
+
+.encabezado {
+  background: #ffffff !important;
+}
+
+.encabezado::before,
+.encabezado::after {
+  content: none !important;
+  display: none !important;
+}
+
+@media (max-width: 600px) {
+  .enlace-logo-inicio .logo {
+    width: min(275px, 78vw);
+    max-height: 82px;
+  }
+}
+
+
+/* V63.7 — Botones de navegación y precios compactos */
+
+/* Secciones superiores: estado activo con color, sin subrayado */
+.menu-ofertas button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 8px 13px;
+  border: 1px solid rgba(34, 86, 69, .13);
+  border-radius: 12px;
+  color: #53655d;
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 0 3px 11px rgba(31, 67, 53, .055);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color .18s ease,
+    background .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    transform .18s ease;
+}
+
+.menu-ofertas button::after,
+.menu-ofertas button.activo::after {
+  content: none !important;
+  display: none !important;
+}
+
+.menu-ofertas button:hover,
+.menu-ofertas button:focus-visible {
+  color: #226650;
+  border-color: rgba(31, 137, 99, .30);
+  background: #f3faf6;
+  box-shadow: 0 6px 15px rgba(31, 107, 80, .10);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.menu-ofertas button:active {
+  transform: scale(.98);
+}
+
+.menu-ofertas button.activo {
+  color: #ffffff;
+  border-color: transparent;
+  background:
+    linear-gradient(135deg, #357866 0%, #55a280 100%);
+  box-shadow: 0 7px 17px rgba(50, 125, 96, .22);
+}
+
+.menu-ofertas button.activo:hover,
+.menu-ofertas button.activo:focus-visible {
+  color: #ffffff;
+  background:
+    linear-gradient(135deg, #2e6e5d 0%, #4a9676 100%);
+}
+
+/* Tienda y Bancarios: mismo lenguaje visual que las secciones superiores */
+.navegacion-inferior {
+  gap: 7px;
+  padding: 7px;
+  border: 1px solid rgba(34, 86, 69, .13);
+  background: rgba(255, 255, 255, .96);
+}
+
+.tab-inferior {
+  min-height: 44px;
+  gap: 7px;
+  border: 1px solid rgba(34, 86, 69, .10);
+  border-radius: 12px;
+  color: #53655d;
+  background: rgba(248, 251, 249, .88);
+  font-size: 13px;
+  font-weight: 400;
+  box-shadow: 0 2px 8px rgba(31, 67, 53, .04);
+  transition:
+    color .18s ease,
+    background .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    transform .18s ease;
+}
+
+.tab-inferior strong {
+  font-weight: 400;
+}
+
+.tab-inferior::after,
+.tab-inferior.activo::after {
+  content: none !important;
+  display: none !important;
+}
+
+.tab-inferior:hover,
+.tab-inferior:focus-visible {
+  color: #226650;
+  border-color: rgba(31, 137, 99, .27);
+  background: #f1f8f4;
+  box-shadow: 0 5px 13px rgba(31, 107, 80, .09);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.tab-inferior:active {
+  transform: scale(.985);
+}
+
+.tab-inferior.activo {
+  color: #ffffff;
+  border-color: transparent;
+  background:
+    linear-gradient(135deg, #357866 0%, #55a280 100%);
+  box-shadow: 0 7px 17px rgba(50, 125, 96, .22);
+}
+
+.tab-inferior.activo:hover,
+.tab-inferior.activo:focus-visible {
+  color: #ffffff;
+  background:
+    linear-gradient(135deg, #2e6e5d 0%, #4a9676 100%);
+}
+
+/* OFERTAS DEL DÍA: precios pequeños y siempre en línea horizontal */
+.publicidad-precios {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  width: min(100%, 330px);
+  gap: 5px;
+  margin: 0 0 8px;
+}
+
+.precio-publicado-bloque,
+.precio-cupon-bloque {
+  min-width: 0;
+  padding: 5px 7px;
+  border-radius: 8px;
+}
+
+.precio-publicado-bloque span,
+.precio-cupon-bloque span {
+  margin-bottom: 1px;
+  font-size: 7.5px;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: .18px;
+}
+
+.precio-publicado-bloque strong {
+  display: block;
+  font-size: 12px;
+  line-height: 1.15;
+}
+
+.precio-cupon-bloque strong {
+  display: block;
+  font-size: 14px;
+  line-height: 1.15;
+}
+
+@media (max-width: 600px) {
+  .menu-ofertas button {
+    min-height: 35px;
+    padding: 7px 10px;
+    font-size: 11px;
+  }
+
+  .tab-inferior {
+    min-height: 42px;
+    font-size: 12px;
+  }
+
+  .tab-inferior span {
+    font-size: 17px;
+  }
+
+  .publicidad-precios {
+    width: min(100%, 265px);
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+
+  .precio-publicado-bloque,
+  .precio-cupon-bloque {
+    padding: 4px 6px;
+    border-radius: 7px;
+  }
+
+  .precio-publicado-bloque span,
+  .precio-cupon-bloque span {
+    font-size: 6.8px;
+  }
+
+  .precio-publicado-bloque strong {
+    font-size: 10.5px;
+  }
+
+  .precio-cupon-bloque strong {
+    font-size: 12.5px;
+  }
+}
+
+
+/* V63.8 — Ayuda plegable para cupones */
+.ayuda-cupones {
+  width: 100%;
+  margin: 0 0 12px;
+  overflow: hidden;
+  border: 1px solid rgba(114, 137, 52, .17);
+  border-radius: 13px;
+  background: linear-gradient(135deg, rgba(255,253,239,.98), rgba(247,251,239,.98));
+  box-shadow: 0 3px 12px rgba(76,91,41,.055);
+}
+.ayuda-cupones-toggle {
+  display: flex;
+  width: 100%;
+  min-height: 43px;
+  padding: 9px 13px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 0;
+  color: #4f5e3f;
+  background: transparent;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 400;
+  cursor: pointer;
+}
+.ayuda-cupones-toggle:hover,
+.ayuda-cupones-toggle:focus-visible {
+  background: rgba(244,248,228,.72);
+  outline: none;
+}
+.ayuda-cupones-toggle-texto {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.ayuda-cupones-icono { font-size: 16px; }
+.ayuda-cupones-flecha { color: #809064; font-size: 10px; }
+.ayuda-cupones-contenido {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .25s ease;
+}
+.ayuda-cupones-interior {
+  padding: 2px 14px 14px;
+  border-top: 1px solid rgba(114,137,52,.12);
+}
+.ayuda-cupones-interior h2 {
+  margin: 12px 0 9px;
+  color: #35462f;
+  font-size: 13px;
+  font-weight: 600;
+}
+.ayuda-cupones-pasos {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: pasos;
+}
+.ayuda-cupones-pasos li {
+  position: relative;
+  padding: 6px 8px 6px 36px;
+  border-radius: 8px;
+  color: #586456;
+  background: rgba(255,255,255,.72);
+  font-size: 10.5px;
+  line-height: 1.35;
+  counter-increment: pasos;
+}
+.ayuda-cupones-pasos li::before {
+  content: counter(pasos);
+  position: absolute;
+  top: 5px;
+  left: 7px;
+  display: inline-flex;
+  width: 21px;
+  height: 21px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(135deg, #7da15f, #9bbd72);
+  font-size: 9px;
+  font-weight: 600;
+}
+.ayuda-cupones-entendido {
+  display: block;
+  min-width: 112px;
+  min-height: 34px;
+  margin: 11px 0 0 auto;
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 9px;
+  color: #fff;
+  background: linear-gradient(135deg, #668d57, #85a96b);
+  font: inherit;
+  font-size: 10.5px;
+  cursor: pointer;
+}
+.ayuda-cupones-entendido:hover,
+.ayuda-cupones-entendido:focus-visible {
+  background: linear-gradient(135deg, #587e4c, #789c5f);
+  outline: none;
+}
+@media (max-width: 600px) {
+  .ayuda-cupones { margin-bottom: 9px; border-radius: 11px; }
+  .ayuda-cupones-toggle { min-height: 40px; padding: 8px 11px; font-size: 11.5px; }
+  .ayuda-cupones-interior { padding: 2px 10px 11px; }
+  .ayuda-cupones-interior h2 { font-size: 12px; }
+  .ayuda-cupones-pasos { gap: 5px; }
+  .ayuda-cupones-pasos li { padding: 5px 7px 5px 33px; font-size: 9.5px; }
+  .ayuda-cupones-pasos li::before { top: 4px; left: 6px; width: 20px; height: 20px; }
+  .ayuda-cupones-entendido { min-height: 32px; font-size: 10px; }
+}
+
+
+/* V63.8.2 — Tip dentro de la ayuda de cupones */
+.ayuda-cupones-tip {
+  margin: 9px 0 0;
+  padding: 8px 10px;
+  border-left: 3px solid rgba(102, 141, 87, .55);
+  border-radius: 7px;
+  color: #566253;
+  background: rgba(255, 255, 255, .72);
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.ayuda-cupones-tip strong {
+  color: #40533b;
+}
+
+@media (max-width: 600px) {
+  .ayuda-cupones-tip {
+    padding: 7px 9px;
+    font-size: 9.2px;
+  }
+}
+
+
+/* V63.9.1 — Alineación del menú y ayuda de cupones más compacta */
+
+/* Alinear el inicio de las secciones con el contenido principal */
+.menu-ofertas-contenedor {
+  padding-left: 0 !important;
+  padding-right: 30px !important;
+}
+
+.menu-ofertas {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  scroll-padding-left: 0 !important;
+}
+
+.menu-ofertas button:first-child {
+  margin-left: 0 !important;
+}
+
+/* Ajustar degradado y flecha izquierda para la nueva alineación */
+.menu-ofertas-contenedor::before {
+  left: 0 !important;
+}
+
+.menu-ofertas-flecha-anterior {
+  left: 0 !important;
+}
+
+/* Compactar la barra plegable sin cambiar textos ni funcionalidad */
+.ayuda-cupones {
+  margin-top: 0 !important;
+  margin-bottom: 7px !important;
+}
+
+.ayuda-cupones-toggle {
+  min-height: 36px !important;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
+
+.ayuda-cupones-interior {
+  padding-top: 0 !important;
+  padding-bottom: 9px !important;
+}
+
+.ayuda-cupones-pasos {
+  gap: 4px !important;
+}
+
+.ayuda-cupones-pasos li {
+  min-height: 0 !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+
+.ayuda-cupones-tip {
+  margin-top: 6px !important;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
+
+.ayuda-cupones-entendido {
+  margin-top: 7px !important;
+  min-height: 30px !important;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+}
+
+@media (max-width: 600px) {
+  .menu-ofertas-contenedor {
+    padding-left: 0 !important;
+    padding-right: 28px !important;
+  }
+
+  .ayuda-cupones {
+    margin-bottom: 6px !important;
+  }
+
+  .ayuda-cupones-toggle {
+    min-height: 34px !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+  }
+
+  .ayuda-cupones-interior {
+    padding-top: 0 !important;
+    padding-bottom: 8px !important;
+  }
+
+  .ayuda-cupones-pasos {
+    gap: 3px !important;
+  }
+
+  .ayuda-cupones-tip {
+    margin-top: 5px !important;
+  }
+
+  .ayuda-cupones-entendido {
+    margin-top: 6px !important;
+    min-height: 29px !important;
+  }
+}
+
+
+/* V64.5 — Etiquetas Nuevo, Popular y Top */
+.cupon-etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 22px;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 5px;
+}
+
+.etiqueta-cupon {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 20px;
+  padding: 3px 8px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 3px 8px rgba(29, 45, 38, .10);
+}
+
+.etiqueta-nuevo {
+  color: #ffffff;
+  background: linear-gradient(135deg, #08b984, #22c99a);
+}
+
+.etiqueta-top {
+  color: #ffffff;
+  background: linear-gradient(135deg, #7c4fe7, #a36bf2);
+}
+
+.etiqueta-popular-integrada {
+  color: #ffffff;
+  background: linear-gradient(135deg, #f08a32, #f5aa42);
+}
+
+.cupon-nuevo {
+  border-color: rgba(21, 184, 132, .25);
+}
+
+.cupon-top {
+  border-color: rgba(127, 79, 231, .25);
+}
+
+.cupon-popular {
+  border-color: rgba(240, 138, 50, .25);
+}
+
+@media (max-width: 600px) {
+  .cupon-etiquetas {
+    min-height: 19px;
+    margin-bottom: 4px;
+  }
+
+  .etiqueta-cupon {
+    min-height: 18px;
+    padding: 3px 7px;
+    font-size: 8px;
+  }
+}
+
+
+/* V65.0 — Contadores tipo notificación en las secciones */
+.contador-seccion {
+  display: inline-flex;
+  flex: 0 0 auto;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, .95);
+  border-radius: 999px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #ef6b57, #e84e67);
+  box-shadow: 0 3px 8px rgba(145, 45, 58, .22);
+  font-size: 8.5px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.contador-seccion[hidden] {
+  display: none !important;
+}
+
+.menu-ofertas button .contador-seccion {
+  margin-left: 1px;
+}
+
+.menu-ofertas button.activo .contador-seccion {
+  border-color: rgba(255, 255, 255, .92);
+  background: linear-gradient(135deg, #ff8a64, #f15d75);
+}
+
+.contador-seccion-inferior {
+  margin-left: 2px;
+}
+
+.tab-inferior .contador-seccion {
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  font-size: 8px;
+}
+
+@media (max-width: 600px) {
+  .contador-seccion {
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-width: 1.5px;
+    font-size: 7.5px;
+  }
+
+  .tab-inferior .contador-seccion {
+    min-width: 18px;
+    height: 18px;
+  }
+}
+
+
+/* V66.0 — Ajuste definitivo del espacio sobre “¿Cómo usar los cupones?” */
+.encabezado {
+  padding-bottom: 0 !important;
+}
+
+.menu-ofertas-contenedor {
+  margin-bottom: 0 !important;
+}
+
+.menu-ofertas-indicador {
+  bottom: 0 !important;
+}
+
+.contenedor {
+  margin-top: 4px !important;
+}
+
+#vista-cupones {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+#vista-cupones > .ayuda-cupones:first-child {
+  margin-top: 0 !important;
+}
+
+@media (max-width: 600px) {
+  .encabezado {
+    padding-bottom: 0 !important;
+  }
+
+  .contenedor {
+    margin-top: 3px !important;
+  }
+}
+
+
+/* V66.6 — Accesos de compra dentro de Comunidad Anirona */
+.tarjeta-canal-anirona {
+  grid-template-columns:
+    minmax(110px, 180px)
+    minmax(270px, 1fr)
+    minmax(250px, 360px);
+}
+
+.canal-anirona-accesos {
+  display: grid;
+  gap: 7px;
+  align-self: stretch;
+  padding: 12px;
+  border: 1px solid rgba(22, 133, 68, .10);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .66);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .55);
+}
+
+.canal-anirona-accesos-titulo {
+  padding: 1px 3px 3px;
+  color: #718078;
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.canal-anirona-accesos a {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) 15px;
+  min-height: 47px;
+  padding: 7px 8px;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(26, 103, 57, .10);
+  border-radius: 10px;
+  color: #294538;
+  background: rgba(255, 255, 255, .86);
+  text-decoration: none;
+  transition:
+    border-color .16s ease,
+    background .16s ease,
+    box-shadow .16s ease,
+    transform .16s ease;
+}
+
+.canal-anirona-accesos a:hover,
+.canal-anirona-accesos a:focus-visible {
+  border-color: rgba(22, 133, 68, .28);
+  background: #ffffff;
+  box-shadow: 0 5px 13px rgba(28, 92, 52, .08);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.canal-anirona-acceso-icono {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: #edf8f0;
+  font-size: 13px;
+}
+
+.canal-anirona-accesos a > span:nth-child(2) {
+  min-width: 0;
+}
+
+.canal-anirona-accesos strong,
+.canal-anirona-accesos small {
+  display: block;
+}
+
+.canal-anirona-accesos strong {
+  overflow: hidden;
+  color: #294538;
+  font-size: 10px;
+  font-weight: 550;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.canal-anirona-accesos small {
+  margin-top: 2px;
+  color: #78877f;
+  font-size: 8px;
+  line-height: 1.2;
+}
+
+.canal-anirona-acceso-flecha {
+  color: #72a083;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+@media (max-width: 900px) {
+  .tarjeta-canal-anirona {
+    grid-template-columns: 100px minmax(0, 1fr);
+  }
+
+  .canal-anirona-accesos {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding: 9px;
+  }
+
+  .canal-anirona-accesos-titulo {
+    grid-column: 1 / -1;
+  }
+
+  .canal-anirona-accesos a {
+    grid-template-columns: 24px minmax(0, 1fr);
+    min-height: 43px;
+    padding: 6px 7px;
+  }
+
+  .canal-anirona-acceso-icono {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+  }
+
+  .canal-anirona-acceso-flecha {
+    display: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .tarjeta-canal-anirona {
+    grid-template-columns: 70px minmax(0, 1fr);
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .canal-anirona-accesos {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    margin-top: 1px;
+    padding: 7px;
+    border-radius: 11px;
+  }
+
+  .canal-anirona-accesos-titulo {
+    padding: 1px 3px 2px;
+    font-size: 7.5px;
+  }
+
+  .canal-anirona-accesos a {
+    grid-template-columns: 26px minmax(0, 1fr) 12px;
+    min-height: 39px;
+    padding: 5px 7px;
+    border-radius: 9px;
+  }
+
+  .canal-anirona-acceso-icono {
+    width: 26px;
+    height: 26px;
+    font-size: 11px;
+  }
+
+  .canal-anirona-accesos strong {
+    font-size: 9px;
+  }
+
+  .canal-anirona-accesos small {
+    font-size: 7.5px;
+  }
+
+  .canal-anirona-acceso-flecha {
+    display: inline;
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 370px) {
+  .tarjeta-canal-anirona {
+    grid-template-columns: 1fr;
+  }
+
+  .canal-anirona-accesos a {
+    text-align: left;
+  }
+}
+
+
+/* V67.0 — Logo opcional en tarjetas de cupones */
+.cupon-encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+.cupon-logo {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  padding: 3px;
+  border: 2px solid rgba(255, 255, 255, .88);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .96);
+  object-fit: contain;
+  box-shadow: 0 3px 9px rgba(23, 44, 62, .14);
+}
+
+.cupon-logo + .descuento {
+  text-align: left;
+}
+
+@media (max-width: 600px) {
+  .cupon-encabezado {
+    gap: 6px;
+  }
+
+  .cupon-logo {
+    width: 27px;
+    height: 27px;
+    padding: 2px;
+    border-width: 1.5px;
+  }
+}
+
+/* ============================================================
+   TARJETAS Y NAVEGACIÓN
+   Origen consolidado: css/coupons.css
+   ============================================================ */
+/* =========================================================
+   V40 — Tarjetas compactas, popular integrado y Me gusta
+   ========================================================= */
+
+.whatsapp-icono svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+.popular-wrapper,
+.popular-titulo,
+.subtitulo-lista {
+  display: none !important;
+}
+
+.cupones-grid-compacta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.cupon {
+  --tono-1: #6858eb;
+  --tono-2: #4e3ddd;
+  --tono-suave: #f1efff;
+
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 350px;
+  overflow: hidden;
+  border: 2px solid color-mix(in srgb, var(--tono-1) 28%, white);
+  border-radius: 22px;
+  background: white;
+  box-shadow: 0 8px 24px rgba(40, 52, 72, 0.08);
+  animation: aparecer-cupon 0.22s ease-out;
+}
+
+.cupon[data-color="azul"] {
+  --tono-1: #3487e9;
+  --tono-2: #2464c3;
+  --tono-suave: #edf5ff;
+}
+
+.cupon[data-color="morado"] {
+  --tono-1: #8b5ce6;
+  --tono-2: #6840be;
+  --tono-suave: #f4efff;
+}
+
+.cupon[data-color="coral"] {
+  --tono-1: #f47763;
+  --tono-2: #ce5745;
+  --tono-suave: #fff0ed;
+}
+
+.cupon[data-color="oliva"] {
+  --tono-1: #78945f;
+  --tono-2: #56723f;
+  --tono-suave: #eff5eb;
+}
+
+.cupon.popular {
+  --tono-1: #6858eb;
+  --tono-2: #4e3ddd;
+  --tono-suave: #f1efff;
+  border-color: #436fd5;
+}
+
+.cupon-encabezado {
+  position: relative;
+  display: block;
+  min-height: 108px;
+  padding: 20px 22px;
+  color: white;
+  background: linear-gradient(135deg, var(--tono-2), var(--tono-1));
+}
+
+.cupon-encabezado::after {
+  content: "";
+  position: absolute;
+  width: 145px;
+  height: 145px;
+  top: -65px;
+  right: -48px;
+  border-radius: 45%;
+  background: rgba(255, 255, 255, 0.09);
+  transform: rotate(22deg);
+}
+
+.descuento {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: clamp(31px, 4vw, 42px);
+  line-height: 1;
+}
+
+.subtitulo {
+  position: relative;
+  z-index: 1;
+  margin: 5px 0 0;
+  font-size: 17px;
+  font-weight: 500;
+  text-transform: lowercase;
+}
+
+.etiqueta-popular {
+  display: none;
+}
+
+.cupon-contenido {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 20px 17px;
+}
+
+.cupon-etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  min-height: 31px;
+}
+
+.etiqueta-popular-integrada {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  padding: 6px 11px;
+  border-radius: 999px;
+  color: white;
+  background: linear-gradient(135deg, #f6a900, #ef8d00);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.descuento-maximo {
+  margin: 0;
+  color: #27332d;
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.descuento-maximo strong {
+  font-weight: 800;
+}
+
+.compra-minima {
+  width: fit-content;
+  margin: 0;
+  padding: 7px 10px;
+  border-radius: 9px;
+  color: #313a35;
+  background: #fff5bf;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.cupon-usado {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 12px;
+  border: 1px solid #9bdcc9;
+  border-radius: 999px;
+  color: #087a63;
+  background: #edfff8;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.cupon-usado[hidden] {
+  display: none;
+}
+
+.acciones-bloque {
+  margin-top: auto;
+}
+
+.acciones-cupon {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 9px;
+}
+
+.boton-canjear {
+  width: 100%;
+  padding: 13px 12px;
+  border: 0;
+  border-radius: 15px;
+  color: #292d2b;
+  background: linear-gradient(135deg, #ffc530, #ffb916);
+  box-shadow: 0 5px 13px rgba(234, 160, 0, 0.19);
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.boton-canjear:hover {
+  filter: brightness(1.02);
+}
+
+.acciones-secundarias {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.boton-like,
+.boton-compartir {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 43px;
+  min-height: 39px;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 999px;
+  background: #f4f7f6;
+  color: #62716a;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.boton-like svg,
+.boton-compartir svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.boton-like.activo {
+  color: white;
+  background: #20b777;
+}
+
+.boton-like.activo svg {
+  fill: white;
+}
+
+.boton-compartir {
+  color: white;
+  background: #25bd75;
+}
+
+.estadisticas-cupon {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-left: auto;
+  color: #6e7c75;
+  font-size: 13px;
+}
+
+.estadistica-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.estadistica-item svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.estadistica-likes {
+  color: #18a777;
+}
+
+.estadistica-usos {
+  color: #4872b9;
+}
+
+.mensaje {
+  min-height: 0;
+  margin: 7px 0 0;
+  font-size: 11px;
+}
+
+/* Publicidad: ocultar correctamente elementos sin cupón */
+.precio-cupon-bloque[hidden],
+.publicidad-aviso-cupon[hidden],
+.precio-publicado-bloque[hidden] {
+  display: none !important;
+}
+
+footer {
+  display: none;
+}
+
+/* Más compacto en general */
+.contenedor {
+  margin-top: 16px;
+}
+
+.instruccion-cupones {
+  margin-bottom: 14px;
+  padding: 10px 13px;
+}
+
+.titulo-fila {
+  margin-bottom: 9px;
+}
+
+.aviso-inferior {
+  margin-top: 18px;
+}
+
+@media (min-width: 1050px) {
+  .cupones-grid-compacta {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .cupon {
+    min-height: 355px;
+  }
+}
+
+@media (max-width: 680px) {
+  .cupones-grid-compacta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .cupon {
+    min-height: 325px;
+    border-radius: 17px;
+  }
+
+  .cupon-encabezado {
+    min-height: 91px;
+    padding: 16px 14px;
+  }
+
+  .descuento {
+    font-size: clamp(25px, 8vw, 34px);
+  }
+
+  .subtitulo {
+    font-size: 14px;
+  }
+
+  .cupon-contenido {
+    gap: 9px;
+    padding: 13px 12px 12px;
+  }
+
+  .etiqueta-popular-integrada {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+
+  .descuento-maximo {
+    font-size: 14px;
+  }
+
+  .compra-minima {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .cupon-usado {
+    padding: 8px 9px;
+    font-size: 11px;
+  }
+
+  .boton-canjear {
+    padding: 11px 8px;
+    font-size: 13px;
+  }
+
+  .acciones-secundarias {
+    gap: 4px;
+  }
+
+  .boton-like,
+  .boton-compartir {
+    min-width: 36px;
+    min-height: 35px;
+    padding: 6px 8px;
+  }
+
+  .estadisticas-cupon {
+    gap: 6px;
+    font-size: 11px;
+  }
+
+  .estadistica-item svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+@media (max-width: 390px) {
+  .cupones-grid-compacta {
+    grid-template-columns: 1fr;
+  }
+
+  .cupon {
+    min-height: 315px;
+  }
+}
+
+
+/* V41 */
+.encabezado {
+  padding: 6px 14px 12px;
+}
+
+.logo {
+  width: min(270px, 72vw);
+  margin: 0 auto 5px;
+  transform: translateY(-2px);
+}
+
+.encabezado > p {
+  margin-top: 5px;
+  font-size: 12px;
+}
+
+.barra-redes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin: 0 auto 4px;
+}
+
+.red-social {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.red-whatsapp {
+  color: #176a39;
+  border: 1px solid rgba(37, 211, 102, 0.24);
+  background: #f1fff6;
+}
+
+.red-facebook {
+  color: #1b5cb6;
+  border: 1px solid rgba(24, 119, 242, 0.22);
+  background: #f2f7ff;
+}
+
+.red-icono {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+}
+
+.red-whatsapp .red-icono {
+  color: white;
+  background: #25d366;
+}
+
+.red-facebook .red-icono {
+  color: white;
+  background: #1877f2;
+}
+
+.red-icono svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+}
+
+.icono-informativo {
+  flex: 0 0 auto;
+  font-size: 18px;
+}
+
+.titulo-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row !important;
+  gap: 10px;
+}
+
+.actualizacion {
+  margin-left: auto;
+}
+
+#contador-actualizacion {
+  display: none !important;
+}
+
+.boton-recargar {
+  padding: 7px 10px;
+  white-space: nowrap;
+}
+
+.cupon-encabezado {
+  min-height: 76px;
+  padding: 15px 16px 12px;
+}
+
+.subtitulo {
+  display: none !important;
+}
+
+.cupon-etiquetas {
+  min-height: 0;
+}
+
+.cupon-etiquetas:empty {
+  display: none;
+}
+
+.cupon-contenido {
+  padding-top: 12px;
+}
+
+.publicidad-cabecera > span {
+  color: #52665e;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.9px;
+}
+
+@media (max-width: 680px) {
+  .cupones-grid-compacta {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px;
+  }
+
+  .cupon {
+    min-height: 286px;
+    border-radius: 15px;
+  }
+
+  .cupon-encabezado {
+    min-height: 66px;
+    padding: 13px 11px 10px;
+  }
+
+  .descuento {
+    font-size: clamp(22px, 7vw, 30px);
+  }
+
+  .cupon-contenido {
+    gap: 7px;
+    padding: 10px 9px 9px;
+  }
+
+  .cupon-etiquetas {
+    min-height: 0;
+  }
+
+  .etiqueta-popular-integrada {
+    padding: 4px 7px;
+    font-size: 10px;
+  }
+
+  .descuento-maximo {
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  .compra-minima {
+    padding: 5px 7px;
+    font-size: 10px;
+  }
+
+  .cupon-usado {
+    padding: 7px;
+    font-size: 10px;
+  }
+
+  .boton-canjear {
+    padding: 10px 6px;
+    border-radius: 12px;
+    font-size: 11px;
+  }
+
+  .boton-like,
+  .boton-compartir {
+    min-width: 31px;
+    min-height: 31px;
+    padding: 5px 6px;
+  }
+
+  .boton-like svg,
+  .boton-compartir svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .estadisticas-cupon {
+    gap: 4px;
+    font-size: 9px;
+  }
+
+  .estadistica-item svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .titulo-seccion {
+    font-size: 19px;
+  }
+
+  .boton-recargar {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+
+  .instruccion-cupones {
+    padding: 9px 10px;
+    font-size: 11px;
+  }
+
+  .red-social {
+    min-height: 31px;
+    padding: 5px 9px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 390px) {
+  .cupones-grid-compacta {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 7px;
+  }
+
+  .cupon {
+    min-height: 278px;
+  }
+
+  .descuento {
+    font-size: 22px;
+  }
+
+  .descuento-maximo {
+    font-size: 11px;
+  }
+
+  .compra-minima {
+    font-size: 9px;
+  }
+
+  .boton-canjear {
+    font-size: 10px;
+  }
+
+  .estadisticas-cupon {
+    font-size: 8px;
+  }
+}
+
+
+/* =========================================================
+   V42 — Ajustes finos de compactación y OFERTAS DEL DÍA
+   ========================================================= */
+
+/* 1. Más espacio para el título y botón bien a la derecha */
+.titulo-fila {
+  width: 100%;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.titulo-seccion {
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.actualizacion {
+  justify-self: end;
+  margin-left: 0;
+}
+
+.boton-recargar {
+  flex: 0 0 auto;
+}
+
+/* 2 y 3. Encabezado y tarjeta más compactos */
+.cupon {
+  min-height: 0 !important;
+}
+
+.cupon-encabezado {
+  display: flex;
+  align-items: center;
+  min-height: 58px !important;
+  padding: 11px 14px !important;
+}
+
+.descuento {
+  line-height: 1 !important;
+  margin: 0 !important;
+}
+
+.cupon-contenido {
+  gap: 6px !important;
+  padding: 9px 10px 10px !important;
+}
+
+.cupon-etiquetas {
+  margin: 0 !important;
+}
+
+.descuento-maximo,
+.compra-minima,
+.cupon-usado,
+.mensaje,
+.acciones-secundarias {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.acciones-bloque {
+  margin-top: 5px !important;
+}
+
+.acciones-secundarias {
+  margin-top: 7px !important;
+}
+
+/* 4. Recuperar apariencia tipográfica sobria de PUBLICIDAD */
+.publicidad-cabecera > span {
+  color: #8a9992 !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.7px !important;
+  text-transform: uppercase !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+
+/* 5. Solo tachar el publicado cuando exista precio con cupón */
+.publicidad-precios.sin-precio-cupon .precio-publicado-bloque strong {
+  text-decoration: none !important;
+  color: #27332d !important;
+  font-size: 18px !important;
+}
+
+.publicidad-precios.con-precio-cupon .precio-publicado-bloque strong {
+  text-decoration: line-through !important;
+  text-decoration-thickness: 1px !important;
+}
+
+/* Ajustes móviles */
+@media (max-width: 680px) {
+  .titulo-fila {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    gap: 6px !important;
+  }
+
+  .titulo-seccion {
+    font-size: 17px !important;
+    white-space: normal;
+  }
+
+  .boton-recargar {
+    padding: 6px 7px !important;
+    font-size: 10px !important;
+  }
+
+  .cupon {
+    min-height: 0 !important;
+  }
+
+  .cupon-encabezado {
+    min-height: 52px !important;
+    padding: 9px 10px !important;
+  }
+
+  .descuento {
+    font-size: 21px !important;
+  }
+
+  .cupon-contenido {
+    gap: 5px !important;
+    padding: 8px 8px 9px !important;
+  }
+
+  .descuento-maximo {
+    font-size: 11px !important;
+  }
+
+  .compra-minima {
+    padding: 5px 6px !important;
+  }
+
+  .acciones-bloque {
+    margin-top: 3px !important;
+  }
+
+  .acciones-secundarias {
+    margin-top: 6px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .titulo-seccion {
+    font-size: 16px !important;
+  }
+
+  .boton-recargar {
+    font-size: 9px !important;
+    padding: 5px 6px !important;
+  }
+
+  .cupon-encabezado {
+    min-height: 48px !important;
+  }
+
+  .descuento {
+    font-size: 19px !important;
+  }
+}
+
+
+/* =========================================================
+   V43 — Botones Copiar y Canjear alineados
+   ========================================================= */
+
+/*
+  La tarjeta se divide en:
+  - contenido variable en la parte superior
+  - acciones fijas en la parte inferior
+*/
+.cupon {
+  height: 100%;
+}
+
+.cupon-contenido {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100%;
+}
+
+/* Zona variable: etiquetas, descuento, mínimo y estado usado */
+.cupon-etiquetas,
+.descuento-maximo,
+.compra-minima,
+.cupon-usado {
+  flex: 0 0 auto;
+}
+
+/*
+  Este bloque baja automáticamente hasta el fondo.
+  Así el botón queda alineado en todas las tarjetas.
+*/
+.acciones-bloque {
+  margin-top: auto !important;
+  padding-top: 8px;
+}
+
+/*
+  Mantiene una altura mínima equilibrada para la parte variable.
+  Evita que Popular o Ya usaste este cupón cambien la posición del botón.
+*/
+.cupon-contenido::before {
+  content: "";
+  display: block;
+  order: -1;
+  height: 0;
+}
+
+/* Alineación por fila en la cuadrícula */
+.cupones-grid-compacta {
+  align-items: stretch;
+}
+
+.cupones-grid-compacta > .cupon {
+  align-self: stretch;
+}
+
+/* Móvil: conservar alineación sin agrandar demasiado */
+@media (max-width: 680px) {
+  .acciones-bloque {
+    padding-top: 6px;
+  }
+
+  .cupon {
+    height: 100%;
+  }
+
+  .cupon-contenido {
+    min-height: 210px;
+  }
+}
+
+@media (max-width: 390px) {
+  .cupon-contenido {
+    min-height: 202px;
+  }
+}
+
+
+/* Conserva la imagen opcional agregada hoy */
+.cupon-encabezado {
+  gap: 8px;
+}
+
+.cupon-logo {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  padding: 2px;
+  border: 1px solid rgba(255, 255, 255, .82);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .95);
+  object-fit: contain;
+  object-position: center;
+  box-sizing: border-box;
+}
+
+@media (max-width: 680px) {
+  .cupon-logo {
+    width: 30px;
+    height: 30px;
+    flex-basis: 30px;
+  }
+}
+
+/* ============================================================
+   PROGRAMACIÓN Y ESTADOS
+   Origen consolidado: css/schedule.css
+   ============================================================ */
+/* =========================================================
+   V50 — Programación automática y estados temporales
+   ========================================================= */
+
+.estado-programacion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 9px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.estado-programacion[hidden] {
+  display: none;
+}
+
+.estado-programacion.programado {
+  color: #795600;
+  border: 1px solid #efd27a;
+  background: #fff8d9;
+}
+
+.estado-programacion.activo {
+  color: #08765f;
+  border: 1px solid #a9dfcf;
+  background: #eefff9;
+}
+
+.estado-programacion.finaliza-pronto {
+  color: #a44322;
+  border: 1px solid #f2b49d;
+  background: #fff1eb;
+}
+
+.boton-canjear:disabled.boton-programado {
+  color: #6c6652;
+  border: 1px solid #ded4a0;
+  background: #f7f2d7;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.fecha-programacion-admin {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+  color: #5c6c65;
+  font-size: 11px;
+}
+
+@media (max-width: 680px) {
+  .estado-programacion {
+    padding: 6px;
+    font-size: 9px;
+  }
+}
+
+
+/* =========================================================
+   V51 — Franja inferior elegante con cuenta regresiva
+   ========================================================= */
+
+.estado-programacion {
+  order: 99;
+  width: 100%;
+  margin-top: 10px !important;
+  padding: 10px 0 0 !important;
+  border: 0 !important;
+  border-top: 1px dashed #c8d3ce !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #52625a;
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.estado-programacion[hidden] {
+  display: none !important;
+}
+
+.estado-programacion .estado-linea {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 7px;
+  white-space: nowrap;
+}
+
+.estado-programacion .estado-tiempo {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.2px;
+}
+
+.estado-programacion.programado {
+  color: #7b5900;
+}
+
+.estado-programacion.activo {
+  color: #16815d;
+}
+
+.estado-programacion.finaliza-pronto {
+  color: #d06b22;
+}
+
+.estado-programacion.ultimos-minutos {
+  color: #c5382e;
+}
+
+.estado-progreso {
+  width: 100%;
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e8eeeb;
+}
+
+.estado-progreso-barra {
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+  background: #22a875;
+  transform-origin: left center;
+  transition:
+    width 1s linear,
+    background 0.25s ease;
+}
+
+.estado-programacion.programado .estado-progreso-barra {
+  background: #d9a300;
+}
+
+.estado-programacion.finaliza-pronto .estado-progreso-barra {
+  background: #ec8a31;
+}
+
+.estado-programacion.ultimos-minutos .estado-progreso-barra {
+  background: #d94236;
+}
+
+@media (max-width: 680px) {
+  .estado-programacion {
+    margin-top: 8px !important;
+    padding-top: 8px !important;
+    font-size: 10px;
+  }
+
+  .estado-programacion .estado-linea {
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+
+  .estado-progreso {
+    height: 4px;
+  }
+}
+
+
+/* =========================================================
+   V52 — Contador limpio, sin iconos ni barra
+   ========================================================= */
+
+.estado-programacion {
+  font-weight: 400 !important;
+}
+
+.estado-programacion .estado-linea {
+  margin-bottom: 0 !important;
+  gap: 4px;
+}
+
+.estado-programacion .estado-tiempo {
+  font-weight: 400 !important;
+}
+
+.estado-progreso,
+.estado-progreso-barra {
+  display: none !important;
+}
+
+
+/* =========================================================
+   V53 — Tarjetas uniformes con espacios reservados
+   ========================================================= */
+
+/*
+  Reserva permanente para la etiqueta Popular.
+  Cuando no existe, conserva la altura sin mostrar contenido.
+*/
+.cupon-etiquetas {
+  display: flex !important;
+  align-items: center;
+  min-height: 28px !important;
+}
+
+.cupon-etiquetas:empty {
+  display: flex !important;
+}
+
+/*
+  Reserva permanente para “Ya usaste este cupón”.
+  Cuando está oculto conserva el espacio, pero no es visible.
+*/
+.cupon-usado[hidden] {
+  display: flex !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/*
+  La franja de programación siempre se conserva.
+  Sin fecha de fin muestra únicamente la línea punteada.
+*/
+.estado-programacion {
+  display: block !important;
+  min-height: 22px;
+  margin-top: 8px !important;
+  padding-top: 8px !important;
+}
+
+.estado-programacion[hidden],
+.estado-programacion.vacio {
+  display: block !important;
+  visibility: visible;
+  color: transparent !important;
+}
+
+.estado-programacion.vacio .estado-linea {
+  display: none !important;
+}
+
+@media (max-width: 680px) {
+  .cupon-etiquetas {
+    min-height: 24px !important;
+  }
+
+  .cupon-usado {
+    min-height: 30px;
+  }
+
+  .estado-programacion {
+    min-height: 18px;
+    margin-top: 7px !important;
+    padding-top: 7px !important;
+  }
+}
+
+/* ============================================================
+   CABECERA BASE
+   Origen consolidado: css/header.css
+   ============================================================ */
+/* Cabecera y redes */
+.encabezado {
+  position: relative;
+  overflow: hidden;
+  padding: 7px 14px 12px;
+  background:
+    radial-gradient(circle at 20% 12%, rgba(27, 162, 107, 0.11), transparent 32%),
+    radial-gradient(circle at 78% 8%, rgba(37, 99, 235, 0.08), transparent 30%),
+    linear-gradient(135deg, #fbfffc 0%, #f6fbf8 52%, #fbfdff 100%);
+}
+
+
+
+.logo,
+.barra-redes,
+.encabezado > p {
+  position: relative;
+  z-index: 1;
+}
+
+.logo {
+  width: min(250px, 68vw);
+  margin-bottom: 2px;
+}
+
+.barra-redes-lineal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  margin: 0 auto;
+  min-height: 32px;
+}
+
+.barra-redes-lineal .red-social {
+  min-height: auto;
+  padding: 3px 2px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: 12px;
+}
+
+.barra-redes-lineal .red-whatsapp {
+  color: #166b3a;
+}
+
+.barra-redes-lineal .red-facebook {
+  color: #205ca8;
+}
+
+.barra-redes-lineal .red-icono {
+  width: 26px;
+  height: 26px;
+}
+
+.barra-redes-lineal .red-icono svg {
+  width: 18px;
+  height: 18px;
+}
+
+.separador-redes {
+  width: 1px;
+  height: 23px;
+  background: #c9d1cd;
+}
+
+
+@media (max-width: 480px) {
+  .encabezado {
+    padding: 5px 8px 10px;
+  }
+
+  .logo {
+    width: min(225px, 65vw);
+  }
+}
+
+
+/* V60.3 — Cabecera blanca y compacta */
+.encabezado {
+  background: #ffffff !important;
+}
+
+.encabezado::before,
+.encabezado::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Evita el espacio que dejó el subtítulo eliminado */
+.logo {
+  margin-bottom: 2px !important;
+}
+
+.barra-redes-lineal {
+  margin-top: 0 !important;
+}
+
+
+/* V60.4 */
+.barra-redes-lineal .red-social span{
+  font-weight:400!important;
+}
+
+
+/* Menú horizontal de secciones de ofertas — V61.5 */
+.menu-ofertas {
+  display: flex;
+  justify-content: center;
+  gap: 9px;
+  width: min(900px, calc(100% - 24px));
+  margin: 10px auto 0;
+  padding: 3px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.menu-ofertas::-webkit-scrollbar { display: none; }
+
+.menu-ofertas button {
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 39px;
+  padding: 8px 14px;
+  border: 1px solid rgba(37, 63, 54, .12);
+  border-radius: 13px;
+  color: #3f514a;
+  background: rgba(255, 255, 255, .92);
+  box-shadow: 0 3px 12px rgba(28, 61, 47, .055);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 400;
+  letter-spacing: .005em;
+  white-space: nowrap;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    color .18s ease,
+    background .18s ease,
+    box-shadow .18s ease;
+}
+
+.menu-ofertas button::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: #15936a;
+  transform: translateX(-50%);
+  transition: width .2s ease;
+}
+
+.menu-ofertas button:hover,
+.menu-ofertas button:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(21, 147, 106, .30);
+  color: #185f4b;
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(28, 61, 47, .10);
+  outline: none;
+}
+
+.menu-ofertas button:hover::after,
+.menu-ofertas button:focus-visible::after,
+.menu-ofertas button.activo::after {
+  width: calc(100% - 26px);
+}
+
+.menu-ofertas button:active {
+  transform: translateY(0) scale(.98);
+  box-shadow: 0 3px 9px rgba(28, 61, 47, .08);
+}
+
+.menu-ofertas button.activo {
+  color: #0d6655;
+  border-color: rgba(21, 147, 106, .28);
+  background: linear-gradient(180deg, #ffffff 0%, #edf9f4 100%);
+  box-shadow: 0 6px 18px rgba(21, 147, 106, .10);
+}
+
+.menu-ofertas-logo {
+  display: block;
+  width: auto;
+  height: 17px;
+  max-width: 31px;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+.menu-ofertas-logo.logo-amazon { height: 15px; max-width: 34px; }
+.menu-ofertas-logo.logo-anirona { height: 16px; max-width: 35px; }
+
+@media (max-width: 600px) {
+  .menu-ofertas {
+    justify-content: flex-start;
+    width: 100%;
+    padding: 3px 12px 5px;
+  }
+
+  .menu-ofertas button {
+    min-height: 36px;
+    padding: 7px 11px;
+    font-size: 11.5px;
+  }
+
+  .menu-ofertas-logo {
+    height: 15px;
+    max-width: 28px;
+  }
+
+  .menu-ofertas-logo.logo-amazon { height: 13px; max-width: 30px; }
+  .menu-ofertas-logo.logo-anirona { height: 14px; max-width: 31px; }
+}
+
+/* ============================================================
+   V71.8 — FONDO GENERAL BLANCO
+   Único cambio visual: unifica el fondo de toda la página con la cabecera.
+   ============================================================ */
+:root {
+  --fondo: #ffffff;
+}
+
+body {
+  background: #ffffff !important;
+  background-image: none !important;
+}
+
+
+/* V72.0 — Número negro únicamente en los contadores inferiores de Tienda y Bancarios */
+.tab-inferior .contador-seccion {
+  color: #000000;
+}
+
+/* ============================================================
+   V72.1 — Colores y logos de marca en botones principales
+   Conserva dimensiones, posición y comportamiento de los botones.
+   ============================================================ */
+.menu-ofertas .boton-principal-marca {
+  --boton-marca-fondo: #ffffff;
+  --boton-marca-texto: #1f2937;
+}
+
+.menu-ofertas .boton-marca-mercado-libre {
+  --boton-marca-fondo: #ffe600;
+  --boton-marca-texto: #24356b;
+}
+
+.menu-ofertas .boton-marca-amazon {
+  --boton-marca-fondo: #232f3e;
+  --boton-marca-texto: #ffffff;
+}
+
+.menu-ofertas .boton-principal-marca[data-estilo-color="marca"],
+.menu-ofertas .boton-principal-marca[data-estilo-color="marca"]:hover,
+.menu-ofertas .boton-principal-marca[data-estilo-color="marca"]:focus-visible,
+.menu-ofertas .boton-principal-marca[data-estilo-color="marca"].activo {
+  background: var(--boton-marca-fondo);
+  color: var(--boton-marca-texto);
+}
+
+.menu-ofertas .boton-principal-marca[data-estilo-color="barra"],
+.menu-ofertas .boton-principal-marca[data-estilo-color="barra"]:hover,
+.menu-ofertas .boton-principal-marca[data-estilo-color="barra"]:focus-visible,
+.menu-ofertas .boton-principal-marca[data-estilo-color="barra"].activo {
+  background: linear-gradient(135deg, var(--tema-color-inicio, #e9cdff), var(--tema-color-fin, #fae8fa));
+  color: #24312c;
+}
+
+.menu-ofertas .boton-principal-marca::after {
+  background: currentColor;
+  opacity: .55;
+}
+
+.menu-ofertas .boton-principal-marca .menu-ofertas-logo {
+  height: 24px;
+  max-width: 84px;
+  border-radius: 3px;
+}
+
+.menu-ofertas .boton-principal-marca .menu-ofertas-logo.logo-amazon {
+  height: 24px;
+  max-width: 84px;
+}
+
+@media (max-width: 600px) {
+  .menu-ofertas .boton-principal-marca .menu-ofertas-logo,
+  .menu-ofertas .boton-principal-marca .menu-ofertas-logo.logo-amazon {
+    height: 21px;
+    max-width: 72px;
+  }
+}
+
+/* =========================================================
+   V73.1 — Tarjetas de cupones más compactas en móvil
+   Cambio exclusivamente visual: no altera contenido ni lógica.
+   Objetivo: reducir altura y mantener dos columnas visibles.
+   ========================================================= */
+@media (max-width: 680px) {
+  .cupones-grid-compacta {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  .cupon {
+    min-height: 0 !important;
+    height: 100% !important;
+    border-width: 1px !important;
+    border-radius: 13px !important;
+  }
+
+  .cupon-encabezado {
+    min-height: 44px !important;
+    padding: 7px 8px !important;
+    gap: 5px !important;
+  }
+
+  .cupon-logo {
+    width: 24px !important;
+    height: 24px !important;
+    flex-basis: 24px !important;
+    padding: 1px !important;
+  }
+
+  .descuento {
+    font-size: 20px !important;
+    line-height: .95 !important;
+  }
+
+  .cupon-contenido {
+    min-height: 0 !important;
+    gap: 3px !important;
+    padding: 6px !important;
+  }
+
+  .cupon-etiquetas {
+    gap: 3px !important;
+    min-height: 0 !important;
+  }
+
+  .etiqueta-popular-integrada {
+    padding: 2px 5px !important;
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+  }
+
+  .descuento-maximo {
+    font-size: 10px !important;
+    line-height: 1.15 !important;
+  }
+
+  .compra-minima {
+    padding: 3px 5px !important;
+    border-radius: 7px !important;
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+  }
+
+  .cupon-usado {
+    gap: 4px !important;
+    padding: 4px 5px !important;
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+  }
+
+  .acciones-bloque {
+    margin-top: auto !important;
+    padding-top: 3px !important;
+  }
+
+  .acciones-cupon {
+    gap: 4px !important;
+  }
+
+  .boton-canjear {
+    padding: 7px 4px !important;
+    border-radius: 9px !important;
+    font-size: 10px !important;
+    line-height: 1.1 !important;
+  }
+
+  .acciones-secundarias {
+    gap: 3px !important;
+    margin-top: 4px !important;
+  }
+
+  .boton-like,
+  .boton-compartir {
+    min-width: 27px !important;
+    min-height: 27px !important;
+    padding: 4px !important;
+  }
+
+  .boton-like svg,
+  .boton-compartir svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .estadisticas-cupon {
+    gap: 3px !important;
+    font-size: 8px !important;
+    line-height: 1 !important;
+  }
+
+  .estadistica-item {
+    gap: 2px !important;
+  }
+
+  .estadistica-item svg {
+    width: 11px !important;
+    height: 11px !important;
+  }
+
+  .mensaje {
+    margin-top: 2px !important;
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+  }
+
+  .estado-programacion {
+    margin-top: 4px !important;
+    padding-top: 4px !important;
+    font-size: 9px !important;
+    line-height: 1.1 !important;
+  }
+
+  .estado-programacion .estado-linea {
+    margin-bottom: 3px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .cupones-grid-compacta {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 5px !important;
+  }
+
+  .cupon-encabezado {
+    min-height: 42px !important;
+    padding: 6px 7px !important;
+  }
+
+  .descuento {
+    font-size: 19px !important;
+  }
+
+  .cupon-contenido {
+    padding: 5px !important;
+  }
+
+  .descuento-maximo,
+  .boton-canjear {
+    font-size: 9px !important;
+  }
+
+  .compra-minima,
+  .etiqueta-popular-integrada,
+  .cupon-usado,
+  .mensaje,
+  .estado-programacion {
+    font-size: 8px !important;
+  }
+}
+
+
+/* V76.0 — Comunidad Anirona sin precios y selector automático de cupones */
+.tarjeta-oferta-anirona .oferta-contenido h3 {
+  min-height: auto;
+}
+
+.tarjeta-oferta-anirona .oferta-descripcion {
+  display: block;
+  overflow: visible;
+  margin-top: 6px;
+  color: #4d5952;
+  font-size: 10.5px;
+  line-height: 1.4;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.tarjeta-oferta-anirona .oferta-meta {
+  order: 3;
+  margin-top: 8px;
+}
+
+.tarjeta-oferta-anirona .oferta-acciones {
+  order: 4;
+}
+
+.tarjeta-oferta-anirona .oferta-ver {
+  border: 1px solid #e0b900;
+  color: #2d2a20;
+  background: #ffe600;
+  box-shadow: 0 3px 8px rgba(204, 174, 0, 0.2);
+}
+
+.tarjeta-oferta-anirona .oferta-ver:hover,
+.tarjeta-oferta-anirona .oferta-ver:focus-visible {
+  background: #ffdc00;
+}
+
+/* V76.1 — Botones independientes en Comunidad Anirona */
+.tarjeta-oferta-anirona .oferta-acciones-anirona {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  gap: 6px;
+  align-items: stretch;
+}
+
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre {
+  border-color: #e0b900;
+  color: #24356b;
+  background: #ffe600;
+}
+
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre:hover,
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre:focus-visible {
+  background: #ffdc00;
+}
+
+.tarjeta-oferta-anirona .oferta-ver-amazon {
+  border-color: #232f3e;
+  color: #ffffff;
+  background: #232f3e;
+  box-shadow: 0 3px 8px rgba(35, 47, 62, 0.22);
+}
+
+.tarjeta-oferta-anirona .oferta-ver-amazon:hover,
+.tarjeta-oferta-anirona .oferta-ver-amazon:focus-visible {
+  background: #17202b;
+}
+
+@media (max-width: 520px) {
+  .tarjeta-oferta-anirona .oferta-acciones-anirona {
+    grid-template-columns: 1fr;
+  }
+  .tarjeta-oferta-anirona .oferta-compartir {
+    width: 100%;
+  }
+}
+
+/* V76.2 — Botones Anirona equilibrados y vistas fijas sobre las acciones */
+.tarjeta-oferta-anirona .oferta-contenido {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.tarjeta-oferta-anirona .oferta-descripcion {
+  display: block;
+  overflow: visible;
+  white-space: normal;
+  -webkit-box-orient: initial;
+  -webkit-line-clamp: initial;
+}
+
+.tarjeta-oferta-anirona .oferta-meta {
+  order: 3;
+  margin-top: auto;
+  margin-bottom: 7px;
+  padding-top: 10px;
+}
+
+.tarjeta-oferta-anirona .oferta-acciones-anirona {
+  order: 4;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 6px;
+  width: 100%;
+  margin-top: 0;
+  padding-top: 0;
+  align-items: stretch;
+}
+
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver {
+  width: 100%;
+  min-width: 0;
+  min-height: 38px;
+  padding: 6px 4px;
+  font-size: 8.6px;
+  line-height: 1.15;
+  white-space: normal;
+  overflow-wrap: normal;
+}
+
+/* Cuando solo existe un enlace de compra, el botón ocupa todo el ancho. */
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver:first-child:nth-last-child(2) {
+  grid-column: 1 / -1;
+}
+
+/* Compartir queda debajo y no reduce el ancho de los botones de compra. */
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-compartir {
+  grid-column: 1 / -1;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 32px;
+}
+
+@media (max-width: 520px) {
+  .tarjeta-oferta-anirona .oferta-acciones-anirona {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver {
+    min-height: 40px;
+    padding-right: 3px;
+    padding-left: 3px;
+    font-size: 8px;
+  }
+}
+
+
+/* V76.4 — Acciones Anirona en una sola fila, logos centrados y títulos completos */
+.tarjeta-oferta-anirona .oferta-contenido h3 {
+  display: block;
+  min-height: calc(1.3em * 3);
+  overflow: visible;
+  line-height: 1.3;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: initial;
+  -webkit-line-clamp: initial;
+}
+
+.tarjeta-oferta-anirona .oferta-acciones-anirona {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 42px !important;
+  gap: 6px;
+  align-items: stretch;
+  width: 100%;
+}
+
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver,
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-compartir {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 40px;
+  margin: 0;
+}
+
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver {
+  width: 100%;
+  padding: 6px 8px;
+}
+
+.tarjeta-oferta-anirona .oferta-logo-marketplace {
+  display: block;
+  width: auto;
+  max-width: 82%;
+  height: 24px;
+  max-height: 24px;
+  margin: 0 auto;
+  object-fit: contain;
+  object-position: center;
+}
+
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-compartir {
+  grid-column: auto;
+  width: 42px !important;
+  min-width: 42px !important;
+  padding: 0 !important;
+}
+
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-compartir svg {
+  width: 19px;
+  height: 19px;
+  margin: 0 auto;
+}
+
+.tarjeta-oferta-anirona .texto-accesible {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Si solo existe una tienda, conserva el botón de compartir a la derecha. */
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver:first-child:nth-last-child(2) {
+  grid-column: 1 / 3;
+}
+
+@media (max-width: 520px) {
+  .tarjeta-oferta-anirona .oferta-contenido h3 {
+    min-height: calc(1.3em * 3);
+    font-size: 12px;
+    line-height: 1.3;
+    -webkit-line-clamp: initial;
+  }
+
+  .tarjeta-oferta-anirona .oferta-acciones-anirona {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 38px !important;
+    gap: 5px;
+  }
+
+  .tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver,
+  .tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-compartir {
+    min-height: 38px;
+  }
+
+  .tarjeta-oferta-anirona .oferta-logo-marketplace {
+    max-width: 84%;
+    height: 22px;
+    max-height: 22px;
+  }
+
+  .tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-compartir {
+    width: 38px !important;
+    min-width: 38px !important;
+  }
+}
+
+
+/* V76.5 — Logos simétricos y centrados en acciones Anirona */
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver {
+  position: relative;
+  overflow: hidden;
+}
+
+.tarjeta-oferta-anirona .oferta-logo-marketplace {
+  display: block;
+  width: auto;
+  max-width: 88%;
+  height: 27px;
+  max-height: 27px;
+  margin: auto;
+  object-fit: contain;
+  object-position: center;
+}
+
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre .oferta-logo-marketplace,
+.tarjeta-oferta-anirona .oferta-ver-amazon .oferta-logo-marketplace {
+  height: 27px;
+  max-height: 27px;
+}
+
+@media (max-width: 520px) {
+  .tarjeta-oferta-anirona .oferta-logo-marketplace,
+  .tarjeta-oferta-anirona .oferta-ver-mercado-libre .oferta-logo-marketplace,
+  .tarjeta-oferta-anirona .oferta-ver-amazon .oferta-logo-marketplace {
+    height: 24px;
+    max-height: 24px;
+    max-width: 90%;
+  }
+}
+
+
+/* V76.6 — Iconos de marketplaces realmente simétricos */
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 5px !important;
+}
+
+.tarjeta-oferta-anirona .oferta-logo-marketplace,
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre .oferta-logo-marketplace,
+.tarjeta-oferta-anirona .oferta-ver-amazon .oferta-logo-marketplace {
+  display: block !important;
+  width: 32px !important;
+  height: 32px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
+  margin: 0 auto !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  transform: none !important;
+}
+
+@media (max-width: 520px) {
+  .tarjeta-oferta-anirona .oferta-logo-marketplace,
+  .tarjeta-oferta-anirona .oferta-ver-mercado-libre .oferta-logo-marketplace,
+  .tarjeta-oferta-anirona .oferta-ver-amazon .oferta-logo-marketplace {
+    width: 30px !important;
+    height: 30px !important;
+    max-width: 30px !important;
+    max-height: 30px !important;
+  }
+}
+
+
+/* ============================================================
+   V77 LTS — Comunidad Anirona terminada y estable
+   - Orden: Mercado Libre, Amazon y Compartir
+   - Botones oficiales y simétricos
+   - Vistas encima de acciones
+   - Título máximo 3 líneas y descripción uniforme
+   - Imágenes de altura uniforme
+   - Optimización móvil sin romper las dos columnas
+   ============================================================ */
+
+.tarjeta-oferta-anirona {
+  overflow: hidden;
+}
+
+.tarjeta-oferta-anirona .oferta-imagen-contenedor {
+  width: 100%;
+  aspect-ratio: 4 / 3 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 7px;
+  background: #fff;
+}
+
+.tarjeta-oferta-anirona .oferta-imagen {
+  width: 100%;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+}
+
+.tarjeta-oferta-anirona .oferta-contenido {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  padding: 10px;
+}
+
+.tarjeta-oferta-anirona .oferta-contenido h3 {
+  display: -webkit-box !important;
+  min-height: calc(1.3em * 3);
+  max-height: calc(1.3em * 3);
+  margin: 0 0 6px;
+  overflow: hidden !important;
+  font-size: 14px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 3 !important;
+}
+
+.tarjeta-oferta-anirona .oferta-descripcion {
+  display: -webkit-box;
+  min-height: calc(1.4em * 3);
+  max-height: calc(1.4em * 3);
+  margin: 0 0 8px;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #5c655f;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.tarjeta-oferta-anirona .oferta-meta {
+  order: 2;
+  display: flex;
+  align-items: center;
+  min-height: 22px;
+  margin: auto 0 6px;
+}
+
+.tarjeta-oferta-anirona .oferta-visitas {
+  width: 100%;
+  font-size: 11px;
+  line-height: 1.2;
+  color: #727b75;
+  text-align: left;
+}
+
+.tarjeta-oferta-anirona .oferta-acciones-anirona {
+  order: 3;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 42px !important;
+  gap: 6px !important;
+  align-items: stretch;
+  width: 100%;
+  margin-top: 0;
+}
+
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver,
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-compartir {
+  min-height: 42px !important;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre,
+.tarjeta-oferta-anirona .oferta-ver-amazon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,.08);
+}
+
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre {
+  background: #ffe600 !important;
+}
+
+.tarjeta-oferta-anirona .oferta-ver-amazon {
+  background: #232f3e !important;
+}
+
+.tarjeta-oferta-anirona .oferta-logo-marketplace,
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre .oferta-logo-marketplace,
+.tarjeta-oferta-anirona .oferta-ver-amazon .oferta-logo-marketplace {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  transform: none !important;
+}
+
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-compartir {
+  grid-column: auto !important;
+  width: 42px !important;
+  min-width: 42px !important;
+  padding: 0 !important;
+}
+
+/* Una sola tienda: ocupa las dos columnas y compartir conserva su lugar. */
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver:first-child:nth-last-child(2) {
+  grid-column: 1 / 3 !important;
+}
+
+.tarjeta-oferta-anirona .oferta-mensaje {
+  order: 4;
+}
+
+@media (max-width: 520px) {
+  .tarjeta-oferta-anirona .oferta-imagen-contenedor {
+    padding: 5px;
+  }
+
+  .tarjeta-oferta-anirona .oferta-contenido {
+    padding: 8px;
+  }
+
+  .tarjeta-oferta-anirona .oferta-contenido h3 {
+    min-height: calc(1.28em * 3);
+    max-height: calc(1.28em * 3);
+    font-size: 12px;
+    line-height: 1.28;
+  }
+
+  .tarjeta-oferta-anirona .oferta-descripcion {
+    min-height: calc(1.35em * 3);
+    max-height: calc(1.35em * 3);
+    font-size: 10.5px;
+    line-height: 1.35;
+  }
+
+  .tarjeta-oferta-anirona .oferta-visitas {
+    font-size: 9.5px;
+  }
+
+  .tarjeta-oferta-anirona .oferta-acciones-anirona {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 36px !important;
+    gap: 4px !important;
+  }
+
+  .tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver,
+  .tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-compartir {
+    min-height: 36px !important;
+    border-radius: 8px;
+  }
+
+  .tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-compartir {
+    width: 36px !important;
+    min-width: 36px !important;
+  }
+
+  .tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-compartir svg {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+
+/* ============================================================
+   V77.1 LTS — Ajustes finales de Comunidad Anirona
+   ============================================================ */
+
+/* Mostrar completa la descripción capturada (hasta 250 caracteres). */
+.tarjeta-oferta-anirona .oferta-descripcion {
+  display: block !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+  -webkit-line-clamp: unset !important;
+  -webkit-box-orient: initial !important;
+}
+
+/* Mercado Libre 10% más grande únicamente cuando comparte fila con Amazon. */
+.tarjeta-oferta-anirona .oferta-acciones-anirona.ambos-marketplaces
+.oferta-ver-mercado-libre .oferta-logo-marketplace {
+  transform: scale(1.1) !important;
+}
+
+/* ============================================================
+   V77.2 LTS — Buscador y catálogo por popularidad
+   ============================================================ */
+.buscador-catalogo-anirona {
+  margin: 0 0 14px;
+}
+
+.buscador-catalogo-campo {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 5px 7px 5px 13px;
+  border: 1px solid #d8e2dc;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgba(25, 61, 39, .06);
+}
+
+.buscador-catalogo-campo:focus-within {
+  border-color: #48a43c;
+  box-shadow: 0 0 0 3px rgba(72, 164, 60, .13);
+}
+
+.buscador-catalogo-campo input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  padding: 9px 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.buscador-catalogo-campo input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.buscador-catalogo-campo button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 9px;
+  background: #eef5ef;
+  color: #36563b;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.resultados-catalogo-anirona {
+  margin: 7px 4px 0;
+  color: #647067;
+  font-size: 12px;
+  text-align: right;
+}
+
+#ofertas-comunidad-anirona .sin-resultados-busqueda {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 520px) {
+  .buscador-catalogo-anirona {
+    margin-bottom: 10px;
+  }
+
+  .buscador-catalogo-campo {
+    border-radius: 12px;
+    padding-left: 10px;
+  }
+
+  .buscador-catalogo-campo input {
+    font-size: 13px;
+  }
+
+  .resultados-catalogo-anirona {
+    font-size: 10.5px;
+  }
+}
+
+
+/* ============================================================
+   V77.3 LTS — Disponibilidad y productos nuevos
+   ============================================================ */
+.etiqueta-producto-nuevo {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0 6px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #fff1b8;
+  color: #7a5700;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.disponibilidad-marketplaces {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px 11px;
+  margin: 2px 0 7px;
+  font-size: 11px;
+  color: #535d57;
+}
+
+.disponibilidad-titulo {
+  width: 100%;
+  font-weight: 700;
+  color: #303a34;
+}
+
+.estado-marketplace {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.punto-disponibilidad {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  flex: 0 0 9px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(0,0,0,.05);
+}
+
+.punto-disponibilidad.disponible { background: #20a447; }
+.punto-disponibilidad.no-disponible { background: #d93434; }
+
+@media (max-width: 520px) {
+  .etiqueta-producto-nuevo {
+    margin-bottom: 4px;
+    padding: 3px 6px;
+    font-size: 8.5px;
+  }
+  .disponibilidad-marketplaces {
+    gap: 4px 8px;
+    margin-bottom: 6px;
+    font-size: 9px;
+  }
+  .punto-disponibilidad {
+    width: 7px;
+    height: 7px;
+    flex-basis: 7px;
+  }
+}
+
+/* ============================================================
+   V77.3.1 LTS — Disponibilidad alineada en tarjetas Anirona
+   ============================================================ */
+.tarjeta-oferta-anirona .disponibilidad-marketplaces {
+  margin-top: auto;
+}
+
+.tarjeta-oferta-anirona .oferta-meta {
+  margin-top: 0;
+  padding-top: 4px;
+}
+
+/* ============================================================
+   V77.4 LTS — Ajustes finales de tarjetas y canal Anirona
+   ============================================================ */
+
+/* Mantener Mercado Libre con el mismo ancho cuando es el único marketplace. */
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-ver:first-child:nth-last-child(2) {
+  grid-column: 1 !important;
+}
+
+.tarjeta-oferta-anirona .oferta-acciones-anirona .oferta-compartir {
+  grid-column: 3 !important;
+}
+
+/* Eliminar cualquier línea o borde interno visible en los botones. */
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre,
+.tarjeta-oferta-anirona .oferta-ver-amazon {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre::before,
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre::after,
+.tarjeta-oferta-anirona .oferta-ver-amazon::before,
+.tarjeta-oferta-anirona .oferta-ver-amazon::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Etiqueta Nuevo igual al estilo verde usado en cupones. */
+.etiqueta-producto-nuevo {
+  min-height: 20px;
+  margin: 0 0 6px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(135deg, #08b984, #22c99a);
+  box-shadow: 0 3px 8px rgba(29, 45, 38, .10);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Reducir a la mitad el espacio inferior de las tarjetas. */
+.tarjeta-oferta-anirona .oferta-contenido {
+  padding-bottom: 5px;
+}
+
+.tarjeta-oferta-anirona .oferta-mensaje:empty {
+  display: none;
+}
+
+/* Botón único de WhatsApp a todo el ancho del catálogo. */
+.tarjeta-canal-anirona-simple {
+  grid-column: 1 / -1;
+  display: block !important;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.canal-anirona-boton-ancho {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 48px;
+  margin: 0;
+  padding: 11px 48px;
+  border: 0;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.canal-anirona-boton-ancho svg {
+  width: 22px;
+  height: 22px;
+}
+
+.canal-anirona-boton-flecha {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  font-size: 21px;
+  line-height: 1;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 520px) {
+  .tarjeta-oferta-anirona .oferta-contenido {
+    padding-bottom: 4px;
+  }
+
+  .etiqueta-producto-nuevo {
+    min-height: 18px;
+    padding: 3px 6px;
+    font-size: 8.5px;
+  }
+
+  .canal-anirona-boton-ancho {
+    min-height: 44px;
+    padding: 9px 38px;
+    border-radius: 10px;
+    font-size: 11px;
+  }
+
+  .canal-anirona-boton-ancho svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .canal-anirona-boton-flecha {
+    right: 13px;
+    font-size: 18px;
+  }
+}
+
+/* ============================================================
+   V77.4.1 LTS — Logos de marketplaces normalizados
+   - Mercado Libre y Amazon usan el mismo lienzo
+   - Logos centrados vertical y horizontalmente
+   - Sin franja blanca en Mercado Libre
+   - Separación uniforme entre disponibilidad, vistas y acciones
+   ============================================================ */
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre,
+.tarjeta-oferta-anirona .oferta-ver-amazon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  background-clip: padding-box !important;
+}
+
+.tarjeta-oferta-anirona .oferta-logo-marketplace,
+.tarjeta-oferta-anirona .oferta-ver-mercado-libre .oferta-logo-marketplace,
+.tarjeta-oferta-anirona .oferta-ver-amazon .oferta-logo-marketplace {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  object-fit: fill !important;
+  object-position: center center !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.tarjeta-oferta-anirona .disponibilidad-marketplaces {
+  margin-bottom: 0 !important;
+}
+
+.tarjeta-oferta-anirona .oferta-meta {
+  min-height: 22px !important;
+  margin: 0 0 6px !important;
+  padding-top: 5px !important;
+}
+
+/* ============================================================
+   V77.4.2 LTS — Corrección proporcional de logos en móvil
+   - Evita deformación horizontal/vertical
+   - Conserva el diseño de escritorio
+   - Centra Mercado Libre y Amazon dentro de su botón
+   ============================================================ */
+@media (max-width: 520px) {
+  .tarjeta-oferta-anirona .oferta-logo-marketplace,
+  .tarjeta-oferta-anirona .oferta-ver-mercado-libre .oferta-logo-marketplace,
+  .tarjeta-oferta-anirona .oferta-ver-amazon .oferta-logo-marketplace {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+  }
+
+  .tarjeta-oferta-anirona .oferta-ver-mercado-libre,
+  .tarjeta-oferta-anirona .oferta-ver-amazon {
+    min-height: 36px !important;
+    height: 36px !important;
+  }
+}
+
+/* ============================================================
+   V77.4.3 LTS — Logos más legibles en móvil
+   - Incremento visual aproximado del 35%
+   - Conserva proporción y centrado
+   - No modifica la vista de escritorio
+   ============================================================ */
+@media (max-width: 520px) {
+  .tarjeta-oferta-anirona .oferta-logo-marketplace,
+  .tarjeta-oferta-anirona .oferta-ver-mercado-libre .oferta-logo-marketplace,
+  .tarjeta-oferta-anirona .oferta-ver-amazon .oferta-logo-marketplace {
+    transform: scale(1.35) !important;
+    transform-origin: center center !important;
+  }
+}
+
+
+/* V77.5 LTS — Avisos de nuevos cupones y productos */
+.boton-avisos-novedades {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 8px 13px;
+  border: 1px solid rgba(22, 133, 101, .24);
+  border-radius: 999px;
+  background: #fff;
+  color: #126b53;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.boton-avisos-novedades:hover { background: #eff9f5; }
+.boton-avisos-novedades.activo { background: #eaf8f2; }
+.aviso-novedades-toast {
+  position: fixed;
+  z-index: 10020;
+  right: 16px;
+  bottom: 82px;
+  width: min(360px, calc(100vw - 32px));
+  padding: 14px 15px;
+  border: 1px solid rgba(22, 133, 101, .24);
+  border-radius: 16px;
+  background: #fff;
+  color: #24332e;
+  box-shadow: 0 14px 40px rgba(20, 60, 47, .18);
+}
+.aviso-novedades-toast[hidden] { display: none !important; }
+.aviso-novedades-toast strong { display: block; margin-bottom: 4px; color: #0d7254; }
+.aviso-novedades-toast p { margin: 0; line-height: 1.4; }
+.aviso-novedades-toast-acciones { display: flex; gap: 8px; margin-top: 10px; }
+.aviso-novedades-toast button {
+  min-height: 34px;
+  padding: 7px 11px;
+  border: 0;
+  border-radius: 9px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.aviso-novedades-ver { background: #168565; color: #fff; }
+.aviso-novedades-cerrar { background: #edf2ef; color: #33473f; }
+@media (max-width: 600px) {
+  .boton-avisos-novedades { min-height: 34px; padding: 7px 10px; font-size: 12px; }
+  .aviso-novedades-toast { right: 10px; bottom: 72px; width: calc(100vw - 20px); }
+}
+
+
+/* ============================================================
+   V77.6 LTS — Avisos automáticos y botón igual a redes sociales
+   ============================================================ */
+.hero-redes-botones .boton-avisos-novedades {
+  height: 29px !important;
+  min-height: 29px !important;
+  padding: 5px 9px !important;
+  gap: 6px !important;
+  border: 1px solid rgba(79, 56, 90, .10) !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, .72) !important;
+  color: #111 !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+}
+.hero-redes-botones .boton-avisos-novedades:hover,
+.hero-redes-botones .boton-avisos-novedades:focus-visible {
+  background: #fff !important;
+  box-shadow: 0 4px 10px rgba(69, 45, 79, .09) !important;
+}
+.hero-redes-botones .boton-avisos-novedades.activo {
+  background: #eaf8f2 !important;
+  color: #111 !important;
+}
+@media (max-width: 600px) {
+  .hero-redes-botones .boton-avisos-novedades {
+    height: 25px !important;
+    min-height: 25px !important;
+    padding: 4px 7px !important;
+    gap: 4px !important;
+    font-size: 8.5px !important;
+  }
+}
+
+
+/* ============================================================
+   V77.7 LTS — Tutorial guiado interactivo
+   ============================================================ */
+.hero-redes-botones .boton-ver-tutorial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 29px;
+  min-height: 29px;
+  padding: 5px 9px;
+  gap: 6px;
+  border: 1px solid rgba(79, 56, 90, .10);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .72);
+  color: #111;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+}
+.hero-redes-botones .boton-ver-tutorial:hover,
+.hero-redes-botones .boton-ver-tutorial:focus-visible {
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(69, 45, 79, .09);
+}
+
+/* V77.11.4 LTS — Invitación visible sin abrir el tutorial automáticamente */
+.hero-redes-botones .boton-ver-tutorial.tutorial-boton-destacado {
+  position: relative;
+  z-index: 4;
+  border-color: #14966d;
+  background: #effbf6;
+  color: #0c533d;
+  box-shadow: 0 0 0 0 rgba(20, 150, 109, .38);
+  animation: tutorialBotonEntrada 1.15s ease-in-out 5;
+}
+.hero-redes-botones .boton-ver-tutorial.tutorial-boton-destacado::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border: 2px solid rgba(20, 150, 109, .48);
+  border-radius: 999px;
+  pointer-events: none;
+  animation: tutorialBotonAro 1.15s ease-out 5;
+}
+@keyframes tutorialBotonEntrada {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-1px) scale(1.055); }
+}
+@keyframes tutorialBotonAro {
+  0% { opacity: .9; transform: scale(.94); }
+  100% { opacity: 0; transform: scale(1.16); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-redes-botones .boton-ver-tutorial.tutorial-boton-destacado,
+  .hero-redes-botones .boton-ver-tutorial.tutorial-boton-destacado::after {
+    animation: none;
+  }
+}
+.tutorial-foco {
+  position: fixed;
+  z-index: 30000;
+  border: 3px solid #17a673;
+  border-radius: 14px;
+  background: transparent;
+  box-shadow: 0 0 0 9999px rgba(18, 27, 24, .67), 0 0 0 5px rgba(23, 166, 115, .20);
+  pointer-events: none;
+  transition: left .22s ease, top .22s ease, width .22s ease, height .22s ease;
+}
+.tutorial-foco[hidden],
+.tutorial-tarjeta[hidden] { display: none !important; }
+.tutorial-tarjeta {
+  position: fixed;
+  z-index: 30010;
+  width: min(360px, calc(100vw - 24px));
+  padding: 16px;
+  border: 1px solid rgba(21, 119, 86, .22);
+  border-radius: 18px;
+  background: #fff;
+  color: #26332e;
+  box-shadow: 0 18px 50px rgba(5, 25, 18, .28);
+}
+.tutorial-tarjeta.tutorial-centrada {
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%);
+}
+.tutorial-tarjeta:not(.tutorial-centrada) { transform: none; }
+.tutorial-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+.tutorial-contador {
+  color: #168565;
+  font-size: 12px;
+  font-weight: 800;
+}
+.tutorial-cerrar {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+  background: #edf3f0;
+  color: #34463f;
+  font-size: 21px;
+  line-height: 1;
+  cursor: pointer;
+}
+.tutorial-icono { margin-bottom: 5px; font-size: 25px; }
+.tutorial-tarjeta h2 { margin: 0 0 7px; color: #145f49; font-size: 19px; line-height: 1.2; }
+.tutorial-tarjeta p { margin: 0; font-size: 14px; line-height: 1.48; }
+.tutorial-acciones { display: flex; justify-content: flex-end; gap: 8px; margin-top: 15px; }
+.tutorial-acciones button {
+  min-height: 38px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+.tutorial-anterior { background: #edf2ef; color: #34463f; }
+.tutorial-siguiente { background: #168565; color: #fff; }
+html.tutorial-en-curso { scroll-behavior: smooth; }
+@media (max-width: 600px) {
+  .hero-redes-botones .boton-ver-tutorial {
+    height: 25px;
+    min-height: 25px;
+    padding: 4px 7px;
+    gap: 4px;
+    font-size: 8.5px;
+  }
+  .tutorial-tarjeta { padding: 14px; border-radius: 15px; }
+  .tutorial-tarjeta h2 { font-size: 17px; }
+  .tutorial-tarjeta p { font-size: 13px; }
+  .tutorial-acciones button { min-height: 36px; padding: 7px 12px; }
+}
+
+
+/* ============================================================
+   V77.8 LTS — Etiqueta Más vendido en Comunidad Anirona
+   ============================================================ */
+.etiquetas-producto-anirona {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  min-height: 20px;
+  margin: 0 0 6px;
+}
+.etiquetas-producto-anirona .etiqueta-producto-nuevo {
+  margin: 0;
+}
+.etiqueta-producto-mas-vendido {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  color: #fff;
+  background: linear-gradient(135deg, #ff7a2f, #f35f18);
+  box-shadow: 0 3px 8px rgba(205, 78, 15, .16);
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+@media (max-width: 520px) {
+  .etiquetas-producto-anirona {
+    min-height: 17px;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+  .etiqueta-producto-mas-vendido {
+    min-height: 17px;
+    padding: 3px 6px;
+    font-size: 7.5px;
+  }
+}
+
+
+/* ============================================================
+   V77.9 LTS — Otras recomendaciones debajo del catálogo Anirona
+   ============================================================ */
+.separador-otras-recomendaciones {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin: 12px 0 2px;
+  padding-top: 14px;
+  border-top: 1px dashed #aebbb2;
+  text-align: center;
+}
+.separador-otras-recomendaciones h2 {
+  margin: 0;
+  color: #56635b;
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: .12em;
+  line-height: 1.3;
+}
+.tarjeta-otra-recomendacion {
+  border-color: #dfe6e1;
+}
+@media (max-width: 520px) {
+  .separador-otras-recomendaciones {
+    margin-top: 8px;
+    padding-top: 11px;
+  }
+  .separador-otras-recomendaciones h2 {
+    font-size: 10px;
+    letter-spacing: .1em;
+  }
+}
+
+
+/* ============================================================
+   V77.10 LTS — Navegación y resaltado de novedades
+   ============================================================ */
+.cupon.novedad-resaltada,
+.tarjeta-oferta.novedad-resaltada {
+  position: relative;
+  z-index: 3;
+  animation: resaltar-novedad-v7710 4.6s ease-out both;
+}
+@keyframes resaltar-novedad-v7710 {
+  0%, 12% {
+    outline: 3px solid #20a84b;
+    outline-offset: 4px;
+    box-shadow: 0 0 0 8px rgba(32, 168, 75, .20), 0 12px 30px rgba(23, 95, 46, .24);
+    transform: translateY(-2px);
+  }
+  45% {
+    outline-color: #39bd61;
+    box-shadow: 0 0 0 5px rgba(32, 168, 75, .12), 0 8px 22px rgba(23, 95, 46, .16);
+  }
+  100% {
+    outline-color: transparent;
+    outline-offset: 0;
+    box-shadow: inherit;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cupon.novedad-resaltada,
+  .tarjeta-oferta.novedad-resaltada {
+    animation: none;
+    outline: 3px solid #20a84b;
+    outline-offset: 3px;
+  }
+}
+
+/* ============================================================
+   V77.11 LTS — Tutorial enfocado exclusivamente en cupones
+   ============================================================ */
+.tutorial-cupon-ejemplo {
+  position: fixed;
+  z-index: 30005;
+  top: clamp(16px, 8vh, 70px);
+  left: 50%;
+  width: min(380px, calc(100vw - 28px));
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.tutorial-cupon-ejemplo[hidden] { display: none !important; }
+.tutorial-cupon-demo {
+  width: 100%;
+  margin: 0;
+  box-shadow: 0 18px 50px rgba(5, 25, 18, .28);
+}
+.tutorial-cupon-demo .boton-canjear,
+.tutorial-cupon-demo .boton-like,
+.tutorial-cupon-demo .boton-compartir { pointer-events: none; }
+.tutorial-ejemplo-aviso {
+  margin: 7px 0 0;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .95);
+  color: #44534d;
+  font-size: 11px;
+  text-align: center;
+  box-shadow: 0 5px 16px rgba(5, 25, 18, .15);
+}
+.tutorial-foco { z-index: 30020; }
+.tutorial-tarjeta { z-index: 30030; }
+.tutorial-tarjeta.tutorial-demo-activo {
+  max-height: 42vh;
+  overflow-y: auto;
+}
+@media (max-width: 600px) {
+  .tutorial-cupon-ejemplo {
+    top: 10px;
+    width: min(330px, calc(100vw - 20px));
+  }
+  .tutorial-cupon-demo .descuento { font-size: 18px; }
+  .tutorial-cupon-demo .cupon-contenido { padding-bottom: 12px; }
+  .tutorial-tarjeta.tutorial-demo-activo {
+    width: calc(100vw - 20px) !important;
+    max-height: 38vh;
+    bottom: 8px !important;
+  }
+}
+
+/* ============================================================
+   V77.11.1 LTS — Cupón real o ejemplo dentro de la cuadrícula
+   ============================================================ */
+#cupones.tutorial-grid-con-ejemplo {
+  display: grid !important;
+  grid-template-columns: minmax(250px, 360px) !important;
+  justify-content: center !important;
+}
+#cupones .tutorial-cupon-demo {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  pointer-events: none;
+  box-shadow: 0 10px 26px rgba(5, 25, 18, .16);
+}
+#cupones .tutorial-cupon-demo .boton-canjear,
+#cupones .tutorial-cupon-demo .boton-like,
+#cupones .tutorial-cupon-demo .boton-compartir {
+  pointer-events: none;
+}
+#cupones .tutorial-ejemplo-aviso {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  z-index: 3;
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .94);
+  color: #476057;
+  font-size: 9px;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .10);
+}
+.cupon.tutorial-cupon-objetivo {
+  position: relative;
+  z-index: 30008;
+}
+.tutorial-tarjeta.tutorial-cupon-activo {
+  max-height: min(42vh, 300px);
+  overflow-y: auto;
+}
+@media (max-width: 600px) {
+  #cupones.tutorial-grid-con-ejemplo {
+    grid-template-columns: minmax(0, 46vw) !important;
+  }
+  #cupones .tutorial-cupon-demo {
+    max-width: 100%;
+  }
+  .tutorial-tarjeta.tutorial-cupon-activo {
+    width: calc(100vw - 20px) !important;
+    max-height: 36vh;
+  }
+}
+
+
+/* ============================================================
+   V77.11.2 LTS — Tutorial estable y cuadro superior
+   ============================================================ */
+.tutorial-tarjeta.tutorial-superior {
+  position: fixed;
+  top: 12px !important;
+  max-height: min(34vh, 260px);
+  overflow-y: auto;
+}
+@media (max-width: 600px) {
+  .tutorial-tarjeta.tutorial-superior {
+    top: 8px !important;
+    width: calc(100vw - 20px) !important;
+    max-height: 31vh;
+  }
+}
+
+/* ============================================================
+   V77.11.3 LTS — Inicio centrado y cupón estable desde el paso 4
+   ============================================================ */
+.tutorial-tarjeta.tutorial-centrada {
+  left: 50% !important;
+  top: 50% !important;
+  bottom: auto !important;
+  max-height: calc(100vh - 24px);
+  transform: translate(-50%, -50%) !important;
+  overflow-y: auto;
+}
+@media (max-width: 600px) {
+  .tutorial-tarjeta.tutorial-centrada {
+    width: calc(100vw - 20px) !important;
+    max-height: calc(100vh - 20px);
+  }
+}
+
+
+/* =========================================================
+   v77.15.8 · Encabezados compactos de cupones
+   ========================================================= */
+.titulo-fila--tienda {
+  padding-bottom: 0 !important;
+  margin-bottom: 4px !important;
+  grid-template-columns: 1fr auto !important;
+}
+
+.titulo-fila--tienda::after {
+  display: none !important;
+}
+
+.titulo-fila--tienda .titulo-seccion {
+  display: none !important;
+}
+
+.titulo-fila--bancarios {
+  padding-bottom: 8px !important;
+  margin-bottom: 10px !important;
+}
+
+.titulo-fila--bancarios .titulo-seccion {
+  display: block !important;
+  margin: 0 !important;
+  font-size: 14px !important;
+  line-height: 1.2 !important;
+  font-weight: 400 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+  color: #64748b !important;
+}
+
+@media (max-width: 640px) {
+  .titulo-fila--tienda {
+    margin-bottom: 2px !important;
+  }
+
+  .titulo-fila--bancarios .titulo-seccion {
+    font-size: 12px !important;
+  }
+}
+
+
+/* v77.15.9 — limpieza de encabezados y cierre de comunidad */
+.separador-contenido {
+  width: 100%;
+  border-top: 1px dashed rgba(31, 41, 55, 0.28);
+}
+
+.separador-despues-ayuda {
+  margin: 12px 0 10px;
+}
+
+#vista-cupones > #estado-carga:empty {
+  display: none;
+}
+
+#seccion-comunidad-anirona > .buscador-catalogo-anirona {
+  margin-top: 0;
+}
+
+.invitacion-canal-final {
+  width: min(1120px, calc(100% - 24px));
+  margin: 22px auto calc(88px + env(safe-area-inset-bottom));
+  padding: 16px 18px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid rgba(109, 40, 217, 0.12);
+  border-radius: 18px;
+  background: linear-gradient(100deg, #faf5ff 0%, #f3e8ff 54%, #ede9fe 100%);
+  box-shadow: 0 10px 24px rgba(76, 29, 149, 0.08);
+}
+
+.invitacion-canal-final-icono {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(126, 34, 206, 0.12);
+  font-size: 28px;
+}
+
+.invitacion-canal-final-contenido {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  color: #3b0764;
+}
+
+.invitacion-canal-final-contenido strong {
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.invitacion-canal-final-contenido span {
+  color: #4c1d95;
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+
+.invitacion-canal-final-boton {
+  min-height: 46px;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #6b21a8, #4c1d95);
+  color: #fff;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 8px 18px rgba(76, 29, 149, 0.18);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.invitacion-canal-final-boton:hover,
+.invitacion-canal-final-boton:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(76, 29, 149, 0.24);
+}
+
+@media (max-width: 640px) {
+  .separador-despues-ayuda {
+    margin: 10px 0 8px;
+  }
+
+  .invitacion-canal-final {
+    width: calc(100% - 20px);
+    margin-top: 16px;
+    padding: 13px;
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 10px;
+    border-radius: 15px;
+  }
+
+  .invitacion-canal-final-icono {
+    width: 46px;
+    height: 46px;
+    font-size: 23px;
+  }
+
+  .invitacion-canal-final-contenido strong {
+    font-size: 0.9rem;
+  }
+
+  .invitacion-canal-final-contenido span {
+    font-size: 0.76rem;
+  }
+
+  .invitacion-canal-final-boton {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-height: 43px;
+  }
+}
+
+/* v77.16 — banner final de WhatsApp con diseño oficial */
+.invitacion-canal-final {
+  width: min(1180px, calc(100% - 24px));
+  margin: 22px auto calc(88px + env(safe-area-inset-bottom));
+  padding: 0;
+  display: block;
+  border: 0;
+  border-radius: 22px;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.invitacion-canal-final-enlace {
+  display: block;
+  width: 100%;
+  border-radius: 22px;
+  text-decoration: none;
+  line-height: 0;
+  transition: transform 160ms ease, filter 160ms ease;
+}
+
+.invitacion-canal-final-enlace:hover,
+.invitacion-canal-final-enlace:focus-visible {
+  transform: translateY(-2px);
+  filter: brightness(1.02);
+  outline: none;
+}
+
+.invitacion-canal-final-enlace:focus-visible {
+  box-shadow: 0 0 0 4px rgba(37, 211, 102, 0.28);
+}
+
+.invitacion-canal-final-imagen {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: contain;
+  border-radius: 22px;
+}
+
+@media (max-width: 640px) {
+  .invitacion-canal-final {
+    width: calc(100% - 16px);
+    margin: 16px auto calc(82px + env(safe-area-inset-bottom));
+    border-radius: 15px;
+  }
+
+  .invitacion-canal-final-enlace,
+  .invitacion-canal-final-imagen {
+    border-radius: 15px;
+  }
+}
+
+
+/* v77.16.1 — cierre compacto, separador final y enlace directo a sorteo */
+#separador-fin-cupones { display: none; }
+#todos-wrapper:not([hidden]) + #separador-fin-cupones {
+  display: block;
+  margin: 14px 0 6px;
+}
+.invitacion-canal-final {
+  margin-bottom: calc(62px + env(safe-area-inset-bottom)) !important;
+}
+.evento-destacado-url {
+  animation: evento-destacado-url 1s ease-in-out 3;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.24), 0 16px 35px rgba(15, 118, 110, 0.16) !important;
+}
+@keyframes evento-destacado-url {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@media (max-width: 640px) {
+  .invitacion-canal-final {
+    margin-bottom: calc(66px + env(safe-area-inset-bottom)) !important;
+  }
+  #todos-wrapper:not([hidden]) + #separador-fin-cupones { margin: 10px 0 4px; }
+}
+
+
+/* v77.17.4 — banner final original, sin mascota */
+.invitacion-canal-final {
+  width: min(1120px, calc(100% - 24px));
+  margin-top: 18px;
+  border-radius: 24px;
+}
+
+.invitacion-canal-final-enlace {
+  position: relative;
+  min-height: 205px;
+  padding: 30px 8% 28px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "texto boton";
+  align-items: center;
+  gap: 34px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.42);
+  border-radius: 24px;
+  background:
+    linear-gradient(100deg, rgba(34,197,94,.96), rgba(22,196,104,.92)),
+    url("../img/patron-ofertas.svg") right center / auto 150%;
+  box-shadow: 0 10px 24px rgba(15,118,110,.18);
+  line-height: normal;
+}
+
+.invitacion-canal-final-enlace::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+}
+
+.invitacion-canal-final-enlace > * {
+  position: relative;
+  z-index: 1;
+}
+
+.invitacion-canal-final-icono-whatsapp {
+  display: none;
+}
+
+.invitacion-canal-final-texto {
+  grid-area: texto;
+  min-width: 0;
+  display: grid;
+  gap: 12px;
+  color: #fff;
+}
+
+.invitacion-canal-final-texto strong {
+  max-width: 640px;
+  font-size: clamp(2rem, 3.3vw, 3.35rem);
+  line-height: 1.04;
+  letter-spacing: -.035em;
+}
+
+.invitacion-canal-final-texto small {
+  max-width: 690px;
+  color: rgba(255,255,255,.94);
+  font-size: clamp(1rem, 1.45vw, 1.38rem);
+  line-height: 1.35;
+}
+
+.invitacion-canal-final-cta {
+  grid-area: boton;
+  min-height: 70px;
+  padding: 0 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  background: #fff;
+  color: #22b956;
+  font-size: clamp(1rem, 1.35vw, 1.3rem);
+  font-weight: 850;
+  white-space: nowrap;
+  box-shadow: 0 9px 20px rgba(15,118,110,.20);
+}
+
+.invitacion-canal-final-enlace:hover,
+.invitacion-canal-final-enlace:focus-visible {
+  filter: brightness(1.015);
+}
+
+@media (max-width: 720px) {
+  .invitacion-canal-final {
+    width: calc(100% - 16px);
+    margin-top: 13px;
+    border-radius: 18px;
+  }
+
+  .invitacion-canal-final-enlace {
+    min-height: 150px;
+    padding: 20px 18px;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "texto"
+      "boton";
+    gap: 18px;
+    text-align: center;
+    border-radius: 18px;
+    background-size: auto 180%;
+    background-position: center;
+  }
+
+  .invitacion-canal-final-texto {
+    justify-items: center;
+  }
+
+  .invitacion-canal-final-texto strong {
+    font-size: clamp(1.45rem, 7vw, 2rem);
+  }
+
+  .invitacion-canal-final-texto small {
+    font-size: .92rem;
+  }
+
+  .invitacion-canal-final-cta {
+    min-height: 52px;
+    width: min(100%, 280px);
+    justify-self: center;
+    padding: 0 20px;
+    border-radius: 14px;
+    font-size: .98rem;
+  }
+}
+
+
+/* v77.17.5 — Banner final compacto aprobado */
+.invitacion-canal-final {
+  width: min(1120px, calc(100% - 24px));
+  margin-top: 16px;
+  border-radius: 20px;
+}
+
+.invitacion-canal-final-enlace {
+  position: relative;
+  min-height: 104px;
+  padding: 16px 30px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: "icono texto boton";
+  align-items: center;
+  gap: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.42);
+  border-radius: 20px;
+  background: linear-gradient(100deg, rgba(34,197,94,.96), rgba(22,196,104,.93));
+  box-shadow: 0 9px 20px rgba(15,118,110,.18);
+  line-height: normal;
+}
+
+.invitacion-canal-final-enlace::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: url("../img/patron-ofertas.svg") center / auto 185% repeat-x;
+  opacity: .14;
+}
+
+.invitacion-canal-final-enlace::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(255,255,255,.05), rgba(255,255,255,0));
+}
+
+.invitacion-canal-final-enlace > * {
+  position: relative;
+  z-index: 1;
+}
+
+.invitacion-canal-final-icono-whatsapp {
+  grid-area: icono;
+  display: grid;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  color: #fff;
+  flex: 0 0 68px;
+}
+
+.invitacion-canal-final-icono-whatsapp svg {
+  width: 100%;
+  height: 100%;
+}
+
+.invitacion-canal-final-texto {
+  grid-area: texto;
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+  color: #fff;
+  text-align: left;
+}
+
+.invitacion-canal-final-texto strong {
+  max-width: none;
+  font-size: clamp(1.18rem, 2vw, 1.65rem);
+  line-height: 1.12;
+  letter-spacing: -.02em;
+}
+
+.invitacion-canal-final-texto small {
+  max-width: none;
+  color: rgba(255,255,255,.95);
+  font-size: clamp(.86rem, 1.15vw, 1.02rem);
+  line-height: 1.35;
+}
+
+.invitacion-canal-final-cta {
+  grid-area: boton;
+  min-height: 54px;
+  padding: 0 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  background: #fff;
+  color: #22b956;
+  font-size: clamp(.96rem, 1.18vw, 1.12rem);
+  font-weight: 850;
+  white-space: nowrap;
+  box-shadow: 0 7px 16px rgba(15,118,110,.18);
+}
+
+@media (max-width: 720px) {
+  .invitacion-canal-final {
+    width: calc(100% - 16px);
+    margin-top: 12px;
+    border-radius: 17px;
+  }
+
+  .invitacion-canal-final-enlace {
+    min-height: 116px;
+    padding: 14px 15px;
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+    grid-template-areas: "icono texto boton";
+    gap: 10px;
+    text-align: left;
+    border-radius: 17px;
+  }
+
+  .invitacion-canal-final-icono-whatsapp {
+    width: 46px;
+    height: 46px;
+  }
+
+  .invitacion-canal-final-texto {
+    justify-items: start;
+  }
+
+  .invitacion-canal-final-texto strong {
+    font-size: clamp(.98rem, 4.3vw, 1.2rem);
+  }
+
+  .invitacion-canal-final-texto small {
+    font-size: clamp(.72rem, 3vw, .86rem);
+  }
+
+  .invitacion-canal-final-cta {
+    min-height: 44px;
+    width: auto;
+    justify-self: end;
+    padding: 0 13px;
+    border-radius: 12px;
+    font-size: .82rem;
+  }
+}
+
+@media (max-width: 440px) {
+  .invitacion-canal-final-enlace {
+    grid-template-columns: 42px minmax(0, 1fr);
+    grid-template-areas:
+      "icono texto"
+      "boton boton";
+    min-height: 132px;
+    gap: 8px 10px;
+  }
+
+  .invitacion-canal-final-icono-whatsapp {
+    width: 40px;
+    height: 40px;
+  }
+
+  .invitacion-canal-final-cta {
+    justify-self: center;
+    min-height: 42px;
+    padding: 0 22px;
+  }
+}
