@@ -1,4 +1,4 @@
-/* V78.1 — Selector oscuro discreto: conserva el diseño sin competir con las tarjetas */
+/* V78.2 — Selector oscuro neutro: selección visible sin colores dominantes */
 .navegacion-inferior.selector-cupones-oscuro {
   --selector-fondo: #0b1523;
   --selector-borde: rgba(148, 163, 184, .18);
@@ -55,30 +55,30 @@
 
 .navegacion-inferior.selector-cupones-oscuro #tab-tienda.activo,
 .navegacion-inferior.selector-cupones-oscuro #tab-tienda[aria-pressed="true"] {
-  color: #ddf9eb !important;
-  border-color: rgba(53, 212, 133, .30) !important;
-  background: rgba(53, 212, 133, .075) !important;
-  box-shadow: inset 0 0 0 1px rgba(53, 212, 133, .025) !important;
+  color: #eef3f8 !important;
+  border-color: rgba(255, 255, 255, .13) !important;
+  background: rgba(255, 255, 255, .045) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .018) !important;
 }
 
 .navegacion-inferior.selector-cupones-oscuro #tab-tienda.activo::before,
 .navegacion-inferior.selector-cupones-oscuro #tab-tienda[aria-pressed="true"]::before {
-  opacity: 1;
-  background: var(--selector-verde);
+  opacity: .65;
+  background: rgba(148, 163, 184, .72);
 }
 
 .navegacion-inferior.selector-cupones-oscuro #tab-bancarios.activo,
 .navegacion-inferior.selector-cupones-oscuro #tab-bancarios[aria-pressed="true"] {
-  color: #e3efff !important;
-  border-color: rgba(74, 141, 247, .32) !important;
-  background: rgba(74, 141, 247, .075) !important;
-  box-shadow: inset 0 0 0 1px rgba(74, 141, 247, .025) !important;
+  color: #eef3f8 !important;
+  border-color: rgba(255, 255, 255, .13) !important;
+  background: rgba(255, 255, 255, .045) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .018) !important;
 }
 
 .navegacion-inferior.selector-cupones-oscuro #tab-bancarios.activo::before,
 .navegacion-inferior.selector-cupones-oscuro #tab-bancarios[aria-pressed="true"]::before {
-  opacity: 1;
-  background: var(--selector-azul);
+  opacity: .65;
+  background: rgba(148, 163, 184, .72);
 }
 
 .navegacion-inferior.selector-cupones-oscuro .tab-icono {
@@ -153,12 +153,12 @@
 
 .navegacion-inferior.selector-cupones-oscuro #tab-tienda.activo .tab-textos small,
 .navegacion-inferior.selector-cupones-oscuro #tab-tienda[aria-pressed="true"] .tab-textos small {
-  color: rgba(190, 255, 222, .60);
+  color: #8d9bad;
 }
 
 .navegacion-inferior.selector-cupones-oscuro #tab-bancarios.activo .tab-textos small,
 .navegacion-inferior.selector-cupones-oscuro #tab-bancarios[aria-pressed="true"] .tab-textos small {
-  color: rgba(199, 222, 255, .62);
+  color: #8d9bad;
 }
 
 .navegacion-inferior.selector-cupones-oscuro .contador-seccion-inferior {
