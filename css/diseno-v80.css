@@ -1,0 +1,385 @@
+/* =========================================================
+   V80.0 — Rediseño visual reversible
+   Solo modifica presentación. No cambia lógica, API ni admin.
+   ========================================================= */
+
+:root {
+  --v80-texto: #17231d;
+  --v80-texto-suave: #66736c;
+  --v80-borde: #e4ebe7;
+  --v80-fondo: #f5f8f6;
+  --v80-superficie: #ffffff;
+  --v80-verde: #079447;
+  --v80-verde-oscuro: #08713b;
+  --v80-verde-suave: #edf8f1;
+  --v80-amarillo: #ffc528;
+  --v80-sombra: 0 10px 28px rgba(22, 50, 36, .075);
+  --v80-radio: 18px;
+}
+
+html {
+  background: var(--v80-fondo);
+}
+
+body {
+  color: var(--v80-texto);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(32, 185, 102, .045), transparent 28rem),
+    var(--v80-fondo);
+}
+
+/* Superficies generales más limpias */
+.contenedor {
+  width: min(1180px, calc(100% - 28px));
+}
+
+.ayuda-cupones {
+  border: 1px solid var(--v80-borde) !important;
+  border-radius: 15px !important;
+  background: rgba(255,255,255,.92) !important;
+  box-shadow: 0 5px 18px rgba(22, 50, 36, .045) !important;
+}
+
+.ayuda-cupones-toggle {
+  color: #3c4942 !important;
+}
+
+/* Cuadrícula */
+.cupones-grid-compacta {
+  gap: 16px !important;
+  align-items: stretch;
+}
+
+/* Tarjeta: misma estructura, nueva jerarquía */
+.cupon {
+  --tono-1: #6c5ce7;
+  --tono-2: #5142c9;
+  --tono-suave: #f3f1ff;
+
+  position: relative;
+  min-height: 342px !important;
+  border: 1px solid var(--v80-borde) !important;
+  border-radius: var(--v80-radio) !important;
+  background: var(--v80-superficie) !important;
+  box-shadow: var(--v80-sombra) !important;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  isolation: isolate;
+}
+
+.cupon::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  border-radius: var(--v80-radio) var(--v80-radio) 0 0;
+  background: linear-gradient(90deg, var(--tono-2), var(--tono-1));
+  z-index: 4;
+}
+
+@media (hover: hover) {
+  .cupon:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--tono-1) 25%, var(--v80-borde)) !important;
+    box-shadow: 0 16px 34px rgba(22, 50, 36, .11) !important;
+  }
+}
+
+/* Encabezado más ligero: conserva color, ya no domina toda la tarjeta */
+.cupon-encabezado {
+  min-height: 76px !important;
+  padding: 20px 20px 13px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  color: var(--tono-2) !important;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--tono-suave) 78%, white), white) !important;
+  border-bottom: 1px solid color-mix(in srgb, var(--tono-1) 10%, var(--v80-borde));
+}
+
+.cupon-encabezado::after {
+  width: 82px !important;
+  height: 82px !important;
+  top: -38px !important;
+  right: -24px !important;
+  background: color-mix(in srgb, var(--tono-1) 8%, transparent) !important;
+}
+
+.cupon-logo {
+  width: 36px !important;
+  height: 36px !important;
+  flex: 0 0 36px !important;
+  border: 1px solid rgba(255,255,255,.9) !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  box-shadow: 0 4px 12px rgba(25, 42, 33, .07);
+  object-fit: contain !important;
+}
+
+.descuento {
+  color: var(--tono-2) !important;
+  font-size: clamp(28px, 3.3vw, 39px) !important;
+  font-weight: 850 !important;
+  letter-spacing: -.035em;
+  line-height: .98 !important;
+}
+
+.cupon-contenido {
+  gap: 11px !important;
+  padding: 15px 18px 17px !important;
+}
+
+.cupon-etiquetas {
+  min-height: 27px !important;
+  align-items: center;
+}
+
+.etiqueta-cupon,
+.etiqueta-popular-integrada {
+  padding: 5px 9px !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+  font-size: 11px !important;
+  letter-spacing: .01em;
+}
+
+.descuento-maximo {
+  color: var(--v80-texto) !important;
+  font-size: 16px !important;
+  line-height: 1.35 !important;
+}
+
+.descuento-maximo strong {
+  color: #111b16;
+  font-weight: 850 !important;
+}
+
+.compra-minima {
+  padding: 6px 9px !important;
+  border: 1px solid #f4e7a4;
+  border-radius: 9px !important;
+  color: #393a2c !important;
+  background: #fff9d9 !important;
+  font-size: 12.5px !important;
+}
+
+.cupon-usado {
+  border: 0 !important;
+  border-radius: 11px !important;
+  background: var(--v80-verde-suave) !important;
+  color: var(--v80-verde-oscuro) !important;
+  box-shadow: inset 0 0 0 1px rgba(7, 148, 71, .10);
+}
+
+.acciones-bloque {
+  margin-top: auto !important;
+  padding-top: 4px;
+}
+
+/* Acción principal: conserva amarillo, aspecto más refinado */
+.boton-canjear {
+  min-height: 46px;
+  padding: 11px 13px !important;
+  border-radius: 12px !important;
+  color: #263028 !important;
+  background: linear-gradient(180deg, #ffd04b, var(--v80-amarillo)) !important;
+  box-shadow: 0 7px 16px rgba(220, 160, 0, .16) !important;
+  font-size: 14px !important;
+  font-weight: 850 !important;
+  transition: transform .16s ease, filter .16s ease, box-shadow .16s ease;
+}
+
+@media (hover: hover) {
+  .boton-canjear:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.015);
+    box-shadow: 0 9px 20px rgba(220, 160, 0, .20) !important;
+  }
+}
+
+.boton-canjear:active {
+  transform: translateY(0) scale(.99);
+}
+
+.acciones-secundarias {
+  margin-top: 10px !important;
+  padding-top: 9px;
+  border-top: 1px solid #edf1ef;
+}
+
+.boton-like,
+.boton-compartir {
+  min-width: 38px !important;
+  min-height: 36px !important;
+  border: 1px solid var(--v80-borde) !important;
+  background: #f8faf9 !important;
+  color: #55645c !important;
+  box-shadow: none !important;
+}
+
+.boton-like.activo,
+.boton-compartir {
+  border-color: rgba(7,148,71,.12) !important;
+  color: var(--v80-verde-oscuro) !important;
+  background: var(--v80-verde-suave) !important;
+}
+
+.estadisticas-cupon {
+  color: var(--v80-texto-suave) !important;
+}
+
+.estadistica-likes,
+.estadistica-usos {
+  color: var(--v80-texto-suave) !important;
+}
+
+/* Mensajes y estados */
+.estado-carga,
+.sin-cupones {
+  border: 1px solid var(--v80-borde);
+  border-radius: var(--v80-radio);
+  background: #fff;
+  box-shadow: var(--v80-sombra);
+}
+
+/* Adaptación móvil: sigue mostrando dos columnas */
+@media (max-width: 680px) {
+  body {
+    background: #f7f9f8;
+  }
+
+  .contenedor {
+    width: calc(100% - 14px);
+    margin-top: 11px !important;
+  }
+
+  .cupones-grid-compacta {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  .cupon {
+    min-height: 0 !important;
+    height: 100% !important;
+    border-radius: 14px !important;
+    box-shadow: 0 5px 15px rgba(22, 50, 36, .07) !important;
+  }
+
+  .cupon::before {
+    height: 3px;
+    border-radius: 14px 14px 0 0;
+  }
+
+  .cupon-encabezado {
+    min-height: 48px !important;
+    padding: 9px 8px 7px !important;
+    gap: 6px !important;
+  }
+
+  .cupon-logo {
+    width: 25px !important;
+    height: 25px !important;
+    flex-basis: 25px !important;
+    border-radius: 7px !important;
+  }
+
+  .descuento {
+    font-size: clamp(19px, 6vw, 24px) !important;
+    letter-spacing: -.025em;
+  }
+
+  .cupon-contenido {
+    gap: 6px !important;
+    padding: 8px 7px 8px !important;
+  }
+
+  .cupon-etiquetas {
+    min-height: 20px !important;
+  }
+
+  .etiqueta-cupon,
+  .etiqueta-popular-integrada {
+    padding: 3px 6px !important;
+    font-size: 8.5px !important;
+  }
+
+  .descuento-maximo {
+    font-size: 10.5px !important;
+    line-height: 1.25 !important;
+  }
+
+  .compra-minima {
+    padding: 4px 5px !important;
+    border-radius: 7px !important;
+    font-size: 9px !important;
+  }
+
+  .cupon-usado {
+    padding: 5px !important;
+    border-radius: 8px !important;
+    font-size: 8.5px !important;
+  }
+
+  .acciones-bloque {
+    padding-top: 2px;
+  }
+
+  .boton-canjear {
+    min-height: 34px;
+    padding: 7px 4px !important;
+    border-radius: 9px !important;
+    font-size: 10px !important;
+    box-shadow: 0 4px 10px rgba(220, 160, 0, .14) !important;
+  }
+
+  .acciones-secundarias {
+    gap: 3px !important;
+    margin-top: 5px !important;
+    padding-top: 5px;
+  }
+
+  .boton-like,
+  .boton-compartir {
+    min-width: 30px !important;
+    min-height: 30px !important;
+    padding: 5px !important;
+  }
+
+  .boton-like svg,
+  .boton-compartir svg {
+    width: 15px !important;
+    height: 15px !important;
+  }
+
+  .estadisticas-cupon {
+    gap: 5px !important;
+    font-size: 9px !important;
+  }
+
+  .estadistica-item svg {
+    width: 13px !important;
+    height: 13px !important;
+  }
+}
+
+@media (max-width: 340px) {
+  .cupones-grid-compacta {
+    gap: 6px !important;
+  }
+
+  .descuento {
+    font-size: 18px !important;
+  }
+
+  .boton-canjear {
+    font-size: 9px !important;
+  }
+}
+
+/* Accesibilidad: reduce animación si el usuario lo solicita */
+@media (prefers-reduced-motion: reduce) {
+  .cupon,
+  .boton-canjear {
+    transition: none !important;
+    animation: none !important;
+  }
+}
