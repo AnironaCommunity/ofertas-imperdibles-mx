@@ -1,17 +1,17 @@
-/* V78.2 — Selector oscuro neutro: selección visible sin colores dominantes */
+/* V78.3 — Selector integrado: caja blanca y color heredado de la barra principal */
 .navegacion-inferior.selector-cupones-oscuro {
-  --selector-fondo: #0b1523;
-  --selector-borde: rgba(148, 163, 184, .18);
-  --selector-verde: #36cf84;
-  --selector-azul: #4a8df7;
+  --selector-color-inicio: var(--tema-color-inicio, #e9cdff);
+  --selector-color-fin: var(--tema-color-fin, #fae8fa);
+  --selector-texto: #2f3a35;
+  --selector-texto-suave: #78837d;
   width: min(500px, calc(100% - 24px));
   gap: 4px !important;
   padding: 4px !important;
-  border: 1px solid var(--selector-borde) !important;
+  border: 1px solid #e2e8e4 !important;
   border-radius: 14px !important;
-  background: rgba(8, 18, 31, .95) !important;
-  box-shadow: 0 8px 22px rgba(2, 8, 23, .24) !important;
-  backdrop-filter: blur(10px);
+  background: #ffffff !important;
+  box-shadow: 0 5px 16px rgba(28, 43, 34, .08) !important;
+  backdrop-filter: none;
 }
 
 .navegacion-inferior.selector-cupones-oscuro .tab-inferior {
@@ -21,7 +21,7 @@
   gap: 7px !important;
   padding: 5px 10px !important;
   overflow: hidden;
-  color: #9aaabd !important;
+  color: var(--selector-texto-suave) !important;
   border: 1px solid transparent !important;
   border-radius: 10px !important;
   background: transparent !important;
@@ -33,19 +33,20 @@
 .navegacion-inferior.selector-cupones-oscuro .tab-inferior::before {
   content: "";
   position: absolute;
-  left: 20%;
-  right: 20%;
-  bottom: 0;
+  left: 24%;
+  right: 24%;
+  bottom: 1px;
   height: 2px;
-  border-radius: 999px 999px 0 0;
+  border-radius: 999px;
   opacity: 0;
+  background: color-mix(in srgb, var(--selector-color-inicio) 76%, #52615a);
   transition: opacity .18s ease;
 }
 
 .navegacion-inferior.selector-cupones-oscuro .tab-inferior:hover,
 .navegacion-inferior.selector-cupones-oscuro .tab-inferior:focus-visible {
-  color: #d8e1ec !important;
-  background: rgba(255, 255, 255, .035) !important;
+  color: var(--selector-texto) !important;
+  background: #f7f9f8 !important;
   transform: none;
 }
 
@@ -54,31 +55,25 @@
 }
 
 .navegacion-inferior.selector-cupones-oscuro #tab-tienda.activo,
-.navegacion-inferior.selector-cupones-oscuro #tab-tienda[aria-pressed="true"] {
-  color: #eef3f8 !important;
-  border-color: rgba(255, 255, 255, .13) !important;
-  background: rgba(255, 255, 255, .045) !important;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .018) !important;
+.navegacion-inferior.selector-cupones-oscuro #tab-tienda[aria-pressed="true"],
+.navegacion-inferior.selector-cupones-oscuro #tab-bancarios.activo,
+.navegacion-inferior.selector-cupones-oscuro #tab-bancarios[aria-pressed="true"] {
+  color: #27312c !important;
+  border-color: color-mix(in srgb, var(--selector-color-inicio) 42%, #dce4df) !important;
+  background-color: color-mix(in srgb, var(--selector-color-inicio) 20%, #ffffff) !important;
+  background-image: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--selector-color-inicio) 42%, #ffffff),
+    color-mix(in srgb, var(--selector-color-fin) 48%, #ffffff)
+  ) !important;
+  box-shadow: none !important;
 }
 
 .navegacion-inferior.selector-cupones-oscuro #tab-tienda.activo::before,
-.navegacion-inferior.selector-cupones-oscuro #tab-tienda[aria-pressed="true"]::before {
-  opacity: .65;
-  background: rgba(148, 163, 184, .72);
-}
-
-.navegacion-inferior.selector-cupones-oscuro #tab-bancarios.activo,
-.navegacion-inferior.selector-cupones-oscuro #tab-bancarios[aria-pressed="true"] {
-  color: #eef3f8 !important;
-  border-color: rgba(255, 255, 255, .13) !important;
-  background: rgba(255, 255, 255, .045) !important;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .018) !important;
-}
-
+.navegacion-inferior.selector-cupones-oscuro #tab-tienda[aria-pressed="true"]::before,
 .navegacion-inferior.selector-cupones-oscuro #tab-bancarios.activo::before,
 .navegacion-inferior.selector-cupones-oscuro #tab-bancarios[aria-pressed="true"]::before {
-  opacity: .65;
-  background: rgba(148, 163, 184, .72);
+  opacity: .7;
 }
 
 .navegacion-inferior.selector-cupones-oscuro .tab-icono {
@@ -88,8 +83,14 @@
   flex: 0 0 22px;
   place-items: center;
   border-radius: 6px;
+  color: #69766f;
   font-size: 0 !important;
   background: transparent !important;
+}
+
+.navegacion-inferior.selector-cupones-oscuro .tab-inferior.activo .tab-icono,
+.navegacion-inferior.selector-cupones-oscuro .tab-inferior[aria-pressed="true"] .tab-icono {
+  color: color-mix(in srgb, var(--selector-color-inicio) 52%, #30473b);
 }
 
 .navegacion-inferior.selector-cupones-oscuro .tab-icono svg {
@@ -102,21 +103,13 @@
   stroke-linejoin: round;
 }
 
-.navegacion-inferior.selector-cupones-oscuro .tab-icono-cupon {
-  color: var(--selector-verde);
-}
-
 .navegacion-inferior.selector-cupones-oscuro .tab-icono-cupon svg path:first-child {
   fill: currentColor;
   stroke: currentColor;
 }
 
 .navegacion-inferior.selector-cupones-oscuro .tab-icono-cupon svg path:last-child {
-  stroke: #082018;
-}
-
-.navegacion-inferior.selector-cupones-oscuro .tab-icono-tarjeta {
-  color: var(--selector-azul);
+  stroke: #ffffff;
 }
 
 .navegacion-inferior.selector-cupones-oscuro .tab-textos {
@@ -143,7 +136,7 @@
 .navegacion-inferior.selector-cupones-oscuro .tab-textos small {
   max-width: 100%;
   overflow: hidden;
-  color: #718197;
+  color: #8a958f;
   font-size: 7.5px;
   font-weight: 500;
   line-height: 1.15;
@@ -151,14 +144,9 @@
   white-space: nowrap;
 }
 
-.navegacion-inferior.selector-cupones-oscuro #tab-tienda.activo .tab-textos small,
-.navegacion-inferior.selector-cupones-oscuro #tab-tienda[aria-pressed="true"] .tab-textos small {
-  color: #8d9bad;
-}
-
-.navegacion-inferior.selector-cupones-oscuro #tab-bancarios.activo .tab-textos small,
-.navegacion-inferior.selector-cupones-oscuro #tab-bancarios[aria-pressed="true"] .tab-textos small {
-  color: #8d9bad;
+.navegacion-inferior.selector-cupones-oscuro .tab-inferior.activo .tab-textos small,
+.navegacion-inferior.selector-cupones-oscuro .tab-inferior[aria-pressed="true"] .tab-textos small {
+  color: #65716b;
 }
 
 .navegacion-inferior.selector-cupones-oscuro .contador-seccion-inferior {
@@ -168,9 +156,9 @@
   min-width: 16px !important;
   height: 16px !important;
   padding: 0 4px !important;
-  color: #dbe6f2 !important;
-  border: 1px solid rgba(255,255,255,.10);
-  background: #172437 !important;
+  color: #47534d !important;
+  border: 1px solid #dde5e0;
+  background: #f2f6f3 !important;
   font-size: 7px !important;
   box-shadow: none !important;
 }
