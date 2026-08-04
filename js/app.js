@@ -132,6 +132,7 @@ let timeoutRedireccion = null;
 let categoriaActiva = "tienda";
 let vistaActiva = "cupones";
 let todosLosCupones = [];
+let firmaUltimosCupones = "";
 let todasLasPublicidades = [];
 let temporizadorEstados = null;
 
@@ -1054,9 +1055,19 @@ async function cargarCupones() {
     }
 
     const cupones = await respuesta.json();
+    const nuevosCupones = Array.isArray(cupones) ? cupones : [];
+    const nuevaFirmaCupones = JSON.stringify(nuevosCupones);
+    const contenidoCambio = nuevaFirmaCupones !== firmaUltimosCupones;
 
-    todosLosCupones = Array.isArray(cupones) ? cupones : [];
-    renderizarCategoria();
+    todosLosCupones = nuevosCupones;
+
+    // Evita vaciar y reconstruir las tarjetas en cada consulta automática.
+    // Solo se redibuja la sección cuando la información realmente cambió.
+    if (contenidoCambio) {
+      firmaUltimosCupones = nuevaFirmaCupones;
+      renderizarCategoria();
+    }
+
     actualizarContadoresSecciones();
     revisarAvisosNovedades();
     procesarNovedadDesdeUrl();
