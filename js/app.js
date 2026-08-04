@@ -24,7 +24,7 @@ const tabTienda = document.querySelector("#tab-tienda");
 const tabBancarios = document.querySelector("#tab-bancarios");
 const vistaCupones = document.querySelector("#vista-cupones");
 const botonesMenuOfertas = document.querySelectorAll(".menu-ofertas [data-vista]");
-const botonComunidadAnirona = document.querySelector(".acceso-comunidad-anirona[data-vista]");
+const botonComunidadAnirona = document.querySelector("#boton-anirona-hero[data-vista]");
 const menuOfertas = document.querySelector(".menu-ofertas");
 const contadorCuponesTienda = document.querySelector(
   "#contador-cupones-tienda"
