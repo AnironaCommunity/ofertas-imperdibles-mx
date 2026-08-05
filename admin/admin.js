@@ -2037,6 +2037,7 @@ function renderAds() {
       </div>
 
       <div class="ad-actions">
+        <button class="compartir-producto" data-action="share-product" data-id="${ad.id}" type="button">Compartir</button>
         <button class="editar" data-action="edit" data-id="${ad.id}" type="button">Editar</button>
         <button class="duplicar" data-action="duplicate" data-id="${ad.id}" type="button">Duplicar</button>
         <button class="estado" data-action="toggle" data-id="${ad.id}" type="button">
@@ -2050,6 +2051,185 @@ function renderAds() {
   }
 
   adList.appendChild(fragment);
+}
+
+
+/* ================= COMPARTIR PRODUCTO CON CUPÓN ================= */
+function activeProductShareCoupons() {
+  const now = Date.now();
+
+  return coupons.filter((coupon) => {
+    if (!coupon.activo || !String(coupon.codigo || "").trim()) return false;
+
+    const start = coupon.fecha_inicio ? new Date(coupon.fecha_inicio).getTime() : null;
+    const end = coupon.fecha_fin ? new Date(coupon.fecha_fin).getTime() : null;
+
+    if (start !== null && Number.isFinite(start) && start > now) return false;
+    if (end !== null && Number.isFinite(end) && end <= now) return false;
+    return true;
+  });
+}
+
+function couponOptionsForPrice(productPrice) {
+  return activeProductShareCoupons()
+    .map((coupon) => calculateCouponDiscount(coupon, productPrice))
+    .filter(Boolean)
+    .sort((a, b) => {
+      if (b.discount !== a.discount) return b.discount - a.discount;
+      return b.minimum - a.minimum;
+    });
+}
+
+function productShareLink(ad) {
+  const links = adMarketplaceLinks(ad);
+  return links.mercadoLibre || links.amazon || ad.enlace || productWebUrl(ad);
+}
+
+function formatProductShareTitle(value) {
+  const title = String(value || "Producto").trim().replace(/^\*+|\*+$/g, "");
+  const match = title.match(/^([^|]+(?:OFF|DE DESCUENTO))\s*\|\s*(.+)$/i);
+  if (!match) return `*${title}*`;
+  return `*${match[1].trim()}* | ${match[2].trim()}`;
+}
+
+function buildProductShareText(ad, productPrice, recommendation) {
+  const link = productShareLink(ad);
+  const title = formatProductShareTitle(ad.titulo);
+  const priceText = formatMoney(productPrice);
+
+  if (!recommendation) {
+    return [
+      title,
+      `Enlace de compra ${link}`,
+      "",
+      `💰 Precio actual: *${priceText}*`,
+    ].join("\n");
+  }
+
+  return [
+    title,
+    `Enlace de compra ${link}`,
+    "",
+    `💰 Precio actual: *${priceText}*`,
+    `🎟️ Usa el cupón *${recommendation.coupon.codigo}* y paga solo *${formatMoney(recommendation.finalPrice)}*`,
+  ].join("\n");
+}
+
+function ensureProductShareDialog() {
+  let dialog = document.querySelector("#compartir-producto-dialogo");
+  if (dialog) return dialog;
+
+  dialog = document.createElement("dialog");
+  dialog.id = "compartir-producto-dialogo";
+  dialog.className = "compartir-producto-dialogo";
+  dialog.innerHTML = `
+    <form method="dialog" class="compartir-producto-panel">
+      <div class="compartir-producto-cabecera">
+        <div>
+          <span class="compartir-producto-etiqueta">Texto listo para WhatsApp</span>
+          <h3 id="compartir-producto-titulo">Compartir producto</h3>
+        </div>
+        <button class="compartir-producto-cerrar" value="cancel" type="submit" aria-label="Cerrar">×</button>
+      </div>
+
+      <label class="compartir-producto-precio">
+        <span>Precio actual del producto</span>
+        <input id="compartir-producto-precio" inputmode="decimal" autocomplete="off" placeholder="$0" />
+      </label>
+
+      <div id="compartir-producto-cupones" class="compartir-producto-cupones"></div>
+
+      <label class="compartir-producto-texto-label" for="compartir-producto-texto">Vista previa</label>
+      <textarea id="compartir-producto-texto" rows="7" readonly></textarea>
+
+      <p id="compartir-producto-mensaje" class="mensaje" aria-live="polite"></p>
+
+      <div class="compartir-producto-acciones">
+        <button id="compartir-producto-copiar" class="boton-principal" type="button">📋 Copiar texto</button>
+        <button class="boton-secundario" value="cancel" type="submit">Cerrar</button>
+      </div>
+    </form>`;
+
+  document.body.appendChild(dialog);
+  return dialog;
+}
+
+function openProductShareDialog(ad) {
+  const dialog = ensureProductShareDialog();
+  const title = dialog.querySelector("#compartir-producto-titulo");
+  const priceInput = dialog.querySelector("#compartir-producto-precio");
+  const couponList = dialog.querySelector("#compartir-producto-cupones");
+  const textArea = dialog.querySelector("#compartir-producto-texto");
+  const message = dialog.querySelector("#compartir-producto-mensaje");
+  const copyButton = dialog.querySelector("#compartir-producto-copiar");
+
+  title.textContent = ad.titulo || "Compartir producto";
+  priceInput.value = ad.precio_publicado || "";
+  couponList.replaceChildren();
+  textArea.value = "";
+  setMessage(message);
+
+  const update = () => {
+    const price = parseMoney(priceInput.value);
+    couponList.replaceChildren();
+
+    if (!price) {
+      textArea.value = buildProductShareText(ad, 0, null).replace(
+        "💰 Precio actual: *$0*",
+        "💰 Precio actual: *Ingresa el precio*"
+      );
+      couponList.innerHTML = '<p class="compartir-producto-ayuda">Ingresa el precio para buscar los cupones que aplican.</p>';
+      copyButton.disabled = true;
+      return;
+    }
+
+    const options = couponOptionsForPrice(price);
+    let selected = options[0] || null;
+
+    if (!options.length) {
+      couponList.innerHTML = '<p class="compartir-producto-ayuda">No hay cupones activos que cumplan la compra mínima. Puedes copiar el producto solo con su precio actual.</p>';
+    } else {
+      options.forEach((option, index) => {
+        const label = document.createElement("label");
+        label.className = "compartir-producto-cupon";
+        label.innerHTML = `
+          <input type="radio" name="compartir-cupon" value="${escapeHtml(String(option.coupon.id || option.coupon.codigo))}" ${index === 0 ? "checked" : ""}>
+          <span class="compartir-producto-cupon-contenido">
+            <span class="compartir-producto-cupon-fila">
+              <strong>${escapeHtml(option.coupon.codigo)}</strong>
+              ${index === 0 ? '<em>🏆 Mejor ahorro</em>' : ""}
+            </span>
+            <span>${escapeHtml(option.coupon.titulo || "Cupón")}</span>
+            <small>Ahorro ${escapeHtml(formatMoney(option.discount))} · Paga ${escapeHtml(formatMoney(option.finalPrice))}</small>
+          </span>`;
+        label.querySelector("input").addEventListener("change", () => {
+          selected = option;
+          textArea.value = buildProductShareText(ad, price, selected);
+        });
+        couponList.appendChild(label);
+      });
+    }
+
+    textArea.value = buildProductShareText(ad, price, selected);
+    copyButton.disabled = false;
+  };
+
+  priceInput.oninput = update;
+  copyButton.onclick = async () => {
+    try {
+      await copyTextSafely(textArea.value);
+      setMessage(message, "✅ Texto copiado. Ya puedes pegarlo en WhatsApp o Facebook.");
+    } catch (error) {
+      setMessage(message, error.message, true);
+    }
+  };
+
+  update();
+  dialog.showModal();
+  window.setTimeout(() => {
+    priceInput.focus();
+    priceInput.select();
+  }, 50);
 }
 
 async function copyTextSafely(text) {
@@ -2348,6 +2528,12 @@ async function handleAdList(event) {
 
   if (button.dataset.action === "duplicate") {
     duplicateAd(ad);
+    return;
+  }
+
+  if (button.dataset.action === "share-product") {
+    if (!coupons.length) await loadCoupons();
+    openProductShareDialog(ad);
     return;
   }
 

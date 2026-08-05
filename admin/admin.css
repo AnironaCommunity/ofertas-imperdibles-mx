@@ -2024,3 +2024,198 @@ table td {
   width: 18px;
   height: 18px;
 }
+
+/* v77.18 — Asistente para compartir productos con cupón */
+.ad-item-productivo .ad-actions {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.compartir-producto {
+  background: linear-gradient(135deg, #1769e0, #0f54bd);
+  color: #fff;
+}
+
+.compartir-producto-dialogo {
+  width: min(680px, calc(100% - 24px));
+  max-height: min(880px, calc(100dvh - 24px));
+  padding: 0;
+  border: 0;
+  border-radius: 22px;
+  box-shadow: 0 24px 70px rgba(15, 31, 54, .28);
+  overflow: hidden;
+}
+
+.compartir-producto-dialogo::backdrop {
+  background: rgba(15, 31, 54, .62);
+  backdrop-filter: blur(3px);
+}
+
+.compartir-producto-panel {
+  display: grid;
+  gap: 16px;
+  padding: 22px;
+  max-height: calc(100dvh - 24px);
+  overflow: auto;
+  background: #fff;
+}
+
+.compartir-producto-cabecera,
+.compartir-producto-cupon-fila,
+.compartir-producto-acciones {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.compartir-producto-cabecera h3 {
+  margin: 3px 0 0;
+  font-size: clamp(18px, 3vw, 24px);
+  line-height: 1.2;
+}
+
+.compartir-producto-etiqueta {
+  color: #1769e0;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.compartir-producto-cerrar {
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  background: #eef3f8;
+  color: #23364d;
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.compartir-producto-precio,
+.compartir-producto-texto-label {
+  display: grid;
+  gap: 7px;
+  color: #26384d;
+  font-weight: 750;
+}
+
+.compartir-producto-precio input,
+#compartir-producto-texto {
+  width: 100%;
+  border: 1px solid #cfd9e5;
+  border-radius: 14px;
+  background: #fbfdff;
+  color: #17263a;
+  font: inherit;
+}
+
+.compartir-producto-precio input {
+  min-height: 50px;
+  padding: 10px 14px;
+  font-size: 22px;
+  font-weight: 750;
+}
+
+#compartir-producto-texto {
+  min-height: 170px;
+  padding: 14px;
+  line-height: 1.55;
+  resize: vertical;
+}
+
+.compartir-producto-cupones {
+  display: grid;
+  gap: 9px;
+  max-height: 285px;
+  overflow: auto;
+  padding-right: 3px;
+}
+
+.compartir-producto-cupon {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 11px;
+  align-items: center;
+  padding: 12px 13px;
+  border: 1px solid #dce5ef;
+  border-radius: 14px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+.compartir-producto-cupon:hover,
+.compartir-producto-cupon:has(input:checked) {
+  border-color: #3480e5;
+  box-shadow: 0 7px 20px rgba(23, 105, 224, .12);
+  transform: translateY(-1px);
+}
+
+.compartir-producto-cupon input {
+  width: 19px;
+  height: 19px;
+  accent-color: #1769e0;
+}
+
+.compartir-producto-cupon-contenido {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.compartir-producto-cupon-fila strong {
+  color: #17263a;
+  font-size: 16px;
+}
+
+.compartir-producto-cupon-fila em {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #fff4cc;
+  color: #8a6200;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.compartir-producto-cupon-contenido > span:nth-child(2),
+.compartir-producto-cupon-contenido small {
+  color: #627287;
+}
+
+.compartir-producto-ayuda {
+  margin: 0;
+  padding: 13px 14px;
+  border-radius: 13px;
+  background: #f2f6fa;
+  color: #596b7f;
+  line-height: 1.45;
+}
+
+.compartir-producto-acciones {
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 760px) {
+  .ad-item-productivo .ad-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ad-item-productivo .ad-actions .compartir-producto {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 520px) {
+  .compartir-producto-panel {
+    padding: 17px;
+  }
+
+  .compartir-producto-acciones > * {
+    width: 100%;
+  }
+}
