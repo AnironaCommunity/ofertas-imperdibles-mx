@@ -654,7 +654,7 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
   const cardHeight = 166;
   const rows = Math.ceil(selectedCoupons.length / columns);
   const cardsAreaHeight = rows * cardHeight + Math.max(0, rows - 1) * rowGap;
-  const footerHeight = 82;
+  const footerHeight = 66;
   const cardsTop = outerPadding + topHeight + introHeight;
   const footerTop = cardsTop + cardsAreaHeight + 18;
   const height = footerTop + footerHeight + outerPadding;
@@ -676,10 +676,9 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
   roundedRect(context, outerPadding, outerPadding, width - outerPadding * 2, height - outerPadding * 2, 28);
   context.clip();
 
-  const [marketplaceLogo, offersLogo, foxMascot] = await Promise.all([
+  const [marketplaceLogo, offersLogo] = await Promise.all([
     loadShareImage("../img/mercado-libre-resumen-compacto.png"),
     loadShareImage("../img/logo-ofertas-zorro.png"),
-    loadShareImage("../img/zorro-ofertas.png"),
   ]);
 
   // Encabezado amarillo con curva blanca, como la referencia.
@@ -703,17 +702,17 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
 
   context.fillStyle = "#111827";
   context.textAlign = "center";
-  context.font = "900 32px Arial, sans-serif";
+  context.font = "700 32px \"Segoe UI\", Arial, sans-serif";
   context.fillText("Cupones disponibles hoy", width / 2, introY + 42);
   context.fillStyle = "#475569";
-  context.font = "500 16px Arial, sans-serif";
+  context.font = "400 16px \"Segoe UI\", Arial, sans-serif";
   context.fillText("Encuentra el descuento que mejor se adapte a tu compra", width / 2, introY + 70);
 
   context.fillStyle = "#ffe000";
   roundedRect(context, width / 2 - 108, introY + 88, 216, 38, 19);
   context.fill();
   context.fillStyle = "#173b7a";
-  context.font = "800 16px Arial, sans-serif";
+  context.font = "600 16px \"Segoe UI\", Arial, sans-serif";
   context.fillText(shareSummaryDate(), width / 2, introY + 113);
 
   const contentWidth = width - (outerPadding + contentPadding) * 2;
@@ -738,11 +737,11 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
     return raw.replace(/\boff\b/i, "OFF");
   }
 
-  function fittedText(text, x, y, maxWidth, preferredSize, minimumSize, weight = 900) {
+  function fittedText(text, x, y, maxWidth, preferredSize, minimumSize, weight = 700) {
     const safeText = String(text || "").trim();
     let fontSize = preferredSize;
     while (fontSize > minimumSize) {
-      context.font = `${weight} ${fontSize}px Arial, sans-serif`;
+      context.font = `${weight} ${fontSize}px "Segoe UI", Arial, sans-serif`;
       if (context.measureText(safeText).width <= maxWidth) break;
       fontSize -= 1;
     }
@@ -782,7 +781,7 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
 
     context.fillStyle = "#ffffff";
     context.textAlign = "center";
-    fittedText(normalizeDiscount(coupon), x + cardWidth / 2, y + 43, cardWidth - 20, 25, 18);
+    fittedText(normalizeDiscount(coupon), x + cardWidth / 2, y + 43, cardWidth - 20, 25, 18, 700);
 
     const infoX = x + 10;
     const infoWidth = cardWidth - 20;
@@ -790,25 +789,25 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
     roundedRect(context, infoX, y + 80, infoWidth, 34, 10);
     context.fill();
     context.fillStyle = "#475569";
-    context.font = "700 12px Arial, sans-serif";
+    context.font = "500 12px \"Segoe UI\", Arial, sans-serif";
     context.textAlign = "left";
     context.fillText("Compra mínima:", infoX + 10, y + 102);
     context.fillStyle = "#111827";
-    context.font = "900 15px Arial, sans-serif";
+    context.font = "700 15px \"Segoe UI\", Arial, sans-serif";
     context.textAlign = "right";
-    fittedText(String(coupon.compra_minima || "Consultar"), infoX + infoWidth - 10, y + 103, infoWidth - 104, 15, 10, 900);
+    fittedText(String(coupon.compra_minima || "Consultar"), infoX + infoWidth - 10, y + 103, infoWidth - 104, 15, 10, 700);
 
     context.fillStyle = "#f8fafc";
     roundedRect(context, infoX, y + 122, infoWidth, 34, 10);
     context.fill();
     context.fillStyle = "#475569";
-    context.font = "700 12px Arial, sans-serif";
+    context.font = "500 12px \"Segoe UI\", Arial, sans-serif";
     context.textAlign = "left";
     context.fillText("Descuento máx:", infoX + 10, y + 144);
     context.fillStyle = color.text;
-    context.font = "900 15px Arial, sans-serif";
+    context.font = "700 15px \"Segoe UI\", Arial, sans-serif";
     context.textAlign = "right";
-    fittedText(String(coupon.ahorro_maximo || "Consultar"), infoX + infoWidth - 10, y + 145, infoWidth - 112, 15, 10, 900);
+    fittedText(String(coupon.ahorro_maximo || "Consultar"), infoX + infoWidth - 10, y + 145, infoWidth - 112, 15, 10, 700);
   });
 
   // Pie amarillo compacto.
@@ -818,35 +817,32 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
   context.strokeStyle = "#173b7a";
   context.lineWidth = 3;
   context.beginPath();
-  context.arc(outerPadding + 38, footerTop + 40, 17, 0, Math.PI * 2);
+  context.arc(outerPadding + 38, footerTop + 33, 16, 0, Math.PI * 2);
   context.stroke();
   context.beginPath();
-  context.ellipse(outerPadding + 38, footerTop + 40, 7, 17, 0, 0, Math.PI * 2);
+  context.ellipse(outerPadding + 38, footerTop + 33, 7, 16, 0, 0, Math.PI * 2);
   context.stroke();
   context.beginPath();
-  context.moveTo(outerPadding + 22, footerTop + 40);
-  context.lineTo(outerPadding + 54, footerTop + 40);
+  context.moveTo(outerPadding + 22, footerTop + 33);
+  context.lineTo(outerPadding + 54, footerTop + 33);
   context.stroke();
 
   let cleanLink = String(link || "").replace(/^https?:\/\//i, "").replace(/\/$/, "");
   context.textAlign = "left";
   context.fillStyle = "#173b7a";
-  context.font = "700 15px Arial, sans-serif";
-  context.fillText("Actívalos en:", outerPadding + 67, footerTop + 31);
-  context.font = "900 18px Arial, sans-serif";
-  fittedText(cleanLink, outerPadding + 67, footerTop + 57, width - 180, 18, 13, 900);
+  context.font = "500 15px \"Segoe UI\", Arial, sans-serif";
+  context.fillText("Actívalos en:", outerPadding + 67, footerTop + 25);
+  context.font = "700 18px \"Segoe UI\", Arial, sans-serif";
+  fittedText(cleanLink, outerPadding + 67, footerTop + 50, width - outerPadding * 2 - 82, 18, 13, 700);
 
   if (selectedCoupons.length < totalActive) {
     context.textAlign = "right";
     context.fillStyle = "#173b7a";
-    context.font = "700 12px Arial, sans-serif";
-    context.fillText(`+${totalActive - selectedCoupons.length} más`, width - outerPadding - 145, footerTop + 29);
+    context.font = "500 12px \"Segoe UI\", Arial, sans-serif";
+    context.fillText(`+${totalActive - selectedCoupons.length} más`, width - outerPadding - 18, footerTop + 24);
   }
 
-  // El zorro identifica a Ofertas Imperdibles y se integra sin quitar espacio a las tarjetas.
-  if (foxMascot) {
-    drawImageContain(context, foxMascot, width - outerPadding - 142, footerTop - 72, 128, 148);
-  }
+  // El pie queda limpio para aprovechar todo el ancho disponible.
 
   context.restore();
 
