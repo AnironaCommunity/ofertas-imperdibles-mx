@@ -676,9 +676,10 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
   roundedRect(context, outerPadding, outerPadding, width - outerPadding * 2, height - outerPadding * 2, 28);
   context.clip();
 
-  const [marketplaceLogo, offersLogo] = await Promise.all([
+  const [marketplaceLogo, offersLogo, foxMascot] = await Promise.all([
     loadShareImage("../img/mercado-libre-resumen-compacto.png"),
-    loadShareImage("../img/logo-ofertas-transparente.png"),
+    loadShareImage("../img/logo-ofertas-zorro.png"),
+    loadShareImage("../img/zorro-ofertas.png"),
   ]);
 
   // Encabezado amarillo con curva blanca, como la referencia.
@@ -693,7 +694,7 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
     drawImageContain(context, marketplaceLogo, outerPadding + 18, outerPadding + 18, 265, 68);
   }
   if (offersLogo) {
-    drawImageContain(context, offersLogo, width - 274, outerPadding + 23, 235, 58);
+    drawImageContain(context, offersLogo, width - 286, outerPadding + 14, 255, 82);
   }
 
   const introY = outerPadding + topHeight;
@@ -791,11 +792,11 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
     context.fillStyle = "#475569";
     context.font = "700 12px Arial, sans-serif";
     context.textAlign = "left";
-    context.fillText("Mínimo:", infoX + 10, y + 102);
+    context.fillText("Compra mínima:", infoX + 10, y + 102);
     context.fillStyle = "#111827";
     context.font = "900 15px Arial, sans-serif";
     context.textAlign = "right";
-    fittedText(String(coupon.compra_minima || "Consultar"), infoX + infoWidth - 10, y + 103, infoWidth - 72, 15, 11, 900);
+    fittedText(String(coupon.compra_minima || "Consultar"), infoX + infoWidth - 10, y + 103, infoWidth - 104, 15, 10, 900);
 
     context.fillStyle = "#f8fafc";
     roundedRect(context, infoX, y + 122, infoWidth, 34, 10);
@@ -803,11 +804,11 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
     context.fillStyle = "#475569";
     context.font = "700 12px Arial, sans-serif";
     context.textAlign = "left";
-    context.fillText("Máx:", infoX + 10, y + 144);
+    context.fillText("Descuento máx:", infoX + 10, y + 144);
     context.fillStyle = color.text;
     context.font = "900 15px Arial, sans-serif";
     context.textAlign = "right";
-    fittedText(String(coupon.ahorro_maximo || "Consultar"), infoX + infoWidth - 10, y + 145, infoWidth - 58, 15, 11, 900);
+    fittedText(String(coupon.ahorro_maximo || "Consultar"), infoX + infoWidth - 10, y + 145, infoWidth - 112, 15, 10, 900);
   });
 
   // Pie amarillo compacto.
@@ -839,7 +840,12 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
     context.textAlign = "right";
     context.fillStyle = "#173b7a";
     context.font = "700 12px Arial, sans-serif";
-    context.fillText(`+${totalActive - selectedCoupons.length} más`, width - outerPadding - 18, footerTop + 29);
+    context.fillText(`+${totalActive - selectedCoupons.length} más`, width - outerPadding - 145, footerTop + 29);
+  }
+
+  // El zorro identifica a Ofertas Imperdibles y se integra sin quitar espacio a las tarjetas.
+  if (foxMascot) {
+    drawImageContain(context, foxMascot, width - outerPadding - 142, footerTop - 72, 128, 148);
   }
 
   context.restore();
