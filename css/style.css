@@ -7753,3 +7753,31 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   margin-left: auto;
   margin-right: auto;
 }
+
+/* V81.13 — Acciones bancarias juntas y centradas como un solo grupo */
+.bank-coupon-card .coupon-actions,
+.bank-coupon-card .card-actions,
+.bank-coupon-card .actions,
+.bank-coupon-card .bank-actions,
+.cupon-bancario .coupon-actions,
+.cupon-bancario .card-actions,
+.cupon-bancario .actions,
+.cupon-bancario .bank-actions {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+}
+.bank-coupon-card .coupon-actions > *,
+.bank-coupon-card .card-actions > *,
+.bank-coupon-card .actions > *,
+.bank-coupon-card .bank-actions > *,
+.cupon-bancario .coupon-actions > *,
+.cupon-bancario .card-actions > *,
+.cupon-bancario .actions > *,
+.cupon-bancario .bank-actions > * {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  flex: 0 0 auto !important;
+}
