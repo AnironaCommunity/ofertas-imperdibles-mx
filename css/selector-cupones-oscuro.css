@@ -1,36 +1,33 @@
 /* =========================================================
-   V81.39 LTS — Selector superior Todos | Tienda | Bancarios
-   Diseño consolidado: opción 10, verde Afirme.
+   V81.48 LTS — Selector Todos | Tienda | Bancarios | Exclusivo
+   Diseño tipo barra moderna de referencia, adaptado SIN fondo negro.
+   Exclusivo continúa ocultándose automáticamente si no hay cupones.
    ========================================================= */
 .navegacion-inferior.selector-cupones-oscuro {
-  --selector-verde: #009b73;
-  --selector-verde-claro: #16b889;
+  --selector-verde: #27bf2b;
+  --selector-verde-claro: #39d63d;
+  --selector-inactivo: #f4f6f7;
+  --selector-borde: #e1e5e7;
   position: relative !important;
   inset: auto !important;
   z-index: 1 !important;
   display: grid !important;
   grid-template-columns: repeat(var(--selector-columnas, 3), minmax(0, 1fr)) !important;
-  width: min(560px, 100%) !important;
+  width: min(100%, 860px) !important;
   margin: 6px auto 16px !important;
-  padding: 0 !important;
-  gap: 0 !important;
-  overflow: hidden !important;
-  border: 1px solid #e3e8e5 !important;
-  border-radius: 15px !important;
-  background: rgba(255, 255, 255, .97) !important;
-  box-shadow: 0 5px 16px rgba(30, 51, 42, .07) !important;
+  padding: 0 0 7px !important;
+  gap: 10px !important;
+  overflow: visible !important;
+  border: 0 !important;
+  border-bottom: 1px solid #edf0f1 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
   transform: none !important;
-  backdrop-filter: blur(10px);
 }
-
 
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior[hidden] {
   display: none !important;
-}
-
-.navegacion-inferior.selector-cupones-oscuro .tab-icono-exclusivo svg {
-  fill: none;
-  stroke: currentColor;
 }
 
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior {
@@ -41,36 +38,38 @@
   justify-content: center !important;
   width: 100% !important;
   min-width: 0 !important;
-  min-height: 48px !important;
+  min-height: 42px !important;
   margin: 0 !important;
-  padding: 8px 9px 10px !important;
+  padding: 8px 10px !important;
   gap: 7px !important;
-  overflow: hidden !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  color: #626d68 !important;
-  background: transparent !important;
-  box-shadow: none !important;
+  overflow: visible !important;
+  border: 1px solid var(--selector-borde) !important;
+  border-radius: 12px !important;
+  color: #525960 !important;
+  background: linear-gradient(180deg, #fafbfb 0%, var(--selector-inactivo) 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .9),
+    0 2px 5px rgba(31, 42, 48, .05) !important;
   transform: none !important;
   cursor: pointer;
-  transition: color .18s ease, background .18s ease;
-}
-
-.navegacion-inferior.selector-cupones-oscuro > .tab-inferior + .tab-inferior {
-  border-left: 1px solid #edf0ee;
+  transition:
+    color .18s ease,
+    background .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease;
 }
 
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior::before {
   content: "";
   position: absolute;
-  left: 18%;
-  right: 18%;
-  bottom: 0;
+  left: 37%;
+  right: 37%;
+  bottom: -9px;
   height: 3px;
   opacity: 0;
-  border-radius: 999px 999px 0 0;
-  background: linear-gradient(90deg, var(--selector-verde), var(--selector-verde-claro));
-  box-shadow: 0 -5px 18px rgba(0, 155, 115, .28);
+  border-radius: 999px;
+  background: var(--selector-verde);
+  box-shadow: 0 0 8px rgba(39, 191, 43, .28);
   transition: opacity .18s ease, left .18s ease, right .18s ease;
 }
 
@@ -80,20 +79,25 @@
 
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior:hover,
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior:focus-visible {
-  color: #34413b;
-  background: rgba(0, 155, 115, .045);
+  color: #2e373b !important;
+  border-color: #d5dcde !important;
+  background: #f7f9f9 !important;
 }
 
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior.activo,
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior[aria-pressed="true"] {
-  color: var(--selector-verde) !important;
-  background: linear-gradient(180deg, rgba(0, 155, 115, 0) 32%, rgba(0, 155, 115, .12) 100%) !important;
+  color: #fff !important;
+  border-color: #18a91d !important;
+  background: linear-gradient(180deg, var(--selector-verde-claro) 0%, #20b724 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .22),
+    0 3px 8px rgba(32, 183, 36, .18) !important;
 }
 
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior.activo::before,
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior[aria-pressed="true"]::before {
-  left: 5%;
-  right: 5%;
+  left: 36%;
+  right: 36%;
   opacity: 1;
 }
 
@@ -101,18 +105,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 21px;
-  height: 21px;
-  min-width: 21px;
-  flex: 0 0 21px;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  flex: 0 0 20px;
   color: currentColor;
   background: transparent;
 }
 
 .navegacion-inferior.selector-cupones-oscuro .tab-icono svg {
   display: block;
-  width: 19px;
-  height: 19px;
+  width: 18px;
+  height: 18px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.8;
@@ -123,6 +127,11 @@
 .navegacion-inferior.selector-cupones-oscuro .tab-icono-todos svg circle {
   fill: currentColor;
   stroke: none;
+}
+
+.navegacion-inferior.selector-cupones-oscuro .tab-icono-exclusivo svg {
+  fill: none;
+  stroke: currentColor;
 }
 
 .navegacion-inferior.selector-cupones-oscuro .tab-textos {
@@ -138,10 +147,13 @@
   max-width: 100%;
   overflow: hidden;
   color: currentColor;
-  font-size: 13px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
   font-weight: 700;
   line-height: 1;
+  letter-spacing: .15px;
   text-overflow: ellipsis;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
@@ -150,44 +162,71 @@
   display: none;
 }
 
-@media (max-width: 430px) {
-  .navegacion-inferior.selector-cupones-oscuro[style*="--selector-columnas: 4"] > .tab-inferior {
-    gap: 3px !important;
-    padding-left: 3px !important;
-    padding-right: 3px !important;
-  }
-
-  .navegacion-inferior.selector-cupones-oscuro[style*="--selector-columnas: 4"] .tab-etiqueta-principal {
-    font-size: 10.5px !important;
-  }
-
-
+@media (max-width: 600px) {
   .navegacion-inferior.selector-cupones-oscuro {
     width: 100% !important;
-    margin: 4px auto 12px !important;
-    border-radius: 13px !important;
+    margin: 4px auto 13px !important;
+    padding-bottom: 7px !important;
+    gap: 6px !important;
   }
 
   .navegacion-inferior.selector-cupones-oscuro > .tab-inferior {
-    min-height: 44px !important;
-    padding: 7px 4px 9px !important;
-    gap: 5px !important;
+    min-height: 39px !important;
+    padding: 7px 5px !important;
+    gap: 4px !important;
+    border-radius: 10px !important;
   }
 
   .navegacion-inferior.selector-cupones-oscuro .tab-icono {
-    width: 18px;
-    height: 18px;
-    min-width: 18px;
-    flex-basis: 18px;
+    width: 17px;
+    height: 17px;
+    min-width: 17px;
+    flex-basis: 17px;
   }
 
   .navegacion-inferior.selector-cupones-oscuro .tab-icono svg {
-    width: 17px;
-    height: 17px;
+    width: 16px;
+    height: 16px;
   }
 
   .navegacion-inferior.selector-cupones-oscuro .tab-etiqueta-principal {
-    font-size: 11.5px;
+    font-size: 10.5px;
+  }
+
+  .navegacion-inferior.selector-cupones-oscuro[style*="--selector-columnas: 4"] {
+    gap: 4px !important;
+  }
+
+  .navegacion-inferior.selector-cupones-oscuro[style*="--selector-columnas: 4"] > .tab-inferior {
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+    gap: 3px !important;
+  }
+
+  .navegacion-inferior.selector-cupones-oscuro[style*="--selector-columnas: 4"] .tab-etiqueta-principal {
+    font-size: 9.6px !important;
+  }
+
+  .navegacion-inferior.selector-cupones-oscuro[style*="--selector-columnas: 4"] .tab-icono {
+    width: 15px;
+    height: 15px;
+    min-width: 15px;
+    flex-basis: 15px;
+  }
+
+  .navegacion-inferior.selector-cupones-oscuro[style*="--selector-columnas: 4"] .tab-icono svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-width: 360px) {
+  .navegacion-inferior.selector-cupones-oscuro .tab-etiqueta-principal {
+    font-size: 9.2px !important;
+  }
+
+  .navegacion-inferior.selector-cupones-oscuro[style*="--selector-columnas: 4"] .tab-etiqueta-principal {
+    font-size: 8.5px !important;
   }
 }
 
