@@ -836,7 +836,7 @@ function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
           </button>
         </div>
 
-        
+        <p class="mensaje" aria-live="polite"></p>
 
         <div class="acciones-secundarias">
           <button
@@ -999,7 +999,7 @@ function crearTarjetaBancaria(cupon) {
             </span>
           </div>
         </div>
-        
+        <p class="mensaje" aria-live="polite"></p>
       </div>
     </div>
   `;
@@ -1457,7 +1457,7 @@ function reiniciarInteraccion() {
   redireccionEnProceso = false;
   cerrarModal();
 
-  document.querySelectorAll(".boton-canjear").forEach((boton) => {
+  document.querySelectorAll(".boton-canjear, .banco-canjear").forEach((boton) => {
     boton.disabled = false;
     boton.innerHTML = contenidoBotonCopiar();
   });
@@ -1479,7 +1479,7 @@ function ejecutarCuentaRegresiva(cupon, boton, mensaje) {
 
       boton.disabled = false;
       boton.innerHTML = contenidoBotonCopiar();
-      mensaje.textContent = "";
+      if (mensaje) mensaje.textContent = "";
 
       redireccionEnProceso = false;
       timeoutRedireccion = null;
@@ -1507,10 +1507,10 @@ async function copiarYCanjear(cupon, tarjeta) {
 
   boton.disabled = true;
   boton.textContent = `✅ ${cupon.codigo}`;
-  mensaje.textContent = "Cupón copiado correctamente.";
+  if (mensaje) mensaje.textContent = "Cupón copiado correctamente.";
 
-  modalRedireccion.querySelector("#modal-titulo").textContent =
-    "¡Cupón copiado!";
+  const modalTitulo = modalRedireccion?.querySelector("#modal-titulo");
+  if (modalTitulo) modalTitulo.textContent = "¡Cupón copiado!";
 
   mostrarModal(cupon.codigo, true);
 
@@ -1542,7 +1542,7 @@ async function copiarYCanjear(cupon, tarjeta) {
   } catch (error) {
     console.error(error);
     reiniciarInteraccion();
-    mensaje.textContent = "No fue posible copiar el cupón.";
+    if (mensaje) mensaje.textContent = "No fue posible copiar el cupón.";
   }
 }
 
@@ -1557,19 +1557,19 @@ async function compartirPagina(tarjeta) {
         url: URL_PAGINA,
       });
 
-      mensaje.textContent = "Cupón compartido.";
+      if (mensaje) mensaje.textContent = "Cupón compartido.";
     } else {
       await copiarTexto(`${texto}\n${URL_PAGINA}`);
-      mensaje.textContent = "Enlace del cupón copiado.";
+      if (mensaje) mensaje.textContent = "Enlace del cupón copiado.";
     }
 
     setTimeout(() => {
-      mensaje.textContent = "";
+      if (mensaje) mensaje.textContent = "";
     }, 3500);
   } catch (error) {
     if (error?.name !== "AbortError") {
       console.error(error);
-      mensaje.textContent = "No fue posible compartir la página.";
+      if (mensaje) mensaje.textContent = "No fue posible compartir la página.";
     }
   }
 }
