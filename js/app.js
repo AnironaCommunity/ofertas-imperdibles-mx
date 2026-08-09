@@ -2973,7 +2973,7 @@ function crearInterfazTutorial() {
     </div>
     <div class="tutorial-icono" aria-hidden="true">✨</div>
     <h2 id="tutorial-titulo"></h2>
-    
+    <p id="tutorial-texto"></p>
     <div class="tutorial-acciones">
       <button class="tutorial-anterior" type="button">Anterior</button>
       <button class="tutorial-siguiente" type="button">Siguiente</button>
