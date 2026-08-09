@@ -7348,3 +7348,154 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
     font-size: 9.4px;
   }
 }
+
+/* =========================================================
+   V81.7 — Interacciones compactas en cupones bancarios
+   Conserva exactamente el tamaño exterior sincronizado V81.6.
+   Añade Me gusta + contador, Compartir y contador de usos.
+   ========================================================= */
+.cupon-bancario-mini .banco-cuerpo {
+  padding: 6px 9px 6px;
+  gap: 1px;
+}
+
+.cupon-bancario-mini .banco-cuerpo h3 {
+  font-size: 17px;
+  line-height: 1;
+}
+
+.cupon-bancario-mini .banco-detalle {
+  margin-bottom: 1px;
+  font-size: 9.25px;
+  line-height: 1.1;
+}
+
+.cupon-bancario-mini .banco-minimo,
+.cupon-bancario-mini .banco-maximo {
+  font-size: 9.25px;
+  line-height: 1.08;
+}
+
+.cupon-bancario-mini .banco-canjear {
+  min-height: 25px;
+  padding: 3px 6px;
+  margin-top: 2px;
+  font-size: 9.35px;
+}
+
+.cupon-bancario-mini .banco-acciones-extra {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  gap: 5px;
+  min-height: 25px;
+  margin-top: 3px;
+}
+
+.cupon-bancario-mini .banco-like,
+.cupon-bancario-mini .banco-compartir {
+  min-width: 0;
+  min-height: 25px;
+  height: 25px;
+  padding: 3px 7px;
+  gap: 4px;
+  border: 1px solid #e7eaf0;
+  border-radius: 999px;
+  background: #f7f8fa;
+  color: #69717d;
+  box-shadow: none;
+  font-size: 9.5px;
+  line-height: 1;
+}
+
+.cupon-bancario-mini .banco-like svg,
+.cupon-bancario-mini .banco-compartir svg,
+.cupon-bancario-mini .banco-contador-usos svg {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 13px;
+  fill: currentColor;
+}
+
+.cupon-bancario-mini .banco-like.activo {
+  border-color: color-mix(in srgb, var(--banco-color) 26%, #d8dce5);
+  background: color-mix(in srgb, var(--banco-color) 11%, #ffffff);
+  color: var(--banco-color);
+}
+
+.cupon-bancario-mini .banco-compartir {
+  border-color: color-mix(in srgb, var(--banco-color) 22%, #dfe3ea);
+  background: color-mix(in srgb, var(--banco-color) 8%, #ffffff);
+  color: var(--banco-color);
+}
+
+.cupon-bancario-mini .banco-contador-usos {
+  justify-self: end;
+  min-height: 25px;
+  padding: 3px 7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: 999px;
+  background: #f7f8fa;
+  color: #667085;
+  font-size: 9.5px;
+  font-weight: 750;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.cupon-bancario-mini .banco-acciones-extra .numero-likes,
+.cupon-bancario-mini .banco-contador-usos .numero-clics {
+  font-variant-numeric: tabular-nums;
+}
+
+/* El mensaje ocupa cero altura cuando está vacío para no crecer la tarjeta. */
+.cupon-bancario-mini .mensaje:empty {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .cupon-bancario-mini .banco-cuerpo {
+    padding: 5px 7px 5px;
+  }
+
+  .cupon-bancario-mini .banco-cuerpo h3 {
+    font-size: 16px;
+  }
+
+  .cupon-bancario-mini .banco-detalle,
+  .cupon-bancario-mini .banco-minimo,
+  .cupon-bancario-mini .banco-maximo {
+    font-size: 8.75px;
+  }
+
+  .cupon-bancario-mini .banco-canjear {
+    min-height: 24px;
+    font-size: 9px;
+  }
+
+  .cupon-bancario-mini .banco-acciones-extra {
+    min-height: 23px;
+    gap: 4px;
+    margin-top: 2px;
+  }
+
+  .cupon-bancario-mini .banco-like,
+  .cupon-bancario-mini .banco-compartir,
+  .cupon-bancario-mini .banco-contador-usos {
+    min-height: 23px;
+    height: 23px;
+    padding: 2px 6px;
+    font-size: 8.8px;
+  }
+
+  .cupon-bancario-mini .banco-like svg,
+  .cupon-bancario-mini .banco-compartir svg,
+  .cupon-bancario-mini .banco-contador-usos svg {
+    width: 12px;
+    height: 12px;
+    flex-basis: 12px;
+  }
+}

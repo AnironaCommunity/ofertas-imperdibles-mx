@@ -924,6 +924,7 @@ function crearTarjetaBancaria(cupon) {
 
   const bancoVisual = obtenerBancoVisual(cupon);
   const logoBanco = bancoVisual.logo;
+  const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
   articulo.dataset.banco = bancoVisual.banco;
   articulo.style.setProperty("--banco-color", bancoVisual.color);
   articulo.style.setProperty("--banco-texto", bancoVisual.texto);
@@ -939,6 +940,29 @@ function crearTarjetaBancaria(cupon) {
       <p class="banco-maximo">Máx. descuento: <strong>${escaparHtml(cupon.ahorro_maximo || "Consultar")}</strong></p>
       <div class="estado-programacion" hidden></div>
       <button class="banco-canjear" type="button">📋 Copiar y Canjear</button>
+      <div class="banco-acciones-extra" aria-label="Interacciones del cupón">
+        <button
+          class="boton-like banco-like ${yaLeGusta ? "activo" : ""}"
+          type="button"
+          aria-label="Me gusta"
+          title="Me gusta"
+        >
+          ${iconoMeGusta()}
+          <span class="numero-likes">${Number(cupon.likes || 0)}</span>
+        </button>
+        <button
+          class="boton-compartir banco-compartir"
+          type="button"
+          aria-label="Compartir"
+          title="Compartir"
+        >
+          ${iconoCompartir()}
+        </button>
+        <span class="banco-contador-usos" title="Veces utilizado" aria-label="Veces utilizado: ${Number(cupon.clics || 0)}">
+          ${iconoCopias()}
+          <span class="numero-clics">${Number(cupon.clics || 0)}</span>
+        </span>
+      </div>
       <p class="mensaje" aria-live="polite"></p>
     </div>
   `;
@@ -952,6 +976,8 @@ function crearTarjetaBancaria(cupon) {
   boton.addEventListener("click", () => {
     if (couponTimeState(cupon).enabled) copiarYCanjear(cupon, articulo);
   });
+  articulo.querySelector(".banco-compartir")?.addEventListener("click", () => compartirPagina(articulo));
+  articulo.querySelector(".banco-like")?.addEventListener("click", () => darMeGusta(cupon, articulo));
   return articulo;
 }
 
@@ -1413,7 +1439,7 @@ async function copiarYCanjear(cupon, tarjeta) {
 
   redireccionEnProceso = true;
 
-  const boton = tarjeta.querySelector(".boton-canjear");
+  const boton = tarjeta.querySelector(".boton-canjear, .banco-canjear");
   const mensaje = tarjeta.querySelector(".mensaje");
   const numeroClics = tarjeta.querySelector(".numero-clics");
   const usado = tarjeta.querySelector(".cupon-usado");
@@ -1431,12 +1457,12 @@ async function copiarYCanjear(cupon, tarjeta) {
     await copiarTexto(cupon.codigo);
 
     localStorage.setItem(claveUsado(cupon.id), "1");
-    usado.hidden = false;
+    if (usado) usado.hidden = false;
 
     registrarClic(cupon.id)
       .then((resultado) => {
         if (Number.isFinite(Number(resultado.clics))) {
-          numeroClics.textContent = String(resultado.clics);
+          if (numeroClics) numeroClics.textContent = String(resultado.clics);
 
           const couponIndex = todosLosCupones.findIndex(
             (item) => Number(item.id) === Number(cupon.id)
