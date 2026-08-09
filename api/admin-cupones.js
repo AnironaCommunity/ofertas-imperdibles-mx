@@ -108,7 +108,7 @@ export default async function handler(request, response) {
     if (request.query?.action === "hero-config") {
       if (request.method === "GET") {
         const config = await requestSupabase(
-          "configuracion_web?select=logo_icono_url,nombre_sitio,eslogan,mostrar_eslogan,nombre_barra,imagen_url,color_inicio,color_fin,texto_descriptivo,nombre_boton_tienda,nombre_seccion_tienda,nombre_boton_bancarios,nombre_seccion_bancarios,nombre_boton_comunidad,descripcion_boton_comunidad,nombre_seccion_comunidad,nombre_boton_mercado_libre,nombre_boton_amazon,enlace_mercado_libre,enlace_amazon,enlace_whatsapp,enlace_facebook,enlace_banner_whatsapp,mostrar_patron_ofertas,posicion_patron_ofertas&id=eq.hero_redes&limit=1"
+          "configuracion_web?select=logo_icono_url,nombre_sitio,eslogan,mostrar_eslogan,nombre_barra,imagen_url,color_inicio,color_fin,texto_descriptivo,nombre_boton_todos,nombre_boton_tienda,nombre_seccion_tienda,nombre_boton_bancarios,nombre_seccion_bancarios,nombre_boton_comunidad,descripcion_boton_comunidad,nombre_seccion_comunidad,nombre_boton_mercado_libre,nombre_boton_amazon,enlace_mercado_libre,enlace_amazon,enlace_whatsapp,enlace_facebook,enlace_banner_whatsapp,mostrar_patron_ofertas,posicion_patron_ofertas&id=eq.hero_redes&limit=1"
         );
 
         response.setHeader("Cache-Control", "no-store");
@@ -124,6 +124,7 @@ export default async function handler(request, response) {
             color_inicio: "#e9cdff",
             color_fin: "#fae8fa",
             texto_descriptivo: "Cupones, promociones y novedades todos los días.",
+            nombre_boton_todos: "Todos",
             nombre_boton_tienda: "Tienda",
             nombre_seccion_tienda: "Cupones de tienda",
             nombre_boton_bancarios: "Bancarios",
@@ -167,6 +168,7 @@ export default async function handler(request, response) {
             "#fae8fa"
           ),
           texto_descriptivo: cleanText(request.body?.texto_descriptivo).slice(0, 120) || "Cupones, promociones y novedades todos los días.",
+          nombre_boton_todos: cleanText(request.body?.nombre_boton_todos).slice(0, 35) || "Todos",
           nombre_boton_tienda: cleanText(request.body?.nombre_boton_tienda).slice(0, 35) || "Tienda",
           nombre_seccion_tienda: cleanText(request.body?.nombre_seccion_tienda).slice(0, 55) || "Cupones de tienda",
           nombre_boton_bancarios: cleanText(request.body?.nombre_boton_bancarios).slice(0, 35) || "Bancarios",

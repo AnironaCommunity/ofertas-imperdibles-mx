@@ -35,6 +35,7 @@ const heroAdminPreviewImage = document.querySelector("#hero-admin-preview-image"
 const heroConfigMessage = document.querySelector("#hero-config-message");
 const heroBarName = document.querySelector("#hero-bar-name");
 const heroText = document.querySelector("#hero-text");
+const heroAllButtonName = document.querySelector("#hero-all-button-name");
 const heroStoreButtonName = document.querySelector("#hero-store-button-name");
 const heroStoreSectionName = document.querySelector("#hero-store-section-name");
 const heroBankButtonName = document.querySelector("#hero-bank-button-name");
@@ -2627,6 +2628,7 @@ async function loadHeroConfig() {
     heroColorStart.value = config.color_inicio || "#e9cdff";
     heroColorEnd.value = config.color_fin || "#fae8fa";
     heroText.value = config.texto_descriptivo || "Cupones, promociones y novedades todos los días.";
+    heroAllButtonName.value = config.nombre_boton_todos || "Todos";
     heroStoreButtonName.value = config.nombre_boton_tienda || "Tienda";
     heroStoreSectionName.value = config.nombre_seccion_tienda || "Cupones de tienda";
     heroBankButtonName.value = config.nombre_boton_bancarios || "Bancarios";
@@ -2699,6 +2701,7 @@ async function saveHeroConfig(event) {
         color_inicio: heroColorStart.value,
         color_fin: heroColorEnd.value,
         texto_descriptivo: heroText.value.trim(),
+        nombre_boton_todos: heroAllButtonName.value.trim(),
         nombre_boton_tienda: heroStoreButtonName.value.trim(),
         nombre_seccion_tienda: heroStoreSectionName.value.trim(),
         nombre_boton_bancarios: heroBankButtonName.value.trim(),

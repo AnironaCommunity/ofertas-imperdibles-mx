@@ -155,15 +155,10 @@
 
     const labels = {
       textoDescriptivo: config.texto_descriptivo || "Cupones, promociones y novedades todos los días.",
-      botonTienda: (() => {
-        const valor = (config.nombre_boton_tienda || "").trim();
-        return !valor || valor.toLowerCase() === "tienda" ? "Para todos" : valor;
-      })(),
+      botonTodos: (config.nombre_boton_todos || "").trim() || "Todos",
+      botonTienda: (config.nombre_boton_tienda || "").trim() || "Tienda",
       seccionTienda: config.nombre_seccion_tienda || "Cupones de tienda",
-      botonBancarios: (() => {
-        const valor = (config.nombre_boton_bancarios || "").trim();
-        return !valor || valor.toLowerCase() === "bancarios" ? "Con tarjeta" : valor;
-      })(),
+      botonBancarios: (config.nombre_boton_bancarios || "").trim() || "Bancarios",
       seccionBancarios: config.nombre_seccion_bancarios || "Cupones bancarios",
       botonComunidad: config.nombre_boton_comunidad || "Comunidad Anirona",
       descripcionComunidad: config.descripcion_boton_comunidad || "Rifas, novedades y publicaciones de la comunidad",
@@ -176,8 +171,10 @@
     const heroDescription = document.querySelector("#hero-texto-descriptivo");
     heroDescription?.replaceChildren(labels.textoDescriptivo);
     if (heroDescription) heroDescription.hidden = false;
+    const nombreBotonTodos = document.querySelector("#nombre-boton-todos");
     const nombreBotonTienda = document.querySelector("#nombre-boton-tienda");
     const nombreBotonBancarios = document.querySelector("#nombre-boton-bancarios");
+    if (nombreBotonTodos) nombreBotonTodos.textContent = labels.botonTodos;
     if (nombreBotonTienda) nombreBotonTienda.textContent = labels.botonTienda;
     if (nombreBotonBancarios) nombreBotonBancarios.textContent = labels.botonBancarios;
     document.querySelector("#nombre-boton-comunidad")?.replaceChildren(labels.botonComunidad);
