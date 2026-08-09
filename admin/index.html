@@ -304,6 +304,31 @@ Descuento máximo: $180"
                 </select>
               </div>
 
+              <div id="coupon-bank-field" class="campo campo-banco" hidden>
+                <label for="coupon-bank">Banco</label>
+                <select id="coupon-bank">
+                  <option value="">Selecciona un banco</option>
+                  <option value="mercado-pago">Mercado Pago</option>
+                  <option value="mercado-pago-visa">Mercado Pago + Visa</option>
+                  <option value="banamex">Banamex</option>
+                  <option value="bbva">BBVA</option>
+                  <option value="hsbc">HSBC</option>
+                  <option value="american-express">American Express</option>
+                  <option value="invex">Invex</option>
+                  <option value="scotiabank">Scotiabank</option>
+                  <option value="afirme">Afirme</option>
+                  <option value="mifel">Mifel</option>
+                  <option value="inbursa">Inbursa</option>
+                  <option value="falabella">Falabella</option>
+                  <option value="didi-card">DiDi Card</option>
+                  <option value="openbank">Openbank</option>
+                </select>
+                <small>El logo se asigna automáticamente al guardar el cupón bancario.</small>
+                <div id="coupon-bank-preview" class="banco-admin-preview" hidden>
+                  <img id="coupon-bank-preview-img" alt="Vista previa del banco" />
+                </div>
+              </div>
+
               <div class="campo">
                 <label for="coupon-start">Fecha y hora de inicio</label>
                 <input
@@ -332,7 +357,7 @@ Descuento máximo: $180"
                 />
               </div>
 
-              <div class="campo campo-completo">
+              <div id="coupon-image-field" class="campo campo-completo">
                 <label for="coupon-image">Logo o imagen del cupón (opcional)</label>
                 <input
                   id="coupon-image"
@@ -1062,6 +1087,6 @@ Descuento máximo: $180"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=77.5.0"></script>
+  <script type="module" src="admin.js?v=81.0.0"></script>
 </body>
 </html>

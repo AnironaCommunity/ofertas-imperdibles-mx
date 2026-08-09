@@ -41,6 +41,11 @@ const contadorComunidadAnirona = document.querySelector(
 const contadorCuponesBancarios = document.querySelector(
   "#contador-cupones-bancarios"
 );
+const seccionCuponesBancarios = document.querySelector("#seccion-cupones-bancarios");
+const carruselCuponesBancarios = document.querySelector("#cupones-bancarios-carrusel");
+const contadorCarruselBancarios = document.querySelector("#contador-carrusel-bancarios");
+const bancariosAnterior = document.querySelector("#bancarios-anterior");
+const bancariosSiguiente = document.querySelector("#bancarios-siguiente");
 
 
 
@@ -604,7 +609,7 @@ function couponProgress(timeState) {
 }
 
 function updateCouponTimes() {
-  document.querySelectorAll(".cupon[data-id]").forEach((card) => {
+  document.querySelectorAll(".cupon[data-id], .cupon-bancario[data-id]").forEach((card) => {
     const coupon = todosLosCupones.find(
       (item) => String(item.id) === card.dataset.id
     );
@@ -638,9 +643,14 @@ function updateCouponTimes() {
     if (timeState.state === "finalizado") {
       card.remove();
 
-      if (!cuponesContainer.querySelector(".cupon[data-id]")) {
+      const quedanTienda = cuponesContainer.querySelector(".cupon[data-id]");
+      const quedanBancarios = carruselCuponesBancarios?.querySelector(".cupon-bancario[data-id]");
+      if (!quedanTienda && !quedanBancarios) {
         todosWrapper.hidden = true;
         sinCupones.hidden = false;
+      }
+      if (!quedanBancarios && seccionCuponesBancarios) {
+        seccionCuponesBancarios.hidden = true;
       }
 
       return;
@@ -901,117 +911,159 @@ function cambiarCategoria(
   if (actualizarHistorial) {
     actualizarUrlSeccion(categoria);
   }
+
+  if (desplazamiento !== "none") {
+    requestAnimationFrame(() => {
+      const destino = categoria === "bancarios"
+        ? seccionCuponesBancarios
+        : cuponesContainer;
+      destino?.scrollIntoView({ behavior: desplazamiento, block: "start" });
+    });
+  }
 }
 
 function limpiarVista() {
   cuponesContainer.replaceChildren();
+  carruselCuponesBancarios?.replaceChildren();
   todosWrapper.hidden = true;
   sinCupones.hidden = true;
+  if (seccionCuponesBancarios) seccionCuponesBancarios.hidden = true;
+}
+
+function ordenarCupones(cupones) {
+  return [...cupones].sort((a, b) => {
+    const stateA = couponTimeState(a);
+    const stateB = couponTimeState(b);
+
+    if (stateA.enabled !== stateB.enabled) return stateA.enabled ? -1 : 1;
+    if (!stateA.enabled && !stateB.enabled) {
+      return Number(stateA.target || 0) - Number(stateB.target || 0);
+    }
+    return Number(b.clics || 0) - Number(a.clics || 0);
+  });
+}
+
+function crearTarjetaBancaria(cupon) {
+  const articulo = document.createElement("article");
+  const yaUsado = localStorage.getItem(claveUsado(cupon.id)) === "1";
+  const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
+
+  articulo.className = "cupon-bancario";
+  articulo.dataset.id = String(cupon.id);
+
+  articulo.innerHTML = `
+    <div class="cupon-bancario-logo-wrap">
+      ${cupon.imagen_url
+        ? `<img class="cupon-bancario-logo" src="${escaparHtml(cupon.imagen_url)}" alt="" loading="lazy" />`
+        : `<div class="cupon-bancario-logo-fallback">Beneficio bancario</div>`}
+    </div>
+    <div class="cupon-bancario-franja">Cupón bancario</div>
+    <div class="cupon-bancario-cuerpo">
+      <h2 class="cupon-bancario-titulo">${escaparHtml(cupon.titulo)}</h2>
+      <p class="cupon-bancario-dato">Compra mínima: <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
+      <div class="cupon-bancario-beneficio">Máx. descuento: ${escaparHtml(cupon.ahorro_maximo || "Consultar")}</div>
+      <div class="estado-programacion" hidden></div>
+      <div class="cupon-usado" ${yaUsado ? "" : "hidden"}>✓ Ya usaste este cupón</div>
+      <div class="cupon-bancario-acciones">
+        <button class="boton-canjear" type="button">📋 Copiar y Canjear</button>
+        <p class="mensaje" aria-live="polite"></p>
+        <div class="acciones-secundarias">
+          <button class="boton-like ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
+          <button class="boton-compartir" type="button" aria-label="Compartir página" title="Compartir página">${iconoCompartir()}</button>
+          <div class="estadisticas-cupon">
+            <span class="estadistica-item estadistica-likes">${iconoMeGusta()}<span class="numero-likes">${Number(cupon.likes || 0)}</span></span>
+            <span class="estadistica-item estadistica-usos">${iconoCopias()}<span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  const initialTimeState = couponTimeState(cupon);
+  const redeemButton = articulo.querySelector(".boton-canjear");
+  if (!initialTimeState.enabled) {
+    redeemButton.disabled = true;
+    redeemButton.classList.add("boton-programado");
+    redeemButton.textContent = "⏳ Disponible pronto";
+  }
+
+  redeemButton.addEventListener("click", () => {
+    if (couponTimeState(cupon).enabled) copiarYCanjear(cupon, articulo);
+  });
+  articulo.querySelector(".boton-compartir")?.addEventListener("click", () => compartirPagina(articulo));
+  articulo.querySelector(".boton-like")?.addEventListener("click", () => darMeGusta(cupon, articulo));
+  return articulo;
+}
+
+function actualizarFlechasBancarias() {
+  if (!carruselCuponesBancarios) return;
+  const max = Math.max(0, carruselCuponesBancarios.scrollWidth - carruselCuponesBancarios.clientWidth - 2);
+  if (bancariosAnterior) bancariosAnterior.disabled = carruselCuponesBancarios.scrollLeft <= 2;
+  if (bancariosSiguiente) bancariosSiguiente.disabled = carruselCuponesBancarios.scrollLeft >= max;
 }
 
 function renderizarCategoria() {
   limpiarVista();
 
-  const cuponesCategoria = todosLosCupones
-    /* La activación manual tiene prioridad sobre la vigencia. */
+  const vigentes = todosLosCupones
     .filter((cupon) => cupon.activo !== false)
-    .filter((cupon) => normalizarCategoria(cupon) === categoriaActiva)
-    .filter((cupon) => couponTimeState(cupon).state !== "finalizado")
-    .sort((a, b) => {
-      const stateA = couponTimeState(a);
-      const stateB = couponTimeState(b);
+    .filter((cupon) => couponTimeState(cupon).state !== "finalizado");
 
-      if (stateA.enabled !== stateB.enabled) {
-        return stateA.enabled ? -1 : 1;
-      }
+  const cuponesTienda = ordenarCupones(vigentes.filter((cupon) => normalizarCategoria(cupon) === "tienda"));
+  const cuponesBancarios = ordenarCupones(vigentes.filter((cupon) => normalizarCategoria(cupon) === "bancarios"));
 
-      if (!stateA.enabled && !stateB.enabled) {
-        return (
-          Number(stateA.target || 0) -
-          Number(stateB.target || 0)
-        );
-      }
-
-      return Number(b.clics || 0) - Number(a.clics || 0);
-    });
-
-  const esTienda = categoriaActiva === "tienda";
-
-  const etiquetas = window.ofertasEtiquetas || {};
-  const tituloCupones = document.querySelector("#titulo-seccion-cupones");
-  if (tituloCupones) {
-    const filaTitulo = tituloCupones.closest(".titulo-fila");
-
-    filaTitulo?.classList.toggle("titulo-fila--tienda", esTienda);
-    filaTitulo?.classList.toggle("titulo-fila--bancarios", !esTienda);
-
-    tituloCupones.textContent = esTienda
-      ? ""
-      : (etiquetas.seccionBancarios || "Bancarios");
-
-    tituloCupones.setAttribute("aria-hidden", String(esTienda));
-  }
-
-  if (cuponesCategoria.length === 0) {
-    sinCupones.querySelector("h2").textContent = esTienda
-      ? `No hay ${(etiquetas.seccionTienda || "cupones de tienda").toLowerCase()} disponibles`
-      : `No hay ${(etiquetas.seccionBancarios || "cupones bancarios").toLowerCase()} disponibles`;
-
-    sinCupones.querySelector("p").textContent =
-      "Pronto agregaremos nuevas opciones.";
-
+  if (!cuponesTienda.length && !cuponesBancarios.length) {
+    sinCupones.querySelector("h2").textContent = "No hay cupones disponibles";
+    sinCupones.querySelector("p").textContent = "Pronto agregaremos nuevas opciones.";
     sinCupones.hidden = false;
     estadoCarga.textContent = "";
     return;
   }
 
-  const fragmento = document.createDocumentFragment();
+  if (cuponesTienda.length) {
+    const fragmento = document.createDocumentFragment();
+    const activos = cuponesTienda.filter((cupon) => couponTimeState(cupon).enabled);
+    const clasificables = [...activos]
+      .filter((cupon) => !esCuponNuevo(cupon))
+      .filter((cupon) => Number(cupon.clics || 0) > 0)
+      .sort((a, b) => Number(b.clics || 0) - Number(a.clics || 0));
+    const top = clasificables[0] || null;
+    const popular = clasificables.find((cupon) => Number(cupon.id) !== Number(top?.id) && Number(cupon.clics || 0) >= MIN_CLICS_POPULAR) || null;
 
-  const cuponesActivos = cuponesCategoria.filter(
-    (cupon) => couponTimeState(cupon).enabled
-  );
+    cuponesTienda.forEach((cupon, indice) => {
+      const estadoDestacado = couponTimeState(cupon).enabled
+        ? obtenerEstadoDestacadoCupon(cupon, top ? Number(top.id) : null, popular ? Number(popular.id) : null)
+        : "";
+      fragmento.appendChild(crearTarjeta(cupon, estadoDestacado, indice));
+    });
+    cuponesContainer.appendChild(fragmento);
+  }
 
-  const cuponesClasificables = [...cuponesActivos]
-    .filter((cupon) => !esCuponNuevo(cupon))
-    .filter((cupon) => Number(cupon.clics || 0) > 0)
-    .sort(
-      (a, b) =>
-        Number(b.clics || 0) - Number(a.clics || 0)
-    );
+  if (cuponesBancarios.length && carruselCuponesBancarios && seccionCuponesBancarios) {
+    const fragmentoBancos = document.createDocumentFragment();
+    cuponesBancarios.forEach((cupon) => fragmentoBancos.appendChild(crearTarjetaBancaria(cupon)));
+    carruselCuponesBancarios.appendChild(fragmentoBancos);
+    seccionCuponesBancarios.hidden = false;
+    if (contadorCarruselBancarios) {
+      contadorCarruselBancarios.textContent = `${cuponesBancarios.length} ${cuponesBancarios.length === 1 ? "cupón bancario" : "cupones bancarios"}`;
+    }
+    requestAnimationFrame(actualizarFlechasBancarias);
+  }
 
-  const cuponTop = cuponesClasificables[0] || null;
-
-  const cuponPopular =
-    cuponesClasificables.find(
-      (cupon) =>
-        Number(cupon.id) !== Number(cuponTop?.id) &&
-        Number(cupon.clics || 0) >= MIN_CLICS_POPULAR
-    ) || null;
-
-  const idTop = cuponTop ? Number(cuponTop.id) : null;
-  const idPopular = cuponPopular
-    ? Number(cuponPopular.id)
-    : null;
-
-  cuponesCategoria.forEach((cupon, indice) => {
-    const estadoDestacado = couponTimeState(cupon).enabled
-      ? obtenerEstadoDestacadoCupon(
-          cupon,
-          idTop,
-          idPopular
-        )
-      : "";
-
-    fragmento.appendChild(
-      crearTarjeta(cupon, estadoDestacado, indice)
-    );
-  });
-
-  cuponesContainer.appendChild(fragmento);
   todosWrapper.hidden = false;
   estadoCarga.textContent = "";
   startCouponTimers();
 }
+
+bancariosAnterior?.addEventListener("click", () => {
+  carruselCuponesBancarios?.scrollBy({ left: -320, behavior: "smooth" });
+});
+
+bancariosSiguiente?.addEventListener("click", () => {
+  carruselCuponesBancarios?.scrollBy({ left: 320, behavior: "smooth" });
+});
+
+carruselCuponesBancarios?.addEventListener("scroll", actualizarFlechasBancarias, { passive: true });
+window.addEventListener("resize", actualizarFlechasBancarias);
 
 function reiniciarContadorActualizacion() {
   segundosRestantes = SEGUNDOS_ACTUALIZACION;
@@ -1031,7 +1083,8 @@ async function cargarCupones() {
 
   const esCargaInicial =
     !todosLosCupones.length &&
-    !cuponesContainer.querySelector(".cupon[data-id]");
+    !cuponesContainer.querySelector(".cupon[data-id]") &&
+    !carruselCuponesBancarios?.querySelector(".cupon-bancario[data-id]");
 
   if (esCargaInicial) {
     estadoCarga.className = "estado-carga";

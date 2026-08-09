@@ -1,0 +1,225 @@
+/* =========================================================
+   V81.0 — Cupones bancarios en carrusel
+   Tarjetas inspiradas en el formato bancario compartido.
+   ========================================================= */
+
+.seccion-cupones-bancarios {
+  margin-top: 28px;
+  padding: 0 0 8px;
+}
+
+.bancarios-divisor {
+  height: 1px;
+  margin: 2px 0 26px;
+  background: linear-gradient(90deg, transparent, #cfd6ef 14%, #cfd6ef 86%, transparent);
+}
+
+.bancarios-cabecera {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+
+.bancarios-cabecera h2 {
+  margin: 0;
+  color: #18213c;
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 850;
+  letter-spacing: -.025em;
+}
+
+.bancarios-cabecera p {
+  margin: 5px 0 0;
+  color: #697186;
+  font-size: 14px;
+}
+
+.bancarios-controles {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.bancarios-contador {
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: #eeedff;
+  color: #2a21b8;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.bancarios-flecha {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #d5d9e8;
+  border-radius: 50%;
+  background: #fff;
+  color: #161a2d;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(25, 34, 70, .06);
+}
+
+.bancarios-flecha:disabled {
+  opacity: .35;
+  cursor: default;
+}
+
+.cupones-bancarios-carrusel {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  padding: 3px 2px 16px;
+}
+
+.cupones-bancarios-carrusel::-webkit-scrollbar { display: none; }
+
+.cupon-bancario {
+  --bank-blue: #1714a6;
+  flex: 0 0 270px;
+  min-height: 390px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  scroll-snap-align: start;
+  border: 1px solid #d9dcef;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(27, 31, 93, .08);
+}
+
+.cupon-bancario-logo-wrap {
+  height: 102px;
+  padding: 16px 20px;
+  display: grid;
+  place-items: center;
+  background: #fff;
+}
+
+.cupon-bancario-logo {
+  display: block;
+  width: 100%;
+  max-width: 205px;
+  height: 66px;
+  object-fit: contain;
+}
+
+.cupon-bancario-logo-fallback {
+  color: #1d2852;
+  font-size: 20px;
+  font-weight: 850;
+  text-align: center;
+}
+
+.cupon-bancario-franja {
+  padding: 7px 12px;
+  background: var(--bank-blue);
+  color: #fff;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 850;
+  letter-spacing: .025em;
+  text-transform: uppercase;
+}
+
+.cupon-bancario-cuerpo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 20px 16px;
+  background: linear-gradient(180deg, #f7f8ff 0%, #fff 68%);
+}
+
+.cupon-bancario-titulo {
+  margin: 0 0 14px;
+  color: #11131c;
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -.025em;
+}
+
+.cupon-bancario-dato {
+  margin: 0 0 8px;
+  color: #33394b;
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.cupon-bancario-dato strong { color: #131625; }
+
+.cupon-bancario-beneficio {
+  align-self: flex-start;
+  margin: 8px 0 12px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: var(--bank-blue);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.cupon-bancario .estado-programacion {
+  margin: 0 0 8px;
+}
+
+.cupon-bancario .cupon-usado {
+  margin: 0 0 9px;
+  font-size: 12px;
+}
+
+.cupon-bancario-acciones {
+  margin-top: auto;
+}
+
+.cupon-bancario .boton-canjear {
+  width: 100%;
+  min-height: 44px;
+  border: 0 !important;
+  border-radius: 11px !important;
+  background: var(--bank-blue) !important;
+  color: #fff !important;
+  box-shadow: 0 7px 15px rgba(23, 20, 166, .18) !important;
+}
+
+.cupon-bancario .boton-canjear:hover {
+  filter: brightness(1.07);
+}
+
+.cupon-bancario .acciones-secundarias {
+  margin-top: 9px !important;
+  padding-top: 8px !important;
+}
+
+@media (max-width: 720px) {
+  .seccion-cupones-bancarios { margin-top: 22px; }
+  .bancarios-divisor { margin-bottom: 20px; }
+  .bancarios-cabecera { align-items: center; }
+  .bancarios-cabecera p { font-size: 12.5px; }
+  .bancarios-flecha { display: none; }
+  .bancarios-contador { font-size: 11px; padding: 6px 9px; }
+  .cupones-bancarios-carrusel {
+    margin-inline: -14px;
+    padding-inline: 14px;
+    scroll-padding-inline: 14px;
+  }
+  .cupon-bancario {
+    flex-basis: min(82vw, 300px);
+    min-height: 370px;
+  }
+  .cupon-bancario-logo-wrap { height: 92px; }
+  .cupon-bancario-titulo { font-size: 24px; }
+}
