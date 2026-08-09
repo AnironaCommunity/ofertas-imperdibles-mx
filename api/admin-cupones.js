@@ -208,7 +208,7 @@ export default async function handler(request, response) {
 
     if (request.method === "GET") {
       const data = await requestSupabase(
-        "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,categoria,enlace,activo,likes,clics,fecha_inicio,fecha_fin,fecha_creacion,fecha_publicacion,imagen_url&order=id.desc"
+        "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,detalle_bancario,categoria,enlace,activo,likes,clics,fecha_inicio,fecha_fin,fecha_creacion,fecha_publicacion,imagen_url&order=id.desc"
       );
 
       response.setHeader("Cache-Control", "no-store");
@@ -224,6 +224,7 @@ export default async function handler(request, response) {
         codigo: cleanText(request.body?.codigo),
         compra_minima: cleanText(request.body?.compra_minima),
         ahorro_maximo: cleanText(request.body?.ahorro_maximo),
+        detalle_bancario: cleanText(request.body?.detalle_bancario).slice(0, 120),
         categoria: normalizeCategory(request.body?.categoria),
         enlace: cleanText(request.body?.enlace),
         imagen_url: cleanText(request.body?.imagen_url),
@@ -268,6 +269,7 @@ export default async function handler(request, response) {
         "codigo",
         "compra_minima",
         "ahorro_maximo",
+        "detalle_bancario",
         "enlace",
         "imagen_url",
       ]) {

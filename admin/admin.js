@@ -64,6 +64,8 @@ const couponSaving = document.querySelector("#coupon-saving");
 const couponCategory = document.querySelector("#coupon-category");
 const couponBank = document.querySelector("#coupon-bank");
 const couponBankWrapper = document.querySelector("#coupon-bank-wrapper");
+const couponBankDetail = document.querySelector("#coupon-bank-detail");
+const couponBankDetailWrapper = document.querySelector("#coupon-bank-detail-wrapper");
 const couponStart = document.querySelector("#coupon-start");
 const couponEnd = document.querySelector("#coupon-end");
 const couponLink = document.querySelector("#coupon-link");
@@ -443,6 +445,7 @@ function resetCouponForm() {
   couponId.value = "";
   couponCategory.value = "tienda";
   if (couponBank) couponBank.value = "";
+  if (couponBankDetail) couponBankDetail.value = "";
   actualizarSelectorBanco();
   couponStart.value = "";
   couponEnd.value = "";
@@ -459,6 +462,7 @@ function editCoupon(coupon) {
   couponCode.value = coupon.codigo || "";
   couponMinimum.value = coupon.compra_minima || "";
   couponSaving.value = coupon.ahorro_maximo || "";
+  if (couponBankDetail) couponBankDetail.value = coupon.detalle_bancario || "";
   couponCategory.value =
     coupon.categoria === "bancarios" ? "bancarios" : "tienda";
   couponStart.value = isoToMexicoLocal(coupon.fecha_inicio);
@@ -984,6 +988,7 @@ async function saveCoupon(event) {
       codigo: couponCode.value.trim(),
       compra_minima: couponMinimum.value.trim(),
       ahorro_maximo: couponSaving.value.trim(),
+      detalle_bancario: couponCategory.value === "bancarios" ? (couponBankDetail?.value || "").trim() : "",
       categoria: couponCategory.value,
       fecha_inicio: mexicoLocalToIso(couponStart.value),
       fecha_fin: mexicoLocalToIso(couponEnd.value),
@@ -2755,6 +2760,7 @@ downloadCommunityList?.addEventListener(
 function actualizarSelectorBanco() {
   const esBancario = couponCategory?.value === "bancarios";
   if (couponBankWrapper) couponBankWrapper.hidden = !esBancario;
+  if (couponBankDetailWrapper) couponBankDetailWrapper.hidden = !esBancario;
   if (esBancario && couponBank?.value) {
     couponImageUrl.value = couponBank.value;
     couponImagePreview.src = couponBank.value;
