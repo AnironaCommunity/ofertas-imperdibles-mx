@@ -7958,6 +7958,15 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
 }
 
 
+/* Alineación del bloque informativo en cupones bancarios. */
+.cupon-bancario-mini .banco-info,
+.cupon-bancario-mini .banco-info h3,
+.cupon-bancario-mini .banco-detalle,
+.cupon-bancario-mini .banco-minimo,
+.cupon-bancario-mini .banco-maximo {
+  text-align: center !important;
+}
+
 /* Cupón Exclusivo: conserva la tarjeta normal y añade identidad propia. */
 .cupon-exclusivo {
   border-color: #d8c76a;
