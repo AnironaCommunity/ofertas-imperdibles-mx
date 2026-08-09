@@ -8871,9 +8871,16 @@ body .navegacion-inferior.selector-cupones-oscuro .contador-seccion-inferior {
   margin: 0 !important;
 }
 
-/* Seguridad: no permitir una tercera línea antigua */
-.mensaje-sin-cupones > *:nth-child(n+3),
-.sin-cupones > *:nth-child(n+3),
-.estado-sin-cupones > *:nth-child(n+3) {
-  display: none !important;
+
+
+/* V81.35 — Mostrar siempre la segunda línea del estado sin cupones */
+.mensaje-sin-cupones p,
+.sin-cupones p,
+.estado-sin-cupones p {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  font-size: 12px !important;
+  line-height: 1.25 !important;
+  margin: 3px 0 0 !important;
 }
