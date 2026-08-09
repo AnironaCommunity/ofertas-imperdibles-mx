@@ -836,7 +836,7 @@ function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
           </button>
         </div>
 
-        <p class="mensaje" aria-live="polite"></p>
+        
 
         <div class="acciones-secundarias">
           <button
@@ -999,7 +999,7 @@ function crearTarjetaBancaria(cupon) {
             </span>
           </div>
         </div>
-        <p class="mensaje" aria-live="polite"></p>
+        
       </div>
     </div>
   `;
@@ -1222,8 +1222,8 @@ function renderizarCategoria() {
     (mostrarBancarios ? cuponesBancarios.length : 0);
 
   if (totalVisible === 0) {
-    sinCupones.querySelector("h2").textContent = "No hay cupones disponibles 🥲";
-    sinCupones.querySelector("p").textContent = "Los cupones se agregan a partir de 8:30 a 9:00 a. m. 🚨.";
+    sinCupones.querySelector("h2").textContent = "¡No hay cupones disponibles!";
+    sinCupones.querySelector("p").textContent = "Los cupones se agregan a partir de 8:30 a 9:00 a. m..";
     sinCupones.hidden = false;
     todosWrapper.hidden = false;
     estadoCarga.textContent = "";
@@ -1768,7 +1768,7 @@ function crearTarjetaOferta(publicidad, categoria) {
           ${iconoCompartir()}
         </button>
       </div>
-      <p class="oferta-mensaje" aria-live="polite"></p>
+      
     </div>
   `;
 
@@ -2795,7 +2795,7 @@ const formatNo=n=>String(n||0).padStart(6,'0');
 async function api(url,opt){const r=await fetch(url,opt);const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'No fue posible completar la operación.');return d;}
 function countdown(date,el){if(!date||!el)return;const tick=()=>{const diff=new Date(date)-new Date();if(diff<=0){el.textContent='El sorteo está por realizarse';return;}const days=Math.floor(diff/86400000),hours=Math.floor(diff%86400000/3600000),mins=Math.floor(diff%3600000/60000);el.textContent=`Faltan ${days} días, ${hours} h y ${mins} min`;};tick();setInterval(tick,60000);}
 function winnerHero(e){document.querySelector('#hero-ganador-evento')?.remove();const w=e?.ganadores?.[0];if(!w||!heroButtons)return;const a=document.createElement('a');a.id='hero-ganador-evento';a.className='hero-ganador';a.href='#eventos-comunidad';a.innerHTML=`🏆 Ganador: <strong>${esc(formatNo(w.numero))}</strong>`;a.addEventListener('click',()=>document.querySelector('[data-vista="comunidad_anirona"]')?.click());heroButtons.append(a);}
-function render(e){currentEvent=e;winnerHero(e);if(!root)return;if(!e){root.innerHTML='<div class="evento-estado-vacio"><strong>🎁 Próximamente habrá una nueva dinámica.</strong><p>Mantente pendiente de Comunidad Anirona.</p></div>';return;}const pct=Math.min(100,Math.round((e.participantes_count/e.limite_boletos)*100));const open=e.estado==='abierta'&&e.disponibles>0;const winners=(e.ganadores||[]).map(w=>`<div class="evento-ganador"><span>🏆 Ganador${w.posicion>1?' '+w.posicion:''}</span><strong>${formatNo(w.numero)}</strong><span>${esc(w.nombre_parcial)}</span></div>`).join('');root.innerHTML=`<article class="evento-card"><div class="evento-portada">${e.imagen_url?`<img class="evento-imagen" src="${esc(e.imagen_url)}" alt="${esc(e.producto_nombre)}">`:'<div class="evento-imagen"></div>'}<div class="evento-info"><span class="evento-etiqueta">${esc(e.tipo)}</span><h3>${esc(e.nombre)}</h3><p class="evento-producto">🎁 ${esc(e.producto_nombre)}</p>${e.premio_enlace?`<div class="evento-premio-enlace"><span><strong>🏆 Premio</strong><small>${esc(e.premio_plataforma||'Ver producto')}</small></span><a id="evento-premio-btn" class="evento-boton evento-premio-boton" href="${esc(e.premio_enlace)}" target="_blank" rel="noopener noreferrer" data-cupon="${esc(e.premio_cupon||'')}">🛒 Conocer el premio</a></div>`:''}<p class="evento-descripcion">${esc(e.descripcion)}</p>${e.fecha_sorteo?`<p class="evento-fecha">📅 Sorteo: ${esc(dateText(e.fecha_sorteo))}</p><p id="evento-cuenta" class="evento-cuenta"></p>`:''}${e.mostrar_contador?`<div class="evento-progreso"><div class="evento-progreso-texto"><strong>${e.participantes_count} participantes</strong><span>${e.disponibles} disponibles</span></div><div class="evento-progreso-barra"><span style="width:${pct}%"></span></div></div>`:''}${winners}${open?`<form id="evento-form" class="evento-form-grid"><div class="evento-campo evento-campo-completo"><label>Nombre completo</label><input name="nombre" required maxlength="100" autocomplete="name"></div><div class="evento-campo"><label>Teléfono</label><input name="telefono" required inputmode="numeric" maxlength="14" autocomplete="tel"></div><div class="evento-campo"><label>Ciudad (opcional)</label><input name="ciudad" maxlength="80" autocomplete="address-level2"></div><label class="evento-privacidad evento-campo-completo"><input name="privacidad" type="checkbox" required> <span>Acepto que mis datos se utilicen únicamente para administrar esta dinámica y contactar a las personas ganadoras.</span></label><button class="evento-boton evento-campo-completo" type="submit">Registrarme y obtener mi número</button><p id="evento-mensaje" class="evento-mensaje evento-campo-completo" aria-live="polite"></p></form>`:`<div class="evento-resultado"><strong>${e.estado==='finalizada'?'Esta dinámica ha finalizado.':'Los registros están cerrados.'}</strong></div>`}<div class="evento-consulta"><strong>Consultar mi registro</strong><div class="evento-consulta-fila evento-campo"><input id="evento-consulta-tel" inputmode="numeric" maxlength="14" placeholder="Teléfono de 10 dígitos"><button id="evento-consulta-btn" class="evento-boton evento-secundario" type="button">Buscar</button></div><p id="evento-consulta-msg" class="evento-mensaje"></p></div></div></div></article>`;countdown(e.fecha_sorteo,document.querySelector('#evento-cuenta'));document.querySelector('#evento-form')?.addEventListener('submit',register);document.querySelector('#evento-consulta-btn')?.addEventListener('click',lookup);document.querySelector('#evento-premio-btn')?.addEventListener('click',ev=>{const cup=ev.currentTarget.dataset.cupon;if(cup&&navigator.clipboard){navigator.clipboard.writeText(cup).then(()=>{const original=ev.currentTarget.textContent;ev.currentTarget.textContent=`✓ Cupón ${cup} copiado`;setTimeout(()=>ev.currentTarget.textContent=original,2200)}).catch(()=>{});}});}
+function render(e){currentEvent=e;winnerHero(e);if(!root)return;if(!e){root.innerHTML='<div class="evento-estado-vacio"><strong>🎁 Próximamente habrá una nueva dinámica.</strong><p>Mantente pendiente de Comunidad Anirona.</p></div>';return;}const pct=Math.min(100,Math.round((e.participantes_count/e.limite_boletos)*100));const open=e.estado==='abierta'&&e.disponibles>0;const winners=(e.ganadores||[]).map(w=>`<div class="evento-ganador"><span>🏆 Ganador${w.posicion>1?' '+w.posicion:''}</span><strong>${formatNo(w.numero)}</strong><span>${esc(w.nombre_parcial)}</span></div>`).join('');root.innerHTML=`<article class="evento-card"><div class="evento-portada">${e.imagen_url?`<img class="evento-imagen" src="${esc(e.imagen_url)}" alt="${esc(e.producto_nombre)}">`:'<div class="evento-imagen"></div>'}<div class="evento-info"><span class="evento-etiqueta">${esc(e.tipo)}</span><h3>${esc(e.nombre)}</h3><p class="evento-producto">🎁 ${esc(e.producto_nombre)}</p>${e.premio_enlace?`<div class="evento-premio-enlace"><span><strong>🏆 Premio</strong><small>${esc(e.premio_plataforma||'Ver producto')}</small></span><a id="evento-premio-btn" class="evento-boton evento-premio-boton" href="${esc(e.premio_enlace)}" target="_blank" rel="noopener noreferrer" data-cupon="${esc(e.premio_cupon||'')}">🛒 Conocer el premio</a></div>`:''}<p class="evento-descripcion">${esc(e.descripcion)}</p>${e.fecha_sorteo?`<p class="evento-fecha">📅 Sorteo: ${esc(dateText(e.fecha_sorteo))}</p>`:''}${e.mostrar_contador?`<div class="evento-progreso"><div class="evento-progreso-texto"><strong>${e.participantes_count} participantes</strong><span>${e.disponibles} disponibles</span></div><div class="evento-progreso-barra"><span style="width:${pct}%"></span></div></div>`:''}${winners}${open?`<form id="evento-form" class="evento-form-grid"><div class="evento-campo evento-campo-completo"><label>Nombre completo</label><input name="nombre" required maxlength="100" autocomplete="name"></div><div class="evento-campo"><label>Teléfono</label><input name="telefono" required inputmode="numeric" maxlength="14" autocomplete="tel"></div><div class="evento-campo"><label>Ciudad (opcional)</label><input name="ciudad" maxlength="80" autocomplete="address-level2"></div><label class="evento-privacidad evento-campo-completo"><input name="privacidad" type="checkbox" required> <span>Acepto que mis datos se utilicen únicamente para administrar esta dinámica y contactar a las personas ganadoras.</span></label><button class="evento-boton evento-campo-completo" type="submit">Registrarme y obtener mi número</button></form>`:`<div class="evento-resultado"><strong>${e.estado==='finalizada'?'Esta dinámica ha finalizado.':'Los registros están cerrados.'}</strong></div>`}<div class="evento-consulta"><strong>Consultar mi registro</strong><div class="evento-consulta-fila evento-campo"><input id="evento-consulta-tel" inputmode="numeric" maxlength="14" placeholder="Teléfono de 10 dígitos"><button id="evento-consulta-btn" class="evento-boton evento-secundario" type="button">Buscar</button></div></div></div></div></article>`;countdown(e.fecha_sorteo,document.querySelector('#evento-cuenta'));document.querySelector('#evento-form')?.addEventListener('submit',register);document.querySelector('#evento-consulta-btn')?.addEventListener('click',lookup);document.querySelector('#evento-premio-btn')?.addEventListener('click',ev=>{const cup=ev.currentTarget.dataset.cupon;if(cup&&navigator.clipboard){navigator.clipboard.writeText(cup).then(()=>{const original=ev.currentTarget.textContent;ev.currentTarget.textContent=`✓ Cupón ${cup} copiado`;setTimeout(()=>ev.currentTarget.textContent=original,2200)}).catch(()=>{});}});}
 function enfocarRegistroDesdeUrl(){
   const params=new URLSearchParams(window.location.search);
   if(String(params.get('sorteo')||'').toLowerCase()!=='registro')return;
@@ -2973,7 +2973,7 @@ function crearInterfazTutorial() {
     </div>
     <div class="tutorial-icono" aria-hidden="true">✨</div>
     <h2 id="tutorial-titulo"></h2>
-    <p id="tutorial-texto"></p>
+    
     <div class="tutorial-acciones">
       <button class="tutorial-anterior" type="button">Anterior</button>
       <button class="tutorial-siguiente" type="button">Siguiente</button>

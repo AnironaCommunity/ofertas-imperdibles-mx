@@ -34,7 +34,7 @@
         Entrar al panel
       </button>
 
-      <p id="login-message" class="mensaje" aria-live="polite"></p>
+      
     </section>
 
     <section id="admin-panel" hidden>
@@ -132,7 +132,7 @@
             <button id="compartir-resumen-imagen" class="boton-secundario" type="button" disabled>Compartir imagen</button>
           </div>
 
-          <p id="resumen-compartir-mensaje" class="mensaje" aria-live="polite"></p>
+          
 
           <div id="resumen-compartir-resultado" class="resumen-compartir-resultado" hidden>
             <div class="resumen-texto-columna">
@@ -223,7 +223,7 @@ Descuento máximo: $180"
             </button>
           </div>
 
-          <p id="import-message" class="mensaje importador-mensaje" aria-live="polite"></p>
+          
 
           <div id="import-preview" class="vista-importacion" hidden>
             <div id="import-summary" class="importador-resumen" aria-live="polite"></div>
@@ -428,7 +428,7 @@ Descuento máximo: $180"
               </button>
             </div>
 
-            <p id="coupon-form-message" class="mensaje" aria-live="polite"></p>
+            
           </form>
         </section>
 
@@ -441,7 +441,7 @@ Descuento máximo: $180"
             </button>
           </div>
 
-          <p id="coupon-list-message" class="mensaje" aria-live="polite"></p>
+          
 
           <div class="tabla-contenedor">
             <table>
@@ -682,7 +682,7 @@ Descuento máximo: $180"
               </button>
             </div>
 
-            <p id="ad-form-message" class="mensaje" aria-live="polite"></p>
+            
           </form>
         </section>
 
@@ -715,11 +715,7 @@ Descuento máximo: $180"
             </div>
           </div>
 
-          <p
-            id="precios-masivos-mensaje"
-            class="mensaje"
-            aria-live="polite"
-          ></p>
+          
 
           <div class="tabla-contenedor tabla-precios-masivos">
             <table>
@@ -785,11 +781,7 @@ Descuento máximo: $180"
             </button>
           </div>
 
-          <p
-            id="mensaje-lista-comunidad"
-            class="mensaje"
-            aria-live="polite"
-          ></p>
+          
         </section>
 
         <section class="panel">
@@ -815,7 +807,7 @@ Descuento máximo: $180"
             </label>
           </div>
 
-          <p id="ad-list-message" class="mensaje" aria-live="polite"></p>
+          
 
           <div id="ad-list" class="ad-list"></div>
         </section>
@@ -845,7 +837,7 @@ Descuento máximo: $180"
             <input id="evento-enlace-registro" type="url" readonly aria-label="Liga directa al registro del sorteo">
             <button id="evento-copiar-enlace" class="boton-secundario" type="button">📋 Copiar liga</button>
           </div>
-          <p id="evento-enlace-mensaje" class="mensaje" aria-live="polite"></p>
+          
         </section>
 
         <div class="eventos-admin-grid">
@@ -872,7 +864,7 @@ Descuento máximo: $180"
                   <label class="switch-row campo-completo"><input id="evento-mostrar-participantes" type="checkbox"><span>Permitir lista pública de participantes (nombre parcial)</span></label>
                   <label class="switch-row campo-completo"><input id="evento-publicar-ganador" type="checkbox" checked><span>Publicar el ganador en la página y barra de visitantes</span></label>
                   <div class="acciones campo-completo"><button class="boton-principal" type="submit">Guardar evento</button><button id="evento-cancelar" class="boton-secundario" type="button">Cancelar</button></div>
-                  <p id="evento-form-mensaje" class="mensaje campo-completo" aria-live="polite"></p>
+                  
                 </div>
               </form>
             </section>
@@ -882,14 +874,14 @@ Descuento máximo: $180"
             <section class="panel">
               <h3>Eventos creados</h3>
               <div id="eventos-lista" class="evento-admin-cards"></div>
-              <p id="eventos-lista-mensaje" class="mensaje"></p>
+              
             </section>
 
             <section id="evento-detalle" class="panel" hidden>
-              <div class="cabecera-panel"><div><h3 id="evento-detalle-titulo">Detalle del evento</h3><p id="evento-detalle-subtitulo"></p></div><button id="evento-exportar" class="boton-secundario" type="button">⬇ Exportar CSV</button></div>
+              <div class="cabecera-panel"><div><h3 id="evento-detalle-titulo">Detalle del evento</h3></div><button id="evento-exportar" class="boton-secundario" type="button">⬇ Exportar CSV</button></div>
               <div class="evento-admin-estadisticas"><div class="evento-admin-stat"><span>Participantes</span><strong id="evento-stat-participantes">0</strong></div><div class="evento-admin-stat"><span>Disponibles</span><strong id="evento-stat-disponibles">0</strong></div><div class="evento-admin-stat"><span>Ganadores</span><strong id="evento-stat-ganadores">0</strong></div><div class="evento-admin-stat"><span>Estado</span><strong id="evento-stat-estado">—</strong></div></div>
               <div class="acciones"><button id="evento-sortear" class="boton-principal" type="button">🎲 Elegir ganador</button><button id="evento-cerrar" class="boton-secundario" type="button">Cerrar registros</button></div>
-              <p id="evento-detalle-mensaje" class="mensaje"></p>
+              
               <div class="evento-admin-tabs"><button class="evento-admin-tab activo" data-evento-vista="participantes" type="button">Participantes</button><button class="evento-admin-tab" data-evento-vista="ganadores" type="button">Ganadores</button></div>
               <div id="evento-vista-participantes"><div class="evento-filtro"><input id="evento-buscar" placeholder="Buscar por nombre, teléfono, número o código"></div><div class="tabla-contenedor"><table class="tabla-eventos"><thead><tr><th>No.</th><th>Código</th><th>Nombre</th><th>Teléfono</th><th>Ciudad</th><th>Fecha</th></tr></thead><tbody id="evento-participantes-lista"></tbody></table></div></div>
               <div id="evento-vista-ganadores" hidden><div id="evento-ganadores-lista"></div></div>
@@ -1094,7 +1086,7 @@ Descuento máximo: $180"
               </button>
             </div>
 
-            <p id="hero-config-message" class="mensaje campo-completo" aria-live="polite"></p>
+            
           </form>
         </section>
       </section>

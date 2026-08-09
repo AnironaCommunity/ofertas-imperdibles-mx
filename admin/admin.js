@@ -2160,7 +2160,7 @@ function ensureProductShareDialog() {
       <label class="compartir-producto-texto-label" for="compartir-producto-texto">Vista previa</label>
       <textarea id="compartir-producto-texto" rows="7" readonly></textarea>
 
-      <p id="compartir-producto-mensaje" class="mensaje" aria-live="polite"></p>
+      
 
       <div class="compartir-producto-acciones">
         <button id="compartir-producto-copiar" class="boton-principal" type="button">📋 Copiar texto</button>

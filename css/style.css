@@ -8845,3 +8845,35 @@ body .navegacion-inferior.selector-cupones-oscuro .contador-seccion-inferior {
 .estado-sin-cupones p:nth-of-type(n+3) {
   display: none !important;
 }
+
+/* =========================================================
+   V81.34 — Mensaje sin cupones definitivo, compacto
+   ========================================================= */
+.mensaje-sin-cupones,
+.sin-cupones,
+.estado-sin-cupones {
+  line-height: 1.2 !important;
+}
+
+.mensaje-sin-cupones h2,
+.sin-cupones h2,
+.estado-sin-cupones h2 {
+  font-size: 14px !important;
+  line-height: 1.2 !important;
+  margin: 0 0 4px !important;
+}
+
+.mensaje-sin-cupones p,
+.sin-cupones p,
+.estado-sin-cupones p {
+  font-size: 12px !important;
+  line-height: 1.25 !important;
+  margin: 0 !important;
+}
+
+/* Seguridad: no permitir una tercera línea antigua */
+.mensaje-sin-cupones > *:nth-child(n+3),
+.sin-cupones > *:nth-child(n+3),
+.estado-sin-cupones > *:nth-child(n+3) {
+  display: none !important;
+}
