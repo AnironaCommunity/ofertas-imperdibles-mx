@@ -490,6 +490,10 @@ function iconoCopias() {
   `;
 }
 
+function contenidoBotonCopiar() {
+  return `${iconoCopias()}<span>Copiar código</span>`;
+}
+
 function claveUsado(id) {
   return `cupon-usado-${id}`;
 }
@@ -656,7 +660,7 @@ function updateCouponTimes() {
     redeemButton.classList.remove("boton-programado");
 
     if (!redireccionEnProceso) {
-      redeemButton.textContent = "📋 Copiar y Canjear";
+      redeemButton.innerHTML = contenidoBotonCopiar();
     }
 
     if (timeState.target !== null) {
@@ -806,7 +810,7 @@ function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
       <div class="acciones-bloque">
         <div class="acciones-cupon">
           <button class="boton-canjear" type="button">
-            📋 Copiar y Canjear
+            ${contenidoBotonCopiar()}
           </button>
         </div>
 
@@ -942,29 +946,36 @@ function crearTarjetaBancaria(cupon) {
       </div>
       <div class="banco-pie">
         <div class="estado-programacion" hidden></div>
-        <button class="banco-canjear" type="button">📋 Copiar y Canjear</button>
-        <div class="banco-acciones-extra" aria-label="Interacciones del cupón">
-        <button
-          class="boton-like banco-like ${yaLeGusta ? "activo" : ""}"
-          type="button"
-          aria-label="Me gusta"
-          title="Me gusta"
-        >
-          ${iconoMeGusta()}
-          <span class="numero-likes">${Number(cupon.likes || 0)}</span>
-        </button>
-        <button
-          class="boton-compartir banco-compartir"
-          type="button"
-          aria-label="Compartir"
-          title="Compartir"
-        >
-          ${iconoCompartir()}
-        </button>
-        <span class="banco-contador-usos" title="Veces utilizado" aria-label="Veces utilizado: ${Number(cupon.clics || 0)}">
-          ${iconoCopias()}
-          <span class="numero-clics">${Number(cupon.clics || 0)}</span>
-        </span>
+        <button class="banco-canjear" type="button">${contenidoBotonCopiar()}</button>
+        <div class="acciones-secundarias banco-acciones-extra" aria-label="Interacciones del cupón">
+          <button
+            class="boton-like banco-like ${yaLeGusta ? "activo" : ""}"
+            type="button"
+            aria-label="Me gusta"
+            title="Me gusta"
+          >
+            ${iconoMeGusta()}
+          </button>
+
+          <button
+            class="boton-compartir banco-compartir"
+            type="button"
+            aria-label="Compartir cupón"
+            title="Compartir cupón"
+          >
+            ${iconoCompartir()}
+          </button>
+
+          <div class="estadisticas-cupon banco-estadisticas">
+            <span class="estadistica-item estadistica-likes">
+              ${iconoMeGusta()}
+              <span class="numero-likes">${Number(cupon.likes || 0)}</span>
+            </span>
+            <span class="estadistica-item estadistica-usos">
+              ${iconoCopias()}
+              <span class="numero-clics">${Number(cupon.clics || 0)}</span>
+            </span>
+          </div>
         </div>
         <p class="mensaje" aria-live="polite"></p>
       </div>
@@ -1402,7 +1413,7 @@ function reiniciarInteraccion() {
 
   document.querySelectorAll(".boton-canjear").forEach((boton) => {
     boton.disabled = false;
-    boton.textContent = "📋 Copiar y Canjear";
+    boton.innerHTML = contenidoBotonCopiar();
   });
 
   document.querySelectorAll(".mensaje").forEach((mensaje) => {
@@ -1421,7 +1432,7 @@ function ejecutarCuentaRegresiva(cupon, boton, mensaje) {
       cerrarModal();
 
       boton.disabled = false;
-      boton.textContent = "📋 Copiar y Canjear";
+      boton.innerHTML = contenidoBotonCopiar();
       mensaje.textContent = "";
 
       redireccionEnProceso = false;
@@ -1491,7 +1502,7 @@ async function copiarYCanjear(cupon, tarjeta) {
 
 async function compartirPagina(tarjeta) {
   const mensaje = tarjeta.querySelector(".mensaje");
-  const texto = `Mira este cupón de descuento publicado en ${URL_PAGINA}`;
+  const texto = "Mira este cupón de descuento publicado en Ofertas Imperdibles MX";
 
   try {
     if (navigator.share) {
@@ -1500,10 +1511,10 @@ async function compartirPagina(tarjeta) {
         url: URL_PAGINA,
       });
 
-      mensaje.textContent = "Página compartida.";
+      mensaje.textContent = "Cupón compartido.";
     } else {
-      await copiarTexto(texto);
-      mensaje.textContent = "Enlace de la página copiado.";
+      await copiarTexto(`${texto}\n${URL_PAGINA}`);
+      mensaje.textContent = "Enlace del cupón copiado.";
     }
 
     setTimeout(() => {
@@ -2819,7 +2830,7 @@ function crearCuponEjemploTutorial() {
       <div class="estado-programacion" hidden></div>
       <div class="acciones-bloque">
         <div class="acciones-cupon">
-          <button class="boton-canjear" type="button" tabindex="-1">📋 Copiar y Canjear</button>
+          <button class="boton-canjear" type="button" tabindex="-1">${contenidoBotonCopiar()}</button>
         </div>
         <div class="acciones-secundarias">
           <button class="boton-like" type="button" tabindex="-1" aria-label="Me gusta">${iconoMeGusta()}</button>
@@ -2974,7 +2985,7 @@ const pasosTutorial = [
   {
     objetivo: objetivoDentroCupon(".boton-canjear"),
     cupon: true,
-    titulo: "Copiar y Canjear",
+    titulo: "Copiar código",
     texto: "Este botón copia el código y te lleva a Mercado Libre para que puedas pegarlo al momento de comprar.",
     icono: "📋",
   },
