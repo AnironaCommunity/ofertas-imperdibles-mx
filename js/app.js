@@ -1222,8 +1222,8 @@ function renderizarCategoria() {
     (mostrarBancarios ? cuponesBancarios.length : 0);
 
   if (totalVisible === 0) {
-    sinCupones.querySelector("h2").textContent = "No hay cupones disponibles";
-    sinCupones.querySelector("p").textContent = "Pronto agregaremos nuevas opciones.";
+    sinCupones.querySelector("h2").textContent = "Nuevos cupones todos los días 🎟️";
+    sinCupones.querySelector("p").textContent = "Actualizamos esta sección entre 8:00 y 9:00 a. m..";
     sinCupones.hidden = false;
     todosWrapper.hidden = false;
     estadoCarga.textContent = "";
