@@ -1,12 +1,5 @@
 const cuponesContainer = document.querySelector("#cupones");
 const todosWrapper = document.querySelector("#todos-wrapper");
-const seccionCuponesBancarios = document.querySelector("#seccion-cupones-bancarios");
-const cuponesBancariosCarrusel = document.querySelector("#cupones-bancarios-carrusel");
-const bancariosConteo = document.querySelector("#bancarios-conteo");
-const bancariosAnterior = document.querySelector("#bancarios-anterior");
-const bancariosSiguiente = document.querySelector("#bancarios-siguiente");
-const bancariosIndicadores = document.querySelector("#bancarios-indicadores");
-const encabezadoCuponesTienda = document.querySelector("#encabezado-cupones-tienda");
 const sinCupones = document.querySelector("#sin-cupones");
 const estadoCarga = document.querySelector("#estado-carga");
 const botonRecargar = document.querySelector("#boton-recargar");
@@ -1018,123 +1011,6 @@ function crearTarjetaBancaria(cupon) {
   return articulo;
 }
 
-function sincronizarTamanoTarjetasBancarias() {
-  if (!seccionCuponesBancarios || !cuponesContainer) return;
-
-  // Tomamos una tarjeta REAL de tienda ya renderizada. Así el carrusel
-  // conserva exactamente el mismo ancho/alto aunque cambie el viewport.
-  const tarjetaTienda = cuponesContainer.querySelector(".cupon:not(.cupon-bancario)");
-  if (!tarjetaTienda) return;
-
-  const rect = tarjetaTienda.getBoundingClientRect();
-  if (rect.width > 0) {
-    seccionCuponesBancarios.style.setProperty("--cupon-tienda-ancho", `${rect.width}px`);
-  }
-  if (rect.height > 0) {
-    seccionCuponesBancarios.style.setProperty("--cupon-tienda-alto", `${rect.height}px`);
-  }
-}
-
-let bancoTamanoRaf = 0;
-function programarSincronizacionBancarios() {
-  cancelAnimationFrame(bancoTamanoRaf);
-  bancoTamanoRaf = requestAnimationFrame(() => {
-    sincronizarTamanoTarjetasBancarias();
-    actualizarIndicadoresBancarios();
-  });
-}
-
-window.addEventListener("resize", programarSincronizacionBancarios, { passive: true });
-if (typeof ResizeObserver !== "undefined" && cuponesContainer) {
-  const observadorTamanoTienda = new ResizeObserver(programarSincronizacionBancarios);
-  observadorTamanoTienda.observe(cuponesContainer);
-}
-
-let bancoAutoTimer = null;
-let bancoAutoPausaHasta = 0;
-
-function tarjetasBancarias() {
-  return cuponesBancariosCarrusel
-    ? [...cuponesBancariosCarrusel.querySelectorAll(".cupon-bancario-mini")]
-    : [];
-}
-
-function indiceBancarioActual() {
-  if (!cuponesBancariosCarrusel) return 0;
-  const tarjetas = tarjetasBancarias();
-  if (!tarjetas.length) return 0;
-  const izquierda = cuponesBancariosCarrusel.scrollLeft;
-  let mejor = 0;
-  let distancia = Infinity;
-  tarjetas.forEach((tarjeta, indice) => {
-    const d = Math.abs(tarjeta.offsetLeft - cuponesBancariosCarrusel.offsetLeft - izquierda);
-    if (d < distancia) { distancia = d; mejor = indice; }
-  });
-  return mejor;
-}
-
-function actualizarIndicadoresBancarios() {
-  if (!bancariosIndicadores) return;
-  const activo = indiceBancarioActual();
-  bancariosIndicadores.querySelectorAll("button").forEach((punto, indice) => {
-    punto.classList.toggle("activo", indice === activo);
-    punto.setAttribute("aria-current", indice === activo ? "true" : "false");
-  });
-}
-
-function crearIndicadoresBancarios() {
-  if (!bancariosIndicadores) return;
-  const tarjetas = tarjetasBancarias();
-  bancariosIndicadores.replaceChildren();
-  tarjetas.forEach((tarjeta, indice) => {
-    const punto = document.createElement("button");
-    punto.type = "button";
-    punto.className = "bancarios-punto";
-    punto.setAttribute("aria-label", `Ir al cupón bancario ${indice + 1}`);
-    punto.addEventListener("click", () => {
-      bancoAutoPausaHasta = Date.now() + 8000;
-      tarjeta.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
-    });
-    bancariosIndicadores.appendChild(punto);
-  });
-  actualizarIndicadoresBancarios();
-}
-
-function desplazarCarruselBancario(direccion, { automatico = false } = {}) {
-  if (!cuponesBancariosCarrusel) return;
-  const tarjetas = tarjetasBancarias();
-  if (!tarjetas.length) return;
-  const actual = indiceBancarioActual();
-  let siguiente = actual + direccion;
-  if (siguiente >= tarjetas.length) siguiente = 0;
-  if (siguiente < 0) siguiente = tarjetas.length - 1;
-  if (!automatico) bancoAutoPausaHasta = Date.now() + 8000;
-  tarjetas[siguiente].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
-}
-
-function iniciarAutoCarruselBancario() {
-  if (bancoAutoTimer) clearInterval(bancoAutoTimer);
-  bancoAutoTimer = setInterval(() => {
-    if (document.hidden || Date.now() < bancoAutoPausaHasta) return;
-    if (!seccionCuponesBancarios || seccionCuponesBancarios.hidden) return;
-    desplazarCarruselBancario(1, { automatico: true });
-  }, 4200);
-}
-
-bancariosAnterior?.addEventListener("click", () => desplazarCarruselBancario(-1));
-bancariosSiguiente?.addEventListener("click", () => desplazarCarruselBancario(1));
-
-let bancoScrollRaf = 0;
-cuponesBancariosCarrusel?.addEventListener("scroll", () => {
-  cancelAnimationFrame(bancoScrollRaf);
-  bancoScrollRaf = requestAnimationFrame(actualizarIndicadoresBancarios);
-}, { passive: true });
-["touchstart", "pointerdown", "wheel"].forEach((evento) => {
-  cuponesBancariosCarrusel?.addEventListener(evento, () => {
-    bancoAutoPausaHasta = Date.now() + 8000;
-  }, { passive: true });
-});
-
 function normalizarCategoria(cupon) {
   const categoria = String(cupon.categoria || "tienda").toLowerCase();
 
@@ -1185,8 +1061,6 @@ function limpiarVista() {
 
 function renderizarCategoria() {
   limpiarVista();
-  cuponesBancariosCarrusel?.replaceChildren();
-  if (seccionCuponesBancarios) seccionCuponesBancarios.hidden = true;
 
   const disponibles = todosLosCupones
     .filter((cupon) => cupon.activo !== false)
@@ -1203,8 +1077,6 @@ function renderizarCategoria() {
   const mostrarTienda = categoriaActiva !== "bancarios";
   const mostrarBancarios = categoriaActiva !== "tienda";
 
-  // V81.17: ya no usamos títulos independientes para Tienda/Bancarios.
-  if (encabezadoCuponesTienda) encabezadoCuponesTienda.hidden = true;
   if (cuponesContainer) cuponesContainer.hidden = false;
 
   document.body.classList.remove("vista-bancarios");
@@ -1223,7 +1095,7 @@ function renderizarCategoria() {
 
   if (totalVisible === 0) {
     sinCupones.querySelector("h2").textContent = "¡No hay cupones disponibles!";
-    sinCupones.querySelector("p").textContent = "Los cupones se agregan a partir de 8:30 a 9:00 a. m..";
+    sinCupones.querySelector("p").textContent = "Los cupones se agregan a partir de 8:30 a 9:00 a. m.";
     sinCupones.hidden = false;
     todosWrapper.hidden = false;
     estadoCarga.textContent = "";
