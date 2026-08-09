@@ -955,6 +955,38 @@ function crearTarjetaBancaria(cupon) {
   return articulo;
 }
 
+function sincronizarTamanoTarjetasBancarias() {
+  if (!seccionCuponesBancarios || !cuponesContainer) return;
+
+  // Tomamos una tarjeta REAL de tienda ya renderizada. Así el carrusel
+  // conserva exactamente el mismo ancho/alto aunque cambie el viewport.
+  const tarjetaTienda = cuponesContainer.querySelector(".cupon:not(.cupon-bancario)");
+  if (!tarjetaTienda) return;
+
+  const rect = tarjetaTienda.getBoundingClientRect();
+  if (rect.width > 0) {
+    seccionCuponesBancarios.style.setProperty("--cupon-tienda-ancho", `${rect.width}px`);
+  }
+  if (rect.height > 0) {
+    seccionCuponesBancarios.style.setProperty("--cupon-tienda-alto", `${rect.height}px`);
+  }
+}
+
+let bancoTamanoRaf = 0;
+function programarSincronizacionBancarios() {
+  cancelAnimationFrame(bancoTamanoRaf);
+  bancoTamanoRaf = requestAnimationFrame(() => {
+    sincronizarTamanoTarjetasBancarias();
+    actualizarIndicadoresBancarios();
+  });
+}
+
+window.addEventListener("resize", programarSincronizacionBancarios, { passive: true });
+if (typeof ResizeObserver !== "undefined" && cuponesContainer) {
+  const observadorTamanoTienda = new ResizeObserver(programarSincronizacionBancarios);
+  observadorTamanoTienda.observe(cuponesContainer);
+}
+
 let bancoAutoTimer = null;
 let bancoAutoPausaHasta = 0;
 
@@ -1145,6 +1177,7 @@ function renderizarCategoria() {
     seccionCuponesBancarios.hidden = false;
     if (bancariosConteo) bancariosConteo.textContent = "";
     requestAnimationFrame(() => {
+      sincronizarTamanoTarjetasBancarias();
       crearIndicadoresBancarios();
       iniciarAutoCarruselBancario();
     });
