@@ -1129,13 +1129,6 @@ function renderizarCategoria() {
   if (mostrarBancarios && cuponesBancarios.length) {
     // Cuando se muestran Todos, iniciamos Bancarios en una fila nueva con
     // una separación pequeña, sin título, sin línea y sin mezclar categorías.
-    if (mostrarTienda && cuponesTienda.length) {
-      const espacio = document.createElement("div");
-      espacio.className = "separacion-bancarios-grid";
-      espacio.setAttribute("aria-hidden", "true");
-      cuponesContainer.appendChild(espacio);
-    }
-
     const fragmentoBancos = document.createDocumentFragment();
     cuponesBancarios.forEach((cupon) => {
       const tarjeta = crearTarjetaBancaria(cupon);
