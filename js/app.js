@@ -934,13 +934,16 @@ function crearTarjetaBancaria(cupon) {
     </div>
     <div class="banco-franja">CUPÓN BANCARIO</div>
     <div class="banco-cuerpo">
-      <h3>${escaparHtml(cupon.titulo || "Beneficio bancario")}</h3>
-      ${cupon.detalle_bancario ? `<p class="banco-detalle">${escaparHtml(cupon.detalle_bancario)}</p>` : ""}
-      <p class="banco-minimo">Compra mínima: <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
-      <p class="banco-maximo">Máx. descuento: <strong>${escaparHtml(cupon.ahorro_maximo || "Consultar")}</strong></p>
-      <div class="estado-programacion" hidden></div>
-      <button class="banco-canjear" type="button">📋 Copiar y Canjear</button>
-      <div class="banco-acciones-extra" aria-label="Interacciones del cupón">
+      <div class="banco-info">
+        <h3>${escaparHtml(cupon.titulo || "Beneficio bancario")}</h3>
+        ${cupon.detalle_bancario ? `<p class="banco-detalle">${escaparHtml(cupon.detalle_bancario)}</p>` : ""}
+        <p class="banco-minimo">Compra mínima: <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
+        <p class="banco-maximo">Máx. descuento: <strong>${escaparHtml(cupon.ahorro_maximo || "Consultar")}</strong></p>
+      </div>
+      <div class="banco-pie">
+        <div class="estado-programacion" hidden></div>
+        <button class="banco-canjear" type="button">📋 Copiar y Canjear</button>
+        <div class="banco-acciones-extra" aria-label="Interacciones del cupón">
         <button
           class="boton-like banco-like ${yaLeGusta ? "activo" : ""}"
           type="button"
@@ -962,8 +965,9 @@ function crearTarjetaBancaria(cupon) {
           ${iconoCopias()}
           <span class="numero-clics">${Number(cupon.clics || 0)}</span>
         </span>
+        </div>
+        <p class="mensaje" aria-live="polite"></p>
       </div>
-      <p class="mensaje" aria-live="polite"></p>
     </div>
   `;
 
