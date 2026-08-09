@@ -774,13 +774,15 @@ function htmlEtiquetaCupon(estado) {
 
 function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
   const articulo = document.createElement("article");
-  const esBancario = normalizarCategoria(cupon) === "bancarios";
+  const categoria = normalizarCategoria(cupon);
+  const esBancario = categoria === "bancarios";
+  const esExclusivo = categoria === "exclusivo";
   const yaUsado = localStorage.getItem(claveUsado(cupon.id)) === "1";
   const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
 
   articulo.className = estadoDestacado
-    ? `cupon cupon-${estadoDestacado}${esBancario ? " cupon-bancario" : ""}`
-    : `cupon${esBancario ? " cupon-bancario" : ""}`;
+    ? `cupon cupon-${estadoDestacado}${esBancario ? " cupon-bancario" : ""}${esExclusivo ? " cupon-exclusivo" : ""}`
+    : `cupon${esBancario ? " cupon-bancario" : ""}${esExclusivo ? " cupon-exclusivo" : ""}`;
   articulo.dataset.id = String(cupon.id);
   articulo.dataset.color = COLORES[indice % COLORES.length];
 
@@ -803,9 +805,13 @@ function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
     <div class="cupon-contenido">
       
       <div class="cupon-etiquetas">
+        ${esExclusivo ? '<span class="etiqueta-cupon etiqueta-exclusivo">⭐ Exclusivo</span>' : ""}
         ${htmlEtiquetaCupon(estadoDestacado)}
       </div>
 
+      ${esExclusivo && cupon.detalle_bancario
+        ? `<p class="detalle-beneficio-exclusivo">${escaparHtml(cupon.detalle_bancario)}</p>`
+        : ""}
       ${esBancario ? `<p class="beneficio-bancario">${escaparHtml(cupon.titulo)}</p>` : ""}
 
       <p class="descuento-maximo">
@@ -1014,9 +1020,9 @@ function crearTarjetaBancaria(cupon) {
 function normalizarCategoria(cupon) {
   const categoria = String(cupon.categoria || "tienda").toLowerCase();
 
-  return categoria === "bancario" || categoria === "bancarios"
-    ? "bancarios"
-    : "tienda";
+  if (categoria === "bancario" || categoria === "bancarios") return "bancarios";
+  if (categoria === "exclusivo" || categoria === "exclusivos") return "exclusivo";
+  return "tienda";
 }
 
 function cambiarCategoria(
@@ -1070,11 +1076,16 @@ function renderizarCategoria() {
     .filter((cupon) => normalizarCategoria(cupon) === "tienda")
     .sort((a, b) => Number(b.clics || 0) - Number(a.clics || 0));
 
+  const cuponesExclusivos = disponibles
+    .filter((cupon) => normalizarCategoria(cupon) === "exclusivo")
+    .sort((a, b) => Number(b.clics || 0) - Number(a.clics || 0));
+
   const cuponesBancarios = disponibles
     .filter((cupon) => normalizarCategoria(cupon) === "bancarios")
     .sort((a, b) => Number(b.clics || 0) - Number(a.clics || 0));
 
   const mostrarTienda = categoriaActiva !== "bancarios";
+  const mostrarExclusivos = categoriaActiva === "todos";
   const mostrarBancarios = categoriaActiva !== "tienda";
 
   if (cuponesContainer) cuponesContainer.hidden = false;
@@ -1091,6 +1102,7 @@ function renderizarCategoria() {
 
   const totalVisible =
     (mostrarTienda ? cuponesTienda.length : 0) +
+    (mostrarExclusivos ? cuponesExclusivos.length : 0) +
     (mostrarBancarios ? cuponesBancarios.length : 0);
 
   if (totalVisible === 0) {
@@ -1126,9 +1138,17 @@ function renderizarCategoria() {
     cuponesContainer.appendChild(fragmentoTienda);
   }
 
+  if (mostrarExclusivos && cuponesExclusivos.length) {
+    const fragmentoExclusivos = document.createDocumentFragment();
+    cuponesExclusivos.forEach((cupon, indice) => {
+      fragmentoExclusivos.appendChild(
+        crearTarjeta(cupon, "", cuponesTienda.length + indice)
+      );
+    });
+    cuponesContainer.appendChild(fragmentoExclusivos);
+  }
+
   if (mostrarBancarios && cuponesBancarios.length) {
-    // Cuando se muestran Todos, iniciamos Bancarios en una fila nueva con
-    // una separación pequeña, sin título, sin línea y sin mezclar categorías.
     const fragmentoBancos = document.createDocumentFragment();
     cuponesBancarios.forEach((cupon) => {
       const tarjeta = crearTarjetaBancaria(cupon);

@@ -165,6 +165,7 @@
               <label for="import-category">Categoría</label>
               <select id="import-category">
                 <option value="tienda">🛒 Tienda</option>
+                <option value="exclusivo">⭐ Exclusivo</option>
                 <option value="bancarios">💳 Bancarios</option>
               </select>
             </div>
@@ -300,6 +301,7 @@ Descuento máximo: $180"
                 <label for="coupon-category">Categoría</label>
                 <select id="coupon-category">
                   <option value="tienda">🛒 Tienda</option>
+                  <option value="exclusivo">⭐ Exclusivo</option>
                   <option value="bancarios">💳 Bancarios</option>
                 </select>
               </div>
@@ -357,14 +359,22 @@ Descuento máximo: $180"
               </div>
 
               <div class="campo campo-completo" id="coupon-bank-detail-wrapper" hidden>
-                <label for="coupon-bank-detail">Detalle del beneficio bancario</label>
+                <label id="coupon-bank-detail-label" for="coupon-bank-detail">Detalle del beneficio bancario</label>
                 <input
                   id="coupon-bank-detail"
                   type="text"
                   maxlength="120"
                   placeholder="Ej. ó 24 MSI en compras con T. de Crédito"
                 />
-                <small>Este texto aparecerá debajo del porcentaje, como en las tarjetas bancarias de Mercado Libre.</small>
+                <small id="coupon-bank-detail-help">Este texto aparecerá debajo del porcentaje.</small>
+              </div>
+
+              <div class="campo campo-completo" id="coupon-share-eligible-wrapper" hidden>
+                <label class="switch-row">
+                  <input id="coupon-share-eligible" type="checkbox" />
+                  <span>Considerar este cupón al compartir productos desde el administrador</span>
+                </label>
+                <small>Solo aplica a cupones de tipo Exclusivo. Si está desmarcado, no participará en el cálculo automático del mejor cupón.</small>
               </div>
 
               <div class="campo campo-completo">
@@ -1102,6 +1112,6 @@ Descuento máximo: $180"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=81.37.0"></script>
+  <script type="module" src="admin.js?v=81.42.0"></script>
 </body>
 </html>

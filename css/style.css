@@ -7957,6 +7957,37 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   filter: none !important;
 }
 
+
+/* Cupón Exclusivo: conserva la tarjeta normal y añade identidad propia. */
+.cupon-exclusivo {
+  border-color: #d8c76a;
+}
+
+.cupon-exclusivo .cupon-encabezado {
+  background: linear-gradient(135deg, #fff7c7 0%, #ffe98a 100%);
+}
+
+.etiqueta-exclusivo {
+  color: #725900 !important;
+  background: #fff2a8 !important;
+  border: 1px solid #ead26a !important;
+}
+
+.detalle-beneficio-exclusivo {
+  margin: 1px 0 2px;
+  color: #51564f;
+  font-size: 10.5px;
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+@media (max-width: 700px) {
+  .detalle-beneficio-exclusivo {
+    font-size: 9px;
+    line-height: 1.15;
+  }
+}
+
 /* Ayuda conservada en HTML para reactivarla después, pero oculta por configuración actual. */
 #ayuda-cupones[data-oculto-temporalmente="true"] {
   display: none !important;

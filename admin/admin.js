@@ -67,6 +67,10 @@ const couponBank = document.querySelector("#coupon-bank");
 const couponBankWrapper = document.querySelector("#coupon-bank-wrapper");
 const couponBankDetail = document.querySelector("#coupon-bank-detail");
 const couponBankDetailWrapper = document.querySelector("#coupon-bank-detail-wrapper");
+const couponBankDetailLabel = document.querySelector("#coupon-bank-detail-label");
+const couponBankDetailHelp = document.querySelector("#coupon-bank-detail-help");
+const couponShareEligible = document.querySelector("#coupon-share-eligible");
+const couponShareEligibleWrapper = document.querySelector("#coupon-share-eligible-wrapper");
 const couponStart = document.querySelector("#coupon-start");
 const couponEnd = document.querySelector("#coupon-end");
 const couponLink = document.querySelector("#coupon-link");
@@ -464,8 +468,10 @@ function editCoupon(coupon) {
   couponMinimum.value = coupon.compra_minima || "";
   couponSaving.value = coupon.ahorro_maximo || "";
   if (couponBankDetail) couponBankDetail.value = coupon.detalle_bancario || "";
-  couponCategory.value =
-    coupon.categoria === "bancarios" ? "bancarios" : "tienda";
+  couponCategory.value = ["tienda", "exclusivo", "bancarios"].includes(coupon.categoria)
+    ? coupon.categoria
+    : "tienda";
+  if (couponShareEligible) couponShareEligible.checked = coupon.considerar_compartir === true;
   couponStart.value = isoToMexicoLocal(coupon.fecha_inicio);
   couponEnd.value = isoToMexicoLocal(coupon.fecha_fin);
   couponLink.value = coupon.enlace || "";
@@ -505,7 +511,13 @@ function renderCoupons() {
     row.innerHTML = `
       <td>${escapeHtml(coupon.titulo)}</td>
       <td>${escapeHtml(coupon.codigo)}</td>
-      <td>${coupon.categoria === "bancarios" ? "💳 Bancarios" : "🛒 Tienda"}</td>
+      <td>${
+        coupon.categoria === "bancarios"
+          ? "💳 Bancarios"
+          : coupon.categoria === "exclusivo"
+            ? "⭐ Exclusivo"
+            : "🛒 Tienda"
+      }</td>
       <td>${Number(coupon.clics || 0)}</td>
       <td>
         <div class="programacion-detalle">
@@ -990,7 +1002,12 @@ async function saveCoupon(event) {
       codigo: couponCode.value.trim(),
       compra_minima: couponMinimum.value.trim(),
       ahorro_maximo: couponSaving.value.trim(),
-      detalle_bancario: couponCategory.value === "bancarios" ? (couponBankDetail?.value || "").trim() : "",
+      detalle_bancario: ["bancarios", "exclusivo"].includes(couponCategory.value)
+        ? (couponBankDetail?.value || "").trim()
+        : "",
+      considerar_compartir: couponCategory.value === "exclusivo"
+        ? Boolean(couponShareEligible?.checked)
+        : false,
       categoria: couponCategory.value,
       fecha_inicio: mexicoLocalToIso(couponStart.value),
       fecha_fin: mexicoLocalToIso(couponEnd.value),
@@ -1530,7 +1547,14 @@ function activeStoreCoupons() {
   const now = Date.now();
 
   return coupons.filter((coupon) => {
-    if (!coupon.activo || coupon.categoria !== "tienda") return false;
+    if (!coupon.activo) return false;
+
+    const categoria = String(coupon.categoria || "tienda").toLowerCase();
+    const elegible =
+      categoria === "tienda" ||
+      (categoria === "exclusivo" && coupon.considerar_compartir === true);
+
+    if (!elegible) return false;
 
     const start = coupon.fecha_inicio
       ? new Date(coupon.fecha_inicio).getTime()
@@ -2762,9 +2786,31 @@ downloadCommunityList?.addEventListener(
 );
 
 function actualizarSelectorBanco() {
-  const esBancario = couponCategory?.value === "bancarios";
+  const categoria = couponCategory?.value || "tienda";
+  const esBancario = categoria === "bancarios";
+  const esExclusivo = categoria === "exclusivo";
+  const usaDetalle = esBancario || esExclusivo;
+
   if (couponBankWrapper) couponBankWrapper.hidden = !esBancario;
-  if (couponBankDetailWrapper) couponBankDetailWrapper.hidden = !esBancario;
+  if (couponBankDetailWrapper) couponBankDetailWrapper.hidden = !usaDetalle;
+  if (couponShareEligibleWrapper) couponShareEligibleWrapper.hidden = !esExclusivo;
+
+  if (couponBankDetailLabel) {
+    couponBankDetailLabel.textContent = esBancario
+      ? "Detalle del beneficio bancario"
+      : "Detalle del beneficio exclusivo";
+  }
+
+  if (couponBankDetailHelp) {
+    couponBankDetailHelp.textContent = esBancario
+      ? "Este texto aparecerá debajo del porcentaje en la tarjeta bancaria."
+      : "Este texto aparecerá dentro de la tarjeta del cupón Exclusivo.";
+  }
+
+  if (!esExclusivo && couponShareEligible) {
+    couponShareEligible.checked = false;
+  }
+
   if (esBancario && couponBank?.value) {
     couponImageUrl.value = couponBank.value;
     couponImagePreview.src = couponBank.value;

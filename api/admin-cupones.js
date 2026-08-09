@@ -70,7 +70,10 @@ function cleanExternalUrl(value, fallback) {
 }
 
 function normalizeCategory(value) {
-  return value === "bancarios" ? "bancarios" : "tienda";
+  const category = String(value || "").trim().toLowerCase();
+  return ["tienda", "exclusivo", "bancarios"].includes(category)
+    ? category
+    : "tienda";
 }
 
 function eventAdminAuth(r){return Boolean(process.env.ADMIN_PASSWORD)&&String(r.headers['x-admin-password']||'')===process.env.ADMIN_PASSWORD;}
@@ -210,7 +213,7 @@ export default async function handler(request, response) {
 
     if (request.method === "GET") {
       const data = await requestSupabase(
-        "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,detalle_bancario,categoria,enlace,activo,likes,clics,fecha_inicio,fecha_fin,fecha_creacion,fecha_publicacion,imagen_url&order=id.desc"
+        "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,detalle_bancario,considerar_compartir,categoria,enlace,activo,likes,clics,fecha_inicio,fecha_fin,fecha_creacion,fecha_publicacion,imagen_url&order=id.desc"
       );
 
       response.setHeader("Cache-Control", "no-store");
@@ -227,6 +230,9 @@ export default async function handler(request, response) {
         compra_minima: cleanText(request.body?.compra_minima),
         ahorro_maximo: cleanText(request.body?.ahorro_maximo),
         detalle_bancario: cleanText(request.body?.detalle_bancario).slice(0, 120),
+        considerar_compartir:
+          normalizeCategory(request.body?.categoria) === "exclusivo" &&
+          request.body?.considerar_compartir === true,
         categoria: normalizeCategory(request.body?.categoria),
         enlace: cleanText(request.body?.enlace),
         imagen_url: cleanText(request.body?.imagen_url),
@@ -282,6 +288,13 @@ export default async function handler(request, response) {
 
       if (Object.hasOwn(request.body || {}, "categoria")) {
         payload.categoria = normalizeCategory(request.body.categoria);
+      }
+
+      if (Object.hasOwn(request.body || {}, "considerar_compartir")) {
+        const categoriaFinal = payload.categoria || normalizeCategory(request.body?.categoria);
+        payload.considerar_compartir =
+          categoriaFinal === "exclusivo" &&
+          request.body.considerar_compartir === true;
       }
 
       if (Object.hasOwn(request.body || {}, "activo")) {
