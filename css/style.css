@@ -8092,3 +8092,83 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
     min-height: 0 !important;
   }
 }
+
+/* =========================================================
+   V81.20 — Corrección efectiva de V81.19
+   ========================================================= */
+
+/* CUPÓN DE TIENDA: eliminado desde JS; esto evita que una versión vieja
+   del marcado pueda volver a mostrarlo durante una recarga parcial. */
+.franja-cupon-tienda {
+  display: none !important;
+}
+
+/* Tienda: misma tipografía ligera de Compra mínima / Máx. descuento
+   que las tarjetas bancarias. */
+.cupon:not(.cupon-bancario-mini) .descuento-maximo,
+.cupon:not(.cupon-bancario-mini) .compra-minima {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: auto !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #343842 !important;
+  font-size: 12px !important;
+  line-height: 1.23 !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+}
+
+.cupon:not(.cupon-bancario-mini) .descuento-maximo strong,
+.cupon:not(.cupon-bancario-mini) .compra-minima strong {
+  color: #202431 !important;
+  font-weight: 650 !important;
+}
+
+/* Bancarios: el detalle puede crecer a las líneas que necesite. */
+.cupon-bancario-mini .banco-detalle {
+  display: block !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  margin-bottom: 4px !important;
+  overflow: visible !important;
+  -webkit-line-clamp: unset !important;
+  -webkit-box-orient: initial !important;
+}
+
+/* El aire solicitado queda exactamente entre los datos/beneficio y el pie.
+   No se comprime Copiar código contra Compra mínima / Máx. descuento. */
+.cupon-bancario-mini .banco-info {
+  margin-bottom: 10px !important;
+}
+
+.cupon-bancario-mini .banco-pie {
+  margin-top: 0 !important;
+}
+
+/* La tarjeta conserva el mismo ancho de Tienda, pero puede crecer un poco
+   verticalmente cuando el detalle bancario sea más largo. */
+.cupones-grid-compacta > .cupon-bancario-mini,
+.cupones-grid-compacta > .cupon-bancario-grid {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 700px) {
+  .cupon:not(.cupon-bancario-mini) .descuento-maximo,
+  .cupon:not(.cupon-bancario-mini) .compra-minima {
+    font-size: 11.25px !important;
+    line-height: 1.2 !important;
+  }
+
+  .cupon-bancario-mini .banco-info {
+    margin-bottom: 8px !important;
+  }
+}

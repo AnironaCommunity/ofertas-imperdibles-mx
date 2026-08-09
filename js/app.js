@@ -802,7 +802,7 @@ function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
     </div>
 
     <div class="cupon-contenido">
-      ${!esBancario ? `<div class="franja-cupon-tienda">CUPÓN DE TIENDA</div>` : ""}
+      
       <div class="cupon-etiquetas">
         ${htmlEtiquetaCupon(estadoDestacado)}
       </div>
