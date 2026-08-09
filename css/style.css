@@ -7813,3 +7813,87 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   gap: 4px !important;
   width: auto !important;
 }
+
+
+/* =========================================================
+   V81.15 — Identidad visual para Cupones de tienda
+   Moderniza sin cambiar dimensiones ni estructura base.
+   ========================================================= */
+.encabezado-cupones-tienda {
+  margin: 2px 0 10px;
+}
+.encabezado-cupones-tienda[hidden] { display: none !important; }
+.encabezado-cupones-tienda h2 {
+  margin: 0;
+  color: #344054;
+  font-size: 16px;
+  line-height: 1.2;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+.encabezado-cupones-tienda p {
+  margin: 3px 0 0;
+  color: #7b8493;
+  font-size: 12px;
+  line-height: 1.25;
+  font-weight: 500;
+}
+
+.cupon:not(.cupon-bancario) .franja-cupon-tienda {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 22px;
+  margin: -9px -10px 2px;
+  padding: 4px 8px;
+  color: #fff;
+  background: var(--tono-1);
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+
+/* Misma lectura ligera de los bancarios, sin perder la jerarquía actual. */
+.cupon:not(.cupon-bancario) .descuento-maximo {
+  color: #667085;
+  font-size: 12px !important;
+  line-height: 1.25 !important;
+  font-weight: 500 !important;
+}
+.cupon:not(.cupon-bancario) .descuento-maximo strong {
+  color: #344054;
+  font-weight: 700 !important;
+}
+.cupon:not(.cupon-bancario) .compra-minima {
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  color: #667085 !important;
+  background: transparent !important;
+  font-size: 12px !important;
+  line-height: 1.25 !important;
+  font-weight: 500 !important;
+}
+
+@media (max-width: 640px) {
+  .encabezado-cupones-tienda {
+    margin-bottom: 8px;
+  }
+  .encabezado-cupones-tienda h2 {
+    font-size: 14px;
+  }
+  .encabezado-cupones-tienda p {
+    font-size: 11px;
+  }
+  .cupon:not(.cupon-bancario) .franja-cupon-tienda {
+    min-height: 20px;
+    padding: 3px 6px;
+    font-size: 9px;
+  }
+  .cupon:not(.cupon-bancario) .descuento-maximo,
+  .cupon:not(.cupon-bancario) .compra-minima {
+    font-size: 11px !important;
+  }
+}

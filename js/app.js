@@ -6,6 +6,7 @@ const bancariosConteo = document.querySelector("#bancarios-conteo");
 const bancariosAnterior = document.querySelector("#bancarios-anterior");
 const bancariosSiguiente = document.querySelector("#bancarios-siguiente");
 const bancariosIndicadores = document.querySelector("#bancarios-indicadores");
+const encabezadoCuponesTienda = document.querySelector("#encabezado-cupones-tienda");
 const sinCupones = document.querySelector("#sin-cupones");
 const estadoCarga = document.querySelector("#estado-carga");
 const botonRecargar = document.querySelector("#boton-recargar");
@@ -787,6 +788,7 @@ function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
     </div>
 
     <div class="cupon-contenido">
+      ${!esBancario ? `<div class="franja-cupon-tienda">CUPÓN DE TIENDA</div>` : ""}
       <div class="cupon-etiquetas">
         ${htmlEtiquetaCupon(estadoDestacado)}
       </div>
@@ -1173,6 +1175,8 @@ function renderizarCategoria() {
   const cuponesBancarios = disponibles
     .filter((cupon) => normalizarCategoria(cupon) === "bancarios")
     .sort((a, b) => Number(b.clics || 0) - Number(a.clics || 0));
+
+  if (encabezadoCuponesTienda) encabezadoCuponesTienda.hidden = cuponesTienda.length === 0;
 
   document.body.classList.remove("vista-bancarios");
   const tituloCupones = document.querySelector("#titulo-seccion-cupones");
