@@ -1,5 +1,10 @@
 const cuponesContainer = document.querySelector("#cupones");
 const todosWrapper = document.querySelector("#todos-wrapper");
+const seccionCuponesBancarios = document.querySelector("#seccion-cupones-bancarios");
+const cuponesBancariosCarrusel = document.querySelector("#cupones-bancarios-carrusel");
+const bancariosConteo = document.querySelector("#bancarios-conteo");
+const bancariosAnterior = document.querySelector("#bancarios-anterior");
+const bancariosSiguiente = document.querySelector("#bancarios-siguiente");
 const sinCupones = document.querySelector("#sin-cupones");
 const estadoCarga = document.querySelector("#estado-carga");
 const botonRecargar = document.querySelector("#boton-recargar");
@@ -338,7 +343,7 @@ tabTienda.addEventListener("click", () => {
 });
 
 tabBancarios.addEventListener("click", () => {
-  cambiarCategoria("bancarios", { actualizarHistorial: true });
+  cambiarCategoria("bancarios", { actualizarHistorial: true, desplazamiento: "auto" });
   actualizarNavegacionPrincipal("bancarios");
 });
 
@@ -604,7 +609,7 @@ function couponProgress(timeState) {
 }
 
 function updateCouponTimes() {
-  document.querySelectorAll(".cupon[data-id]").forEach((card) => {
+  document.querySelectorAll(".cupon[data-id], .cupon-bancario-mini[data-id]").forEach((card) => {
     const coupon = todosLosCupones.find(
       (item) => String(item.id) === card.dataset.id
     );
@@ -613,7 +618,7 @@ function updateCouponTimes() {
 
     const timeState = couponTimeState(coupon);
     const status = card.querySelector(".estado-programacion");
-    const redeemButton = card.querySelector(".boton-canjear");
+    const redeemButton = card.querySelector(".boton-canjear, .banco-canjear");
 
     status.className =
       `estado-programacion ${timeState.state}`;
@@ -638,7 +643,7 @@ function updateCouponTimes() {
     if (timeState.state === "finalizado") {
       card.remove();
 
-      if (!cuponesContainer.querySelector(".cupon[data-id]")) {
+      if (!document.querySelector(".cupon[data-id], .cupon-bancario-mini[data-id]")) {
         todosWrapper.hidden = true;
         sinCupones.hidden = false;
       }
@@ -867,6 +872,78 @@ function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
   return articulo;
 }
 
+
+function obtenerLogoBanco(cupon) {
+  const imagen = String(cupon.imagen_url || "");
+  if (imagen.includes("/img/bancos/")) return imagen;
+
+  const codigo = String(cupon.codigo || "").toUpperCase().replace(/\s+/g, "");
+  const titulo = String(cupon.titulo || "").toUpperCase();
+  const texto = `${codigo} ${titulo}`;
+
+  const bancos = [
+    [/BNMX|BANAMEX/, "/img/bancos/banamex.png"],
+    [/BBVA/, "/img/bancos/bbva.png"],
+    [/HSBC/, "/img/bancos/hsbc.png"],
+    [/AMEX|AMERICAN/, "/img/bancos/american-express.png"],
+    [/INVE|INVEX/, "/img/bancos/invex.png"],
+    [/SCOT|SCOTIA/, "/img/bancos/scotiabank.png"],
+    [/AFRM|AFIRME/, "/img/bancos/afirme.png"],
+    [/MIFE|MIFEL/, "/img/bancos/mifel.png"],
+    [/INBR|INBURSA/, "/img/bancos/inbursa.png"],
+    [/FALA|FALABELLA/, "/img/bancos/falabella.png"],
+    [/DIDI/, "/img/bancos/didi-card.png"],
+    [/OPBA|OPENBANK/, "/img/bancos/openbank.png"],
+    [/TCMP|MERCADO\s*PAGO.*VISA/, "/img/bancos/mercado-pago-visa.png"],
+    [/MESES|MST|MERCADO\s*PAGO/, "/img/bancos/mercado-pago.png"],
+  ];
+
+  return bancos.find(([patron]) => patron.test(texto))?.[1] || imagen;
+}
+
+function crearTarjetaBancaria(cupon) {
+  const articulo = document.createElement("article");
+  articulo.className = "cupon-bancario-mini";
+  articulo.dataset.id = String(cupon.id);
+
+  const logoBanco = obtenerLogoBanco(cupon);
+  articulo.innerHTML = `
+    <div class="banco-logo-area">
+      ${logoBanco ? `<img class="banco-logo" src="${escaparHtml(logoBanco)}" alt="" loading="lazy" />` : `<span class="banco-logo-fallback">BANCO</span>`}
+    </div>
+    <div class="banco-franja">CUPÓN BANCARIO</div>
+    <div class="banco-cuerpo">
+      <h3>${escaparHtml(cupon.titulo || "Beneficio bancario")}</h3>
+      <p class="banco-minimo">Compra mínima: <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
+      <p class="banco-maximo">Máx. descuento: <strong>${escaparHtml(cupon.ahorro_maximo || "Consultar")}</strong></p>
+      <div class="estado-programacion" hidden></div>
+      <button class="banco-canjear" type="button">📋 Copiar y Canjear</button>
+      <p class="mensaje" aria-live="polite"></p>
+    </div>
+  `;
+
+  const boton = articulo.querySelector(".banco-canjear");
+  const estadoInicial = couponTimeState(cupon);
+  if (!estadoInicial.enabled) {
+    boton.disabled = true;
+    boton.textContent = "⏳ Disponible pronto";
+  }
+  boton.addEventListener("click", () => {
+    if (couponTimeState(cupon).enabled) copiarYCanjear(cupon, articulo);
+  });
+  return articulo;
+}
+
+function desplazarCarruselBancario(direccion) {
+  if (!cuponesBancariosCarrusel) return;
+  const tarjeta = cuponesBancariosCarrusel.querySelector(".cupon-bancario-mini");
+  const distancia = (tarjeta?.getBoundingClientRect().width || 220) + 14;
+  cuponesBancariosCarrusel.scrollBy({ left: distancia * direccion * 2, behavior: "smooth" });
+}
+
+bancariosAnterior?.addEventListener("click", () => desplazarCarruselBancario(-1));
+bancariosSiguiente?.addEventListener("click", () => desplazarCarruselBancario(1));
+
 function normalizarCategoria(cupon) {
   const categoria = String(cupon.categoria || "tienda").toLowerCase();
 
@@ -913,109 +990,74 @@ function limpiarVista() {
 
 function renderizarCategoria() {
   limpiarVista();
+  cuponesBancariosCarrusel?.replaceChildren();
+  if (seccionCuponesBancarios) seccionCuponesBancarios.hidden = true;
 
-  const cuponesCategoria = todosLosCupones
-    /* La activación manual tiene prioridad sobre la vigencia. */
+  const disponibles = todosLosCupones
     .filter((cupon) => cupon.activo !== false)
-    .filter((cupon) => normalizarCategoria(cupon) === categoriaActiva)
-    .filter((cupon) => couponTimeState(cupon).state !== "finalizado")
-    .sort((a, b) => {
-      const stateA = couponTimeState(a);
-      const stateB = couponTimeState(b);
+    .filter((cupon) => couponTimeState(cupon).state !== "finalizado");
 
-      if (stateA.enabled !== stateB.enabled) {
-        return stateA.enabled ? -1 : 1;
-      }
+  const cuponesTienda = disponibles
+    .filter((cupon) => normalizarCategoria(cupon) === "tienda")
+    .sort((a, b) => Number(b.clics || 0) - Number(a.clics || 0));
 
-      if (!stateA.enabled && !stateB.enabled) {
-        return (
-          Number(stateA.target || 0) -
-          Number(stateB.target || 0)
-        );
-      }
+  const cuponesBancarios = disponibles
+    .filter((cupon) => normalizarCategoria(cupon) === "bancarios")
+    .sort((a, b) => Number(b.clics || 0) - Number(a.clics || 0));
 
-      return Number(b.clics || 0) - Number(a.clics || 0);
-    });
-
-  const esTienda = categoriaActiva === "tienda";
-  document.body.classList.toggle("vista-bancarios", !esTienda);
-
-  const etiquetas = window.ofertasEtiquetas || {};
+  document.body.classList.remove("vista-bancarios");
   const tituloCupones = document.querySelector("#titulo-seccion-cupones");
   if (tituloCupones) {
     const filaTitulo = tituloCupones.closest(".titulo-fila");
-
-    filaTitulo?.classList.toggle("titulo-fila--tienda", esTienda);
-    filaTitulo?.classList.toggle("titulo-fila--bancarios", !esTienda);
-
-    tituloCupones.textContent = esTienda
-      ? ""
-      : (etiquetas.seccionBancarios || "Bancarios");
-
-    tituloCupones.setAttribute("aria-hidden", String(esTienda));
+    filaTitulo?.classList.add("titulo-fila--tienda");
+    filaTitulo?.classList.remove("titulo-fila--bancarios");
+    tituloCupones.textContent = "";
+    tituloCupones.setAttribute("aria-hidden", "true");
   }
 
-  if (cuponesCategoria.length === 0) {
-    sinCupones.querySelector("h2").textContent = esTienda
-      ? `No hay ${(etiquetas.seccionTienda || "cupones de tienda").toLowerCase()} disponibles`
-      : `No hay ${(etiquetas.seccionBancarios || "cupones bancarios").toLowerCase()} disponibles`;
-
-    sinCupones.querySelector("p").textContent =
-      "Pronto agregaremos nuevas opciones.";
-
+  if (cuponesTienda.length === 0 && cuponesBancarios.length === 0) {
+    sinCupones.querySelector("h2").textContent = "No hay cupones disponibles";
+    sinCupones.querySelector("p").textContent = "Pronto agregaremos nuevas opciones.";
     sinCupones.hidden = false;
     estadoCarga.textContent = "";
     return;
   }
 
-  const fragmento = document.createDocumentFragment();
-
-  const cuponesActivos = cuponesCategoria.filter(
-    (cupon) => couponTimeState(cupon).enabled
-  );
-
-  const cuponesClasificables = [...cuponesActivos]
+  const activosTienda = cuponesTienda.filter((cupon) => couponTimeState(cupon).enabled);
+  const clasificables = [...activosTienda]
     .filter((cupon) => !esCuponNuevo(cupon))
     .filter((cupon) => Number(cupon.clics || 0) > 0)
-    .sort(
-      (a, b) =>
-        Number(b.clics || 0) - Number(a.clics || 0)
-    );
-
-  const cuponTop = cuponesClasificables[0] || null;
-
-  const cuponPopular =
-    cuponesClasificables.find(
-      (cupon) =>
-        Number(cupon.id) !== Number(cuponTop?.id) &&
-        Number(cupon.clics || 0) >= MIN_CLICS_POPULAR
-    ) || null;
-
+    .sort((a, b) => Number(b.clics || 0) - Number(a.clics || 0));
+  const cuponTop = clasificables[0] || null;
+  const cuponPopular = clasificables.find((cupon) => Number(cupon.id) !== Number(cuponTop?.id) && Number(cupon.clics || 0) >= MIN_CLICS_POPULAR) || null;
   const idTop = cuponTop ? Number(cuponTop.id) : null;
-  const idPopular = cuponPopular
-    ? Number(cuponPopular.id)
-    : null;
+  const idPopular = cuponPopular ? Number(cuponPopular.id) : null;
 
-  cuponesCategoria.forEach((cupon, indice) => {
-    const estadoDestacado = couponTimeState(cupon).enabled
-      ? obtenerEstadoDestacadoCupon(
-          cupon,
-          idTop,
-          idPopular
-        )
+  const fragmentoTienda = document.createDocumentFragment();
+  cuponesTienda.forEach((cupon, indice) => {
+    const destacado = couponTimeState(cupon).enabled
+      ? obtenerEstadoDestacadoCupon(cupon, idTop, idPopular)
       : "";
-
-    fragmento.appendChild(
-      crearTarjeta(cupon, estadoDestacado, indice)
-    );
+    fragmentoTienda.appendChild(crearTarjeta(cupon, destacado, indice));
   });
+  cuponesContainer.appendChild(fragmentoTienda);
 
-  cuponesContainer.appendChild(fragmento);
+  if (cuponesBancarios.length && cuponesBancariosCarrusel && seccionCuponesBancarios) {
+    const fragmentoBancos = document.createDocumentFragment();
+    cuponesBancarios.forEach((cupon) => fragmentoBancos.appendChild(crearTarjetaBancaria(cupon)));
+    cuponesBancariosCarrusel.appendChild(fragmentoBancos);
+    seccionCuponesBancarios.hidden = false;
+    if (bancariosConteo) bancariosConteo.textContent = `${cuponesBancarios.length} ${cuponesBancarios.length === 1 ? "cupón bancario" : "cupones bancarios"}`;
+  }
+
   todosWrapper.hidden = false;
   estadoCarga.textContent = "";
   startCouponTimers();
-}
 
+  if (categoriaActiva === "bancarios" && seccionCuponesBancarios && !seccionCuponesBancarios.hidden) {
+    requestAnimationFrame(() => seccionCuponesBancarios.scrollIntoView({ behavior: "smooth", block: "start" }));
+  }
+}
 function reiniciarContadorActualizacion() {
   segundosRestantes = SEGUNDOS_ACTUALIZACION;
   actualizarTextoContador();

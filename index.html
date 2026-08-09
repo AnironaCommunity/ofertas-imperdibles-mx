@@ -55,7 +55,6 @@
   <link rel="stylesheet" href="css/estabilidad.css?v=77.15.5" />
   <link rel="stylesheet" href="css/cabecera-inteligente.css?v=77.15.1" />
   <link rel="stylesheet" href="css/selector-cupones-oscuro.css?v=78.4.0" />
-  <link rel="stylesheet" href="css/cupones-bancarios.css?v=81.0.0" />
   <script>
     try {
       const temaGuardado = JSON.parse(localStorage.getItem("ofertas_imperdibles_tema") || "null");
@@ -297,23 +296,22 @@
       <section
         id="cupones"
         class="cupones-grid-compacta"
-        aria-label="Lista de cupones de tienda"
+        aria-label="Lista de cupones"
       ></section>
 
       <section id="seccion-cupones-bancarios" class="seccion-cupones-bancarios" hidden aria-labelledby="titulo-cupones-bancarios">
-        <div class="bancarios-divisor" aria-hidden="true"></div>
-        <div class="bancarios-cabecera">
+        <div class="bancarios-encabezado">
           <div>
             <h2 id="titulo-cupones-bancarios">💳 Cupones bancarios</h2>
             <p>Desliza para ver más opciones y encuentra el beneficio de tu banco.</p>
           </div>
-          <div class="bancarios-controles">
-            <span id="contador-carrusel-bancarios" class="bancarios-contador"></span>
-            <button id="bancarios-anterior" class="bancarios-flecha" type="button" aria-label="Ver bancos anteriores">‹</button>
-            <button id="bancarios-siguiente" class="bancarios-flecha" type="button" aria-label="Ver más bancos">›</button>
-          </div>
+          <span id="bancarios-conteo" class="bancarios-conteo"></span>
         </div>
-        <div id="cupones-bancarios-carrusel" class="cupones-bancarios-carrusel" aria-label="Cupones bancarios"></div>
+        <div class="bancarios-carrusel-wrap">
+          <button id="bancarios-anterior" class="bancarios-flecha bancarios-flecha--izq" type="button" aria-label="Ver bancos anteriores">‹</button>
+          <div id="cupones-bancarios-carrusel" class="cupones-bancarios-carrusel" aria-label="Cupones bancarios"></div>
+          <button id="bancarios-siguiente" class="bancarios-flecha bancarios-flecha--der" type="button" aria-label="Ver más bancos">›</button>
+        </div>
       </section>
     </section>
     <div id="separador-fin-cupones" class="separador-contenido separador-fin-cupones" aria-hidden="true"></div>
@@ -591,7 +589,7 @@
   </div>
 
 
-  <script type="module" src="js/app.js?v=81.0.0"></script>
+  <script type="module" src="js/app.js?v=78.6.0"></script>
   <script src="js/hero-redes.js?v=78.4.0" defer></script>
   <script src="js/header-dinamico-v68-3.js?v=70.0.0" defer></script>
   <script src="js/cabecera-inteligente.js?v=77.15.7" defer></script>

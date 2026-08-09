@@ -2219,23 +2219,3 @@ table td {
     width: 100%;
   }
 }
-
-/* V81.0 — Selector de banco para cupones bancarios */
-.campo-banco select { width: 100%; }
-.banco-admin-preview {
-  margin-top: 10px;
-  min-height: 74px;
-  padding: 10px 14px;
-  display: grid;
-  place-items: center;
-  border: 1px solid #dfe3ef;
-  border-radius: 12px;
-  background: #fff;
-}
-.banco-admin-preview img {
-  display: block;
-  width: 100%;
-  max-width: 230px;
-  height: 62px;
-  object-fit: contain;
-}
