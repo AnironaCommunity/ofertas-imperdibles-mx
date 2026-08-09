@@ -7903,9 +7903,9 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  width: 62% !important;
-  min-width: 0 !important;
-  max-width: 62% !important;
+  width: 120px !important;
+  min-width: 120px !important;
+  max-width: 120px !important;
   height: 30px !important;
   min-height: 30px !important;
   max-height: 30px !important;
@@ -7919,6 +7919,7 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   font-size: 10.5px !important;
   font-weight: 800 !important;
   white-space: nowrap !important;
+  overflow: visible !important;
 }
 
 .cupon .boton-canjear {
@@ -7934,7 +7935,7 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
 }
 
 .cupon-bancario-mini .banco-pie .banco-canjear {
-  flex: 0 0 62% !important;
+  flex: 0 0 120px !important;
   border: 1px solid var(--banco-color) !important;
   color: var(--banco-texto, #fff) !important;
   background: var(--banco-color) !important;
@@ -8019,8 +8020,9 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
 
   .cupon .boton-canjear,
   .cupon-bancario-mini .banco-pie .banco-canjear {
-    width: 62% !important;
-    max-width: 62% !important;
+    width: 120px !important;
+    min-width: 120px !important;
+    max-width: 120px !important;
     height: 30px !important;
     min-height: 30px !important;
     max-height: 30px !important;
@@ -8030,6 +8032,6 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   }
 
   .cupon-bancario-mini .banco-pie .banco-canjear {
-    flex-basis: 62% !important;
+    flex-basis: 120px !important;
   }
 }
