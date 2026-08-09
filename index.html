@@ -47,14 +47,14 @@
   <link rel="icon" href="img/logo.png" />
   <link rel="apple-touch-icon" href="img/logo.png" />
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="stylesheet" href="css/style.css?v=81.42.0" />
+  <link rel="stylesheet" href="css/style.css?v=81.43.0" />
   <link rel="stylesheet" href="css/hero-redes.css?v=77.17.6" />
   <link rel="stylesheet" href="css/ajustes-visuales-v67-16.css?v=70.0.0" />
   <link rel="stylesheet" href="css/eventos-v68.css?v=70.0.0" />
   <link rel="stylesheet" href="css/header-dinamico-v68-3.css?v=70.0.0" />
   <link rel="stylesheet" href="css/estabilidad.css?v=77.15.5" />
   <link rel="stylesheet" href="css/cabecera-inteligente.css?v=77.15.1" />
-  <link rel="stylesheet" href="css/selector-cupones-oscuro.css?v=81.42.0" />
+  <link rel="stylesheet" href="css/selector-cupones-oscuro.css?v=81.43.0" />
   <script>
     try {
       const temaGuardado = JSON.parse(localStorage.getItem("ofertas_imperdibles_tema") || "null");
@@ -358,6 +358,30 @@
         hidden
       >0</span>
     </button>
+    <button
+      id="tab-exclusivo"
+      class="tab-inferior"
+      type="button"
+      data-categoria="exclusivo"
+      aria-pressed="false"
+      aria-label="Mostrar cupones exclusivos"
+      hidden
+    >
+      <span class="tab-icono tab-icono-exclusivo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path d="M12 3.4l2.2 4.5 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5-3.6-3.5 5-.7L12 3.4Z"></path>
+        </svg>
+      </span>
+      <span class="tab-textos">
+        <strong id="nombre-boton-exclusivo" class="tab-etiqueta-principal">Exclusivo</strong>
+      </span>
+      <span
+        id="contador-cupones-exclusivo"
+        class="contador-seccion contador-seccion-inferior"
+        aria-label="0 cupones"
+        hidden
+      >0</span>
+    </button>
   </nav>
 
     <p id="estado-carga" class="estado-carga" aria-live="polite">
@@ -596,8 +620,8 @@
   </div>
 
 
-  <script type="module" src="js/app.js?v=81.42.0"></script>
-  <script src="js/hero-redes.js?v=81.42.0" defer></script>
+  <script type="module" src="js/app.js?v=81.43.0"></script>
+  <script src="js/hero-redes.js?v=81.43.0" defer></script>
   <script src="js/header-dinamico-v68-3.js?v=70.0.0" defer></script>
   <script src="js/cabecera-inteligente.js?v=77.15.7" defer></script>
 </body>

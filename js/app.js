@@ -23,6 +23,7 @@ const modalCuponOculto = document.querySelector("#modal-cupon-oculto");
 const tabTodos = document.querySelector("#tab-todos");
 const tabTienda = document.querySelector("#tab-tienda");
 const tabBancarios = document.querySelector("#tab-bancarios");
+const tabExclusivo = document.querySelector("#tab-exclusivo");
 const vistaCupones = document.querySelector("#vista-cupones");
 const botonesMenuOfertas = document.querySelectorAll(".menu-ofertas [data-vista]");
 const botonComunidadAnirona = document.querySelector("#boton-anirona-hero[data-vista]");
@@ -41,6 +42,12 @@ const contadorComunidadAnirona = document.querySelector(
 );
 const contadorCuponesBancarios = document.querySelector(
   "#contador-cupones-bancarios"
+);
+const contadorCuponesExclusivo = document.querySelector(
+  "#contador-cupones-exclusivo"
+);
+const selectorCupones = document.querySelector(
+  ".navegacion-inferior.selector-cupones-oscuro"
 );
 
 
@@ -150,6 +157,10 @@ const SECCIONES_URL = {
     vista: "cupones",
     categoria: "bancarios",
   },
+  exclusivo: {
+    vista: "cupones",
+    categoria: "exclusivo",
+  },
   mercadolibre: {
     vista: "ofertas_mercado_libre",
   },
@@ -165,6 +176,7 @@ const TITULOS_SECCION = {
   todos: "Cupones de Mercado Libre | Ofertas Imperdibles MX",
   tienda: "Cupones Tienda | Ofertas Imperdibles MX",
   bancarios: "Cupones Bancarios | Ofertas Imperdibles MX",
+  exclusivo: "Cupones Exclusivos | Ofertas Imperdibles MX",
   mercadolibre: "Ofertas Mercado Libre | Ofertas Imperdibles MX",
   amazon: "Ofertas Amazon | Ofertas Imperdibles MX",
   anirona: "Comunidad Anirona | Ofertas Imperdibles MX",
@@ -235,11 +247,40 @@ function actualizarContadoresSecciones() {
     cantidadTienda,
     "cupón"
   );
+  const cantidadExclusivos = todosLosCupones.filter(
+    (cupon) =>
+      cupon.activo !== false &&
+      normalizarCategoria(cupon) === "exclusivo" &&
+      couponTimeState(cupon).state !== "finalizado"
+  ).length;
+
   mostrarCantidadSeccion(
     contadorCuponesBancarios,
     cantidadBancarios,
     "cupón"
   );
+  mostrarCantidadSeccion(
+    contadorCuponesExclusivo,
+    cantidadExclusivos,
+    "cupón"
+  );
+
+  const hayExclusivos = cantidadExclusivos > 0;
+  if (tabExclusivo) tabExclusivo.hidden = !hayExclusivos;
+  if (selectorCupones) {
+    selectorCupones.style.setProperty(
+      "--selector-columnas",
+      hayExclusivos ? "4" : "3"
+    );
+  }
+
+  // Si el usuario conserva una URL de Exclusivos cuando ya no hay cupones,
+  // volvemos a Todos para evitar una vista vacía con el botón oculto.
+  if (!hayExclusivos && categoriaActiva === "exclusivo") {
+    categoriaActiva = "todos";
+    actualizarUrlSeccion("todos", "replace");
+    renderizarCategoria();
+  }
 }
 
 function actualizarTituloSeccion(seccion) {
@@ -334,9 +375,10 @@ function actualizarNavegacionPrincipal(seccion) {
     todos: tabTodos,
     tienda: tabTienda,
     bancarios: tabBancarios,
+    exclusivo: tabExclusivo,
   };
 
-  [tabTodos, tabTienda, tabBancarios].forEach((boton) => {
+  [tabTodos, tabTienda, tabBancarios, tabExclusivo].forEach((boton) => {
     if (!boton) return;
     const activo = boton === mapa[seccion];
     boton.classList.toggle("activo", activo);
@@ -357,6 +399,11 @@ tabTienda.addEventListener("click", () => {
 tabBancarios.addEventListener("click", () => {
   cambiarCategoria("bancarios", { actualizarHistorial: true, desplazamiento: "auto" });
   actualizarNavegacionPrincipal("bancarios");
+});
+
+tabExclusivo?.addEventListener("click", () => {
+  cambiarCategoria("exclusivo", { actualizarHistorial: true, desplazamiento: "auto" });
+  actualizarNavegacionPrincipal("exclusivo");
 });
 
 function abrirEnlacePrincipal(boton) {
@@ -445,12 +492,15 @@ function cambiarVista(
   const todosActivos = mostrarCupones && categoriaActiva === "todos";
   const tiendaActiva = mostrarCupones && categoriaActiva === "tienda";
   const bancariosActivos = mostrarCupones && categoriaActiva === "bancarios";
+  const exclusivoActivo = mostrarCupones && categoriaActiva === "exclusivo";
   tabTodos?.classList.toggle("activo", todosActivos);
   tabTienda.classList.toggle("activo", tiendaActiva);
   tabBancarios.classList.toggle("activo", bancariosActivos);
+  tabExclusivo?.classList.toggle("activo", exclusivoActivo);
   tabTodos?.setAttribute("aria-pressed", String(todosActivos));
   tabTienda.setAttribute("aria-pressed", String(tiendaActiva));
   tabBancarios.setAttribute("aria-pressed", String(bancariosActivos));
+  tabExclusivo?.setAttribute("aria-pressed", String(exclusivoActivo));
 
   if (actualizarHistorial) {
     const seccion =
@@ -1042,15 +1092,20 @@ function cambiarCategoria(
   const esTodos = categoria === "todos";
   const esTienda = categoria === "tienda";
   const esBancarios = categoria === "bancarios";
+  const esExclusivo = categoria === "exclusivo";
 
   tabTodos?.classList.toggle("activo", esTodos);
   tabTienda.classList.toggle("activo", esTienda);
   tabBancarios.classList.toggle("activo", esBancarios);
+  tabExclusivo?.classList.toggle("activo", esExclusivo);
 
   tabTodos?.setAttribute("aria-pressed", String(esTodos));
   tabTienda.setAttribute("aria-pressed", String(esTienda));
   tabBancarios.setAttribute("aria-pressed", String(esBancarios));
-  actualizarNavegacionPrincipal(esTodos ? "todos" : esTienda ? "tienda" : "bancarios");
+  tabExclusivo?.setAttribute("aria-pressed", String(esExclusivo));
+  actualizarNavegacionPrincipal(
+    esTodos ? "todos" : esTienda ? "tienda" : esBancarios ? "bancarios" : "exclusivo"
+  );
 
   renderizarCategoria();
 
@@ -1084,9 +1139,12 @@ function renderizarCategoria() {
     .filter((cupon) => normalizarCategoria(cupon) === "bancarios")
     .sort((a, b) => Number(b.clics || 0) - Number(a.clics || 0));
 
-  const mostrarTienda = categoriaActiva !== "bancarios";
-  const mostrarExclusivos = categoriaActiva === "todos";
-  const mostrarBancarios = categoriaActiva !== "tienda";
+  const mostrarTienda =
+    categoriaActiva === "todos" || categoriaActiva === "tienda";
+  const mostrarExclusivos =
+    categoriaActiva === "todos" || categoriaActiva === "exclusivo";
+  const mostrarBancarios =
+    categoriaActiva === "todos" || categoriaActiva === "bancarios";
 
   if (cuponesContainer) cuponesContainer.hidden = false;
 

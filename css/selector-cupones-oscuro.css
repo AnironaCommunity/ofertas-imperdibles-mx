@@ -9,7 +9,7 @@
   inset: auto !important;
   z-index: 1 !important;
   display: grid !important;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  grid-template-columns: repeat(var(--selector-columnas, 3), minmax(0, 1fr)) !important;
   width: min(560px, 100%) !important;
   margin: 6px auto 16px !important;
   padding: 0 !important;
@@ -21,6 +21,16 @@
   box-shadow: 0 5px 16px rgba(30, 51, 42, .07) !important;
   transform: none !important;
   backdrop-filter: blur(10px);
+}
+
+
+.navegacion-inferior.selector-cupones-oscuro > .tab-inferior[hidden] {
+  display: none !important;
+}
+
+.navegacion-inferior.selector-cupones-oscuro .tab-icono-exclusivo svg {
+  fill: none;
+  stroke: currentColor;
 }
 
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior {
@@ -141,6 +151,17 @@
 }
 
 @media (max-width: 430px) {
+  .navegacion-inferior.selector-cupones-oscuro[style*="--selector-columnas: 4"] > .tab-inferior {
+    gap: 3px !important;
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+  }
+
+  .navegacion-inferior.selector-cupones-oscuro[style*="--selector-columnas: 4"] .tab-etiqueta-principal {
+    font-size: 10.5px !important;
+  }
+
+
   .navegacion-inferior.selector-cupones-oscuro {
     width: 100% !important;
     margin: 4px auto 12px !important;
