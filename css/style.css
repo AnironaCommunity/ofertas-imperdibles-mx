@@ -7090,3 +7090,145 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
     font-size:10.75px;
   }
 }
+
+/* =========================================================
+   V81.5 — Logos originales + identidad de color por banco
+   ========================================================= */
+.cupon-bancario-mini {
+  --banco-color:#17139d;
+  --banco-texto:#fff;
+  height:258px;
+  border-color:color-mix(in srgb, var(--banco-color) 30%, #d8dbe7);
+  background:#fff;
+}
+
+.banco-logo-area {
+  height:58px;
+  min-height:58px;
+  padding:5px 9px;
+  overflow:hidden;
+  background:#fff;
+}
+
+.banco-logo {
+  display:block;
+  width:100% !important;
+  height:100% !important;
+  max-width:100% !important;
+  max-height:100% !important;
+  margin:0 auto;
+  object-fit:contain !important;
+  object-position:center center !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:#fff !important;
+  box-shadow:none !important;
+  image-rendering:auto;
+}
+
+.banco-franja {
+  height:21px;
+  min-height:21px;
+  background:var(--banco-color) !important;
+  color:var(--banco-texto) !important;
+  font-size:9.5px;
+  font-weight:800;
+  letter-spacing:.015em;
+}
+
+.banco-cuerpo {
+  padding:8px 12px 8px;
+  gap:2px;
+}
+
+.banco-cuerpo h3 {
+  margin:0 0 1px;
+  font-size:20px;
+  line-height:1.05;
+}
+
+.banco-detalle {
+  margin:0 0 2px;
+  min-height:25px;
+  color:#333842;
+  font-size:10.8px;
+  line-height:1.18;
+  font-weight:400;
+}
+
+.banco-minimo,
+.banco-maximo {
+  color:#3f4652;
+  font-size:10.8px;
+  line-height:1.17;
+  font-weight:400;
+}
+
+.banco-minimo strong,
+.banco-maximo strong {
+  color:#232833;
+  font-weight:650;
+}
+
+.banco-canjear {
+  min-height:29px;
+  padding:5px 7px;
+  background:var(--banco-color) !important;
+  color:var(--banco-texto) !important;
+  font-size:10.5px;
+  border-radius:999px;
+}
+
+.cupon-bancario-mini[data-banco="mercado-pago"] .banco-franja,
+.cupon-bancario-mini[data-banco="mercado-pago-visa"] .banco-franja,
+.cupon-bancario-mini[data-banco="mercado-pago"] .banco-canjear,
+.cupon-bancario-mini[data-banco="mercado-pago-visa"] .banco-canjear {
+  color:#252525 !important;
+}
+
+@media (max-width:700px) {
+  .cupon-bancario-mini {
+    height:236px;
+  }
+
+  .banco-logo-area {
+    height:52px;
+    min-height:52px;
+    padding:4px 7px;
+  }
+
+  .banco-franja {
+    height:19px;
+    min-height:19px;
+    font-size:8.6px;
+  }
+
+  .banco-cuerpo {
+    padding:7px 10px 7px;
+    gap:1.5px;
+  }
+
+  .banco-cuerpo h3 {
+    font-size:18px;
+    line-height:1.05;
+  }
+
+  .banco-detalle {
+    min-height:23px;
+    margin-bottom:1px;
+    font-size:10px;
+    line-height:1.15;
+  }
+
+  .banco-minimo,
+  .banco-maximo {
+    font-size:10.15px;
+    line-height:1.15;
+  }
+
+  .banco-canjear {
+    min-height:28px;
+    padding:4px 6px;
+    font-size:10px;
+  }
+}

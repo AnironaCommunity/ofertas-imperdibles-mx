@@ -473,8 +473,9 @@ function editCoupon(coupon) {
   couponImagePreview.src = coupon.imagen_url || "";
   couponImagePreviewWrapper.hidden = !coupon.imagen_url;
   if (couponBank && coupon.categoria === "bancarios") {
-    const existe = [...couponBank.options].some(o => o.value === (coupon.imagen_url || ""));
-    couponBank.value = existe ? (coupon.imagen_url || "") : "";
+    const imagenBanco = String(coupon.imagen_url || "").replace(/\.png(?:\?.*)?$/i, ".jpg");
+    const existe = [...couponBank.options].some(o => o.value === imagenBanco);
+    couponBank.value = existe ? imagenBanco : "";
   }
   actualizarSelectorBanco();
   couponActive.checked = Boolean(coupon.activo);

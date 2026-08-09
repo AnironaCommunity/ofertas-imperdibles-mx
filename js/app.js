@@ -874,32 +874,47 @@ function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
 }
 
 
-function obtenerLogoBanco(cupon) {
-  const imagen = String(cupon.imagen_url || "");
-  if (imagen.includes("/img/bancos/")) return imagen;
-
+function obtenerBancoVisual(cupon) {
+  const imagenOriginal = String(cupon.imagen_url || "");
   const codigo = String(cupon.codigo || "").toUpperCase().replace(/\s+/g, "");
   const titulo = String(cupon.titulo || "").toUpperCase();
-  const texto = `${codigo} ${titulo}`;
+  const detalle = String(cupon.detalle_bancario || "").toUpperCase();
+  const texto = `${codigo} ${titulo} ${detalle} ${imagenOriginal.toUpperCase()}`;
 
+  // V81.5: cada banco usa exactamente el logo proporcionado por el usuario.
+  // La franja y el botón toman el color principal de la marca. Mercado Pago usa amarillo ML.
   const bancos = [
-    [/BNMX|BANAMEX/, "/img/bancos/banamex.png"],
-    [/BBVA/, "/img/bancos/bbva.png"],
-    [/HSBC/, "/img/bancos/hsbc.png"],
-    [/AMEX|AMERICAN/, "/img/bancos/american-express.png"],
-    [/INVE|INVEX/, "/img/bancos/invex.png"],
-    [/SCOT|SCOTIA/, "/img/bancos/scotiabank.png"],
-    [/AFRM|AFIRME/, "/img/bancos/afirme.png"],
-    [/MIFE|MIFEL/, "/img/bancos/mifel.png"],
-    [/INBR|INBURSA/, "/img/bancos/inbursa.png"],
-    [/FALA|FALABELLA/, "/img/bancos/falabella.png"],
-    [/DIDI/, "/img/bancos/didi-card.png"],
-    [/OPBA|OPENBANK/, "/img/bancos/openbank.png"],
-    [/TCMP|MERCADO\s*PAGO.*VISA/, "/img/bancos/mercado-pago-visa.png"],
-    [/MESES|MST|MERCADO\s*PAGO/, "/img/bancos/mercado-pago.png"],
+    { patron: /TCMP|MERCADO(?:\s|-|_)*PAGO.*VISA|MERCADO-PAGO-VISA/, banco: "mercado-pago-visa", logo: "/img/bancos/mercado-pago-visa.jpg", color: "#ffe600", texto: "#2b2b2b" },
+    { patron: /MESES|MST|MERCADO(?:\s|-|_)*PAGO|MERCADO-PAGO/, banco: "mercado-pago", logo: "/img/bancos/mercado-pago.jpg", color: "#ffe600", texto: "#2b2b2b" },
+    { patron: /BNMX|BANAMEX/, banco: "banamex", logo: "/img/bancos/banamex.jpg", color: "#e71950", texto: "#ffffff" },
+    { patron: /BBVA/, banco: "bbva", logo: "/img/bancos/bbva.jpg", color: "#00549f", texto: "#ffffff" },
+    { patron: /HSBC/, banco: "hsbc", logo: "/img/bancos/hsbc.jpg", color: "#db0011", texto: "#ffffff" },
+    { patron: /AMEX|AMERICAN/, banco: "american-express", logo: "/img/bancos/american-express.jpg", color: "#0077a8", texto: "#ffffff" },
+    { patron: /INVE|INVEX/, banco: "invex", logo: "/img/bancos/invex.jpg", color: "#c60045", texto: "#ffffff" },
+    { patron: /SCOT|SCOTIA/, banco: "scotiabank", logo: "/img/bancos/scotiabank.jpg", color: "#ec111a", texto: "#ffffff" },
+    { patron: /AFRM|AFIRME/, banco: "afirme", logo: "/img/bancos/afirme.jpg", color: "#009c76", texto: "#ffffff" },
+    { patron: /MIFE|MIFEL/, banco: "mifel", logo: "/img/bancos/mifel.jpg", color: "#003b67", texto: "#ffffff" },
+    { patron: /INBR|INBURSA/, banco: "inbursa", logo: "/img/bancos/inbursa.jpg", color: "#00457c", texto: "#ffffff" },
+    { patron: /FALA|FALABELLA/, banco: "falabella", logo: "/img/bancos/falabella.jpg", color: "#19b81f", texto: "#ffffff" },
+    { patron: /DIDI/, banco: "didi-card", logo: "/img/bancos/didi-card.jpg", color: "#ff5a00", texto: "#ffffff" },
+    { patron: /OPBA|OPENBANK/, banco: "openbank", logo: "/img/bancos/openbank.jpg", color: "#111111", texto: "#ffffff" },
+    { patron: /BANO|BANORTE/, banco: "banorte", logo: "/img/bancos/banorte.jpg", color: "#e30613", texto: "#ffffff" },
+    { patron: /SANT|SANTANDER/, banco: "santander", logo: "/img/bancos/santander.jpg", color: "#ec0000", texto: "#ffffff" },
   ];
 
-  return bancos.find(([patron]) => patron.test(texto))?.[1] || imagen;
+  const banco = bancos.find(({ patron }) => patron.test(texto));
+  if (banco) return banco;
+
+  return {
+    banco: "generico",
+    logo: imagenOriginal,
+    color: "#17139d",
+    texto: "#ffffff",
+  };
+}
+
+function obtenerLogoBanco(cupon) {
+  return obtenerBancoVisual(cupon).logo;
 }
 
 function crearTarjetaBancaria(cupon) {
@@ -907,7 +922,11 @@ function crearTarjetaBancaria(cupon) {
   articulo.className = "cupon-bancario-mini";
   articulo.dataset.id = String(cupon.id);
 
-  const logoBanco = obtenerLogoBanco(cupon);
+  const bancoVisual = obtenerBancoVisual(cupon);
+  const logoBanco = bancoVisual.logo;
+  articulo.dataset.banco = bancoVisual.banco;
+  articulo.style.setProperty("--banco-color", bancoVisual.color);
+  articulo.style.setProperty("--banco-texto", bancoVisual.texto);
   articulo.innerHTML = `
     <div class="banco-logo-area">
       ${logoBanco ? `<img class="banco-logo" src="${escaparHtml(logoBanco)}" alt="" loading="lazy" />` : `<span class="banco-logo-fallback">BANCO</span>`}
