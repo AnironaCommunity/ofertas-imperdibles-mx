@@ -169,6 +169,7 @@ const SECCIONES_URL = {
 };
 
 const TITULOS_SECCION = {
+  todos: "Cupones de Mercado Libre | Ofertas Imperdibles MX",
   tienda: "Cupones Tienda | Ofertas Imperdibles MX",
   bancarios: "Cupones Bancarios | Ofertas Imperdibles MX",
   mercadolibre: "Ofertas Mercado Libre | Ofertas Imperdibles MX",
@@ -266,7 +267,8 @@ function obtenerSeccionDesdeUrl() {
   const seccion = String(parametros.get("seccion") || "").toLowerCase().trim();
 
   if (sorteo === "registro") return "anirona";
-  return SECCIONES_URL[seccion] ? seccion : "tienda";
+  // La URL principal sin parámetros corresponde a Todos.
+  return SECCIONES_URL[seccion] ? seccion : "todos";
 }
 
 function actualizarUrlSeccion(seccion, modo = "push") {
@@ -274,9 +276,13 @@ function actualizarUrlSeccion(seccion, modo = "push") {
 
   const url = new URL(window.location.href);
 
-  url.searchParams.set("seccion", seccion);
+  // "Todos" usa la URL principal que ya se comparte públicamente.
+  if (seccion === "todos") {
+    url.searchParams.delete("seccion");
+  } else {
+    url.searchParams.set("seccion", seccion);
+  }
   // Al navegar normalmente, retirar el acceso temporal al registro del sorteo.
-  // Así una recarga mantiene al usuario en la sección que eligió.
   url.searchParams.delete("sorteo");
   actualizarTituloSeccion(seccion);
 
@@ -3005,15 +3011,25 @@ const pasosTutorial = [
     },
   },
   {
+    selector: "#tab-todos",
+    titulo: "Todos los cupones",
+    texto: "Esta es la vista principal. Aquí aparecen primero los cupones de tienda y después los cupones bancarios.",
+    icono: "▦",
+    preparar: async () => { tabTodos?.click(); await esperarTutorial(350); },
+  },
+  {
     selector: "#tab-tienda",
-    titulo: "Cupones de Tienda",
-    texto: "Aquí encontrarás los cupones principales y generales disponibles para tus compras.",
+    titulo: "Cupones",
+    texto: "Aquí puedes ver únicamente los cupones generales o de tienda disponibles para tus compras.",
+    icono: "🛍️",
     preparar: async () => { tabTienda?.click(); await esperarTutorial(350); },
   },
   {
     selector: "#tab-bancarios",
-    titulo: "Cupones Bancarios",
-    texto: "En Bancarios se muestran los descuentos exclusivos de bancos y métodos de pago participantes.",
+    titulo: "Bancarios",
+    texto: "Aquí puedes ver únicamente los beneficios exclusivos de bancos y métodos de pago participantes.",
+    icono: "💳",
+    preparar: async () => { tabBancarios?.click(); await esperarTutorial(350); },
   },
   {
     objetivo: objetivoDentroCupon(null),
@@ -3177,8 +3193,14 @@ function finalizarTutorialGuiado(completado = false, irATienda = false) {
   }
   if (completado) localStorage.setItem(CLAVE_TUTORIAL_COMPLETADO, "1");
   if (irATienda) {
-    tabTienda?.click();
-    window.setTimeout(() => cuponesContainer?.scrollIntoView({ behavior: "smooth", block: "start" }), 200);
+    // Al terminar el tutorial regresamos a la vista principal: Todos.
+    tabTodos?.click();
+    window.setTimeout(() => {
+      document.querySelector(".selector-cupones-oscuro")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }, 200);
   }
 }
 
