@@ -7608,4 +7608,118 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
     min-height:23px;
   }
 }
-\n\n/* =========================================================\n   V81.9 — Acciones bancarias unificadas con cupones de tienda\n   Mantiene dimensiones exteriores y pie anclado.\n   ========================================================= */\n.cupon-bancario-mini .banco-pie .banco-canjear {\n  display:flex;\n  align-items:center;\n  justify-content:center;\n  gap:5px;\n  white-space:nowrap;\n}\n.cupon-bancario-mini .banco-pie .banco-canjear svg {\n  width:14px;\n  height:14px;\n  flex:0 0 14px;\n  fill:currentColor;\n}\n.cupon-bancario-mini .banco-acciones-extra {\n  display:flex !important;\n  align-items:center;\n  gap:3px !important;\n  min-height:27px !important;\n}\n.cupon-bancario-mini .banco-acciones-extra .banco-like,\n.cupon-bancario-mini .banco-acciones-extra .banco-compartir {\n  min-width:27px !important;\n  width:27px !important;\n  min-height:27px !important;\n  height:27px !important;\n  padding:4px !important;\n  border-radius:8px !important;\n  display:inline-flex;\n  align-items:center;\n  justify-content:center;\n}\n.cupon-bancario-mini .banco-acciones-extra .banco-like svg,\n.cupon-bancario-mini .banco-acciones-extra .banco-compartir svg {\n  width:14px !important;\n  height:14px !important;\n  flex:0 0 14px !important;\n}\n.cupon-bancario-mini .banco-estadisticas {\n  margin-left:auto;\n  display:flex !important;\n  align-items:center;\n  justify-content:flex-end;\n  gap:4px !important;\n  font-size:8px !important;\n  line-height:1 !important;\n  white-space:nowrap;\n}\n.cupon-bancario-mini .banco-estadisticas .estadistica-item {\n  display:inline-flex;\n  align-items:center;\n  gap:2px !important;\n}\n.cupon-bancario-mini .banco-estadisticas svg {\n  width:11px !important;\n  height:11px !important;\n  flex:0 0 11px !important;\n}\n/* V81.9 reemplaza las píldoras de V81.7 por el mismo lenguaje visual de tienda. */\n.cupon-bancario-mini .banco-contador-usos { display:none !important; }\n\n.boton-canjear,\n.banco-canjear {\n  display:flex;\n  align-items:center;\n  justify-content:center;\n  gap:5px;\n}\n.boton-canjear svg,\n.banco-canjear svg {\n  width:14px;\n  height:14px;\n  flex:0 0 14px;\n  fill:currentColor;\n}\n\n@media (max-width:700px) {\n  .cupon-bancario-mini .banco-acciones-extra {\n    min-height:25px !important;\n    gap:3px !important;\n  }\n  .cupon-bancario-mini .banco-acciones-extra .banco-like,\n  .cupon-bancario-mini .banco-acciones-extra .banco-compartir {\n    min-width:25px !important;\n    width:25px !important;\n    min-height:25px !important;\n    height:25px !important;\n  }\n}\n
+
+
+/* =========================================================
+   V81.10 — Botón Copiar código compacto
+   Conserva dimensiones y diseño de tarjeta bancaria.
+   ========================================================= */
+.cupon-bancario-mini .banco-pie .banco-canjear {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  width:100%;
+  min-height:23px;
+  height:23px;
+  padding:2px 7px;
+  margin:0;
+  border-radius:8px;
+  font-size:10px;
+  line-height:1;
+  font-weight:800;
+  white-space:nowrap;
+}
+.cupon-bancario-mini .banco-pie .banco-canjear svg {
+  width:11px;
+  height:11px;
+  flex:0 0 11px;
+  fill:currentColor;
+}
+
+/* Acciones bancarias conservan el lenguaje visual de tienda,
+   pero en escala compacta para no saturar el pie. */
+.cupon-bancario-mini .banco-acciones-extra {
+  display:flex !important;
+  align-items:center;
+  gap:3px !important;
+  min-height:24px !important;
+}
+.cupon-bancario-mini .banco-acciones-extra .banco-like,
+.cupon-bancario-mini .banco-acciones-extra .banco-compartir {
+  min-width:24px !important;
+  width:24px !important;
+  min-height:24px !important;
+  height:24px !important;
+  padding:3px !important;
+  border-radius:999px !important;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.cupon-bancario-mini .banco-acciones-extra .banco-like svg,
+.cupon-bancario-mini .banco-acciones-extra .banco-compartir svg {
+  width:12px !important;
+  height:12px !important;
+  flex:0 0 12px !important;
+}
+.cupon-bancario-mini .banco-estadisticas {
+  margin-left:auto;
+  display:flex !important;
+  align-items:center;
+  justify-content:flex-end;
+  gap:4px !important;
+  font-size:8px !important;
+  line-height:1 !important;
+  white-space:nowrap;
+}
+.cupon-bancario-mini .banco-estadisticas .estadistica-item {
+  display:inline-flex;
+  align-items:center;
+  gap:2px !important;
+}
+.cupon-bancario-mini .banco-estadisticas svg {
+  width:10px !important;
+  height:10px !important;
+  flex:0 0 10px !important;
+}
+.cupon-bancario-mini .banco-contador-usos { display:none !important; }
+
+/* Botón de tienda: mismo icono, sin agrandarlo. */
+.boton-canjear {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+}
+.boton-canjear svg {
+  width:14px;
+  height:14px;
+  flex:0 0 14px;
+  fill:currentColor;
+}
+
+@media (max-width:700px) {
+  .cupon-bancario-mini .banco-pie .banco-canjear {
+    min-height:22px;
+    height:22px;
+    padding:2px 6px;
+    font-size:9.5px;
+    border-radius:7px;
+  }
+  .cupon-bancario-mini .banco-pie .banco-canjear svg {
+    width:10px;
+    height:10px;
+    flex-basis:10px;
+  }
+  .cupon-bancario-mini .banco-acciones-extra {
+    min-height:23px !important;
+  }
+  .cupon-bancario-mini .banco-acciones-extra .banco-like,
+  .cupon-bancario-mini .banco-acciones-extra .banco-compartir {
+    min-width:23px !important;
+    width:23px !important;
+    min-height:23px !important;
+    height:23px !important;
+  }
+}
