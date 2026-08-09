@@ -8812,3 +8812,36 @@ body .navegacion-inferior.selector-cupones-oscuro .contador-seccion-inferior {
     padding-bottom: 0 !important;
   }
 }
+
+/* =========================================================
+   V81.33 — Estado sin cupones: SOLO 2 líneas, compacto
+   ========================================================= */
+.mensaje-sin-cupones,
+.sin-cupones,
+.estado-sin-cupones {
+  line-height: 1.25 !important;
+}
+
+.mensaje-sin-cupones p,
+.sin-cupones p,
+.estado-sin-cupones p {
+  font-size: 12px !important;
+  line-height: 1.25 !important;
+  margin-top: 3px !important;
+  margin-bottom: 3px !important;
+}
+
+/* Título ligeramente destacado, pero más pequeño que antes */
+.mensaje-sin-cupones p:first-child,
+.sin-cupones p:first-child,
+.estado-sin-cupones p:first-child {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+}
+
+/* Seguridad: el estado vacío solo debe mostrar dos líneas */
+.mensaje-sin-cupones p:nth-of-type(n+3),
+.sin-cupones p:nth-of-type(n+3),
+.estado-sin-cupones p:nth-of-type(n+3) {
+  display: none !important;
+}
