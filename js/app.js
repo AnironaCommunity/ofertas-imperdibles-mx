@@ -1196,8 +1196,10 @@ function renderizarCategoria() {
 
   const mostrarTienda = categoriaActiva !== "bancarios";
   const mostrarBancarios = categoriaActiva !== "tienda";
-  if (encabezadoCuponesTienda) encabezadoCuponesTienda.hidden = !mostrarTienda || cuponesTienda.length === 0;
-  if (cuponesContainer) cuponesContainer.hidden = !mostrarTienda;
+
+  // V81.17: ya no usamos títulos independientes para Tienda/Bancarios.
+  if (encabezadoCuponesTienda) encabezadoCuponesTienda.hidden = true;
+  if (cuponesContainer) cuponesContainer.hidden = false;
 
   document.body.classList.remove("vista-bancarios");
   const tituloCupones = document.querySelector("#titulo-seccion-cupones");
@@ -1209,10 +1211,15 @@ function renderizarCategoria() {
     tituloCupones.setAttribute("aria-hidden", "true");
   }
 
-  if (cuponesTienda.length === 0 && cuponesBancarios.length === 0) {
+  const totalVisible =
+    (mostrarTienda ? cuponesTienda.length : 0) +
+    (mostrarBancarios ? cuponesBancarios.length : 0);
+
+  if (totalVisible === 0) {
     sinCupones.querySelector("h2").textContent = "No hay cupones disponibles";
     sinCupones.querySelector("p").textContent = "Pronto agregaremos nuevas opciones.";
     sinCupones.hidden = false;
+    todosWrapper.hidden = false;
     estadoCarga.textContent = "";
     return;
   }
@@ -1223,40 +1230,48 @@ function renderizarCategoria() {
     .filter((cupon) => Number(cupon.clics || 0) > 0)
     .sort((a, b) => Number(b.clics || 0) - Number(a.clics || 0));
   const cuponTop = clasificables[0] || null;
-  const cuponPopular = clasificables.find((cupon) => Number(cupon.id) !== Number(cuponTop?.id) && Number(cupon.clics || 0) >= MIN_CLICS_POPULAR) || null;
+  const cuponPopular = clasificables.find(
+    (cupon) => Number(cupon.id) !== Number(cuponTop?.id) &&
+      Number(cupon.clics || 0) >= MIN_CLICS_POPULAR
+  ) || null;
   const idTop = cuponTop ? Number(cuponTop.id) : null;
   const idPopular = cuponPopular ? Number(cuponPopular.id) : null;
 
-  const fragmentoTienda = document.createDocumentFragment();
-  cuponesTienda.forEach((cupon, indice) => {
-    const destacado = couponTimeState(cupon).enabled
-      ? obtenerEstadoDestacadoCupon(cupon, idTop, idPopular)
-      : "";
-    fragmentoTienda.appendChild(crearTarjeta(cupon, destacado, indice));
-  });
-  cuponesContainer.appendChild(fragmentoTienda);
-
-  if (mostrarBancarios && cuponesBancarios.length && cuponesBancariosCarrusel && seccionCuponesBancarios) {
-    const fragmentoBancos = document.createDocumentFragment();
-    cuponesBancarios.forEach((cupon) => fragmentoBancos.appendChild(crearTarjetaBancaria(cupon)));
-    cuponesBancariosCarrusel.appendChild(fragmentoBancos);
-    seccionCuponesBancarios.hidden = false;
-    if (bancariosConteo) bancariosConteo.textContent = "";
-    requestAnimationFrame(() => {
-      sincronizarTamanoTarjetasBancarias();
-      crearIndicadoresBancarios();
-      iniciarAutoCarruselBancario();
+  if (mostrarTienda) {
+    const fragmentoTienda = document.createDocumentFragment();
+    cuponesTienda.forEach((cupon, indice) => {
+      const destacado = couponTimeState(cupon).enabled
+        ? obtenerEstadoDestacadoCupon(cupon, idTop, idPopular)
+        : "";
+      fragmentoTienda.appendChild(crearTarjeta(cupon, destacado, indice));
     });
+    cuponesContainer.appendChild(fragmentoTienda);
+  }
+
+  if (mostrarBancarios && cuponesBancarios.length) {
+    // Cuando se muestran Todos, iniciamos Bancarios en una fila nueva con
+    // una separación pequeña, sin título, sin línea y sin mezclar categorías.
+    if (mostrarTienda && cuponesTienda.length) {
+      const espacio = document.createElement("div");
+      espacio.className = "separacion-bancarios-grid";
+      espacio.setAttribute("aria-hidden", "true");
+      cuponesContainer.appendChild(espacio);
+    }
+
+    const fragmentoBancos = document.createDocumentFragment();
+    cuponesBancarios.forEach((cupon) => {
+      const tarjeta = crearTarjetaBancaria(cupon);
+      tarjeta.classList.add("cupon-bancario-grid");
+      fragmentoBancos.appendChild(tarjeta);
+    });
+    cuponesContainer.appendChild(fragmentoBancos);
   }
 
   todosWrapper.hidden = false;
   estadoCarga.textContent = "";
   startCouponTimers();
-
-  if (categoriaActiva === "bancarios" && seccionCuponesBancarios && !seccionCuponesBancarios.hidden) {
-    requestAnimationFrame(() => seccionCuponesBancarios.scrollIntoView({ behavior: "smooth", block: "start" }));
-  }
 }
+
 function reiniciarContadorActualizacion() {
   segundosRestantes = SEGUNDOS_ACTUALIZACION;
   actualizarTextoContador();

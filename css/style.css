@@ -7916,3 +7916,90 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
     font-size: 11px !important;
   }
 }
+
+/* =========================================================
+   V81.17 — Todos juntos: Tienda primero, Bancarios después
+   ========================================================= */
+
+/* Ya no existen encabezados independientes ni carrusel bancario. */
+.encabezado-cupones-tienda,
+.bancarios-encabezado,
+.bancarios-carrusel-wrap,
+.bancarios-indicadores,
+.bancarios-flecha {
+  display: none !important;
+}
+
+/* Pequeño respiro entre categorías, sin línea ni texto.
+   Al ocupar todas las columnas obliga a que Bancarios empiece en una fila nueva. */
+.cupones-grid-compacta > .separacion-bancarios-grid {
+  grid-column: 1 / -1;
+  height: 8px;
+  min-height: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+/* Bancarios pasan a comportarse como tarjetas normales de la misma cuadrícula. */
+.cupones-grid-compacta > .cupon-bancario-mini,
+.cupones-grid-compacta > .cupon-bancario-grid {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: 100% !important;
+  min-height: 350px !important;
+  max-height: none !important;
+  flex: initial !important;
+  align-self: stretch !important;
+  scroll-snap-align: none !important;
+  margin: 0 !important;
+}
+
+/* La cuadrícula sigue siendo la misma que Tienda. */
+.cupones-grid-compacta {
+  align-items: stretch;
+}
+
+/* Selector inferior: tres botones, siempre en una sola línea. */
+.navegacion-inferior.selector-cupones-oscuro {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 4px !important;
+}
+.navegacion-inferior.selector-cupones-oscuro .tab-inferior {
+  width: 100% !important;
+  min-width: 0 !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+}
+.navegacion-inferior.selector-cupones-oscuro .tab-textos {
+  min-width: 0 !important;
+  flex: 0 1 auto !important;
+}
+.navegacion-inferior.selector-cupones-oscuro .tab-etiqueta-principal {
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+}
+
+@media (max-width: 680px) {
+  .cupones-grid-compacta > .cupon-bancario-mini,
+  .cupones-grid-compacta > .cupon-bancario-grid {
+    height: 100% !important;
+    min-height: 350px !important;
+  }
+
+  .cupones-grid-compacta > .separacion-bancarios-grid {
+    height: 6px;
+    min-height: 6px;
+  }
+
+  .navegacion-inferior.selector-cupones-oscuro .tab-inferior {
+    gap: 4px !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+  }
+}

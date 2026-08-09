@@ -215,3 +215,37 @@
     transition: none !important;
   }
 }
+
+/* V81.17 — Selector Todos | Tienda | Bancarios en una sola línea */
+.navegacion-inferior.selector-cupones-oscuro {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+.navegacion-inferior.selector-cupones-oscuro #tab-todos.activo,
+.navegacion-inferior.selector-cupones-oscuro #tab-todos[aria-pressed="true"] {
+  color: #27312c !important;
+  border-color: color-mix(in srgb, var(--selector-color-inicio) 58%, #dce4df) !important;
+  background-color: color-mix(in srgb, var(--selector-color-inicio) 34%, #ffffff) !important;
+  background-image: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--selector-color-inicio) 58%, #ffffff),
+    color-mix(in srgb, var(--selector-color-fin) 62%, #ffffff)
+  ) !important;
+  box-shadow: none !important;
+}
+
+.navegacion-inferior.selector-cupones-oscuro #tab-todos.activo::before,
+.navegacion-inferior.selector-cupones-oscuro #tab-todos[aria-pressed="true"]::before {
+  opacity: .7;
+}
+
+.navegacion-inferior.selector-cupones-oscuro .tab-textos small {
+  display: none !important;
+}
+
+.navegacion-inferior.selector-cupones-oscuro .tab-textos {
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
