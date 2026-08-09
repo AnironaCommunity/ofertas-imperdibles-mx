@@ -27,6 +27,7 @@ const modalCodigoBloque = document.querySelector("#modal-codigo-bloque");
 const modalCuponOculto = document.querySelector("#modal-cupon-oculto");
 
 
+const tabTodos = document.querySelector("#tab-todos");
 const tabTienda = document.querySelector("#tab-tienda");
 const tabBancarios = document.querySelector("#tab-bancarios");
 const vistaCupones = document.querySelector("#vista-cupones");
@@ -136,7 +137,7 @@ let segundosRestantes = SEGUNDOS_ACTUALIZACION;
 let cargando = false;
 let redireccionEnProceso = false;
 let timeoutRedireccion = null;
-let categoriaActiva = "tienda";
+let categoriaActiva = "todos";
 let vistaActiva = "cupones";
 let todosLosCupones = [];
 let firmaUltimosCupones = "";
@@ -144,6 +145,10 @@ let todasLasPublicidades = [];
 let temporizadorEstados = null;
 
 const SECCIONES_URL = {
+  todos: {
+    vista: "cupones",
+    categoria: "todos",
+  },
   tienda: {
     vista: "cupones",
     categoria: "tienda",
@@ -327,17 +332,23 @@ enlaceLogoInicio?.addEventListener("click", (event) => {
 botonRecargar?.addEventListener("click", cargarCupones);
 function actualizarNavegacionPrincipal(seccion) {
   const mapa = {
+    todos: tabTodos,
     tienda: tabTienda,
     bancarios: tabBancarios,
   };
 
-  [tabTienda, tabBancarios].forEach((boton) => {
+  [tabTodos, tabTienda, tabBancarios].forEach((boton) => {
     if (!boton) return;
     const activo = boton === mapa[seccion];
     boton.classList.toggle("activo", activo);
     boton.setAttribute("aria-pressed", String(activo));
   });
 }
+
+tabTodos?.addEventListener("click", () => {
+  cambiarCategoria("todos", { actualizarHistorial: true });
+  actualizarNavegacionPrincipal("todos");
+});
 
 tabTienda.addEventListener("click", () => {
   cambiarCategoria("tienda", { actualizarHistorial: true });
@@ -432,10 +443,13 @@ function cambiarVista(
     botonComunidadAnirona.setAttribute("aria-pressed", String(comunidadActiva));
   }
 
+  const todosActivos = mostrarCupones && categoriaActiva === "todos";
   const tiendaActiva = mostrarCupones && categoriaActiva === "tienda";
   const bancariosActivos = mostrarCupones && categoriaActiva === "bancarios";
+  tabTodos?.classList.toggle("activo", todosActivos);
   tabTienda.classList.toggle("activo", tiendaActiva);
   tabBancarios.classList.toggle("activo", bancariosActivos);
+  tabTodos?.setAttribute("aria-pressed", String(todosActivos));
   tabTienda.setAttribute("aria-pressed", String(tiendaActiva));
   tabBancarios.setAttribute("aria-pressed", String(bancariosActivos));
 
@@ -1137,14 +1151,18 @@ function cambiarCategoria(
     desplazamiento,
   });
 
+  const esTodos = categoria === "todos";
   const esTienda = categoria === "tienda";
+  const esBancarios = categoria === "bancarios";
 
+  tabTodos?.classList.toggle("activo", esTodos);
   tabTienda.classList.toggle("activo", esTienda);
-  tabBancarios.classList.toggle("activo", !esTienda);
+  tabBancarios.classList.toggle("activo", esBancarios);
 
+  tabTodos?.setAttribute("aria-pressed", String(esTodos));
   tabTienda.setAttribute("aria-pressed", String(esTienda));
-  tabBancarios.setAttribute("aria-pressed", String(!esTienda));
-  actualizarNavegacionPrincipal(esTienda ? "tienda" : "bancarios");
+  tabBancarios.setAttribute("aria-pressed", String(esBancarios));
+  actualizarNavegacionPrincipal(esTodos ? "todos" : esTienda ? "tienda" : "bancarios");
 
   renderizarCategoria();
 
@@ -1176,7 +1194,10 @@ function renderizarCategoria() {
     .filter((cupon) => normalizarCategoria(cupon) === "bancarios")
     .sort((a, b) => Number(b.clics || 0) - Number(a.clics || 0));
 
-  if (encabezadoCuponesTienda) encabezadoCuponesTienda.hidden = cuponesTienda.length === 0;
+  const mostrarTienda = categoriaActiva !== "bancarios";
+  const mostrarBancarios = categoriaActiva !== "tienda";
+  if (encabezadoCuponesTienda) encabezadoCuponesTienda.hidden = !mostrarTienda || cuponesTienda.length === 0;
+  if (cuponesContainer) cuponesContainer.hidden = !mostrarTienda;
 
   document.body.classList.remove("vista-bancarios");
   const tituloCupones = document.querySelector("#titulo-seccion-cupones");
@@ -1215,7 +1236,7 @@ function renderizarCategoria() {
   });
   cuponesContainer.appendChild(fragmentoTienda);
 
-  if (cuponesBancarios.length && cuponesBancariosCarrusel && seccionCuponesBancarios) {
+  if (mostrarBancarios && cuponesBancarios.length && cuponesBancariosCarrusel && seccionCuponesBancarios) {
     const fragmentoBancos = document.createDocumentFragment();
     cuponesBancarios.forEach((cupon) => fragmentoBancos.appendChild(crearTarjetaBancaria(cupon)));
     cuponesBancariosCarrusel.appendChild(fragmentoBancos);

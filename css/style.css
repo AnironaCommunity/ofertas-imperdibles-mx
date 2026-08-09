@@ -7897,3 +7897,22 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
     font-size: 11px !important;
   }
 }
+
+/* V81.16 — Selector inferior Todos | Tienda | Bancarios */
+.selector-cupones-oscuro {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+.selector-cupones-oscuro .tab-inferior {
+  min-width: 0 !important;
+}
+@media (max-width: 430px) {
+  .selector-cupones-oscuro {
+    gap: 4px !important;
+  }
+  .selector-cupones-oscuro .tab-textos small {
+    font-size: 9px !important;
+  }
+  .selector-cupones-oscuro .tab-etiqueta-principal {
+    font-size: 11px !important;
+  }
+}
