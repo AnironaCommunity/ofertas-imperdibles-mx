@@ -8027,3 +8027,68 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
     max-height: none !important;
   }
 }
+
+/* =========================================================
+   V81.19 — Más aire en Bancarios + Tienda simplificada
+   ========================================================= */
+
+/* Tienda vuelve a su presentación normal: sin etiqueta superior. */
+.cupon-tienda-etiqueta {
+  display: none !important;
+}
+
+/* Compra mínima y descuento máximo de Tienda usan el mismo lenguaje
+   tipográfico ligero de los datos bancarios. */
+.cupon:not(.cupon-bancario-mini) .cupon-meta,
+.cupon:not(.cupon-bancario-mini) .cupon-meta-item,
+.cupon:not(.cupon-bancario-mini) .cupon-dato,
+.cupon:not(.cupon-bancario-mini) .cupon-dato-label,
+.cupon:not(.cupon-bancario-mini) .cupon-dato-valor,
+.cupon:not(.cupon-bancario-mini) .compra-minima,
+.cupon:not(.cupon-bancario-mini) .descuento-maximo {
+  font-family: inherit !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+}
+
+/* El bloque de beneficio bancario puede crecer naturalmente. */
+.cupon-bancario-mini .banco-beneficio,
+.cupon-bancario-mini .banco-detalle,
+.cupon-bancario-mini .detalle-beneficio-bancario {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Reserva un pequeño respiro antes de Copiar código.
+   Si el detalle bancario ocupa más líneas, la tarjeta puede crecer. */
+.cupon-bancario-mini .banco-boton-copiar,
+.cupon-bancario-mini .btn-copiar,
+.cupon-bancario-mini .copiar-codigo,
+.cupon-bancario-mini [data-action="copy"],
+.cupon-bancario-mini [data-accion="copiar"] {
+  margin-top: 10px !important;
+}
+
+/* Ya no forzamos a Bancarios a comprimir su contenido para igualar
+   estrictamente la altura de Tienda. Conserva el mismo ancho y puede
+   crecer verticalmente solo cuando el contenido lo necesita. */
+.cupones-grid-compacta > .cupon-bancario-mini,
+.cupones-grid-compacta > .cupon-bancario-grid {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  align-self: stretch !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 680px) {
+  .cupones-grid-compacta > .cupon-bancario-mini,
+  .cupones-grid-compacta > .cupon-bancario-grid {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+}
