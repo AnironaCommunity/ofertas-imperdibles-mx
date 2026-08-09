@@ -8775,3 +8775,40 @@ body .navegacion-inferior.selector-cupones-oscuro .contador-seccion-inferior {
     flex-basis: 62% !important;
   }
 }
+
+/* =========================================================
+   V81.30 — Igualar ALTURA de Copiar código
+   Tienda y Bancarios comparten exactamente la misma altura.
+   ========================================================= */
+.cupon .boton-canjear,
+.cupon-bancario-mini .banco-pie .banco-canjear {
+  height: 30px !important;
+  min-height: 30px !important;
+  max-height: 30px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  box-sizing: border-box !important;
+  line-height: 1 !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* El contenedor bancario no debe agregar altura al botón */
+.cupon-bancario-mini .banco-pie {
+  min-height: 0 !important;
+  height: auto !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Neutraliza reglas móviles anteriores que pudieran agrandarlo */
+@media (max-width: 700px) {
+  .cupon .boton-canjear,
+  .cupon-bancario-mini .banco-pie .banco-canjear {
+    height: 30px !important;
+    min-height: 30px !important;
+    max-height: 30px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
