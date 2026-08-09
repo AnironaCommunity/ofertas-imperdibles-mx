@@ -8676,3 +8676,59 @@ body .navegacion-inferior.selector-cupones-oscuro .contador-seccion-inferior {
 .cupon-bancario-mini .banco-pie > * {
   flex-shrink: 0 !important;
 }
+
+/* =========================================================
+   V81.28 — Botón Copiar código al 70% + acciones Tienda centradas
+   ========================================================= */
+
+/* Botones de Copiar código: 70% del ancho y centrados */
+.cupon .boton-canjear,
+.cupon-bancario-mini .banco-pie .banco-canjear {
+  width: 70% !important;
+  max-width: 70% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  align-self: center !important;
+}
+
+/* Mantener el color verde Afirme en Tienda */
+.cupon:not(.cupon-bancario-mini) .boton-canjear {
+  border-color: #008b68 !important;
+  color: #ffffff !important;
+  background: #009c76 !important;
+  background-image: linear-gradient(135deg, #00a77e 0%, #008f6c 100%) !important;
+}
+
+/* Mantener color propio por banco */
+.cupon-bancario-mini .banco-pie .banco-canjear {
+  border-color: var(--banco-color) !important;
+  color: var(--banco-texto, #ffffff) !important;
+  background: var(--banco-color) !important;
+  background-image: none !important;
+}
+
+/* Acciones de Tienda nuevamente juntas y centradas */
+.cupon:not(.cupon-bancario-mini) .acciones-secundarias {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.cupon:not(.cupon-bancario-mini) .acciones-secundarias > * {
+  flex: 0 0 auto !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Evita que estadísticas se vayan a la derecha por reglas anteriores */
+.cupon:not(.cupon-bancario-mini) .estadisticas-cupon {
+  margin-left: 0 !important;
+  width: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
