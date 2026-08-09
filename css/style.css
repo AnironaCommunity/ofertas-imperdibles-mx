@@ -7723,3 +7723,15 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
     height:23px !important;
   }
 }
+
+/* =========================================================
+   V81.11 — Temporizador bancario al final de la tarjeta
+   Mismo orden visual que los cupones de tienda.
+   ========================================================= */
+.cupon-bancario-mini .banco-pie .banco-canjear { order:1; }
+.cupon-bancario-mini .banco-pie .banco-acciones-extra { order:2; }
+.cupon-bancario-mini .banco-pie .mensaje { order:3; }
+.cupon-bancario-mini .banco-pie .estado-programacion {
+  order:4;
+  margin-top:1px;
+}
