@@ -7735,3 +7735,21 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   order:4;
   margin-top:1px;
 }
+
+
+/* V81.12 — Acciones centradas en cupones bancarios */
+.bank-coupon-card .coupon-actions,
+.bank-coupon-card .card-actions,
+.bank-coupon-card .actions,
+.bank-coupon-card .bank-actions,
+.cupon-bancario .coupon-actions,
+.cupon-bancario .card-actions,
+.cupon-bancario .actions,
+.cupon-bancario .bank-actions {
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
