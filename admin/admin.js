@@ -62,15 +62,12 @@ const couponCode = document.querySelector("#coupon-code");
 const couponMinimum = document.querySelector("#coupon-minimum");
 const couponSaving = document.querySelector("#coupon-saving");
 const couponCategory = document.querySelector("#coupon-category");
-const couponBankField = document.querySelector("#coupon-bank-field");
 const couponBank = document.querySelector("#coupon-bank");
-const couponBankPreview = document.querySelector("#coupon-bank-preview");
-const couponBankPreviewImg = document.querySelector("#coupon-bank-preview-img");
+const couponBankWrapper = document.querySelector("#coupon-bank-wrapper");
 const couponStart = document.querySelector("#coupon-start");
 const couponEnd = document.querySelector("#coupon-end");
 const couponLink = document.querySelector("#coupon-link");
 const couponImage = document.querySelector("#coupon-image");
-const couponImageField = document.querySelector("#coupon-image-field");
 const couponImageUrl = document.querySelector("#coupon-image-url");
 const couponImagePreviewWrapper = document.querySelector(
   "#coupon-image-preview-wrapper"
@@ -441,56 +438,12 @@ function couponAutomaticStatus(coupon) {
   };
 }
 
-const BANK_LOGOS = {
-  "mercado-pago": "../img/bancos/mercado-pago.png",
-  "mercado-pago-visa": "../img/bancos/mercado-pago-visa.png",
-  "banamex": "../img/bancos/banamex.png",
-  "bbva": "../img/bancos/bbva.png",
-  "hsbc": "../img/bancos/hsbc.png",
-  "american-express": "../img/bancos/american-express.png",
-  "invex": "../img/bancos/invex.png",
-  "scotiabank": "../img/bancos/scotiabank.png",
-  "afirme": "../img/bancos/afirme.png",
-  "mifel": "../img/bancos/mifel.png",
-  "inbursa": "../img/bancos/inbursa.png",
-  "falabella": "../img/bancos/falabella.png",
-  "didi-card": "../img/bancos/didi-card.png",
-  "openbank": "../img/bancos/openbank.png",
-};
-
-function publicBankLogoPath(bank) {
-  const adminPath = BANK_LOGOS[bank] || "";
-  return adminPath.replace(/^\.\.\//, "");
-}
-
-function bankFromImageUrl(url) {
-  const normalized = String(url || "").split("?")[0].toLowerCase();
-  return Object.keys(BANK_LOGOS).find((bank) => normalized.endsWith(`/img/bancos/${bank}.png`) || normalized.endsWith(`img/bancos/${bank}.png`)) || "";
-}
-
-function updateBankAdminUI() {
-  const isBank = couponCategory?.value === "bancarios";
-  if (couponBankField) couponBankField.hidden = !isBank;
-  if (couponImageField) couponImageField.hidden = isBank;
-  if (isBank && couponImagePreviewWrapper) couponImagePreviewWrapper.hidden = true;
-
-  if (isBank) {
-    const bank = couponBank?.value || "";
-    const logo = BANK_LOGOS[bank] || "";
-    if (couponBankPreview && couponBankPreviewImg) {
-      couponBankPreview.hidden = !logo;
-      couponBankPreviewImg.src = logo;
-    }
-    if (logo && couponImageUrl) couponImageUrl.value = publicBankLogoPath(bank);
-  }
-}
-
 function resetCouponForm() {
   couponForm.reset();
   couponId.value = "";
   couponCategory.value = "tienda";
   if (couponBank) couponBank.value = "";
-  updateBankAdminUI();
+  actualizarSelectorBanco();
   couponStart.value = "";
   couponEnd.value = "";
   couponActive.checked = true;
@@ -508,16 +461,18 @@ function editCoupon(coupon) {
   couponSaving.value = coupon.ahorro_maximo || "";
   couponCategory.value =
     coupon.categoria === "bancarios" ? "bancarios" : "tienda";
-  if (couponBank) couponBank.value = bankFromImageUrl(coupon.imagen_url);
-  updateBankAdminUI();
   couponStart.value = isoToMexicoLocal(coupon.fecha_inicio);
   couponEnd.value = isoToMexicoLocal(coupon.fecha_fin);
   couponLink.value = coupon.enlace || "";
   couponImage.value = "";
   couponImageUrl.value = coupon.imagen_url || "";
   couponImagePreview.src = coupon.imagen_url || "";
-  couponImagePreviewWrapper.hidden = !coupon.imagen_url || coupon.categoria === "bancarios";
-  updateBankAdminUI();
+  couponImagePreviewWrapper.hidden = !coupon.imagen_url;
+  if (couponBank && coupon.categoria === "bancarios") {
+    const existe = [...couponBank.options].some(o => o.value === (coupon.imagen_url || ""));
+    couponBank.value = existe ? (coupon.imagen_url || "") : "";
+  }
+  actualizarSelectorBanco();
   couponActive.checked = Boolean(coupon.activo);
   couponPublishNew.checked = false;
 
@@ -1021,12 +976,8 @@ async function saveCoupon(event) {
 
   try {
     const imageUrl = couponCategory.value === "bancarios" && couponBank?.value
-      ? publicBankLogoPath(couponBank.value)
+      ? couponBank.value
       : await uploadCouponImage();
-
-    if (couponCategory.value === "bancarios" && !couponBank?.value) {
-      throw new Error("Selecciona el banco del cupón bancario.");
-    }
 
     const payload = {
       titulo: couponTitle.value.trim(),
@@ -2786,10 +2737,6 @@ passwordInput.addEventListener("keydown", (event) => {
 });
 
 logoutButton.addEventListener("click", logout);
-couponCategory?.addEventListener("change", updateBankAdminUI);
-couponBank?.addEventListener("change", updateBankAdminUI);
-updateBankAdminUI();
-
 tabCoupons.addEventListener("click", () => showSection("cupones"));
 tabAds.addEventListener("click", () => showSection("publicidad"));
 tabEvents?.addEventListener("click", () => showSection("eventos"));
@@ -2804,6 +2751,26 @@ downloadCommunityList?.addEventListener(
   "click",
   downloadCommunityProductsList
 );
+
+function actualizarSelectorBanco() {
+  const esBancario = couponCategory?.value === "bancarios";
+  if (couponBankWrapper) couponBankWrapper.hidden = !esBancario;
+  if (esBancario && couponBank?.value) {
+    couponImageUrl.value = couponBank.value;
+    couponImagePreview.src = couponBank.value;
+    couponImagePreviewWrapper.hidden = false;
+  }
+}
+
+couponCategory?.addEventListener("change", actualizarSelectorBanco);
+couponBank?.addEventListener("change", () => {
+  if (!couponBank.value) return;
+  couponImage.value = "";
+  couponImageUrl.value = couponBank.value;
+  couponImagePreview.src = couponBank.value;
+  couponImagePreviewWrapper.hidden = false;
+});
+actualizarSelectorBanco();
 
 couponForm.addEventListener("submit", saveCoupon);
 couponList.addEventListener("click", handleCouponList);

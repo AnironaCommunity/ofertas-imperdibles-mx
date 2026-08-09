@@ -6644,3 +6644,67 @@ html.tutorial-en-curso { scroll-behavior: smooth; }
     padding: 0 22px;
   }
 }
+
+/* V81.1 — Tarjetas bancarias compactas, inspiradas en la referencia aprobada */
+body.vista-bancarios #cupones-container {
+  display:flex !important; gap:14px !important; overflow-x:auto !important; overflow-y:hidden;
+  padding:8px 4px 18px !important; scroll-snap-type:x mandatory; scrollbar-width:thin;
+  grid-template-columns:none !important; align-items:stretch;
+}
+body.vista-bancarios #cupones-container .cupon {
+  flex:0 0 258px !important; width:258px !important; min-width:258px !important;
+  min-height:0 !important; height:330px !important; padding:0 !important; overflow:hidden;
+  border:1px solid #c9c9ee !important; border-radius:16px !important; background:#f8f9ff !important;
+  box-shadow:0 5px 16px rgba(25,35,90,.08) !important; scroll-snap-align:start;
+  display:flex !important; flex-direction:column !important;
+}
+body.vista-bancarios .cupon .cupon-encabezado {
+  height:86px !important; min-height:86px !important; padding:12px 18px !important; margin:0 !important;
+  background:#fff !important; display:flex !important; align-items:center !important; justify-content:center !important;
+  border-bottom:26px solid #17139d !important; position:relative;
+}
+body.vista-bancarios .cupon .cupon-encabezado::after {
+  content:'TARJETA / BENEFICIO'; position:absolute; left:0; right:0; bottom:-23px;
+  color:#fff; font-size:11px; font-weight:800; text-align:center; letter-spacing:.2px;
+}
+body.vista-bancarios .cupon .cupon-logo {
+  display:block !important; width:auto !important; height:auto !important; max-width:190px !important; max-height:54px !important;
+  object-fit:contain !important; border-radius:0 !important; margin:0 auto !important; box-shadow:none !important; background:transparent !important;
+}
+body.vista-bancarios .cupon .cupon-encabezado .descuento { display:none !important; }
+body.vista-bancarios .cupon .cupon-contenido {
+  padding:25px 18px 14px !important; display:flex !important; flex-direction:column !important; gap:8px !important; flex:1;
+}
+body.vista-bancarios .cupon .cupon-etiquetas,
+body.vista-bancarios .cupon .cupon-usado,
+body.vista-bancarios .cupon .acciones-secundarias { display:none !important; }
+body.vista-bancarios .cupon .descuento-maximo {
+  order:1; margin:0 !important; font-size:24px !important; line-height:1.1 !important; font-weight:800 !important; color:#111 !important;
+}
+body.vista-bancarios .cupon .descuento-maximo::before { content:''; }
+body.vista-bancarios .cupon .descuento-maximo strong { font-weight:800 !important; }
+body.vista-bancarios .cupon .compra-minima {
+  order:2; margin:4px 0 0 !important; font-size:16px !important; line-height:1.3 !important; color:#242424 !important;
+}
+body.vista-bancarios .cupon .estado-programacion { order:4; margin-top:auto !important; font-size:11px !important; min-height:16px !important; }
+body.vista-bancarios .cupon .acciones-bloque { order:3; margin-top:auto !important; }
+body.vista-bancarios .cupon .acciones-cupon { margin:0 !important; }
+body.vista-bancarios .cupon .boton-canjear {
+  width:100% !important; min-height:42px !important; padding:9px 12px !important; border-radius:11px !important;
+  font-size:14px !important; font-weight:800 !important; background:#17139d !important; box-shadow:none !important;
+}
+body.vista-bancarios .cupon .mensaje { margin:2px 0 0 !important; font-size:11px !important; min-height:0 !important; }
+@media (max-width:600px){
+ body.vista-bancarios #cupones-container{gap:12px !important;padding-left:2px !important;padding-right:22px !important;}
+ body.vista-bancarios #cupones-container .cupon{flex-basis:230px !important;width:230px !important;min-width:230px !important;height:310px !important;border-radius:14px !important;}
+ body.vista-bancarios .cupon .cupon-encabezado{height:78px !important;min-height:78px !important;padding:10px 14px !important;}
+ body.vista-bancarios .cupon .cupon-logo{max-width:170px !important;max-height:48px !important;}
+ body.vista-bancarios .cupon .cupon-contenido{padding:23px 15px 12px !important;}
+ body.vista-bancarios .cupon .descuento-maximo{font-size:21px !important;}
+ body.vista-bancarios .cupon .compra-minima{font-size:15px !important;}
+}
+body.vista-bancarios .cupon .beneficio-bancario{order:0;margin:0 0 4px!important;font-size:24px!important;line-height:1.1!important;font-weight:850!important;color:#111!important;}
+body.vista-bancarios .cupon .descuento-maximo{order:2!important;font-size:14px!important;line-height:1.25!important;font-weight:500!important;margin:2px 0!important;}
+body.vista-bancarios .cupon .compra-minima{order:1!important;}
+body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
+@media(max-width:600px){body.vista-bancarios .cupon .beneficio-bancario{font-size:22px!important;}}
