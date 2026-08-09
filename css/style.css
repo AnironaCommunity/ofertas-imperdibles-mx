@@ -8602,3 +8602,77 @@ body .navegacion-inferior.selector-cupones-oscuro .contador-seccion-inferior {
   box-shadow: none !important;
   filter: none !important;
 }
+
+
+/* =========================================================
+   V81.27 — Botones con mismo ancho + pie bancario fijo abajo
+   ========================================================= */
+
+/* Ambos botones ocupan exactamente el ancho interior de su tarjeta. */
+.cupon .acciones-bloque,
+.cupon .acciones-cupon,
+.cupon-bancario-mini .banco-pie {
+  width: 100% !important;
+  max-width: none !important;
+  box-sizing: border-box !important;
+}
+
+.cupon .boton-canjear,
+.cupon-bancario-mini .banco-pie .banco-canjear {
+  display: flex !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* La tarjeta bancaria trabaja como columna completa. */
+.cupon-bancario-mini {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.cupon-bancario-mini .banco-cuerpo {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  flex-direction: column !important;
+  min-height: 0 !important;
+}
+
+/* La información puede crecer, pero el pie siempre se queda abajo. */
+.cupon-bancario-mini .banco-info {
+  flex: 0 1 auto !important;
+}
+
+.cupon-bancario-mini .banco-pie {
+  display: flex !important;
+  flex: 0 0 auto !important;
+  flex-direction: column !important;
+  margin-top: auto !important;
+  padding-top: 8px !important;
+}
+
+/* Orden fijo del pie bancario, sin importar la longitud del detalle. */
+.cupon-bancario-mini .banco-pie .banco-canjear {
+  order: 1 !important;
+}
+
+.cupon-bancario-mini .banco-pie .banco-acciones-extra {
+  order: 2 !important;
+}
+
+.cupon-bancario-mini .banco-pie .mensaje {
+  order: 3 !important;
+}
+
+.cupon-bancario-mini .banco-pie .estado-programacion {
+  order: 4 !important;
+  margin-top: 4px !important;
+}
+
+/* Evita que reglas antiguas empujen o compriman el pie. */
+.cupon-bancario-mini .banco-pie > * {
+  flex-shrink: 0 !important;
+}
