@@ -8557,3 +8557,48 @@ body .navegacion-inferior.selector-cupones-oscuro .contador-seccion-inferior {
     font-size: 10px !important;
   }
 }
+
+
+/* =========================================================
+   V81.26 — Corrección botón bancario
+   - Tienda conserva verde Afirme.
+   - Bancarios recuperan el color propio de cada banco.
+   - Ambos botones ocupan exactamente el ancho disponible.
+   ========================================================= */
+.cupon .boton-canjear {
+  width: 100% !important;
+  align-self: stretch !important;
+}
+
+.cupon-bancario-mini .banco-pie,
+.cupon-bancario-mini .banco-pie .banco-canjear {
+  width: 100% !important;
+  max-width: none !important;
+  align-self: stretch !important;
+  box-sizing: border-box !important;
+}
+
+.cupon-bancario-mini .banco-pie .banco-canjear {
+  border-color: var(--banco-color) !important;
+  color: var(--banco-texto, #ffffff) !important;
+  background: var(--banco-color) !important;
+  background-image: none !important;
+  box-shadow: 0 3px 9px color-mix(in srgb, var(--banco-color) 22%, transparent) !important;
+}
+
+.cupon-bancario-mini .banco-pie .banco-canjear:hover {
+  border-color: var(--banco-color) !important;
+  color: var(--banco-texto, #ffffff) !important;
+  background: var(--banco-color) !important;
+  background-image: none !important;
+  filter: brightness(.94);
+}
+
+.cupon-bancario-mini .banco-pie .banco-canjear:disabled.boton-programado {
+  color: #6c6652 !important;
+  border-color: #ded4a0 !important;
+  background: #f7f2d7 !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
