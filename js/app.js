@@ -406,6 +406,93 @@ tabExclusivo?.addEventListener("click", () => {
   actualizarNavegacionPrincipal("exclusivo");
 });
 
+
+/* Navegación táctil entre categorías de cupones.
+   Deslizar a la izquierda avanza; a la derecha regresa.
+   Solo reconoce un gesto horizontal claro para no interferir con el scroll vertical. */
+function categoriasCuponDisponibles() {
+  const categorias = ["todos", "tienda", "bancarios"];
+
+  if (tabExclusivo && !tabExclusivo.hidden) {
+    categorias.push("exclusivo");
+  }
+
+  return categorias;
+}
+
+function navegarCategoriaPorDeslizamiento(direccion) {
+  const categorias = categoriasCuponDisponibles();
+  const indiceActual = categorias.indexOf(categoriaActiva);
+
+  if (indiceActual < 0) return;
+
+  const nuevoIndice = indiceActual + direccion;
+  if (nuevoIndice < 0 || nuevoIndice >= categorias.length) return;
+
+  cambiarCategoria(categorias[nuevoIndice], {
+    actualizarHistorial: true,
+    desplazamiento: "auto",
+  });
+}
+
+let swipeInicioX = 0;
+let swipeInicioY = 0;
+let swipeInicioTiempo = 0;
+let swipeActivo = false;
+
+vistaCupones?.addEventListener(
+  "touchstart",
+  (event) => {
+    if (event.touches.length !== 1) {
+      swipeActivo = false;
+      return;
+    }
+
+    const toque = event.touches[0];
+    swipeInicioX = toque.clientX;
+    swipeInicioY = toque.clientY;
+    swipeInicioTiempo = Date.now();
+    swipeActivo = true;
+  },
+  { passive: true }
+);
+
+vistaCupones?.addEventListener(
+  "touchend",
+  (event) => {
+    if (!swipeActivo || event.changedTouches.length !== 1) return;
+    swipeActivo = false;
+
+    const toque = event.changedTouches[0];
+    const deltaX = toque.clientX - swipeInicioX;
+    const deltaY = toque.clientY - swipeInicioY;
+    const duracion = Date.now() - swipeInicioTiempo;
+
+    const distanciaHorizontal = Math.abs(deltaX);
+    const distanciaVertical = Math.abs(deltaY);
+
+    // Umbral suficiente para distinguir swipe de toque/clic y de scroll vertical.
+    const esSwipeHorizontal =
+      distanciaHorizontal >= 55 &&
+      distanciaHorizontal > distanciaVertical * 1.35 &&
+      duracion <= 700;
+
+    if (!esSwipeHorizontal) return;
+
+    // Dedo hacia la izquierda = siguiente categoría.
+    navegarCategoriaPorDeslizamiento(deltaX < 0 ? 1 : -1);
+  },
+  { passive: true }
+);
+
+vistaCupones?.addEventListener(
+  "touchcancel",
+  () => {
+    swipeActivo = false;
+  },
+  { passive: true }
+);
+
 function abrirEnlacePrincipal(boton) {
   const vista = boton?.dataset?.vista;
   const cache = (() => {
