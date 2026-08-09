@@ -7772,7 +7772,7 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   scroll-snap-align: none !important;
 }
 
-/* Tienda: misma lectura tipográfica de mínimo/máximo que Bancarios. */
+/* Tienda: misma tipografía y tamaño que Compra mínima / Máx. descuento de Bancarios. */
 .cupon:not(.cupon-bancario-mini) .descuento-maximo,
 .cupon:not(.cupon-bancario-mini) .compra-minima {
   margin: 0 !important;
@@ -7782,8 +7782,9 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   border-radius: 0 !important;
   background: transparent !important;
   color: #343842 !important;
-  font-size: 12px !important;
-  line-height: 1.23 !important;
+  font-family: inherit !important;
+  font-size: 9.35px !important;
+  line-height: 1.13 !important;
   font-weight: 400 !important;
   letter-spacing: 0 !important;
 }
@@ -7791,6 +7792,9 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
 .cupon:not(.cupon-bancario-mini) .descuento-maximo strong,
 .cupon:not(.cupon-bancario-mini) .compra-minima strong {
   color: #202431 !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
   font-weight: 650 !important;
 }
 
@@ -8035,8 +8039,8 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
 @media (max-width: 700px) {
   .cupon:not(.cupon-bancario-mini) .descuento-maximo,
   .cupon:not(.cupon-bancario-mini) .compra-minima {
-    font-size: 11.25px !important;
-    line-height: 1.2 !important;
+    font-size: 8.8px !important;
+    line-height: 1.12 !important;
   }
 
   .cupon-bancario-mini .banco-info {
