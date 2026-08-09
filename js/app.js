@@ -5,6 +5,7 @@ const cuponesBancariosCarrusel = document.querySelector("#cupones-bancarios-carr
 const bancariosConteo = document.querySelector("#bancarios-conteo");
 const bancariosAnterior = document.querySelector("#bancarios-anterior");
 const bancariosSiguiente = document.querySelector("#bancarios-siguiente");
+const bancariosIndicadores = document.querySelector("#bancarios-indicadores");
 const sinCupones = document.querySelector("#sin-cupones");
 const estadoCarga = document.querySelector("#estado-carga");
 const botonRecargar = document.querySelector("#boton-recargar");
@@ -934,15 +935,90 @@ function crearTarjetaBancaria(cupon) {
   return articulo;
 }
 
-function desplazarCarruselBancario(direccion) {
+let bancoAutoTimer = null;
+let bancoAutoPausaHasta = 0;
+
+function tarjetasBancarias() {
+  return cuponesBancariosCarrusel
+    ? [...cuponesBancariosCarrusel.querySelectorAll(".cupon-bancario-mini")]
+    : [];
+}
+
+function indiceBancarioActual() {
+  if (!cuponesBancariosCarrusel) return 0;
+  const tarjetas = tarjetasBancarias();
+  if (!tarjetas.length) return 0;
+  const izquierda = cuponesBancariosCarrusel.scrollLeft;
+  let mejor = 0;
+  let distancia = Infinity;
+  tarjetas.forEach((tarjeta, indice) => {
+    const d = Math.abs(tarjeta.offsetLeft - cuponesBancariosCarrusel.offsetLeft - izquierda);
+    if (d < distancia) { distancia = d; mejor = indice; }
+  });
+  return mejor;
+}
+
+function actualizarIndicadoresBancarios() {
+  if (!bancariosIndicadores) return;
+  const activo = indiceBancarioActual();
+  bancariosIndicadores.querySelectorAll("button").forEach((punto, indice) => {
+    punto.classList.toggle("activo", indice === activo);
+    punto.setAttribute("aria-current", indice === activo ? "true" : "false");
+  });
+}
+
+function crearIndicadoresBancarios() {
+  if (!bancariosIndicadores) return;
+  const tarjetas = tarjetasBancarias();
+  bancariosIndicadores.replaceChildren();
+  tarjetas.forEach((tarjeta, indice) => {
+    const punto = document.createElement("button");
+    punto.type = "button";
+    punto.className = "bancarios-punto";
+    punto.setAttribute("aria-label", `Ir al cupón bancario ${indice + 1}`);
+    punto.addEventListener("click", () => {
+      bancoAutoPausaHasta = Date.now() + 8000;
+      tarjeta.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+    });
+    bancariosIndicadores.appendChild(punto);
+  });
+  actualizarIndicadoresBancarios();
+}
+
+function desplazarCarruselBancario(direccion, { automatico = false } = {}) {
   if (!cuponesBancariosCarrusel) return;
-  const tarjeta = cuponesBancariosCarrusel.querySelector(".cupon-bancario-mini");
-  const distancia = (tarjeta?.getBoundingClientRect().width || 220) + 14;
-  cuponesBancariosCarrusel.scrollBy({ left: distancia * direccion * 2, behavior: "smooth" });
+  const tarjetas = tarjetasBancarias();
+  if (!tarjetas.length) return;
+  const actual = indiceBancarioActual();
+  let siguiente = actual + direccion;
+  if (siguiente >= tarjetas.length) siguiente = 0;
+  if (siguiente < 0) siguiente = tarjetas.length - 1;
+  if (!automatico) bancoAutoPausaHasta = Date.now() + 8000;
+  tarjetas[siguiente].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+}
+
+function iniciarAutoCarruselBancario() {
+  if (bancoAutoTimer) clearInterval(bancoAutoTimer);
+  bancoAutoTimer = setInterval(() => {
+    if (document.hidden || Date.now() < bancoAutoPausaHasta) return;
+    if (!seccionCuponesBancarios || seccionCuponesBancarios.hidden) return;
+    desplazarCarruselBancario(1, { automatico: true });
+  }, 4200);
 }
 
 bancariosAnterior?.addEventListener("click", () => desplazarCarruselBancario(-1));
 bancariosSiguiente?.addEventListener("click", () => desplazarCarruselBancario(1));
+
+let bancoScrollRaf = 0;
+cuponesBancariosCarrusel?.addEventListener("scroll", () => {
+  cancelAnimationFrame(bancoScrollRaf);
+  bancoScrollRaf = requestAnimationFrame(actualizarIndicadoresBancarios);
+}, { passive: true });
+["touchstart", "pointerdown", "wheel"].forEach((evento) => {
+  cuponesBancariosCarrusel?.addEventListener(evento, () => {
+    bancoAutoPausaHasta = Date.now() + 8000;
+  }, { passive: true });
+});
 
 function normalizarCategoria(cupon) {
   const categoria = String(cupon.categoria || "tienda").toLowerCase();
@@ -1047,7 +1123,11 @@ function renderizarCategoria() {
     cuponesBancarios.forEach((cupon) => fragmentoBancos.appendChild(crearTarjetaBancaria(cupon)));
     cuponesBancariosCarrusel.appendChild(fragmentoBancos);
     seccionCuponesBancarios.hidden = false;
-    if (bancariosConteo) bancariosConteo.textContent = `${cuponesBancarios.length} ${cuponesBancarios.length === 1 ? "cupón bancario" : "cupones bancarios"}`;
+    if (bancariosConteo) bancariosConteo.textContent = "";
+    requestAnimationFrame(() => {
+      crearIndicadoresBancarios();
+      iniciarAutoCarruselBancario();
+    });
   }
 
   todosWrapper.hidden = false;

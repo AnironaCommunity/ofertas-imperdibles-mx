@@ -6806,3 +6806,178 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   .bancarios-encabezado { gap:8px; }
   .bancarios-conteo { max-width:120px; white-space:normal; text-align:center; line-height:1.15; }
 }
+
+
+/* =========================================================
+   V81.3 — Bancarios compactos, logos completos + autoplay
+   ========================================================= */
+.seccion-cupones-bancarios {
+  margin-top:24px;
+  padding-top:18px;
+}
+.bancarios-encabezado {
+  display:block;
+  margin:0 2px 10px;
+}
+.bancarios-encabezado h2 {
+  margin:0;
+  font-size:24px;
+  line-height:1.15;
+  font-weight:800;
+  color:#17213d;
+}
+.bancarios-encabezado p {
+  margin:4px 0 0;
+  max-width:none;
+  font-size:13px;
+  line-height:1.2;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:clip;
+  color:#667085;
+}
+.bancarios-conteo { display:none !important; }
+
+.cupones-bancarios-carrusel {
+  gap:14px;
+  padding:3px 4px 7px;
+  scroll-padding-left:4px;
+}
+.cupon-bancario-mini {
+  flex:0 0 238px;
+  width:238px;
+  min-width:238px;
+  height:292px;
+  overflow:hidden;
+}
+.banco-logo-area {
+  box-sizing:border-box;
+  height:76px;
+  min-height:76px;
+  padding:9px 14px;
+  overflow:hidden;
+}
+.banco-logo {
+  width:100% !important;
+  height:100% !important;
+  max-width:100% !important;
+  max-height:100% !important;
+  object-fit:contain !important;
+  object-position:center center !important;
+  image-rendering:auto;
+}
+.banco-franja {
+  height:24px;
+  min-height:24px;
+  font-size:10.5px;
+}
+.banco-cuerpo {
+  box-sizing:border-box;
+  padding:11px 14px 10px;
+  gap:4px;
+  overflow:visible;
+}
+.banco-cuerpo h3 {
+  display:block;
+  flex:0 0 auto;
+  margin:0 0 2px;
+  padding:1px 0 2px;
+  font-size:22px;
+  line-height:1.15;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.banco-minimo,.banco-maximo {
+  flex:0 0 auto;
+  margin:0;
+  font-size:12.5px;
+  line-height:1.23;
+}
+.banco-canjear {
+  flex:0 0 auto;
+  margin-top:auto;
+  min-height:34px;
+  padding:6px 8px;
+  font-size:11.5px;
+  line-height:1.1;
+}
+.cupon-bancario-mini .estado-programacion {
+  flex:0 0 auto;
+  margin:0;
+  font-size:9px;
+  line-height:1.05;
+}
+.cupon-bancario-mini .mensaje {
+  flex:0 0 auto;
+  margin:0;
+  min-height:0;
+  font-size:9px;
+  line-height:1.05;
+}
+.bancarios-indicadores {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-height:22px;
+  margin:3px 0 0;
+}
+.bancarios-punto {
+  width:7px;
+  height:7px;
+  padding:0;
+  border:0;
+  border-radius:999px;
+  background:#d9dce6;
+  cursor:pointer;
+  transition:width .2s ease, background .2s ease, transform .2s ease;
+}
+.bancarios-punto.activo {
+  width:18px;
+  background:#17139d;
+}
+
+@media (max-width:700px) {
+  .seccion-cupones-bancarios { margin-top:20px; padding-top:16px; }
+  .bancarios-encabezado { margin-bottom:9px; }
+  .bancarios-encabezado h2 { font-size:19px; line-height:1.1; }
+  .bancarios-encabezado p {
+    margin-top:3px;
+    font-size:10.5px;
+    line-height:1.15;
+    letter-spacing:-.01em;
+    white-space:nowrap;
+  }
+  .cupones-bancarios-carrusel { gap:12px; padding:2px 32px 6px 1px; }
+  .cupon-bancario-mini {
+    flex-basis:205px;
+    width:205px;
+    min-width:205px;
+    height:260px;
+  }
+  .banco-logo-area {
+    height:67px;
+    min-height:67px;
+    padding:8px 12px;
+  }
+  .banco-logo {
+    width:100% !important;
+    height:100% !important;
+    max-width:100% !important;
+    max-height:100% !important;
+  }
+  .banco-franja { height:21px; min-height:21px; font-size:9px; }
+  .banco-cuerpo { padding:9px 11px 9px; gap:3px; }
+  .banco-cuerpo h3 { font-size:19px; line-height:1.16; padding-bottom:1px; }
+  .banco-minimo,.banco-maximo { font-size:11px; line-height:1.18; }
+  .banco-canjear { min-height:31px; padding:5px 6px; font-size:10.5px; }
+  .bancarios-indicadores { gap:6px; min-height:20px; margin-top:2px; }
+  .bancarios-punto { width:6px; height:6px; }
+  .bancarios-punto.activo { width:16px; }
+}
+
+@media (max-width:380px) {
+  .bancarios-encabezado h2 { font-size:18px; }
+  .bancarios-encabezado p { font-size:9.6px; }
+}
