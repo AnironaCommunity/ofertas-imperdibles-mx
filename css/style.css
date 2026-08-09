@@ -8732,3 +8732,46 @@ body .navegacion-inferior.selector-cupones-oscuro .contador-seccion-inferior {
   align-items: center !important;
   gap: 4px !important;
 }
+
+/* =========================================================
+   V81.29 — Corrección real de ancho de Copiar código
+   ========================================================= */
+
+/* Tienda: botón compacto y centrado */
+.cupon .boton-canjear {
+  width: 62% !important;
+  max-width: 62% !important;
+  min-width: 0 !important;
+  align-self: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Bancarios: también reducimos el CONTENEDOR del botón */
+.cupon-bancario-mini .banco-pie {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.cupon-bancario-mini .banco-pie .banco-canjear {
+  width: 62% !important;
+  max-width: 62% !important;
+  min-width: 0 !important;
+  flex: 0 0 62% !important;
+  align-self: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* En móvil conserva el mismo ancho visual compacto */
+@media (max-width: 700px) {
+  .cupon .boton-canjear,
+  .cupon-bancario-mini .banco-pie .banco-canjear {
+    width: 62% !important;
+    max-width: 62% !important;
+    flex-basis: 62% !important;
+  }
+}
