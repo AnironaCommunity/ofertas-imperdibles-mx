@@ -8085,10 +8085,10 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
 .cupon:not(.cupon-bancario) .franja-categoria-cupon {
   display:flex !important; align-items:center; justify-content:center;
   min-height:22px; padding:4px 8px; box-sizing:border-box;
-  background:var(--categoria-cupon-color,#22c55e); color:#fff;
+  background:var(--categoria-cupon-color,#22c55e); color:var(--categoria-cupon-texto,#fff);
   font-size:10px; line-height:1; font-weight:800; letter-spacing:.045em; text-transform:uppercase;
 }
-.cupon.cupon-exclusivo .franja-categoria-cupon { color:#202124; }
+.cupon.cupon-exclusivo .franja-categoria-cupon { color:var(--categoria-cupon-texto,#202124); }
 .cupon:not(.cupon-bancario) .cupon-encabezado {
   min-height:72px !important; height:auto !important; padding:12px 10px 8px !important;
   background:#fff !important; display:flex !important; align-items:center !important; justify-content:center !important; gap:8px !important;
@@ -8403,4 +8403,17 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   :root {
     --altura-cupon-estandar: 244px;
   }
+}
+
+
+/* =========================================================
+   V81.49.8 — Contraste automático en franjas de categoría
+   El texto cambia entre claro/oscuro según el fondo elegido.
+   ========================================================= */
+.cupon:not(.cupon-bancario) .franja-categoria-cupon {
+  color: var(--categoria-cupon-texto, #fff) !important;
+}
+.cupon-bancario-mini .banco-franja {
+  background: var(--banco-color, #17139d) !important;
+  color: var(--banco-franja-texto, #fff) !important;
 }

@@ -920,6 +920,24 @@ function htmlEtiquetaCupon(estado) {
 }
 
 
+function colorTextoContraste(colorFondo) {
+  const valor = String(colorFondo || "").trim();
+  const hex = valor.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+  if (!hex) return "#ffffff";
+
+  let limpio = hex[1];
+  if (limpio.length === 3) limpio = limpio.split("").map((c) => c + c).join("");
+
+  const r = parseInt(limpio.slice(0, 2), 16) / 255;
+  const g = parseInt(limpio.slice(2, 4), 16) / 255;
+  const b = parseInt(limpio.slice(4, 6), 16) / 255;
+  const convertir = (v) => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+  const luminancia = 0.2126 * convertir(r) + 0.7152 * convertir(g) + 0.0722 * convertir(b);
+
+  // Umbral WCAG: elige automáticamente el texto con mejor contraste.
+  return luminancia > 0.179 ? "#111827" : "#ffffff";
+}
+
 function configuracionVisualCategoria(categoria) {
   const etiquetas = window.ofertasEtiquetas || {};
   let cache = {};
@@ -951,6 +969,7 @@ function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
   articulo.dataset.id = String(cupon.id);
   articulo.dataset.color = COLORES[indice % COLORES.length];
   articulo.style.setProperty("--categoria-cupon-color", visualCategoria.color);
+  articulo.style.setProperty("--categoria-cupon-texto", colorTextoContraste(visualCategoria.color));
 
   articulo.innerHTML = `
     <div class="franja-categoria-cupon">${escaparHtml(visualCategoria.nombre)}</div>
@@ -1118,6 +1137,7 @@ function crearTarjetaBancaria(cupon) {
   articulo.dataset.banco = bancoVisual.banco;
   articulo.style.setProperty("--banco-color", bancoVisual.color);
   articulo.style.setProperty("--banco-texto", bancoVisual.texto);
+  articulo.style.setProperty("--banco-franja-texto", colorTextoContraste(bancoVisual.color));
   articulo.innerHTML = `
     <div class="banco-logo-area">
       ${logoBanco ? `<img class="banco-logo" src="${escaparHtml(logoBanco)}" alt="" loading="lazy" />` : `<span class="banco-logo-fallback">BANCO</span>`}
@@ -2940,6 +2960,7 @@ document.addEventListener("ofertas:etiquetas-cargadas", () => {
     if (!cupon) return;
     const visual = configuracionVisualCategoria(normalizarCategoria(cupon));
     tarjeta.style.setProperty("--categoria-cupon-color", visual.color);
+    tarjeta.style.setProperty("--categoria-cupon-texto", colorTextoContraste(visual.color));
     const franja = tarjeta.querySelector(".franja-categoria-cupon");
     if (franja) franja.textContent = visual.nombre;
   });
