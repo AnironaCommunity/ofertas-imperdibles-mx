@@ -47,7 +47,7 @@
   <link rel="icon" href="img/logo.png" />
   <link rel="apple-touch-icon" href="img/logo.png" />
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="stylesheet" href="css/style.css?v=81.49.8" />
+  <link rel="stylesheet" href="css/style.css?v=81.50.0" />
   <link rel="stylesheet" href="css/hero-redes.css?v=77.17.6" />
   <link rel="stylesheet" href="css/ajustes-visuales-v67-16.css?v=70.0.0" />
   <link rel="stylesheet" href="css/eventos-v68.css?v=70.0.0" />
@@ -620,13 +620,8 @@
       <h2 id="modal-titulo">¡Cupón copiado!</h2>
 
       <p>
-        Serás redireccionado a Mercado Libre en
-        <strong><span id="modal-contador">3</span> segundos</strong>.
+        El código ya está listo. Para continuar, abre Mercado Libre desde el botón siguiente.
       </p>
-
-      <div class="cronometro" aria-hidden="true">
-        <span id="cronometro-numero">3</span>
-      </div>
 
       <p id="modal-codigo-bloque" class="modal-codigo">
         Código: <strong id="modal-codigo"></strong>
@@ -635,11 +630,20 @@
       <p id="modal-cupon-oculto" class="modal-cupon-oculto" hidden>
         El cupón se copió automáticamente.
       </p>
+
+      <div class="modal-acciones">
+        <button id="modal-continuar" class="modal-continuar" type="button">
+          Continuar a Mercado Libre
+        </button>
+        <button id="modal-cancelar" class="modal-cancelar" type="button">
+          Seguir viendo cupones
+        </button>
+      </div>
     </div>
   </div>
 
 
-  <script type="module" src="js/app.js?v=81.49.8"></script>
+  <script type="module" src="js/app.js?v=81.50.0"></script>
   <script src="js/hero-redes.js?v=81.49.0" defer></script>
   <script src="js/header-dinamico-v68-3.js?v=70.0.0" defer></script>
   <script src="js/cabecera-inteligente.js?v=77.15.7" defer></script>

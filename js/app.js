@@ -13,11 +13,11 @@ const ayudaCuponesEntendido = document.querySelector("#ayuda-cupones-entendido")
 const enlaceLogoInicio = document.querySelector("#enlace-logo-inicio");
 
 const modalRedireccion = document.querySelector("#modal-redireccion");
-const modalContador = document.querySelector("#modal-contador");
-const cronometroNumero = document.querySelector("#cronometro-numero");
 const modalCodigo = document.querySelector("#modal-codigo");
 const modalCodigoBloque = document.querySelector("#modal-codigo-bloque");
 const modalCuponOculto = document.querySelector("#modal-cupon-oculto");
+const modalContinuar = document.querySelector("#modal-continuar");
+const modalCancelar = document.querySelector("#modal-cancelar");
 
 
 const tabTodos = document.querySelector("#tab-todos");
@@ -130,7 +130,6 @@ window.addEventListener("resize", () => {
 });
 
 const SEGUNDOS_ACTUALIZACION = 5;
-const SEGUNDOS_REDIRECCION = 3;
 const MILISEGUNDOS_PUBLICIDAD = 8000;
 const URL_PAGINA = "https://ofertasimperdiblesmx.vercel.app/";
 const COLORES = ["turquesa", "azul", "morado", "coral", "oliva"];
@@ -138,7 +137,6 @@ const COLORES = ["turquesa", "azul", "morado", "coral", "oliva"];
 let segundosRestantes = SEGUNDOS_ACTUALIZACION;
 let cargando = false;
 let redireccionEnProceso = false;
-let timeoutRedireccion = null;
 let categoriaActiva = "todos";
 let vistaActiva = "cupones";
 let todosLosCupones = [];
@@ -1557,13 +1555,16 @@ async function darMeGusta(cupon, tarjeta) {
   }
 }
 
-function mostrarModal(codigo, mostrarCodigo = true) {
+function mostrarModal(codigo, mostrarCodigo = true, enlace = "") {
   modalCodigo.textContent = codigo || "";
   modalCodigoBloque.hidden = !mostrarCodigo;
   modalCuponOculto.hidden = mostrarCodigo;
 
-  modalContador.textContent = String(SEGUNDOS_REDIRECCION);
-  cronometroNumero.textContent = String(SEGUNDOS_REDIRECCION);
+  if (modalContinuar) {
+    modalContinuar.dataset.enlace = enlace || "";
+    modalContinuar.disabled = !enlace;
+  }
+
   modalRedireccion.hidden = false;
   document.body.style.overflow = "hidden";
 }
@@ -1571,14 +1572,14 @@ function mostrarModal(codigo, mostrarCodigo = true) {
 function cerrarModal() {
   modalRedireccion.hidden = true;
   document.body.style.overflow = "";
+
+  if (modalContinuar) {
+    modalContinuar.dataset.enlace = "";
+    modalContinuar.disabled = false;
+  }
 }
 
 function reiniciarInteraccion() {
-  if (timeoutRedireccion) {
-    clearTimeout(timeoutRedireccion);
-    timeoutRedireccion = null;
-  }
-
   redireccionEnProceso = false;
   cerrarModal();
 
@@ -1592,33 +1593,37 @@ function reiniciarInteraccion() {
   });
 }
 
-function ejecutarCuentaRegresiva(cupon, boton, mensaje) {
-  let segundos = SEGUNDOS_REDIRECCION;
-
-  const avanzar = () => {
-    modalContador.textContent = String(segundos);
-    cronometroNumero.textContent = String(segundos);
-
-    if (segundos === 0) {
-      cerrarModal();
-
-      boton.disabled = false;
-      boton.innerHTML = contenidoBotonCopiar();
-      if (mensaje) mensaje.textContent = "";
-
-      redireccionEnProceso = false;
-      timeoutRedireccion = null;
-
-      window.location.assign(cupon.enlace);
-      return;
-    }
-
-    segundos -= 1;
-    timeoutRedireccion = window.setTimeout(avanzar, 1000);
-  };
-
-  avanzar();
+function enlaceWebSeguro(enlace) {
+  try {
+    const destino = new URL(String(enlace || "").trim(), window.location.origin);
+    return ["http:", "https:"].includes(destino.protocol) ? destino.toString() : "";
+  } catch {
+    return "";
+  }
 }
+
+function finalizarInteraccionCupon() {
+  redireccionEnProceso = false;
+  cerrarModal();
+
+  document.querySelectorAll(".boton-canjear, .banco-canjear").forEach((boton) => {
+    boton.disabled = false;
+    boton.innerHTML = contenidoBotonCopiar();
+  });
+}
+
+modalContinuar?.addEventListener("click", () => {
+  const enlace = enlaceWebSeguro(modalContinuar.dataset.enlace);
+  if (!enlace) {
+    reiniciarInteraccion();
+    return;
+  }
+
+  finalizarInteraccionCupon();
+  window.location.assign(enlace);
+});
+
+modalCancelar?.addEventListener("click", finalizarInteraccionCupon);
 
 async function copiarYCanjear(cupon, tarjeta) {
   if (redireccionEnProceso || !couponTimeState(cupon).enabled) return;
@@ -1637,7 +1642,16 @@ async function copiarYCanjear(cupon, tarjeta) {
   const modalTitulo = modalRedireccion?.querySelector("#modal-titulo");
   if (modalTitulo) modalTitulo.textContent = "¡Cupón copiado!";
 
-  mostrarModal(cupon.codigo, true);
+  const enlaceDestino = enlaceWebSeguro(cupon.enlace);
+  if (!enlaceDestino) {
+    redireccionEnProceso = false;
+    boton.disabled = false;
+    boton.innerHTML = contenidoBotonCopiar();
+    if (mensaje) mensaje.textContent = "El enlace de compra no es válido.";
+    return;
+  }
+
+  mostrarModal(cupon.codigo, true, enlaceDestino);
 
   try {
     await copiarTexto(cupon.codigo);
@@ -1665,7 +1679,8 @@ async function copiarYCanjear(cupon, tarjeta) {
         console.warn("El contador no pudo actualizarse:", error);
       });
 
-    ejecutarCuentaRegresiva(cupon, boton, mensaje);
+    // La salida a la tienda ocurre únicamente cuando el usuario pulsa
+    // el botón visible del modal. No se realizan redirecciones automáticas.
   } catch (error) {
     console.error(error);
     reiniciarInteraccion();

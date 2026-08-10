@@ -707,6 +707,39 @@ a {
   background: #e2f5f1;
 }
 
+.modal-acciones {
+  display: grid;
+  gap: 9px;
+  margin-top: 18px;
+}
+
+.modal-continuar,
+.modal-cancelar {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 12px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.modal-continuar {
+  border: 0;
+  color: white;
+  background: linear-gradient(135deg, #08786f, #0f9f92);
+}
+
+.modal-continuar:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.modal-cancelar {
+  border: 1px solid #d7e2df;
+  color: #47565e;
+  background: white;
+}
+
 footer {
   padding: 0 18px 27px;
   color: var(--gris);
