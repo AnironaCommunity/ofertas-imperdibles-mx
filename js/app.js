@@ -54,6 +54,7 @@ const selectorCupones = document.querySelector(
 
 const carruselesPublicidad = [];
 const seccionComunidadAnirona = document.querySelector("#seccion-comunidad-anirona");
+const botonRegresarCuponesAnirona = document.querySelector("#boton-regresar-cupones-anirona");
 const seccionOfertasAmazon = document.querySelector("#seccion-ofertas-amazon");
 const seccionOfertasMercadoLibre = document.querySelector("#seccion-ofertas-mercado-libre");
 const ofertasComunidadAnirona = document.querySelector("#ofertas-comunidad-anirona");
@@ -529,6 +530,14 @@ botonComunidadAnirona?.addEventListener("click", () => {
     actualizarHistorial: true,
     desplazamiento: "smooth",
   });
+});
+
+botonRegresarCuponesAnirona?.addEventListener("click", () => {
+  cambiarCategoria("todos", {
+    actualizarHistorial: true,
+    desplazamiento: "smooth",
+  });
+  actualizarNavegacionPrincipal("todos");
 });
 
 

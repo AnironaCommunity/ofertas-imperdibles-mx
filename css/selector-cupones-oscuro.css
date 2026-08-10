@@ -236,3 +236,16 @@
     transition: none;
   }
 }
+
+
+/* V81.49.7 — Acceso claro de Anirona a la vista principal de cupones */
+.navegacion-inferior.selector-cupones-oscuro.selector-regreso-cupones {
+  grid-template-columns: minmax(0, 1fr) !important;
+  width: min(100%, 860px) !important;
+  margin-top: 6px !important;
+  margin-bottom: 16px !important;
+}
+
+.navegacion-inferior.selector-cupones-oscuro.selector-regreso-cupones > .tab-inferior {
+  max-width: none !important;
+}
