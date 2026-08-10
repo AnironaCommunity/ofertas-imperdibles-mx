@@ -137,6 +137,8 @@ const COLORES = ["turquesa", "azul", "morado", "coral", "oliva"];
 let segundosRestantes = SEGUNDOS_ACTUALIZACION;
 let cargando = false;
 let redireccionEnProceso = false;
+let temporizadorRedireccion = null;
+const SEGUNDOS_REDIRECCION_AUTOMATICA = 5;
 let categoriaActiva = "todos";
 let vistaActiva = "cupones";
 let todosLosCupones = [];
@@ -1555,6 +1557,49 @@ async function darMeGusta(cupon, tarjeta) {
   }
 }
 
+function detenerTemporizadorRedireccion() {
+  if (temporizadorRedireccion) {
+    clearInterval(temporizadorRedireccion);
+    temporizadorRedireccion = null;
+  }
+}
+
+function actualizarTextoBotonRedireccion(segundos) {
+  if (!modalContinuar) return;
+  modalContinuar.textContent = `Ir a Mercado Libre (${segundos})`;
+}
+
+function irAMercadoLibreDesdeModal() {
+  const enlace = enlaceWebSeguro(modalContinuar?.dataset.enlace);
+  if (!enlace) {
+    reiniciarInteraccion();
+    return;
+  }
+
+  detenerTemporizadorRedireccion();
+  finalizarInteraccionCupon();
+  window.location.assign(enlace);
+}
+
+function iniciarTemporizadorRedireccion() {
+  detenerTemporizadorRedireccion();
+
+  let segundos = SEGUNDOS_REDIRECCION_AUTOMATICA;
+  actualizarTextoBotonRedireccion(segundos);
+
+  temporizadorRedireccion = window.setInterval(() => {
+    segundos -= 1;
+
+    if (segundos <= 0) {
+      detenerTemporizadorRedireccion();
+      irAMercadoLibreDesdeModal();
+      return;
+    }
+
+    actualizarTextoBotonRedireccion(segundos);
+  }, 1000);
+}
+
 function mostrarModal(codigo, mostrarCodigo = true, enlace = "") {
   modalCodigo.textContent = codigo || "";
   modalCodigoBloque.hidden = !mostrarCodigo;
@@ -1567,15 +1612,21 @@ function mostrarModal(codigo, mostrarCodigo = true, enlace = "") {
 
   modalRedireccion.hidden = false;
   document.body.style.overflow = "hidden";
+
+  if (enlace) {
+    iniciarTemporizadorRedireccion();
+  }
 }
 
 function cerrarModal() {
+  detenerTemporizadorRedireccion();
   modalRedireccion.hidden = true;
   document.body.style.overflow = "";
 
   if (modalContinuar) {
     modalContinuar.dataset.enlace = "";
     modalContinuar.disabled = false;
+    modalContinuar.textContent = "Ir a Mercado Libre";
   }
 }
 
@@ -1612,16 +1663,7 @@ function finalizarInteraccionCupon() {
   });
 }
 
-modalContinuar?.addEventListener("click", () => {
-  const enlace = enlaceWebSeguro(modalContinuar.dataset.enlace);
-  if (!enlace) {
-    reiniciarInteraccion();
-    return;
-  }
-
-  finalizarInteraccionCupon();
-  window.location.assign(enlace);
-});
+modalContinuar?.addEventListener("click", irAMercadoLibreDesdeModal);
 
 modalCancelar?.addEventListener("click", finalizarInteraccionCupon);
 
@@ -1679,8 +1721,8 @@ async function copiarYCanjear(cupon, tarjeta) {
         console.warn("El contador no pudo actualizarse:", error);
       });
 
-    // La salida a la tienda ocurre únicamente cuando el usuario pulsa
-    // el botón visible del modal. No se realizan redirecciones automáticas.
+    // El usuario puede salir de inmediato con el botón del modal.
+    // Si no interactúa, se redirige automáticamente al terminar la cuenta regresiva.
   } catch (error) {
     console.error(error);
     reiniciarInteraccion();
