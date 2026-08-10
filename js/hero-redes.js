@@ -51,6 +51,23 @@
     if (fin) selector.style.setProperty("--selector-color-fin", fin);
   }
 
+  function colorTextoContraste(colorFondo) {
+    const valor = String(colorFondo || "").trim();
+    const hex = valor.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+    if (!hex) return "#ffffff";
+
+    let limpio = hex[1];
+    if (limpio.length === 3) limpio = limpio.split("").map((c) => c + c).join("");
+
+    const r = parseInt(limpio.slice(0, 2), 16) / 255;
+    const g = parseInt(limpio.slice(2, 4), 16) / 255;
+    const b = parseInt(limpio.slice(4, 6), 16) / 255;
+    const convertir = (v) => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+    const luminancia = 0.2126 * convertir(r) + 0.7152 * convertir(g) + 0.0722 * convertir(b);
+
+    return luminancia > 0.179 ? "#111827" : "#ffffff";
+  }
+
   function renderMainSiteName(element, value) {
     if (!element) return;
     const words = String(value || "Ofertas Imperdibles").trim().split(/\s+/).filter(Boolean);
@@ -93,9 +110,14 @@
       config.color_fin || getComputedStyle(document.documentElement).getPropertyValue("--tema-color-fin").trim()
     );
 
+    const colorBotonTiendaExclusivo = config.color_boton_tienda_exclusivo || "#1cac17";
     document.documentElement.style.setProperty(
       "--color-boton-tienda-exclusivo",
-      config.color_boton_tienda_exclusivo || "#1cac17"
+      colorBotonTiendaExclusivo
+    );
+    document.documentElement.style.setProperty(
+      "--color-texto-boton-tienda-exclusivo",
+      colorTextoContraste(colorBotonTiendaExclusivo)
     );
 
     try {

@@ -8446,10 +8446,12 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
    ========================================================= */
 :root {
   --color-boton-tienda-exclusivo: #1cac17;
+  --color-texto-boton-tienda-exclusivo: #ffffff;
 }
 
 .cupon:not(.cupon-bancario) .boton-canjear {
   border-color: color-mix(in srgb, var(--color-boton-tienda-exclusivo) 82%, #000) !important;
+  color: var(--color-texto-boton-tienda-exclusivo) !important;
   background: var(--color-boton-tienda-exclusivo) !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, .22),
