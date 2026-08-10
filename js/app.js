@@ -1104,6 +1104,7 @@ function crearTarjetaBancaria(cupon) {
 
   const bancoVisual = obtenerBancoVisual(cupon);
   const logoBanco = bancoVisual.logo;
+  const yaUsado = localStorage.getItem(claveUsado(cupon.id)) === "1";
   const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
   articulo.dataset.banco = bancoVisual.banco;
   articulo.style.setProperty("--banco-color", bancoVisual.color);
@@ -1122,6 +1123,7 @@ function crearTarjetaBancaria(cupon) {
       </div>
       <div class="banco-pie">
         <div class="estado-programacion" hidden></div>
+        <span class="cupon-copiado-mini banco-copiado-mini" ${yaUsado ? "" : "hidden"}>✓ Ya copiado</span>
         <button class="banco-canjear" type="button">${contenidoBotonCopiar()}</button>
         <div class="acciones-secundarias banco-acciones-extra" aria-label="Interacciones del cupón">
           <button
