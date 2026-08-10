@@ -8325,4 +8325,82 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
     --altura-cupon-estandar: 254px;
   }
 }
-\n\n/* =========================================================\n   V81.49.5 — Menos aire entre descuento y etiquetas + Ya copiado bancario\n   - Reduce aproximadamente a la mitad el espacio vertical entre\n     el %/$ OFF y las etiquetas Top/Popular/Nuevo/Exclusivo.\n   - Aprovecha ese espacio para reducir la altura exterior común.\n   - El distintivo "Ya copiado" también se muestra en Bancarios\n     sin ocupar una fila ni cambiar la acción Copiar código.\n   ========================================================= */\n:root {\n  --altura-cupon-estandar: 248px;\n}\n\n/* Tienda/Exclusivo: acercar el descuento a las etiquetas. */\n.cupon:not(.cupon-bancario) .cupon-encabezado {\n  min-height: 42px !important;\n  padding: 4px 10px 2px !important;\n}\n\n.cupon:not(.cupon-bancario) .cupon-contenido {\n  padding-top: 3px !important;\n}\n\n.cupon:not(.cupon-bancario) .cupon-etiquetas {\n  margin-top: 0 !important;\n  margin-bottom: 1px !important;\n}\n\n/* Bancarios: el distintivo comparte exactamente el mismo estado local. */\n.cupon-bancario-mini .banco-pie {\n  position: relative !important;\n  overflow: visible !important;\n}\n\n.cupon-bancario-mini .banco-copiado-mini {\n  top: -7px;\n  right: calc(50% - 64px);\n}\n\n/* El badge es flotante: nunca participa en el alto ni en el orden del pie. */\n.cupon-bancario-mini .banco-pie > .cupon-copiado-mini {\n  position: absolute !important;\n  z-index: 5 !important;\n  flex: none !important;\n  order: 0 !important;\n}\n\n@media (max-width: 700px) {\n  :root {\n    --altura-cupon-estandar: 248px;\n  }\n\n  .cupon:not(.cupon-bancario) .cupon-encabezado {\n    min-height: 39px !important;\n    padding: 3px 6px 2px !important;\n  }\n\n  .cupon:not(.cupon-bancario) .cupon-contenido {\n    padding-top: 2px !important;\n  }\n\n  .cupon-bancario-mini .banco-copiado-mini {\n    top: -6px;\n    right: calc(50% - 62px);\n  }\n}\n\n@media (max-width: 390px) {\n  :root {\n    --altura-cupon-estandar: 244px;\n  }\n}\n
+
+
+/* =========================================================
+   V81.49.6 — Corrección real de compactación + Ya copiado bancario
+   - Corrige el bloque V81.49.5 que quedó guardado con \n literales.
+   - Reduce de forma visible el espacio entre el descuento y las etiquetas.
+   - Mantiene "Ya copiado" en Tienda, Exclusivo y Bancarios sin ocupar fila.
+   ========================================================= */
+:root {
+  --altura-cupon-estandar: 248px;
+}
+
+/* Tienda / Exclusivo: compactar la transición OFF -> etiquetas. */
+.cupon:not(.cupon-bancario) .cupon-encabezado {
+  min-height: 40px !important;
+  padding: 3px 8px 1px !important;
+  gap: 4px !important;
+}
+
+.cupon:not(.cupon-bancario) .cupon-encabezado .descuento {
+  margin: 0 !important;
+  line-height: .98 !important;
+}
+
+.cupon:not(.cupon-bancario) .cupon-contenido {
+  padding-top: 2px !important;
+  gap: 4px !important;
+}
+
+.cupon:not(.cupon-bancario) .cupon-etiquetas {
+  margin: 0 0 1px !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  line-height: 1 !important;
+}
+
+/* Ya copiado bancario: flotante, sin sumar altura. */
+.cupon-bancario-mini .banco-pie {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.cupon-bancario-mini .banco-pie > .cupon-copiado-mini {
+  position: absolute !important;
+  z-index: 5 !important;
+  top: -7px !important;
+  right: 6px !important;
+  flex: none !important;
+  order: 0 !important;
+  margin: 0 !important;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --altura-cupon-estandar: 248px;
+  }
+
+  .cupon:not(.cupon-bancario) .cupon-encabezado {
+    min-height: 37px !important;
+    padding: 2px 5px 1px !important;
+    gap: 3px !important;
+  }
+
+  .cupon:not(.cupon-bancario) .cupon-contenido {
+    padding-top: 1px !important;
+    gap: 3px !important;
+  }
+
+  .cupon-bancario-mini .banco-pie > .cupon-copiado-mini {
+    top: -6px !important;
+    right: 5px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  :root {
+    --altura-cupon-estandar: 244px;
+  }
+}
