@@ -8240,3 +8240,88 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
     --altura-cupon-estandar: 270px;
   }
 }
+
+/* =========================================================
+   V81.49.4 — Compactación real de tarjetas
+   - Elimina reservas invisibles heredadas (etiqueta/temporizador).
+   - Recupera el espacio liberado por "Ya usaste este cupón".
+   - Conserva una altura exterior común para Tienda, Exclusivo y Bancarios.
+   - Los componentes visibles ocupan espacio solo cuando existen.
+   ========================================================= */
+:root {
+  --altura-cupon-estandar: 258px;
+}
+
+/* Ya no reservamos una fila para etiquetas que no existen. */
+.cupon:not(.cupon-bancario) .cupon-etiquetas {
+  min-height: 0 !important;
+  max-height: 24px !important;
+  margin-top: 0 !important;
+  margin-bottom: 2px !important;
+}
+
+.cupon:not(.cupon-bancario) .cupon-etiquetas:empty {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* La fila antigua de usado queda eliminada por completo. */
+.cupon-usado,
+.cupon-usado[hidden] {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Un temporizador oculto ya no deja un hueco invisible. */
+.cupon .estado-programacion[hidden],
+.cupon .estado-programacion.vacio,
+.cupon-bancario-mini .estado-programacion[hidden],
+.cupon-bancario-mini .estado-programacion.vacio {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+/* Quita la altura mínima heredada que seguía conservando aire en móvil. */
+.cupon:not(.cupon-bancario) .cupon-contenido {
+  flex: 1 1 auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+.cupon:not(.cupon-bancario) .acciones-bloque {
+  padding-top: 4px !important;
+}
+
+/* Mantiene el pie alineado sin fabricar una fila vacía. */
+.cupon:not(.cupon-bancario) .acciones-cupon,
+.cupon-bancario-mini .banco-pie {
+  min-height: 0 !important;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --altura-cupon-estandar: 258px;
+  }
+
+  .cupon:not(.cupon-bancario) .acciones-bloque {
+    padding-top: 3px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  :root {
+    --altura-cupon-estandar: 254px;
+  }
+}
