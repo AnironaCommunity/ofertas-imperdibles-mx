@@ -724,9 +724,9 @@ a {
 }
 
 .modal-continuar {
-  border: 0;
-  color: white;
-  background: linear-gradient(135deg, #08786f, #0f9f92);
+  border: 1px solid #e6cf00;
+  color: #2d3277;
+  background: #ffe600;
 }
 
 .modal-continuar:disabled {
