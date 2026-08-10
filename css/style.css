@@ -8440,6 +8440,30 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
 
 
 /* =========================================================
+   V81.49.9 — Configuración única del botón Tienda / Exclusivo
+   CAMBIA SOLO ESTE VALOR para modificar ambos botones.
+   Los botones bancarios conservan el color de cada banco.
+   ========================================================= */
+:root {
+  --color-boton-tienda-exclusivo: #1cac17;
+}
+
+.cupon:not(.cupon-bancario) .boton-canjear {
+  border-color: color-mix(in srgb, var(--color-boton-tienda-exclusivo) 82%, #000) !important;
+  background: var(--color-boton-tienda-exclusivo) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .22),
+    0 3px 8px color-mix(in srgb, var(--color-boton-tienda-exclusivo) 22%, transparent) !important;
+}
+
+.cupon:not(.cupon-bancario) .boton-canjear:hover {
+  background: color-mix(in srgb, var(--color-boton-tienda-exclusivo) 90%, #fff) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .25),
+    0 4px 10px color-mix(in srgb, var(--color-boton-tienda-exclusivo) 26%, transparent) !important;
+}
+
+/* =========================================================
    V81.49.8 — Contraste automático en franjas de categoría
    El texto cambia entre claro/oscuro según el fondo elegido.
    ========================================================= */
