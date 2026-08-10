@@ -93,6 +93,11 @@
       config.color_fin || getComputedStyle(document.documentElement).getPropertyValue("--tema-color-fin").trim()
     );
 
+    document.documentElement.style.setProperty(
+      "--color-boton-tienda-exclusivo",
+      config.color_boton_tienda_exclusivo || "#1cac17"
+    );
+
     try {
       localStorage.setItem(
         "ofertas_imperdibles_tema",
@@ -162,6 +167,7 @@
       colorTarjetaTienda: config.color_tarjeta_tienda || "#22c55e",
       tarjetaExclusivo: (config.nombre_tarjeta_exclusivo || "").trim() || "CUPÓN EXCLUSIVO",
       colorTarjetaExclusivo: config.color_tarjeta_exclusivo || "#f5c400",
+      colorBotonTiendaExclusivo: config.color_boton_tienda_exclusivo || "#1cac17",
       botonBancarios: (config.nombre_boton_bancarios || "").trim() || "Bancarios",
       seccionBancarios: config.nombre_seccion_bancarios || "Cupones bancarios",
       botonComunidad: config.nombre_boton_comunidad || "Comunidad Anirona",

@@ -42,6 +42,7 @@ const couponStoreLabel = document.querySelector("#coupon-store-label");
 const couponStoreColor = document.querySelector("#coupon-store-color");
 const couponExclusiveLabel = document.querySelector("#coupon-exclusive-label");
 const couponExclusiveColor = document.querySelector("#coupon-exclusive-color");
+const couponActionColor = document.querySelector("#coupon-action-color");
 const heroBankButtonName = document.querySelector("#hero-bank-button-name");
 const heroBankSectionName = document.querySelector("#hero-bank-section-name");
 const heroCommunityButtonName = document.querySelector("#hero-community-button-name");
@@ -2663,6 +2664,7 @@ async function loadHeroConfig() {
     couponStoreColor.value = config.color_tarjeta_tienda || "#22c55e";
     couponExclusiveLabel.value = config.nombre_tarjeta_exclusivo || "CUPÓN EXCLUSIVO";
     couponExclusiveColor.value = config.color_tarjeta_exclusivo || "#f5c400";
+    couponActionColor.value = config.color_boton_tienda_exclusivo || "#1cac17";
     heroBankButtonName.value = config.nombre_boton_bancarios || "Bancarios";
     heroBankSectionName.value = config.nombre_seccion_bancarios || "Cupones bancarios";
     heroCommunityButtonName.value = config.nombre_boton_comunidad || "Comunidad Anirona";
@@ -2740,6 +2742,7 @@ async function saveHeroConfig(event) {
         color_tarjeta_tienda: couponStoreColor.value,
         nombre_tarjeta_exclusivo: couponExclusiveLabel.value.trim(),
         color_tarjeta_exclusivo: couponExclusiveColor.value,
+        color_boton_tienda_exclusivo: couponActionColor.value,
         nombre_boton_bancarios: heroBankButtonName.value.trim(),
         nombre_seccion_bancarios: heroBankSectionName.value.trim(),
         nombre_boton_comunidad: heroCommunityButtonName.value.trim(),
