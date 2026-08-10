@@ -8,7 +8,7 @@
   <title>Administrador | Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="../img/logo.png" />
-  <link rel="stylesheet" href="admin.css?v=81.5.0" />
+  <link rel="stylesheet" href="admin.css?v=81.49.0" />
 </head>
 
 <body>
@@ -1001,6 +1001,25 @@ Descuento máximo: $180"
               <input id="hero-store-section-name" type="text" maxlength="55" placeholder="Cupones de tienda" />
             </div>
             <div class="campo">
+              <label for="coupon-store-label">Nombre visible en tarjeta Tienda</label>
+              <input id="coupon-store-label" type="text" maxlength="35" placeholder="CUPÓN DE TIENDA" />
+              <small>Aparece en la franja superior de cada cupón de Tienda.</small>
+            </div>
+            <div class="campo">
+              <label for="coupon-store-color">Color de tarjeta Tienda</label>
+              <input id="coupon-store-color" type="color" value="#22c55e" />
+              <small>Se aplica a la franja y al descuento principal.</small>
+            </div>
+            <div class="campo">
+              <label for="coupon-exclusive-label">Nombre visible en tarjeta Exclusivo</label>
+              <input id="coupon-exclusive-label" type="text" maxlength="35" placeholder="CUPÓN EXCLUSIVO" />
+            </div>
+            <div class="campo">
+              <label for="coupon-exclusive-color">Color de tarjeta Exclusivo</label>
+              <input id="coupon-exclusive-color" type="color" value="#f5c400" />
+              <small>Los bancarios conservan automáticamente el color de cada banco.</small>
+            </div>
+            <div class="campo">
               <label for="hero-bank-button-name">Nombre del botón Bancarios</label>
               <input id="hero-bank-button-name" type="text" maxlength="35" placeholder="Bancarios" />
             </div>
@@ -1112,6 +1131,6 @@ Descuento máximo: $180"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=81.42.0"></script>
+  <script type="module" src="admin.js?v=81.49.0"></script>
 </body>
 </html>

@@ -8076,3 +8076,32 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
     flex-basis: 120px !important;
   }
 }
+
+
+/* =========================================================
+   V81.49 — Tarjetas Tienda/Exclusivo con jerarquía Bancarios
+   Franja y color administrables sin alterar acciones ni tamaño base.
+   ========================================================= */
+.cupon:not(.cupon-bancario) .franja-categoria-cupon {
+  display:flex !important; align-items:center; justify-content:center;
+  min-height:22px; padding:4px 8px; box-sizing:border-box;
+  background:var(--categoria-cupon-color,#22c55e); color:#fff;
+  font-size:10px; line-height:1; font-weight:800; letter-spacing:.045em; text-transform:uppercase;
+}
+.cupon.cupon-exclusivo .franja-categoria-cupon { color:#202124; }
+.cupon:not(.cupon-bancario) .cupon-encabezado {
+  min-height:72px !important; height:auto !important; padding:12px 10px 8px !important;
+  background:#fff !important; display:flex !important; align-items:center !important; justify-content:center !important; gap:8px !important;
+}
+.cupon:not(.cupon-bancario) .cupon-encabezado .descuento {
+  margin:0 !important; color:var(--categoria-cupon-color,#22c55e) !important;
+  font-size:27px !important; line-height:1.05 !important; font-weight:850 !important; text-align:center !important; text-shadow:none !important;
+}
+.cupon:not(.cupon-bancario) .cupon-logo { max-height:38px !important; width:auto !important; object-fit:contain !important; }
+.cupon:not(.cupon-bancario) .cupon-contenido { padding-top:8px !important; }
+@media (max-width:640px) {
+  .cupon:not(.cupon-bancario) .franja-categoria-cupon { min-height:20px; padding:3px 5px; font-size:8.5px; }
+  .cupon:not(.cupon-bancario) .cupon-encabezado { min-height:62px !important; padding:9px 6px 6px !important; }
+  .cupon:not(.cupon-bancario) .cupon-encabezado .descuento { font-size:23px !important; }
+  .cupon:not(.cupon-bancario) .cupon-logo { max-height:32px !important; max-width:42px !important; }
+}

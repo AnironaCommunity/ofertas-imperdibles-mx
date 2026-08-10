@@ -111,7 +111,7 @@ export default async function handler(request, response) {
     if (request.query?.action === "hero-config") {
       if (request.method === "GET") {
         const config = await requestSupabase(
-          "configuracion_web?select=logo_icono_url,nombre_sitio,eslogan,mostrar_eslogan,nombre_barra,imagen_url,color_inicio,color_fin,texto_descriptivo,nombre_boton_todos,nombre_boton_tienda,nombre_seccion_tienda,nombre_boton_bancarios,nombre_seccion_bancarios,nombre_boton_comunidad,descripcion_boton_comunidad,nombre_seccion_comunidad,nombre_boton_mercado_libre,nombre_boton_amazon,enlace_mercado_libre,enlace_amazon,enlace_whatsapp,enlace_facebook,enlace_banner_whatsapp,mostrar_patron_ofertas,posicion_patron_ofertas&id=eq.hero_redes&limit=1"
+          "configuracion_web?select=logo_icono_url,nombre_sitio,eslogan,mostrar_eslogan,nombre_barra,imagen_url,color_inicio,color_fin,texto_descriptivo,nombre_boton_todos,nombre_boton_tienda,nombre_seccion_tienda,nombre_tarjeta_tienda,color_tarjeta_tienda,nombre_tarjeta_exclusivo,color_tarjeta_exclusivo,nombre_boton_bancarios,nombre_seccion_bancarios,nombre_boton_comunidad,descripcion_boton_comunidad,nombre_seccion_comunidad,nombre_boton_mercado_libre,nombre_boton_amazon,enlace_mercado_libre,enlace_amazon,enlace_whatsapp,enlace_facebook,enlace_banner_whatsapp,mostrar_patron_ofertas,posicion_patron_ofertas&id=eq.hero_redes&limit=1"
         );
 
         response.setHeader("Cache-Control", "no-store");
@@ -130,6 +130,10 @@ export default async function handler(request, response) {
             nombre_boton_todos: "Todos",
             nombre_boton_tienda: "Tienda",
             nombre_seccion_tienda: "Cupones de tienda",
+            nombre_tarjeta_tienda: "CUPÓN DE TIENDA",
+            color_tarjeta_tienda: "#22c55e",
+            nombre_tarjeta_exclusivo: "CUPÓN EXCLUSIVO",
+            color_tarjeta_exclusivo: "#f5c400",
             nombre_boton_bancarios: "Bancarios",
             nombre_seccion_bancarios: "Cupones bancarios",
             nombre_boton_comunidad: "Comunidad Anirona",
@@ -174,6 +178,10 @@ export default async function handler(request, response) {
           nombre_boton_todos: cleanText(request.body?.nombre_boton_todos).slice(0, 35) || "Todos",
           nombre_boton_tienda: cleanText(request.body?.nombre_boton_tienda).slice(0, 35) || "Tienda",
           nombre_seccion_tienda: cleanText(request.body?.nombre_seccion_tienda).slice(0, 55) || "Cupones de tienda",
+          nombre_tarjeta_tienda: cleanText(request.body?.nombre_tarjeta_tienda).slice(0, 35) || "CUPÓN DE TIENDA",
+          color_tarjeta_tienda: cleanColor(request.body?.color_tarjeta_tienda, "#22c55e"),
+          nombre_tarjeta_exclusivo: cleanText(request.body?.nombre_tarjeta_exclusivo).slice(0, 35) || "CUPÓN EXCLUSIVO",
+          color_tarjeta_exclusivo: cleanColor(request.body?.color_tarjeta_exclusivo, "#f5c400"),
           nombre_boton_bancarios: cleanText(request.body?.nombre_boton_bancarios).slice(0, 35) || "Bancarios",
           nombre_seccion_bancarios: cleanText(request.body?.nombre_seccion_bancarios).slice(0, 55) || "Cupones bancarios",
           nombre_boton_comunidad: cleanText(request.body?.nombre_boton_comunidad).slice(0, 45) || "Comunidad Anirona",

@@ -909,6 +909,23 @@ function htmlEtiquetaCupon(estado) {
   return etiquetas[estado] || "";
 }
 
+
+function configuracionVisualCategoria(categoria) {
+  const etiquetas = window.ofertasEtiquetas || {};
+  let cache = {};
+  try { cache = JSON.parse(localStorage.getItem("ofertas_imperdibles_config_cache") || "{}") || {}; } catch {}
+  if (categoria === "exclusivo") {
+    return {
+      nombre: etiquetas.tarjetaExclusivo || cache.nombre_tarjeta_exclusivo || "CUPÓN EXCLUSIVO",
+      color: etiquetas.colorTarjetaExclusivo || cache.color_tarjeta_exclusivo || "#f5c400",
+    };
+  }
+  return {
+    nombre: etiquetas.tarjetaTienda || cache.nombre_tarjeta_tienda || "CUPÓN DE TIENDA",
+    color: etiquetas.colorTarjetaTienda || cache.color_tarjeta_tienda || "#22c55e",
+  };
+}
+
 function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
   const articulo = document.createElement("article");
   const categoria = normalizarCategoria(cupon);
@@ -916,14 +933,17 @@ function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
   const esExclusivo = categoria === "exclusivo";
   const yaUsado = localStorage.getItem(claveUsado(cupon.id)) === "1";
   const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
+  const visualCategoria = configuracionVisualCategoria(categoria);
 
   articulo.className = estadoDestacado
     ? `cupon cupon-${estadoDestacado}${esBancario ? " cupon-bancario" : ""}${esExclusivo ? " cupon-exclusivo" : ""}`
     : `cupon${esBancario ? " cupon-bancario" : ""}${esExclusivo ? " cupon-exclusivo" : ""}`;
   articulo.dataset.id = String(cupon.id);
   articulo.dataset.color = COLORES[indice % COLORES.length];
+  articulo.style.setProperty("--categoria-cupon-color", visualCategoria.color);
 
   articulo.innerHTML = `
+    <div class="franja-categoria-cupon">${escaparHtml(visualCategoria.nombre)}</div>
     <div class="cupon-encabezado">
       ${
         cupon.imagen_url
@@ -1087,6 +1107,7 @@ function crearTarjetaBancaria(cupon) {
   const bancoVisual = obtenerBancoVisual(cupon);
   const logoBanco = bancoVisual.logo;
   const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
+  const visualCategoria = configuracionVisualCategoria(categoria);
   articulo.dataset.banco = bancoVisual.banco;
   articulo.style.setProperty("--banco-color", bancoVisual.color);
   articulo.style.setProperty("--banco-texto", bancoVisual.texto);
@@ -2858,6 +2879,14 @@ load();
 // Evitamos volver a renderizar las tarjetas al terminar de cargar la configuración,
 // ya que eso provocaba un segundo parpadeo durante la carga inicial.
 document.addEventListener("ofertas:etiquetas-cargadas", () => {
+  document.querySelectorAll(".cupon[data-id]:not(.cupon-bancario)").forEach((tarjeta) => {
+    const cupon = todosLosCupones.find((item) => Number(item.id) === Number(tarjeta.dataset.id));
+    if (!cupon) return;
+    const visual = configuracionVisualCategoria(normalizarCategoria(cupon));
+    tarjeta.style.setProperty("--categoria-cupon-color", visual.color);
+    const franja = tarjeta.querySelector(".franja-categoria-cupon");
+    if (franja) franja.textContent = visual.nombre;
+  });
   actualizarContadoresSecciones();
 });
 
@@ -2896,6 +2925,7 @@ function crearCuponEjemploTutorial() {
   articulo.dataset.color = "0";
   articulo.setAttribute("aria-label", "Cupón de ejemplo para el tutorial");
   articulo.innerHTML = `
+    <div class="franja-categoria-cupon">${escaparHtml(visualCategoria.nombre)}</div>
     <div class="cupon-encabezado">
       <h2 class="descuento">10% de descuento</h2>
     </div>
