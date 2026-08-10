@@ -8149,3 +8149,94 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
     padding-top: 5px !important;
   }
 }
+
+
+/* =========================================================
+   V81.49.3 — Tarjetas uniformes y estado "Ya copiado" compacto
+   - Altura fija por breakpoint: ya no depende de Exclusivo ni de
+     una tarjeta con contenido adicional.
+   - "Ya copiado" es un distintivo flotante; no crea una fila nueva.
+   - El botón siempre conserva la acción "Copiar código".
+   ========================================================= */
+:root {
+  --altura-cupon-estandar: 292px;
+}
+
+.cupones-grid-compacta > .cupon,
+.cupones-grid-compacta > .cupon-bancario-mini,
+.cupones-grid-compacta > .cupon-bancario-grid {
+  height: var(--altura-cupon-estandar) !important;
+  min-height: var(--altura-cupon-estandar) !important;
+  max-height: var(--altura-cupon-estandar) !important;
+}
+
+/* Evita que una etiqueta o detalle excepcional cambie la altura. */
+.cupon:not(.cupon-bancario) .cupon-etiquetas {
+  flex: 0 0 auto;
+  max-height: 24px;
+  overflow: hidden;
+}
+
+.cupon:not(.cupon-bancario) .detalle-beneficio-exclusivo {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.cupon:not(.cupon-bancario) .acciones-cupon {
+  position: relative;
+  overflow: visible;
+}
+
+.cupon-copiado-mini {
+  position: absolute;
+  z-index: 3;
+  top: -7px;
+  right: calc(50% - 64px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 15px;
+  padding: 1px 5px;
+  border: 1px solid #9bdcc9;
+  border-radius: 999px;
+  color: #087a63;
+  background: #f1fff9;
+  box-shadow: 0 1px 3px rgba(8, 122, 99, .10);
+  font-size: 7.5px;
+  line-height: 1;
+  font-weight: 800;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.cupon-copiado-mini[hidden] {
+  display: none !important;
+}
+
+/* La antigua fila ya no participa del layout aunque quede en caché. */
+.cupon-usado {
+  display: none !important;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --altura-cupon-estandar: 278px;
+  }
+
+  .cupon-copiado-mini {
+    top: -6px;
+    right: calc(50% - 62px);
+    min-height: 14px;
+    padding: 1px 4px;
+    font-size: 7px;
+  }
+}
+
+@media (max-width: 390px) {
+  :root {
+    --altura-cupon-estandar: 270px;
+  }
+}

@@ -982,12 +982,9 @@ function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
 
       <div class="estado-programacion" hidden></div>
 
-      <div class="cupon-usado" ${yaUsado ? "" : "hidden"}>
-        ✓ Ya usaste este cupón
-      </div>
-
       <div class="acciones-bloque">
         <div class="acciones-cupon">
+          <span class="cupon-copiado-mini" ${yaUsado ? "" : "hidden"}>✓ Ya copiado</span>
           <button class="boton-canjear" type="button">
             ${contenidoBotonCopiar()}
           </button>
@@ -1332,10 +1329,10 @@ function renderizarCategoria() {
 
 
 /* =========================================================
-   V81.49.2 — Sincronización robusta de altura de tarjetas
-   Mide primero la altura natural de todas las tarjetas visibles y
-   después aplica a todas la mayor. Así Tienda, Exclusivo y Bancarios
-   conservan exactamente la misma altura sin adivinar un valor fijo.
+   V81.49.3 — Altura estándar estable
+   La altura ya no depende de la tarjeta más alta del momento.
+   CSS define una altura exterior común para Tienda, Exclusivo y
+   Bancarios; aquí solo limpiamos alturas inline heredadas.
    ========================================================= */
 let rafSincronizarAlturaTarjetas = 0;
 let timeoutSincronizarAlturaTarjetas = 0;
@@ -1351,29 +1348,10 @@ function obtenerTarjetasVisiblesParaAltura() {
 
 function sincronizarAlturaTarjetas() {
   const tarjetas = obtenerTarjetasVisiblesParaAltura();
-  if (!tarjetas.length) return;
-
-  // Quitar cualquier altura anterior es indispensable al cambiar de
-  // categoría o tamaño de pantalla: primero medimos el contenido real.
   tarjetas.forEach((tarjeta) => {
     tarjeta.style.removeProperty('height');
     tarjeta.style.removeProperty('min-height');
     tarjeta.style.removeProperty('max-height');
-  });
-
-  const alturaMayor = Math.ceil(
-    tarjetas.reduce((mayor, tarjeta) => Math.max(mayor, tarjeta.scrollHeight), 0)
-  );
-
-  if (!Number.isFinite(alturaMayor) || alturaMayor <= 0) return;
-
-  tarjetas.forEach((tarjeta) => {
-    const alto = `${alturaMayor}px`;
-    // !important evita que los overrides históricos de las bancarias
-    // vuelvan a imponer height:auto.
-    tarjeta.style.setProperty('height', alto, 'important');
-    tarjeta.style.setProperty('min-height', alto, 'important');
-    tarjeta.style.setProperty('max-height', alto, 'important');
   });
 }
 
@@ -1619,7 +1597,7 @@ async function copiarYCanjear(cupon, tarjeta) {
   const boton = tarjeta.querySelector(".boton-canjear, .banco-canjear");
   const mensaje = tarjeta.querySelector(".mensaje");
   const numeroClics = tarjeta.querySelector(".numero-clics");
-  const usado = tarjeta.querySelector(".cupon-usado");
+  const usado = tarjeta.querySelector(".cupon-copiado-mini");
 
   boton.disabled = true;
   boton.textContent = `✅ ${cupon.codigo}`;
@@ -1636,7 +1614,6 @@ async function copiarYCanjear(cupon, tarjeta) {
     localStorage.setItem(claveUsado(cupon.id), "1");
     if (usado) {
       usado.hidden = false;
-      programarSincronizacionAlturaTarjetas();
     }
 
     registrarClic(cupon.id)
