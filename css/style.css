@@ -8554,3 +8554,41 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
     --altura-cupon-estandar: 220px;
   }
 }
+
+
+/* =========================================================
+   V81.50.4 — Ajuste fino de separación antes de Copiar código
+   - Recupera ~30% de aire respecto al ajuste V81.50.3.
+   - Mantiene las tarjetas compactas y el tamaño del botón.
+   ========================================================= */
+:root {
+  --altura-cupon-estandar: 228px;
+}
+
+.cupon:not(.cupon-bancario) .acciones-bloque {
+  padding-top: 3px !important;
+}
+
+.cupon-bancario-mini .banco-info {
+  margin-bottom: 3px !important;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --altura-cupon-estandar: 228px;
+  }
+
+  .cupon:not(.cupon-bancario) .acciones-bloque {
+    padding-top: 3px !important;
+  }
+
+  .cupon-bancario-mini .banco-info {
+    margin-bottom: 3px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  :root {
+    --altura-cupon-estandar: 224px;
+  }
+}
