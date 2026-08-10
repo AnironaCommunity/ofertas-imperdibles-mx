@@ -1107,7 +1107,6 @@ function crearTarjetaBancaria(cupon) {
   const bancoVisual = obtenerBancoVisual(cupon);
   const logoBanco = bancoVisual.logo;
   const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
-  const visualCategoria = configuracionVisualCategoria(categoria);
   articulo.dataset.banco = bancoVisual.banco;
   articulo.style.setProperty("--banco-color", bancoVisual.color);
   articulo.style.setProperty("--banco-texto", bancoVisual.texto);
@@ -2919,6 +2918,7 @@ function crearBotonTutorial() {
 }
 
 function crearCuponEjemploTutorial() {
+  const visualCategoria = configuracionVisualCategoria("tienda");
   const articulo = document.createElement("article");
   articulo.id = "tutorial-cupon-ejemplo";
   articulo.className = "cupon tutorial-cupon-demo";
