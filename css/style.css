@@ -8476,3 +8476,81 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   background: var(--banco-color, #17139d) !important;
   color: var(--banco-franja-texto, #fff) !important;
 }
+
+/* =========================================================
+   V81.50.2 — Tarjetas de cupones más compactas
+   - Reduce aproximadamente a la mitad el aire libre que quedaba
+     antes del botón "Copiar código" sin alterar su tamaño.
+   - Conserva la alineación inferior entre tarjetas.
+   - Compacta también el pie bancario de forma proporcional.
+   ========================================================= */
+:root {
+  --altura-cupon-estandar: 236px;
+}
+
+/* Tienda / Exclusivo: menos separación inmediata sobre el botón. */
+.cupon:not(.cupon-bancario) .acciones-bloque {
+  padding-top: 2px !important;
+}
+
+/* Bancarios: el bloque informativo deja la mitad del margen previo al pie. */
+.cupon-bancario-mini .banco-info {
+  margin-bottom: 5px !important;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --altura-cupon-estandar: 236px;
+  }
+
+  .cupon:not(.cupon-bancario) .acciones-bloque {
+    padding-top: 1px !important;
+  }
+
+  .cupon-bancario-mini .banco-info {
+    margin-bottom: 4px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  :root {
+    --altura-cupon-estandar: 232px;
+  }
+}
+
+
+/* =========================================================
+   V81.50.3 — Reduce 50% adicional del espacio antes de Copiar código
+   Mantiene el tamaño del botón y la alineación de las tarjetas.
+   ========================================================= */
+:root {
+  --altura-cupon-estandar: 224px;
+}
+
+.cupon:not(.cupon-bancario) .acciones-bloque {
+  padding-top: 0 !important;
+}
+
+.cupon-bancario-mini .banco-info {
+  margin-bottom: 2px !important;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --altura-cupon-estandar: 224px;
+  }
+
+  .cupon:not(.cupon-bancario) .acciones-bloque {
+    padding-top: 0 !important;
+  }
+
+  .cupon-bancario-mini .banco-info {
+    margin-bottom: 2px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  :root {
+    --altura-cupon-estandar: 220px;
+  }
+}
