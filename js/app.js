@@ -125,6 +125,7 @@ window.addEventListener("resize", () => {
     ayudaCuponesContenido.style.maxHeight =
       `${ayudaCuponesContenido.scrollHeight}px`;
   }
+  programarSincronizacionAlturaTarjetas({ incluirSegundoPase: true });
 });
 
 const SEGUNDOS_ACTUALIZACION = 5;
@@ -1326,6 +1327,71 @@ function renderizarCategoria() {
   todosWrapper.hidden = false;
   estadoCarga.textContent = "";
   startCouponTimers();
+  programarSincronizacionAlturaTarjetas();
+}
+
+
+/* =========================================================
+   V81.49.2 — Sincronización robusta de altura de tarjetas
+   Mide primero la altura natural de todas las tarjetas visibles y
+   después aplica a todas la mayor. Así Tienda, Exclusivo y Bancarios
+   conservan exactamente la misma altura sin adivinar un valor fijo.
+   ========================================================= */
+let rafSincronizarAlturaTarjetas = 0;
+let timeoutSincronizarAlturaTarjetas = 0;
+
+function obtenerTarjetasVisiblesParaAltura() {
+  if (!cuponesContainer) return [];
+  return Array.from(
+    cuponesContainer.querySelectorAll(
+      ':scope > .cupon, :scope > .cupon-bancario-mini, :scope > .cupon-bancario-grid'
+    )
+  ).filter((tarjeta) => !tarjeta.hidden);
+}
+
+function sincronizarAlturaTarjetas() {
+  const tarjetas = obtenerTarjetasVisiblesParaAltura();
+  if (!tarjetas.length) return;
+
+  // Quitar cualquier altura anterior es indispensable al cambiar de
+  // categoría o tamaño de pantalla: primero medimos el contenido real.
+  tarjetas.forEach((tarjeta) => {
+    tarjeta.style.removeProperty('height');
+    tarjeta.style.removeProperty('min-height');
+    tarjeta.style.removeProperty('max-height');
+  });
+
+  const alturaMayor = Math.ceil(
+    tarjetas.reduce((mayor, tarjeta) => Math.max(mayor, tarjeta.scrollHeight), 0)
+  );
+
+  if (!Number.isFinite(alturaMayor) || alturaMayor <= 0) return;
+
+  tarjetas.forEach((tarjeta) => {
+    const alto = `${alturaMayor}px`;
+    // !important evita que los overrides históricos de las bancarias
+    // vuelvan a imponer height:auto.
+    tarjeta.style.setProperty('height', alto, 'important');
+    tarjeta.style.setProperty('min-height', alto, 'important');
+    tarjeta.style.setProperty('max-height', alto, 'important');
+  });
+}
+
+function programarSincronizacionAlturaTarjetas({ incluirSegundoPase = true } = {}) {
+  if (rafSincronizarAlturaTarjetas) {
+    cancelAnimationFrame(rafSincronizarAlturaTarjetas);
+  }
+  rafSincronizarAlturaTarjetas = requestAnimationFrame(() => {
+    rafSincronizarAlturaTarjetas = 0;
+    sincronizarAlturaTarjetas();
+  });
+
+  if (incluirSegundoPase) {
+    clearTimeout(timeoutSincronizarAlturaTarjetas);
+    timeoutSincronizarAlturaTarjetas = window.setTimeout(() => {
+      sincronizarAlturaTarjetas();
+    }, 180);
+  }
 }
 
 function reiniciarContadorActualizacion() {
@@ -1568,7 +1634,10 @@ async function copiarYCanjear(cupon, tarjeta) {
     await copiarTexto(cupon.codigo);
 
     localStorage.setItem(claveUsado(cupon.id), "1");
-    if (usado) usado.hidden = false;
+    if (usado) {
+      usado.hidden = false;
+      programarSincronizacionAlturaTarjetas();
+    }
 
     registrarClic(cupon.id)
       .then((resultado) => {

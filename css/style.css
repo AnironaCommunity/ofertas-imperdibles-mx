@@ -8105,3 +8105,47 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   .cupon:not(.cupon-bancario) .cupon-encabezado .descuento { font-size:23px !important; }
   .cupon:not(.cupon-bancario) .cupon-logo { max-height:32px !important; max-width:42px !important; }
 }
+
+
+/* =========================================================
+   V81.49.2 — Altura uniforme + descuento más compacto
+   - Todas las tarjetas visibles toman la altura natural de la
+     tarjeta más alta de la vista.
+   - Tienda/Exclusivo reducen el aire vertical alrededor del OFF.
+   - La altura la sincroniza JS después de renderizar temporizadores.
+   ========================================================= */
+.cupon:not(.cupon-bancario) .cupon-encabezado {
+  min-height: 50px !important;
+  padding: 6px 10px 5px !important;
+  gap: 6px !important;
+}
+
+.cupon:not(.cupon-bancario) .cupon-encabezado .descuento {
+  margin: 0 !important;
+  line-height: 1 !important;
+}
+
+.cupon:not(.cupon-bancario) .cupon-contenido {
+  padding-top: 6px !important;
+}
+
+/* El alto final lo fija la rutina de sincronización. Mantener flex
+   permite que el bloque de acciones permanezca alineado abajo. */
+.cupones-grid-compacta > .cupon,
+.cupones-grid-compacta > .cupon-bancario-mini,
+.cupones-grid-compacta > .cupon-bancario-grid {
+  box-sizing: border-box !important;
+  align-self: stretch !important;
+}
+
+@media (max-width: 640px) {
+  .cupon:not(.cupon-bancario) .cupon-encabezado {
+    min-height: 46px !important;
+    padding: 5px 6px 4px !important;
+    gap: 5px !important;
+  }
+
+  .cupon:not(.cupon-bancario) .cupon-contenido {
+    padding-top: 5px !important;
+  }
+}
