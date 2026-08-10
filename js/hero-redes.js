@@ -68,6 +68,29 @@
     return luminancia > 0.179 ? "#111827" : "#ffffff";
   }
 
+  // V81.50.5 — Aplica inmediatamente la configuración visual guardada.
+  // Evita que los botones Tienda/Exclusivo muestren primero el color CSS
+  // por defecto mientras llega la configuración desde Supabase.
+  function aplicarConfiguracionCacheada() {
+    try {
+      const cache = JSON.parse(localStorage.getItem(CONFIG_CACHE_KEY) || "{}");
+      const colorBoton = String(cache.color_boton_tienda_exclusivo || "").trim();
+
+      if (colorBoton) {
+        document.documentElement.style.setProperty(
+          "--color-boton-tienda-exclusivo",
+          colorBoton
+        );
+        document.documentElement.style.setProperty(
+          "--color-texto-boton-tienda-exclusivo",
+          colorTextoContraste(colorBoton)
+        );
+      }
+    } catch {}
+  }
+
+  aplicarConfiguracionCacheada();
+
   function renderMainSiteName(element, value) {
     if (!element) return;
     const words = String(value || "Ofertas Imperdibles").trim().split(/\s+/).filter(Boolean);
