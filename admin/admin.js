@@ -781,9 +781,30 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
     return Object.keys(bankPalette).find((key) => source.includes(key)) || "";
   }
 
+  // Usar logos bancarios LOCALES del mismo dominio.
+  // Esto evita que una imagen remota sin CORS contamine el canvas ("tainted canvas")
+  // y permite exportar el resumen con canvas.toBlob().
+  const bankLocalAssets = {
+    bbva: "../img/bancos/bbva.png",
+    banamex: "../img/bancos/banamex.png",
+    santander: "../img/bancos/santander.jpg",
+    hsbc: "../img/bancos/hsbc.png",
+    "american-express": "../img/bancos/american-express.png",
+    afirme: "../img/bancos/afirme.png",
+    inbursa: "../img/bancos/inbursa.png",
+    banorte: "../img/bancos/banorte.jpg",
+    scotiabank: "../img/bancos/scotiabank.png",
+    openbank: "../img/bancos/openbank.png",
+    invex: "../img/bancos/invex.png",
+    mifel: "../img/bancos/mifel.png",
+    "mercado-pago": "../img/bancos/mercado-pago.png",
+  };
+
   const cardAssets = await Promise.all(selectedCoupons.map(async (coupon) => {
-    if (String(coupon.categoria || "").toLowerCase() !== "bancarios" || !coupon.imagen_url) return null;
-    return loadShareImage(String(coupon.imagen_url).replace(/^\.\//, "../"));
+    if (String(coupon.categoria || "").toLowerCase() !== "bancarios") return null;
+    const key = bankKey(coupon);
+    const localAsset = bankLocalAssets[key];
+    return localAsset ? loadShareImage(localAsset) : null;
   }));
 
   selectedCoupons.forEach((coupon, index) => {
