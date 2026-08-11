@@ -693,7 +693,7 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
   const canvas = shareSummaryCanvas;
   const context = canvas.getContext("2d");
 
-  // V81.50.9 — Resumen de descuentos: refuerza visualmente el ahorro sin logo, códigos ni botones.
+  // V81.50.10 — Mejora de legibilidad móvil en textos secundarios del resumen.
   const width = 1200;
   const outerPadding = 24;
   const contentPadding = 28;
@@ -704,7 +704,7 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
   const cardHeight = 248;
   const rows = Math.ceil(selectedCoupons.length / columns);
   const cardsAreaHeight = rows * cardHeight + Math.max(0, rows - 1) * rowGap;
-  const footerHeight = 118;
+  const footerHeight = 132;
   const cardsTop = outerPadding + headerHeight + 20;
   const footerTop = cardsTop + cardsAreaHeight + 24;
   const height = footerTop + footerHeight + outerPadding;
@@ -757,10 +757,10 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
   context.fillText("✓", badgeX + 34, badgeY + 43);
   context.textAlign = "left";
   context.fillStyle = "#111827";
-  context.font = "700 16px \"Segoe UI\", Arial, sans-serif";
+  context.font = "700 19px \"Segoe UI\", Arial, sans-serif";
   context.fillText("Cupones vigentes", badgeX + 64, badgeY + 31);
   context.fillStyle = "#64748b";
-  context.font = "400 13px \"Segoe UI\", Arial, sans-serif";
+  context.font = "500 16px \"Segoe UI\", Arial, sans-serif";
   context.fillText(shareSummaryDate(), badgeX + 64, badgeY + 52);
 
   const contentWidth = width - (outerPadding + contentPadding) * 2;
@@ -900,7 +900,7 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
     context.stroke();
 
     context.fillStyle = "#475569";
-    context.font = "500 11px \"Segoe UI\", Arial, sans-serif";
+    context.font = "600 14px \"Segoe UI\", Arial, sans-serif";
     context.textAlign = "center";
     context.fillText("Compra mínima", x + cardWidth * 0.25, infoY + 24);
     context.fillText("Descuento máx.", x + cardWidth * 0.75, infoY + 24);
@@ -916,7 +916,7 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
   context.fill();
 
   context.fillStyle = "#168c3a";
-  context.font = "800 16px \"Segoe UI\", Arial, sans-serif";
+  context.font = "800 20px \"Segoe UI\", Arial, sans-serif";
   context.textAlign = "left";
   context.fillText("Tips para usar tu cupón:", footerX + 20, footerTop + 29);
 
@@ -927,8 +927,8 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
     "Selecciona “Ingresar código”",
     "Pega el código",
   ];
-  const stepsStartX = footerX + 205;
-  const stepsWidth = contentWidth - 225;
+  const stepsStartX = footerX + 245;
+  const stepsWidth = contentWidth - 265;
   const stepWidth = stepsWidth / steps.length;
   steps.forEach((step, index) => {
     const centerX = stepsStartX + stepWidth * index + stepWidth / 2;
@@ -941,33 +941,33 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
     context.textAlign = "center";
     context.fillText(String(index + 1), centerX - stepWidth * 0.36, footerTop + 29);
     context.fillStyle = "#334155";
-    context.font = "600 10px \"Segoe UI\", Arial, sans-serif";
+    context.font = "600 12px \"Segoe UI\", Arial, sans-serif";
     const lines = wrapCanvasText(context, step, stepWidth - 34).slice(0, 2);
     lines.forEach((line, lineIndex) => {
-      context.fillText(line, centerX + 7, footerTop + 21 + lineIndex * 13);
+      context.fillText(line, centerX + 7, footerTop + 21 + lineIndex * 15);
     });
   });
 
   context.strokeStyle = "#e2e8f0";
   context.lineWidth = 1;
   context.beginPath();
-  context.moveTo(footerX + 20, footerTop + 57);
-  context.lineTo(footerX + contentWidth - 20, footerTop + 57);
+  context.moveTo(footerX + 20, footerTop + 63);
+  context.lineTo(footerX + contentWidth - 20, footerTop + 63);
   context.stroke();
 
   const cleanLink = String(link || "").replace(/^https?:\/\//i, "").replace(/\/$/, "");
   context.fillStyle = "#475569";
   context.textAlign = "left";
-  context.font = "600 12px \"Segoe UI\", Arial, sans-serif";
-  context.fillText("Consulta los cupones:", footerX + 20, footerTop + 84);
+  context.font = "700 15px \"Segoe UI\", Arial, sans-serif";
+  context.fillText("Consulta los cupones:", footerX + 20, footerTop + 98);
   context.fillStyle = "#168c3a";
-  fittedText(cleanLink, footerX + 150, footerTop + 84, contentWidth - 330, 12, 10, 700);
+  fittedText(cleanLink, footerX + 174, footerTop + 98, contentWidth - 370, 15, 12, 700);
 
   if (selectedCoupons.length < totalActive) {
     context.fillStyle = "#168c3a";
     context.textAlign = "right";
-    context.font = "700 12px \"Segoe UI\", Arial, sans-serif";
-    context.fillText(`+${totalActive - selectedCoupons.length} cupones más`, footerX + contentWidth - 20, footerTop + 84);
+    context.font = "700 15px \"Segoe UI\", Arial, sans-serif";
+    context.fillText(`+${totalActive - selectedCoupons.length} cupones más`, footerX + contentWidth - 20, footerTop + 98);
   }
 
   return await new Promise((resolve, reject) => {
