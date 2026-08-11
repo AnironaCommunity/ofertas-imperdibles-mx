@@ -8727,3 +8727,123 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
     font-size: 6.7px !important;
   }
 }
+
+/* =========================================================
+   V81.51.1 — Altura automática y contenido seguro en tarjetas
+   - Elimina la altura máxima rígida introducida por versiones compactas.
+   - Conserva una altura mínima compacta, pero cada tarjeta puede crecer
+     cuando etiquetas, detalle o textos necesitan más espacio.
+   - Evita que el bloque informativo bancario se comprima y se encime
+     con el botón "Copiar código".
+   ========================================================= */
+:root {
+  --altura-cupon-minima: 228px;
+}
+
+.cupones-grid-compacta > .cupon,
+.cupones-grid-compacta > .cupon-bancario-mini,
+.cupones-grid-compacta > .cupon-bancario-grid {
+  height: auto !important;
+  min-height: var(--altura-cupon-minima) !important;
+  max-height: none !important;
+  align-self: stretch !important;
+  overflow: visible !important;
+}
+
+/* El contenido central conserva su altura natural. El pie puede seguir
+   anclándose abajo gracias al flex de la tarjeta, sin invadir el texto. */
+.cupon:not(.cupon-bancario) .cupon-contenido,
+.cupon-bancario-mini .banco-cuerpo {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.cupon-bancario-mini .banco-cuerpo {
+  flex: 1 0 auto !important;
+  padding-top: 6px !important;
+}
+
+.cupon-bancario-mini .banco-info {
+  flex: 0 0 auto !important;
+  min-height: max-content !important;
+  height: auto !important;
+  max-height: none !important;
+  margin-bottom: 4px !important;
+  overflow: visible !important;
+}
+
+.cupon-bancario-mini .banco-info h3,
+.cupon-bancario-mini .banco-detalle,
+.cupon-bancario-mini .banco-minimo,
+.cupon-bancario-mini .banco-maximo {
+  position: static !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  flex-shrink: 0 !important;
+  overflow: visible !important;
+}
+
+/* Separación corta pero estable entre las líneas informativas. */
+.cupon-bancario-mini .banco-info {
+  gap: 2px !important;
+}
+
+.cupon-bancario-mini .banco-detalle {
+  margin: 0 0 2px !important;
+}
+
+.cupon-bancario-mini .banco-minimo,
+.cupon-bancario-mini .banco-maximo {
+  margin: 0 !important;
+}
+
+.cupon-bancario-mini .banco-pie,
+.cupon:not(.cupon-bancario) .acciones-bloque {
+  flex-shrink: 0 !important;
+  position: relative !important;
+}
+
+/* Las etiquetas pueden ocupar su fila real. Si son dos, la tarjeta crece
+   en vez de comprimir el bloque de información. */
+.cupon-etiquetas,
+.cupon-bancario-mini .banco-etiquetas {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.cupon-bancario-mini .banco-etiquetas:not(:empty) {
+  flex-basis: auto !important;
+  height: auto !important;
+  min-height: 20px !important;
+  padding-bottom: 2px !important;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --altura-cupon-minima: 224px;
+  }
+
+  .cupon-bancario-mini .banco-cuerpo {
+    padding-top: 5px !important;
+  }
+
+  .cupon-bancario-mini .banco-info {
+    gap: 2px !important;
+    margin-bottom: 4px !important;
+  }
+
+  .cupon-bancario-mini .banco-etiquetas:not(:empty) {
+    min-height: 18px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  :root {
+    --altura-cupon-minima: 220px;
+  }
+}
