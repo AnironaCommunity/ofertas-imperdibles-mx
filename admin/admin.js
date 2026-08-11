@@ -20,9 +20,6 @@ const siteMainLogoUrl = document.querySelector("#site-main-logo-url");
 const siteMainLogoPreviewWrapper = document.querySelector("#site-main-logo-preview-wrapper");
 const siteMainLogoPreview = document.querySelector("#site-main-logo-preview");
 const siteMainLogoRemove = document.querySelector("#site-main-logo-remove");
-const siteName = document.querySelector("#site-name");
-const siteSlogan = document.querySelector("#site-slogan");
-const siteShowSlogan = document.querySelector("#site-show-slogan");
 const heroImage = document.querySelector("#hero-image");
 const heroImageUrl = document.querySelector("#hero-image-url");
 const heroPreviewWrapper = document.querySelector("#hero-preview-wrapper");
@@ -37,28 +34,19 @@ const heroBarName = document.querySelector("#hero-bar-name");
 const heroText = document.querySelector("#hero-text");
 const heroAllButtonName = document.querySelector("#hero-all-button-name");
 const heroStoreButtonName = document.querySelector("#hero-store-button-name");
-const heroStoreSectionName = document.querySelector("#hero-store-section-name");
 const couponStoreLabel = document.querySelector("#coupon-store-label");
 const couponStoreColor = document.querySelector("#coupon-store-color");
 const couponExclusiveLabel = document.querySelector("#coupon-exclusive-label");
 const couponExclusiveColor = document.querySelector("#coupon-exclusive-color");
 const couponActionColor = document.querySelector("#coupon-action-color");
 const heroBankButtonName = document.querySelector("#hero-bank-button-name");
-const heroBankSectionName = document.querySelector("#hero-bank-section-name");
-const heroCommunityButtonName = document.querySelector("#hero-community-button-name");
-const heroCommunityButtonDescription = document.querySelector("#hero-community-button-description");
-const heroCommunitySectionName = document.querySelector("#hero-community-section-name");
-const heroMercadoLibreButtonName = document.querySelector("#hero-mercado-libre-button-name");
-const heroMercadoLibreUrl = document.querySelector("#hero-mercado-libre-url");
-const heroAmazonButtonName = document.querySelector("#hero-amazon-button-name");
-const heroAmazonUrl = document.querySelector("#hero-amazon-url");
 const heroWhatsappUrl = document.querySelector("#hero-whatsapp-url");
 const heroFacebookUrl = document.querySelector("#hero-facebook-url");
-const heroBannerWhatsappUrl = document.querySelector("#hero-banner-whatsapp-url");
 const heroShowPattern = document.querySelector("#hero-show-pattern");
 const heroPatternPosition = document.querySelector("#hero-pattern-position");
 const heroAdminPreviewText = document.querySelector("#hero-admin-preview-text");
 const heroAdminPreviewName = document.querySelector("#hero-admin-preview-name");
+let preservedHeroConfig = {};
 
 /* Cupones */
 const couponForm = document.querySelector("#coupon-form");
@@ -2829,11 +2817,9 @@ function updateHeroAdminPreview() {
 async function loadHeroConfig() {
   try {
     const config = await api("/api/admin-cupones?action=hero-config");
+    preservedHeroConfig = { ...config };
 
     siteMainLogoUrl.value = config.logo_icono_url || "";
-    siteName.value = config.nombre_sitio || "Ofertas Imperdibles MX";
-    siteSlogan.value = config.eslogan || "Las mejores ofertas, siempre";
-    siteShowSlogan.checked = config.mostrar_eslogan !== false;
     heroBarName.value = config.nombre_barra || "Ofertas Imperdibles MX";
     siteMainLogoPreview.src = siteMainLogoUrl.value || "../img/logo-ofertas-transparente.png?v=71.6";
     siteMainLogoPreviewWrapper.hidden = false;
@@ -2844,24 +2830,14 @@ async function loadHeroConfig() {
     heroText.value = config.texto_descriptivo || "Cupones, promociones y novedades todos los días.";
     heroAllButtonName.value = config.nombre_boton_todos || "Todos";
     heroStoreButtonName.value = config.nombre_boton_tienda || "Tienda";
-    heroStoreSectionName.value = config.nombre_seccion_tienda || "Cupones de tienda";
     couponStoreLabel.value = config.nombre_tarjeta_tienda || "CUPÓN DE TIENDA";
     couponStoreColor.value = config.color_tarjeta_tienda || "#22c55e";
     couponExclusiveLabel.value = config.nombre_tarjeta_exclusivo || "CUPÓN EXCLUSIVO";
     couponExclusiveColor.value = config.color_tarjeta_exclusivo || "#f5c400";
     couponActionColor.value = config.color_boton_tienda_exclusivo || "#1cac17";
     heroBankButtonName.value = config.nombre_boton_bancarios || "Bancarios";
-    heroBankSectionName.value = config.nombre_seccion_bancarios || "Cupones bancarios";
-    heroCommunityButtonName.value = config.nombre_boton_comunidad || "Comunidad Anirona";
-    heroCommunityButtonDescription.value = config.descripcion_boton_comunidad || "Rifas, novedades y publicaciones de la comunidad";
-    heroCommunitySectionName.value = config.nombre_seccion_comunidad || "Comunidad Anirona";
-    heroMercadoLibreButtonName.value = config.nombre_boton_mercado_libre || "Ofertas Mercado Libre";
-    heroMercadoLibreUrl.value = config.enlace_mercado_libre || "https://www.mercadolibre.com.mx/";
-    heroAmazonButtonName.value = config.nombre_boton_amazon || "Ofertas Amazon";
-    heroAmazonUrl.value = config.enlace_amazon || "https://www.amazon.com.mx/";
     heroWhatsappUrl.value = config.enlace_whatsapp || "https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n";
     heroFacebookUrl.value = config.enlace_facebook || "https://www.facebook.com/OfertasImperdiblesView";
-    heroBannerWhatsappUrl.value = config.enlace_banner_whatsapp || config.enlace_whatsapp || "https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n";
     heroShowPattern.checked = config.mostrar_patron_ofertas !== false;
     heroPatternPosition.value = ["izquierda", "centro", "derecha"].includes(config.posicion_patron_ofertas) ? config.posicion_patron_ofertas : "centro";
 
@@ -2912,9 +2888,9 @@ async function saveHeroConfig(event) {
       method: "PUT",
       body: JSON.stringify({
         logo_icono_url: mainLogoUrl || "",
-        nombre_sitio: siteName.value.trim(),
-        eslogan: siteSlogan.value.trim(),
-        mostrar_eslogan: siteShowSlogan.checked,
+        nombre_sitio: preservedHeroConfig.nombre_sitio || "Ofertas Imperdibles MX",
+        eslogan: preservedHeroConfig.eslogan || "Las mejores ofertas, siempre",
+        mostrar_eslogan: preservedHeroConfig.mostrar_eslogan !== false,
         nombre_barra: heroBarName.value.trim(),
         imagen_url: imageUrl || "",
         color_inicio: heroColorStart.value,
@@ -2922,28 +2898,30 @@ async function saveHeroConfig(event) {
         texto_descriptivo: heroText.value.trim(),
         nombre_boton_todos: heroAllButtonName.value.trim(),
         nombre_boton_tienda: heroStoreButtonName.value.trim(),
-        nombre_seccion_tienda: heroStoreSectionName.value.trim(),
+        nombre_seccion_tienda: preservedHeroConfig.nombre_seccion_tienda || "Cupones de tienda",
         nombre_tarjeta_tienda: couponStoreLabel.value.trim(),
         color_tarjeta_tienda: couponStoreColor.value,
         nombre_tarjeta_exclusivo: couponExclusiveLabel.value.trim(),
         color_tarjeta_exclusivo: couponExclusiveColor.value,
         color_boton_tienda_exclusivo: couponActionColor.value,
         nombre_boton_bancarios: heroBankButtonName.value.trim(),
-        nombre_seccion_bancarios: heroBankSectionName.value.trim(),
-        nombre_boton_comunidad: heroCommunityButtonName.value.trim(),
-        descripcion_boton_comunidad: heroCommunityButtonDescription.value.trim(),
-        nombre_seccion_comunidad: heroCommunitySectionName.value.trim(),
-        nombre_boton_mercado_libre: heroMercadoLibreButtonName.value.trim(),
-        enlace_mercado_libre: heroMercadoLibreUrl.value.trim(),
-        nombre_boton_amazon: heroAmazonButtonName.value.trim(),
-        enlace_amazon: heroAmazonUrl.value.trim(),
+        nombre_seccion_bancarios: preservedHeroConfig.nombre_seccion_bancarios || "Cupones bancarios",
+        nombre_boton_comunidad: preservedHeroConfig.nombre_boton_comunidad || "Comunidad Anirona",
+        descripcion_boton_comunidad: preservedHeroConfig.descripcion_boton_comunidad || "Rifas, novedades y publicaciones de la comunidad",
+        nombre_seccion_comunidad: preservedHeroConfig.nombre_seccion_comunidad || "Comunidad Anirona",
+        nombre_boton_mercado_libre: preservedHeroConfig.nombre_boton_mercado_libre || "Ofertas Mercado Libre",
+        enlace_mercado_libre: preservedHeroConfig.enlace_mercado_libre || "https://www.mercadolibre.com.mx/",
+        nombre_boton_amazon: preservedHeroConfig.nombre_boton_amazon || "Ofertas Amazon",
+        enlace_amazon: preservedHeroConfig.enlace_amazon || "https://www.amazon.com.mx/",
         enlace_whatsapp: heroWhatsappUrl.value.trim(),
         enlace_facebook: heroFacebookUrl.value.trim(),
-        enlace_banner_whatsapp: heroBannerWhatsappUrl.value.trim(),
+        enlace_banner_whatsapp: preservedHeroConfig.enlace_banner_whatsapp || preservedHeroConfig.enlace_whatsapp || heroWhatsappUrl.value.trim(),
         mostrar_patron_ofertas: heroShowPattern.checked,
         posicion_patron_ofertas: heroPatternPosition.value,
       }),
     });
+
+    preservedHeroConfig = { ...preservedHeroConfig, ...savedConfig };
 
     siteMainLogoUrl.value = savedConfig.logo_icono_url || mainLogoUrl || "";
     siteMainLogo.value = "";
@@ -3153,7 +3131,7 @@ siteMainLogoRemove?.addEventListener("click", () => {
   siteMainLogoPreview.src = "../img/logo-ofertas-transparente.png?v=71.6";
   siteMainLogoPreviewWrapper.hidden = false;
 });
-[siteName, siteSlogan, siteShowSlogan, heroBarName].forEach((element) => {
+[heroBarName].forEach((element) => {
   element?.addEventListener("input", updateHeroAdminPreview);
   element?.addEventListener("change", updateHeroAdminPreview);
 });
