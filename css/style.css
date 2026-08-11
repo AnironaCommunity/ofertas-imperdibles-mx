@@ -8872,3 +8872,14 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
 .cupon-bancario-mini .banco-etiquetas {
   max-height: none !important;
 }
+
+/* =========================================================
+   V81.51.3 — Centrado de etiquetas en cupones bancarios
+   - Una etiqueta queda centrada horizontalmente.
+   - Dos etiquetas se centran juntas como grupo.
+   - No modifica Tienda/Exclusivo ni la altura automática.
+   ========================================================= */
+.cupon-bancario-mini .banco-etiquetas {
+  justify-content: center !important;
+  width: 100% !important;
+}
