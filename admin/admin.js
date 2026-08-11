@@ -102,6 +102,7 @@ const couponListMessage = document.querySelector("#coupon-list-message");
 
 /* Resumen para compartir */
 const shareSummaryLink = document.querySelector("#resumen-liga");
+const shareSummaryCategory = document.querySelector("#resumen-categoria");
 const shareSummaryLimit = document.querySelector("#resumen-limite");
 const generateShareSummary = document.querySelector("#generar-resumen");
 const copyShareSummaryText = document.querySelector("#copiar-resumen-texto");
@@ -576,6 +577,24 @@ function activeCouponsForSharing() {
   return coupons.filter((coupon) => couponAutomaticStatus(coupon).key === "activo");
 }
 
+function couponPublishedTimestamp(coupon) {
+  const published = Date.parse(coupon?.fecha_publicacion || "");
+  if (Number.isFinite(published)) return published;
+  const created = Date.parse(coupon?.fecha_creacion || "");
+  if (Number.isFinite(created)) return created;
+  return Number(coupon?.id || 0);
+}
+
+function couponsForShareCategory(activeCoupons, category) {
+  const normalized = String(category || "todos").toLowerCase();
+  const filtered = normalized === "todos"
+    ? [...activeCoupons]
+    : activeCoupons.filter((coupon) => String(coupon.categoria || "tienda").toLowerCase() === normalized);
+
+  // El resumen de “últimos publicados” siempre parte del más reciente.
+  return filtered.sort((a, b) => couponPublishedTimestamp(b) - couponPublishedTimestamp(a));
+}
+
 function shareSummaryDate() {
   return new Intl.DateTimeFormat("es-MX", {
     timeZone: MEXICO_TIME_ZONE,
@@ -685,7 +704,7 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
   const cardHeight = 248;
   const rows = Math.ceil(selectedCoupons.length / columns);
   const cardsAreaHeight = rows * cardHeight + Math.max(0, rows - 1) * rowGap;
-  const footerHeight = 76;
+  const footerHeight = 118;
   const cardsTop = outerPadding + headerHeight + 20;
   const footerTop = cardsTop + cardsAreaHeight + 24;
   const height = footerTop + footerHeight + outerPadding;
@@ -872,23 +891,65 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
     fittedText(String(coupon.ahorro_maximo || "Consultar"), x + cardWidth * 0.75, infoY + 49, cardWidth * 0.42, 17, 12, 800);
   });
 
-  // Pie informativo, sin logos.
+  // Tips de uso + liga de consulta. No se muestran códigos en la imagen.
+  const footerX = outerPadding + contentPadding;
   context.fillStyle = "#ffffff";
-  roundedRect(context, outerPadding + contentPadding, footerTop, contentWidth, footerHeight, 14);
+  roundedRect(context, footerX, footerTop, contentWidth, footerHeight, 14);
   context.fill();
+
   context.fillStyle = "#168c3a";
-  context.font = "700 17px \"Segoe UI\", Arial, sans-serif";
+  context.font = "800 16px \"Segoe UI\", Arial, sans-serif";
   context.textAlign = "left";
-  context.fillText("Consulta todos los cupones y actívalos desde nuestra página", outerPadding + contentPadding + 22, footerTop + 31);
+  context.fillText("Tips para usar tu cupón:", footerX + 20, footerTop + 29);
+
+  const steps = [
+    "Copia el código",
+    "Ve a Mercado Libre",
+    "Entra a Cupones",
+    "Selecciona “Ingresar código”",
+    "Pega el código",
+  ];
+  const stepsStartX = footerX + 205;
+  const stepsWidth = contentWidth - 225;
+  const stepWidth = stepsWidth / steps.length;
+  steps.forEach((step, index) => {
+    const centerX = stepsStartX + stepWidth * index + stepWidth / 2;
+    context.fillStyle = "#168c3a";
+    context.beginPath();
+    context.arc(centerX - stepWidth * 0.36, footerTop + 25, 12, 0, Math.PI * 2);
+    context.fill();
+    context.fillStyle = "#ffffff";
+    context.font = "800 11px \"Segoe UI\", Arial, sans-serif";
+    context.textAlign = "center";
+    context.fillText(String(index + 1), centerX - stepWidth * 0.36, footerTop + 29);
+    context.fillStyle = "#334155";
+    context.font = "600 10px \"Segoe UI\", Arial, sans-serif";
+    const lines = wrapCanvasText(context, step, stepWidth - 34).slice(0, 2);
+    lines.forEach((line, lineIndex) => {
+      context.fillText(line, centerX + 7, footerTop + 21 + lineIndex * 13);
+    });
+  });
+
+  context.strokeStyle = "#e2e8f0";
+  context.lineWidth = 1;
+  context.beginPath();
+  context.moveTo(footerX + 20, footerTop + 57);
+  context.lineTo(footerX + contentWidth - 20, footerTop + 57);
+  context.stroke();
+
   const cleanLink = String(link || "").replace(/^https?:\/\//i, "").replace(/\/$/, "");
   context.fillStyle = "#475569";
-  context.font = "500 14px \"Segoe UI\", Arial, sans-serif";
-  fittedText(cleanLink, outerPadding + contentPadding + 22, footerTop + 55, contentWidth - 180, 14, 11, 500);
+  context.textAlign = "left";
+  context.font = "600 12px \"Segoe UI\", Arial, sans-serif";
+  context.fillText("Consulta los cupones:", footerX + 20, footerTop + 84);
+  context.fillStyle = "#168c3a";
+  fittedText(cleanLink, footerX + 150, footerTop + 84, contentWidth - 330, 12, 10, 700);
+
   if (selectedCoupons.length < totalActive) {
     context.fillStyle = "#168c3a";
     context.textAlign = "right";
-    context.font = "700 14px \"Segoe UI\", Arial, sans-serif";
-    context.fillText(`+${totalActive - selectedCoupons.length} cupones más`, width - outerPadding - contentPadding - 22, footerTop + 44);
+    context.font = "700 12px \"Segoe UI\", Arial, sans-serif";
+    context.fillText(`+${totalActive - selectedCoupons.length} cupones más`, footerX + contentWidth - 20, footerTop + 84);
   }
 
   return await new Promise((resolve, reject) => {
@@ -918,18 +979,22 @@ async function createShareSummary() {
     if (!active.length) throw new Error("No hay cupones activos y vigentes para incluir.");
 
     const link = validShareLink(shareSummaryLink.value);
+    const category = shareSummaryCategory?.value || "todos";
+    const filtered = couponsForShareCategory(active, category);
+    if (!filtered.length) throw new Error("No hay cupones activos en la categoría seleccionada.");
+
     const limitValue = shareSummaryLimit.value;
-    const limit = limitValue === "all" ? active.length : Number(limitValue);
-    const selected = active.slice(0, limit);
-    shareSummaryText.value = buildShareSummaryText(selected, link, active.length);
-    shareSummaryBlob = await drawShareSummaryImage(selected, link, active.length);
+    const limit = limitValue === "all" ? filtered.length : Math.max(1, Number(limitValue) || filtered.length);
+    const selected = filtered.slice(0, limit);
+    shareSummaryText.value = buildShareSummaryText(selected, link, filtered.length);
+    shareSummaryBlob = await drawShareSummaryImage(selected, link, filtered.length);
     if (shareSummaryPreview.src) URL.revokeObjectURL(shareSummaryPreview.src);
     shareSummaryPreview.src = URL.createObjectURL(shareSummaryBlob);
     shareSummaryResult.hidden = false;
     copyShareSummaryText.disabled = false;
     downloadShareSummaryImage.disabled = false;
     shareShareSummaryImage.disabled = false;
-    setMessage(shareSummaryMessage, `✅ Resumen generado con ${selected.length} de ${active.length} cupones activos. Los códigos no se incluyen.`);
+    setMessage(shareSummaryMessage, `✅ Resumen generado con ${selected.length} de ${filtered.length} cupones activos de la categoría seleccionada. Los códigos no se incluyen.`);
   } catch (error) {
     setMessage(shareSummaryMessage, readableError(error), true);
   } finally {
