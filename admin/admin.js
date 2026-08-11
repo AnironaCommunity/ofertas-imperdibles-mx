@@ -623,21 +623,40 @@ const SHARE_BANKS = {
   falabella: { label: "Falabella", aliases: ["falabella"] },
 };
 
+function normalizeBankSearchText(value) {
+  let text = String(value || "");
+  try { text = decodeURIComponent(text); } catch {}
+  return text
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function shareBankKey(coupon) {
-  const source = [
+  // Revisamos todos los campos disponibles porque algunos cupones guardan
+  // el banco en la imagen, otros en el detalle y otros solamente en el título.
+  const source = normalizeBankSearchText([
     coupon?.imagen_url,
     coupon?.detalle_bancario,
     coupon?.titulo,
     coupon?.codigo,
     coupon?.enlace,
-  ].filter(Boolean).join(" ").toLowerCase();
+  ].filter(Boolean).join(" "));
 
   // Primero las variantes más específicas para evitar que Mercado Pago Visa
-  // sea detectado únicamente como Mercado Pago.
+  // sea detectado únicamente como Mercado Pago. Normalizamos guiones, espacios,
+  // guiones bajos, acentos y URLs codificadas para que la detección sea estable.
   const entries = Object.entries(SHARE_BANKS).sort((a, b) =>
-    Math.max(...b[1].aliases.map((alias) => alias.length)) - Math.max(...a[1].aliases.map((alias) => alias.length))
+    Math.max(...b[1].aliases.map((alias) => normalizeBankSearchText(alias).length)) -
+    Math.max(...a[1].aliases.map((alias) => normalizeBankSearchText(alias).length))
   );
-  return entries.find(([, bank]) => bank.aliases.some((alias) => source.includes(alias)))?.[0] || "";
+
+  return entries.find(([, bank]) =>
+    bank.aliases.some((alias) => source.includes(normalizeBankSearchText(alias)))
+  )?.[0] || "";
 }
 
 function shareBankName(coupon) {
@@ -690,7 +709,6 @@ function buildShareSummaryText(selectedCoupons, link, totalActive) {
       lines.push(`🎟️ ${discount} | Compra mínima: ${shareMoneyText(coupon.compra_minima)} | Ahorra hasta: ${shareMoneyText(coupon.ahorro_maximo)}`);
     }
 
-    if (index < selectedCoupons.length - 1) lines.push("");
   });
 
   if (selectedCoupons.length < totalActive) {
@@ -874,29 +892,37 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
   // Esto evita que una imagen remota sin CORS contamine el canvas ("tainted canvas")
   // y permite exportar el resumen con canvas.toBlob().
   const bankLocalAssets = {
-    bbva: "../img/bancos/bbva.png",
-    banamex: "../img/bancos/banamex.png",
-    santander: "../img/bancos/santander.jpg",
-    hsbc: "../img/bancos/hsbc.png",
-    "american-express": "../img/bancos/american-express.png",
-    afirme: "../img/bancos/afirme.png",
-    inbursa: "../img/bancos/inbursa.png",
-    banorte: "../img/bancos/banorte.jpg",
-    scotiabank: "../img/bancos/scotiabank.png",
-    openbank: "../img/bancos/openbank.png",
-    invex: "../img/bancos/invex.png",
-    mifel: "../img/bancos/mifel.png",
-    "mercado-pago": "../img/bancos/mercado-pago.png",
-    "mercado-pago-visa": "../img/bancos/mercado-pago-visa.png",
-    "didi-card": "../img/bancos/didi-card.png",
-    falabella: "../img/bancos/falabella.png",
+    bbva: ["bbva.png", "bbva.jpg"],
+    banamex: ["banamex.png", "banamex.jpg"],
+    santander: ["santander.jpg"],
+    hsbc: ["hsbc.png", "hsbc.jpg"],
+    "american-express": ["american-express.png", "american-express.jpg"],
+    afirme: ["afirme.png", "afirme.jpg"],
+    inbursa: ["inbursa.png", "inbursa.jpg"],
+    banorte: ["banorte.jpg"],
+    scotiabank: ["scotiabank.png", "scotiabank.jpg"],
+    openbank: ["openbank.png", "openbank.jpg"],
+    invex: ["invex.png", "invex.jpg"],
+    mifel: ["mifel.png", "mifel.jpg"],
+    "mercado-pago": ["mercado-pago.png", "mercado-pago.jpg"],
+    "mercado-pago-visa": ["mercado-pago-visa.png", "mercado-pago-visa.jpg"],
+    "didi-card": ["didi-card.png", "didi-card.jpg"],
+    falabella: ["falabella.png", "falabella.jpg"],
   };
+
+  async function loadLocalBankLogo(key) {
+    const candidates = bankLocalAssets[key] || [];
+    for (const filename of candidates) {
+      const url = new URL(`../img/bancos/${filename}`, window.location.href).href;
+      const image = await loadShareImage(url);
+      if (image) return image;
+    }
+    return null;
+  }
 
   const cardAssets = await Promise.all(selectedCoupons.map(async (coupon) => {
     if (String(coupon.categoria || "").toLowerCase() !== "bancarios") return null;
-    const key = bankKey(coupon);
-    const localAsset = bankLocalAssets[key];
-    return localAsset ? loadShareImage(localAsset) : null;
+    return loadLocalBankLogo(bankKey(coupon));
   }));
 
   selectedCoupons.forEach((coupon, index) => {
