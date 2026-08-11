@@ -604,12 +604,64 @@ function shareSummaryDate() {
   }).format(new Date());
 }
 
-function couponSummaryLines(coupon) {
-  const lines = [];
-  lines.push(String(coupon.titulo || "Cupón disponible").trim());
-  if (coupon.compra_minima) lines.push(`Compra mínima: ${coupon.compra_minima}`);
-  if (coupon.ahorro_maximo) lines.push(`Ahorra hasta: ${coupon.ahorro_maximo}`);
-  return lines;
+const SHARE_BANKS = {
+  bbva: { label: "BBVA", aliases: ["bbva"] },
+  banamex: { label: "Banamex", aliases: ["banamex", "citibanamex", "citi banamex"] },
+  santander: { label: "Santander", aliases: ["santander"] },
+  hsbc: { label: "HSBC", aliases: ["hsbc"] },
+  "american-express": { label: "American Express", aliases: ["american-express", "american_express", "american express", "amex"] },
+  afirme: { label: "Afirme", aliases: ["afirme"] },
+  inbursa: { label: "Inbursa", aliases: ["inbursa"] },
+  banorte: { label: "Banorte", aliases: ["banorte"] },
+  scotiabank: { label: "Scotiabank", aliases: ["scotiabank", "scotia"] },
+  openbank: { label: "Openbank", aliases: ["openbank", "open bank"] },
+  invex: { label: "Invex", aliases: ["invex"] },
+  mifel: { label: "Mifel", aliases: ["mifel"] },
+  "mercado-pago-visa": { label: "Mercado Pago Visa", aliases: ["mercado-pago-visa", "mercado_pago_visa", "mercado pago visa"] },
+  "mercado-pago": { label: "Mercado Pago", aliases: ["mercado-pago", "mercado_pago", "mercado pago"] },
+  "didi-card": { label: "DiDi Card", aliases: ["didi-card", "didi_card", "didi card", "didi"] },
+  falabella: { label: "Falabella", aliases: ["falabella"] },
+};
+
+function shareBankKey(coupon) {
+  const source = [
+    coupon?.imagen_url,
+    coupon?.detalle_bancario,
+    coupon?.titulo,
+    coupon?.codigo,
+    coupon?.enlace,
+  ].filter(Boolean).join(" ").toLowerCase();
+
+  // Primero las variantes más específicas para evitar que Mercado Pago Visa
+  // sea detectado únicamente como Mercado Pago.
+  const entries = Object.entries(SHARE_BANKS).sort((a, b) =>
+    Math.max(...b[1].aliases.map((alias) => alias.length)) - Math.max(...a[1].aliases.map((alias) => alias.length))
+  );
+  return entries.find(([, bank]) => bank.aliases.some((alias) => source.includes(alias)))?.[0] || "";
+}
+
+function shareBankName(coupon) {
+  const key = shareBankKey(coupon);
+  return SHARE_BANKS[key]?.label || "Cupón bancario";
+}
+
+function shareDiscountText(coupon) {
+  const raw = String(coupon?.titulo || "Cupón disponible").replace(/\s+/g, " ").trim();
+  const percentage = raw.match(/(\d+(?:[.,]\d+)?)\s*%/i);
+  if (percentage) return `${percentage[1]}% OFF`;
+  const money = raw.match(/\$\s*([\d,.]+)/i);
+  if (money) return `$${money[1]} OFF`;
+  const numericOff = raw.match(/(?:^|\s)([\d,.]+)\s*OFF\b/i);
+  if (numericOff) return `${numericOff[1]} OFF`;
+  return /\boff\b/i.test(raw) ? raw : `${raw} OFF`;
+}
+
+function shareMoneyText(value, bankStyle = false) {
+  const raw = String(value || "Consultar").trim();
+  if (!bankStyle) return raw;
+  const numeric = Number(raw.replace(/[^0-9.-]/g, ""));
+  if (!Number.isFinite(numeric)) return raw;
+  return numeric.toLocaleString("es-MX", { style: "currency", currency: "MXN", minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function buildShareSummaryText(selectedCoupons, link, totalActive) {
@@ -617,26 +669,33 @@ function buildShareSummaryText(selectedCoupons, link, totalActive) {
   const lines = [
     `🔥 CUPONES DISPONIBLES HOY EN MERCADO LIBRE · ${date}`,
     "",
+    "",
+    "Consulta los cupones y canjéalos aquí 👇",
+    link,
+    "",
+    "",
+    "Ingresa desde nuestra página para copiar y canjear el cupón en Mercado Libre.",
+    "",
+    "",
   ];
 
   selectedCoupons.forEach((coupon, index) => {
-    const details = couponSummaryLines(coupon);
-    lines.push(`✅ ${details[0]}`);
-    details.slice(1).forEach((detail) => lines.push(detail));
+    const category = String(coupon?.categoria || "tienda").toLowerCase();
+    const isBank = category === "bancarios";
+    const discount = shareDiscountText(coupon);
+
+    if (isBank) {
+      lines.push(`💳  ${shareBankName(coupon)} → ${discount} | Mín. ${shareMoneyText(coupon.compra_minima, true)} | Tope ${shareMoneyText(coupon.ahorro_maximo, true)}`);
+    } else {
+      lines.push(`🎟️ ${discount} | Compra mínima: ${shareMoneyText(coupon.compra_minima)} | Ahorra hasta: ${shareMoneyText(coupon.ahorro_maximo)}`);
+    }
+
     if (index < selectedCoupons.length - 1) lines.push("");
   });
 
   if (selectedCoupons.length < totalActive) {
     lines.push("", `Y ${totalActive - selectedCoupons.length} cupones activos más disponibles en la página.`);
   }
-
-  lines.push(
-    "",
-    "Consulta los cupones y canjéalos aquí 👇",
-    link,
-    "",
-    "Ingresa desde nuestra página para copiar y canjear el cupón en Mercado Libre."
-  );
 
   return lines.join("\n");
 }
@@ -780,6 +839,9 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
     invex: { accent: "#173b7a", soft: "#f1f5fb" },
     mifel: { accent: "#173b7a", soft: "#f1f5fb" },
     "mercado-pago": { accent: "#1687d9", soft: "#eef8ff" },
+    "mercado-pago-visa": { accent: "#1687d9", soft: "#eef8ff" },
+    "didi-card": { accent: "#f97316", soft: "#fff7ed" },
+    falabella: { accent: "#159447", soft: "#effaf3" },
   };
 
   function normalizeDiscount(coupon) {
@@ -805,8 +867,7 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
   }
 
   function bankKey(coupon) {
-    const source = `${coupon.imagen_url || ""} ${coupon.detalle_bancario || ""}`.toLowerCase();
-    return Object.keys(bankPalette).find((key) => source.includes(key)) || "";
+    return shareBankKey(coupon);
   }
 
   // Usar logos bancarios LOCALES del mismo dominio.
@@ -826,6 +887,9 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
     invex: "../img/bancos/invex.png",
     mifel: "../img/bancos/mifel.png",
     "mercado-pago": "../img/bancos/mercado-pago.png",
+    "mercado-pago-visa": "../img/bancos/mercado-pago-visa.png",
+    "didi-card": "../img/bancos/didi-card.png",
+    falabella: "../img/bancos/falabella.png",
   };
 
   const cardAssets = await Promise.all(selectedCoupons.map(async (coupon) => {
