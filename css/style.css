@@ -8592,3 +8592,138 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
     --altura-cupon-estandar: 224px;
   }
 }
+
+/* =========================================================
+   V81.51 — Etiquetas automáticas de cupones
+   Máximo 2 etiquetas visibles por tarjeta.
+   Prioridad: Última oportunidad > Últimas horas > Regresó >
+   Más usado > Popular > Mayor ahorro > Top > Nuevo.
+   Exclusivo cuenta como etiqueta visual y muestra 1 automática adicional.
+   ========================================================= */
+.cupon-etiquetas,
+.cupon-bancario-mini .banco-etiquetas {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 4px !important;
+  min-height: 0 !important;
+  max-height: 22px !important;
+  overflow: hidden !important;
+}
+
+.cupon-etiquetas .etiqueta-cupon {
+  flex: 0 1 auto;
+  max-width: 100%;
+  min-height: 18px !important;
+  padding: 3px 7px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  color: #fff !important;
+  font-size: 8px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  letter-spacing: -.08px;
+  white-space: nowrap !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, .12) !important;
+}
+
+.etiqueta-ultima-oportunidad {
+  background: linear-gradient(135deg, #dc2626, #ef4444) !important;
+}
+
+.etiqueta-ultimas-horas {
+  background: linear-gradient(135deg, #ea580c, #f97316) !important;
+}
+
+.etiqueta-regreso {
+  background: linear-gradient(135deg, #7c3aed, #8b5cf6) !important;
+}
+
+.etiqueta-mas-usado {
+  background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+}
+
+.etiqueta-popular-integrada {
+  background: linear-gradient(135deg, #e11d48, #fb7185) !important;
+}
+
+.etiqueta-mayor-ahorro {
+  background: linear-gradient(135deg, #15803d, #22c55e) !important;
+}
+
+.etiqueta-top {
+  color: #4a3200 !important;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
+}
+
+.etiqueta-nuevo {
+  background: linear-gradient(135deg, #0f9f9a, #14b8a6) !important;
+}
+
+.etiqueta-exclusivo {
+  background: linear-gradient(135deg, #9333ea, #c026d3) !important;
+}
+
+/* El borde acompaña al estado más urgente sin cambiar el layout. */
+.cupon-ultima-oportunidad,
+.cupon-bancario-mini.cupon-ultima-oportunidad {
+  border-color: rgba(220, 38, 38, .42) !important;
+}
+
+.cupon-ultimas-horas,
+.cupon-bancario-mini.cupon-ultimas-horas {
+  border-color: rgba(249, 115, 22, .36) !important;
+}
+
+/* Bancarios: las etiquetas viven entre la franja y el cuerpo,
+   ocupando una fila compacta sin cambiar la altura exterior. */
+.cupon-bancario-mini .banco-etiquetas {
+  flex: 0 0 20px !important;
+  height: 20px !important;
+  margin: 0 !important;
+  padding: 2px 7px 0 !important;
+  background: #fff !important;
+  box-sizing: border-box !important;
+}
+
+.cupon-bancario-mini .banco-etiquetas:empty {
+  display: none !important;
+  flex-basis: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+}
+
+.cupon-bancario-mini .banco-etiquetas .etiqueta-cupon {
+  min-height: 16px !important;
+  padding: 2px 6px !important;
+  font-size: 7.5px !important;
+}
+
+@media (max-width: 700px) {
+  .cupon-etiquetas,
+  .cupon-bancario-mini .banco-etiquetas {
+    gap: 3px !important;
+    max-height: 20px !important;
+  }
+
+  .cupon-etiquetas .etiqueta-cupon {
+    min-height: 16px !important;
+    padding: 2px 5px !important;
+    font-size: 7px !important;
+  }
+
+  .cupon-bancario-mini .banco-etiquetas {
+    flex-basis: 18px !important;
+    height: 18px !important;
+    padding: 2px 5px 0 !important;
+  }
+
+  .cupon-bancario-mini .banco-etiquetas .etiqueta-cupon {
+    min-height: 14px !important;
+    padding: 2px 4px !important;
+    font-size: 6.7px !important;
+  }
+}

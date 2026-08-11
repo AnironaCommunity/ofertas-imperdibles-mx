@@ -863,10 +863,13 @@ function startCouponTimers() {
 
 
 const UNA_HORA_MS = 60 * 60 * 1000;
-const MIN_CLICS_POPULAR = 2;
+const DOS_HORAS_MS = 2 * UNA_HORA_MS;
+const VEINTICUATRO_HORAS_MS = 24 * UNA_HORA_MS;
+const SIETE_DIAS_MS = 7 * 24 * UNA_HORA_MS;
+const MAX_ETIQUETAS_CUPON = 2;
 
 function fechaPublicacionCupon(cupon) {
-  const valor = cupon?.fecha_publicacion;
+  const valor = cupon?.fecha_publicacion || cupon?.fecha_inicio || cupon?.fecha_creacion;
 
   if (!valor) return null;
 
@@ -879,44 +882,133 @@ function esCuponNuevo(cupon) {
   if (!fecha) return false;
 
   const antiguedad = Date.now() - fecha.getTime();
-
   return antiguedad >= 0 && antiguedad < UNA_HORA_MS;
 }
 
-function obtenerEstadoDestacadoCupon(
-  cupon,
-  idTop,
-  idPopular
-) {
-  if (esCuponNuevo(cupon)) {
-    return "nuevo";
+function normalizarCodigoHistorial(cupon) {
+  return String(cupon?.codigo || "")
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g, "");
+}
+
+function valorNumericoCupon(valor) {
+  const texto = String(valor ?? "")
+    .replace(/\s/g, "")
+    .replace(/,/g, "")
+    .replace(/[^0-9.-]/g, "");
+  const numero = Number.parseFloat(texto);
+  return Number.isFinite(numero) ? Math.max(0, numero) : 0;
+}
+
+function idsTopPorMetrica(cupones, obtenerValor, proporcion = 0.20) {
+  const candidatos = cupones
+    .map((cupon) => ({ cupon, valor: Number(obtenerValor(cupon)) || 0 }))
+    .filter(({ valor }) => valor > 0)
+    .sort((a, b) => b.valor - a.valor);
+
+  if (!candidatos.length) return new Set();
+  const cantidad = Math.max(1, Math.ceil(candidatos.length * proporcion));
+  return new Set(candidatos.slice(0, cantidad).map(({ cupon }) => Number(cupon.id)));
+}
+
+function crearContextoEtiquetas(cuponesActivos, todosCupones) {
+  const activos = cuponesActivos.filter((cupon) => couponTimeState(cupon).enabled);
+  const idsMasUsados = idsTopPorMetrica(activos, (cupon) => cupon.clics);
+  const idsPopulares = idsTopPorMetrica(activos, (cupon) => cupon.likes);
+  const idsMayorAhorro = idsTopPorMetrica(activos, (cupon) => valorNumericoCupon(cupon.ahorro_maximo));
+
+  const candidatosTop = [...activos]
+    .filter((cupon) => Number(cupon.clics || 0) > 0 || Number(cupon.likes || 0) > 0)
+    .sort((a, b) => {
+      const puntuacionA = Number(a.clics || 0) + Number(a.likes || 0) * 2;
+      const puntuacionB = Number(b.clics || 0) + Number(b.likes || 0) * 2;
+      if (puntuacionB !== puntuacionA) return puntuacionB - puntuacionA;
+      return Number(b.id || 0) - Number(a.id || 0);
+    });
+
+  const codigosHistoricos = new Map();
+  todosCupones.forEach((cupon) => {
+    const codigo = normalizarCodigoHistorial(cupon);
+    if (!codigo) return;
+    if (!codigosHistoricos.has(codigo)) codigosHistoricos.set(codigo, []);
+    codigosHistoricos.get(codigo).push(cupon);
+  });
+
+  return {
+    idsMasUsados,
+    idsPopulares,
+    idsMayorAhorro,
+    idTop: candidatosTop[0] ? Number(candidatosTop[0].id) : null,
+    codigosHistoricos,
+  };
+}
+
+function cuponRegreso(cupon, contexto) {
+  const codigo = normalizarCodigoHistorial(cupon);
+  if (!codigo) return false;
+
+  const historial = contexto.codigosHistoricos.get(codigo) || [];
+  if (historial.length < 2) return false;
+
+  const fechaActual = fechaPublicacionCupon(cupon);
+  if (!fechaActual) return false;
+  const antiguedad = Date.now() - fechaActual.getTime();
+  if (antiguedad < 0 || antiguedad > SIETE_DIAS_MS) return false;
+
+  return historial.some((otro) => {
+    if (Number(otro.id) === Number(cupon.id)) return false;
+    const fechaOtro = fechaPublicacionCupon(otro);
+    if (fechaOtro) return fechaOtro.getTime() < fechaActual.getTime();
+    return Number(otro.id || 0) < Number(cupon.id || 0);
+  });
+}
+
+function etiquetasAutomaticasCupon(cupon, contexto, maximo = MAX_ETIQUETAS_CUPON) {
+  if (!couponTimeState(cupon).enabled) return [];
+
+  const etiquetas = [];
+  const ahora = Date.now();
+  const fin = cupon?.fecha_fin ? new Date(cupon.fecha_fin).getTime() : NaN;
+  const restante = Number.isFinite(fin) ? fin - ahora : Infinity;
+
+  // Prioridad 1 y 2: son mutuamente excluyentes.
+  if (restante > 0 && restante <= DOS_HORAS_MS) {
+    etiquetas.push("ultima-oportunidad");
+  } else if (restante > DOS_HORAS_MS && restante <= VEINTICUATRO_HORAS_MS) {
+    etiquetas.push("ultimas-horas");
   }
 
-  if (
-    idTop !== null &&
-    Number(cupon.id) === Number(idTop)
-  ) {
-    return "top";
-  }
+  if (cuponRegreso(cupon, contexto)) etiquetas.push("regreso");
+  if (contexto.idsMasUsados.has(Number(cupon.id))) etiquetas.push("mas-usado");
+  if (contexto.idsPopulares.has(Number(cupon.id))) etiquetas.push("popular");
+  if (contexto.idsMayorAhorro.has(Number(cupon.id))) etiquetas.push("mayor-ahorro");
+  if (contexto.idTop !== null && Number(cupon.id) === contexto.idTop) etiquetas.push("top");
+  if (esCuponNuevo(cupon)) etiquetas.push("nuevo");
 
-  if (
-    idPopular !== null &&
-    Number(cupon.id) === Number(idPopular)
-  ) {
-    return "popular";
-  }
-
-  return "";
+  return [...new Set(etiquetas)].slice(0, Math.max(0, maximo));
 }
 
 function htmlEtiquetaCupon(estado) {
   const etiquetas = {
-    nuevo: '<span class="etiqueta-cupon etiqueta-nuevo">✨ Nuevo</span>',
-    top: '<span class="etiqueta-cupon etiqueta-top">🏆 Top</span>',
+    "ultima-oportunidad": '<span class="etiqueta-cupon etiqueta-ultima-oportunidad">🔴 Última oportunidad</span>',
+    "ultimas-horas": '<span class="etiqueta-cupon etiqueta-ultimas-horas">⏰ Últimas horas</span>',
+    regreso: '<span class="etiqueta-cupon etiqueta-regreso">🔄 Regresó</span>',
+    "mas-usado": '<span class="etiqueta-cupon etiqueta-mas-usado">⚡ Más usado</span>',
     popular: '<span class="etiqueta-cupon etiqueta-popular-integrada">🔥 Popular</span>',
+    "mayor-ahorro": '<span class="etiqueta-cupon etiqueta-mayor-ahorro">💰 Mayor ahorro</span>',
+    top: '<span class="etiqueta-cupon etiqueta-top">⭐ Top</span>',
+    nuevo: '<span class="etiqueta-cupon etiqueta-nuevo">🆕 Nuevo</span>',
   };
 
   return etiquetas[estado] || "";
+}
+
+function htmlEtiquetasCupon(estados) {
+  return (Array.isArray(estados) ? estados : [estados])
+    .filter(Boolean)
+    .map((estado) => htmlEtiquetaCupon(estado))
+    .join("");
 }
 
 
@@ -954,7 +1046,7 @@ function configuracionVisualCategoria(categoria) {
   };
 }
 
-function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
+function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   const articulo = document.createElement("article");
   const categoria = normalizarCategoria(cupon);
   const esBancario = categoria === "bancarios";
@@ -963,9 +1055,9 @@ function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
   const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
   const visualCategoria = configuracionVisualCategoria(categoria);
 
-  articulo.className = estadoDestacado
-    ? `cupon cupon-${estadoDestacado}${esBancario ? " cupon-bancario" : ""}${esExclusivo ? " cupon-exclusivo" : ""}`
-    : `cupon${esBancario ? " cupon-bancario" : ""}${esExclusivo ? " cupon-exclusivo" : ""}`;
+  const estados = Array.isArray(estadosDestacados) ? estadosDestacados.filter(Boolean) : [estadosDestacados].filter(Boolean);
+  const clasesEstado = estados.map((estado) => ` cupon-${estado}`).join("");
+  articulo.className = `cupon${clasesEstado}${esBancario ? " cupon-bancario" : ""}${esExclusivo ? " cupon-exclusivo" : ""}`;
   articulo.dataset.id = String(cupon.id);
   articulo.dataset.color = COLORES[indice % COLORES.length];
   articulo.style.setProperty("--categoria-cupon-color", visualCategoria.color);
@@ -991,8 +1083,8 @@ function crearTarjeta(cupon, estadoDestacado = "", indice = 0) {
     <div class="cupon-contenido">
       
       <div class="cupon-etiquetas">
-        ${esExclusivo ? '<span class="etiqueta-cupon etiqueta-exclusivo">⭐ Exclusivo</span>' : ""}
-        ${htmlEtiquetaCupon(estadoDestacado)}
+        ${esExclusivo ? '<span class="etiqueta-cupon etiqueta-exclusivo">💎 Exclusivo</span>' : ""}
+        ${htmlEtiquetasCupon(esExclusivo ? estados.slice(0, 1) : estados)}
       </div>
 
       ${esExclusivo && cupon.detalle_bancario
@@ -1125,9 +1217,10 @@ function obtenerLogoBanco(cupon) {
   return obtenerBancoVisual(cupon).logo;
 }
 
-function crearTarjetaBancaria(cupon) {
+function crearTarjetaBancaria(cupon, estadosDestacados = []) {
   const articulo = document.createElement("article");
-  articulo.className = "cupon-bancario-mini";
+  const estados = Array.isArray(estadosDestacados) ? estadosDestacados.filter(Boolean) : [estadosDestacados].filter(Boolean);
+  articulo.className = `cupon-bancario-mini${estados.map((estado) => ` cupon-${estado}`).join("")}`;
   articulo.dataset.id = String(cupon.id);
 
   const bancoVisual = obtenerBancoVisual(cupon);
@@ -1143,6 +1236,7 @@ function crearTarjetaBancaria(cupon) {
       ${logoBanco ? `<img class="banco-logo" src="${escaparHtml(logoBanco)}" alt="" loading="lazy" />` : `<span class="banco-logo-fallback">BANCO</span>`}
     </div>
     <div class="banco-franja">CUPÓN BANCARIO</div>
+    <div class="cupon-etiquetas banco-etiquetas">${htmlEtiquetasCupon(estados)}</div>
     <div class="banco-cuerpo">
       <div class="banco-info">
         <h3>${escaparHtml(cupon.titulo || "Beneficio bancario")}</h3>
@@ -1308,26 +1402,15 @@ function renderizarCategoria() {
     return;
   }
 
-  const activosTienda = cuponesTienda.filter((cupon) => couponTimeState(cupon).enabled);
-  const clasificables = [...activosTienda]
-    .filter((cupon) => !esCuponNuevo(cupon))
-    .filter((cupon) => Number(cupon.clics || 0) > 0)
-    .sort((a, b) => Number(b.clics || 0) - Number(a.clics || 0));
-  const cuponTop = clasificables[0] || null;
-  const cuponPopular = clasificables.find(
-    (cupon) => Number(cupon.id) !== Number(cuponTop?.id) &&
-      Number(cupon.clics || 0) >= MIN_CLICS_POPULAR
-  ) || null;
-  const idTop = cuponTop ? Number(cuponTop.id) : null;
-  const idPopular = cuponPopular ? Number(cuponPopular.id) : null;
+  // V81.51 — Estatus automáticos. Se calculan sobre todos los cupones activos
+  // para que Tienda, Exclusivo y Bancarios utilicen exactamente las mismas reglas.
+  const contextoEtiquetas = crearContextoEtiquetas(disponibles, todosLosCupones);
 
   if (mostrarTienda) {
     const fragmentoTienda = document.createDocumentFragment();
     cuponesTienda.forEach((cupon, indice) => {
-      const destacado = couponTimeState(cupon).enabled
-        ? obtenerEstadoDestacadoCupon(cupon, idTop, idPopular)
-        : "";
-      fragmentoTienda.appendChild(crearTarjeta(cupon, destacado, indice));
+      const etiquetas = etiquetasAutomaticasCupon(cupon, contextoEtiquetas, MAX_ETIQUETAS_CUPON);
+      fragmentoTienda.appendChild(crearTarjeta(cupon, etiquetas, indice));
     });
     cuponesContainer.appendChild(fragmentoTienda);
   }
@@ -1336,7 +1419,11 @@ function renderizarCategoria() {
     const fragmentoExclusivos = document.createDocumentFragment();
     cuponesExclusivos.forEach((cupon, indice) => {
       fragmentoExclusivos.appendChild(
-        crearTarjeta(cupon, "", cuponesTienda.length + indice)
+        crearTarjeta(
+          cupon,
+          etiquetasAutomaticasCupon(cupon, contextoEtiquetas, 1),
+          cuponesTienda.length + indice
+        )
       );
     });
     cuponesContainer.appendChild(fragmentoExclusivos);
@@ -1345,7 +1432,10 @@ function renderizarCategoria() {
   if (mostrarBancarios && cuponesBancarios.length) {
     const fragmentoBancos = document.createDocumentFragment();
     cuponesBancarios.forEach((cupon) => {
-      const tarjeta = crearTarjetaBancaria(cupon);
+      const tarjeta = crearTarjetaBancaria(
+        cupon,
+        etiquetasAutomaticasCupon(cupon, contextoEtiquetas, MAX_ETIQUETAS_CUPON)
+      );
       tarjeta.classList.add("cupon-bancario-grid");
       fragmentoBancos.appendChild(tarjeta);
     });
