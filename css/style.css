@@ -8847,3 +8847,28 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
     --altura-cupon-minima: 220px;
   }
 }
+
+/* =========================================================
+   V81.51.2 — Recuperar esquinas redondeadas con altura automática
+   - Mantiene el crecimiento dinámico introducido en V81.51.1.
+   - El recorte vuelve a realizarse en el contenedor exterior para que
+     encabezados, franjas, logos y fondos respeten el border-radius.
+   - Aplica a Tienda, Exclusivo y Bancarios sin imponer una altura fija.
+   ========================================================= */
+.cupones-grid-compacta > .cupon,
+.cupones-grid-compacta > .cupon-bancario-mini,
+.cupones-grid-compacta > .cupon-bancario-grid {
+  overflow: hidden !important;
+  background-clip: padding-box !important;
+  isolation: isolate;
+}
+
+/* Los bloques interiores ya pueden crecer de forma natural; el recorte
+   corresponde únicamente al perímetro visual de la tarjeta. */
+.cupon:not(.cupon-bancario) .cupon-contenido,
+.cupon-bancario-mini .banco-cuerpo,
+.cupon-bancario-mini .banco-info,
+.cupon-etiquetas,
+.cupon-bancario-mini .banco-etiquetas {
+  max-height: none !important;
+}
