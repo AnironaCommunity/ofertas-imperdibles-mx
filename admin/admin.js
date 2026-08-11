@@ -918,7 +918,11 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
     const category = String(coupon.categoria || "tienda").toLowerCase();
     const isBank = category === "bancarios";
     const key = bankKey(coupon);
-    const palette = isBank ? (bankPalette[key] || { accent: "#1464d2", soft: "#eef5ff" }) : { accent: summaryGreen, soft: "#f0f9f2" };
+    // V81.51.4 — En Tienda/Exclusivo el amarillo se conserva como acento,
+    // pero el texto principal usa un tono oscuro para mantener contraste en móvil.
+    const palette = isBank
+      ? (bankPalette[key] || { accent: "#1464d2", soft: "#eef5ff", label: "#1464d2", labelText: "#ffffff" })
+      : { accent: "#172033", soft: "#f0f9f2", label: "#ffe600", labelText: "#172033" };
 
     context.save();
     context.shadowColor = "rgba(15, 23, 42, .10)";
@@ -951,9 +955,9 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
     // Etiqueta de descuento: refuerza que cada tarjeta representa un ahorro.
     const discountLabelWidth = Math.min(118, cardWidth - 36);
     roundedRect(context, x + (cardWidth - discountLabelWidth) / 2, y + 66, discountLabelWidth, 25, 7);
-    context.fillStyle = palette.accent;
+    context.fillStyle = palette.label || palette.accent;
     context.fill();
-    context.fillStyle = "#ffffff";
+    context.fillStyle = palette.labelText || "#ffffff";
     context.textAlign = "center";
     context.font = "800 12px \"Segoe UI\", Arial, sans-serif";
     context.fillText("DESCUENTO", x + cardWidth / 2, y + 83);
