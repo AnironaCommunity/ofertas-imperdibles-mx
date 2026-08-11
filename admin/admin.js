@@ -693,7 +693,7 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
   const canvas = shareSummaryCanvas;
   const context = canvas.getContext("2d");
 
-  // V81.50.6 — Resumen informativo: sin logo del sitio, sin códigos y sin botones.
+  // V81.50.9 — Resumen de descuentos: refuerza visualmente el ahorro sin logo, códigos ni botones.
   const width = 1200;
   const outerPadding = 24;
   const contentPadding = 28;
@@ -719,13 +719,22 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
   // Encabezado limpio: deliberadamente sin logo.
   context.fillStyle = "#ffffff";
   context.fillRect(0, 0, width, outerPadding + headerHeight);
+  const summaryGreen = couponActionColor?.value || "#1cac17";
   context.fillStyle = "#10213d";
   context.textAlign = "left";
-  context.font = "800 46px \"Segoe UI\", Arial, sans-serif";
-  context.fillText("CUPONES PUBLICADOS", outerPadding + contentPadding, outerPadding + 54);
-  context.fillStyle = "#475569";
-  context.font = "400 20px \"Segoe UI\", Arial, sans-serif";
-  context.fillText("Descuentos disponibles hoy en Mercado Libre", outerPadding + contentPadding, outerPadding + 88);
+  context.font = "800 39px \"Segoe UI\", Arial, sans-serif";
+  context.fillText("CUPONES Y DESCUENTOS", outerPadding + contentPadding, outerPadding + 46);
+  context.fillStyle = summaryGreen;
+  context.font = "900 40px \"Segoe UI\", Arial, sans-serif";
+  context.fillText("ACTIVOS", outerPadding + contentPadding, outerPadding + 86);
+
+  // Franja de beneficio: deja claro desde el primer vistazo que son descuentos.
+  context.fillStyle = "#ffe600";
+  roundedRect(context, outerPadding + contentPadding, outerPadding + 99, 515, 27, 13);
+  context.fill();
+  context.fillStyle = "#172033";
+  context.font = "800 13px \"Segoe UI\", Arial, sans-serif";
+  context.fillText("APROVECHA LOS MEJORES DESCUENTOS HOY EN MERCADO LIBRE", outerPadding + contentPadding + 14, outerPadding + 117);
 
   const badgeWidth = 260;
   const badgeX = width - outerPadding - contentPadding - badgeWidth;
@@ -834,7 +843,7 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
     const category = String(coupon.categoria || "tienda").toLowerCase();
     const isBank = category === "bancarios";
     const key = bankKey(coupon);
-    const palette = isBank ? (bankPalette[key] || { accent: "#1464d2", soft: "#eef5ff" }) : { accent: "#168c3a", soft: "#f0f9f2" };
+    const palette = isBank ? (bankPalette[key] || { accent: "#1464d2", soft: "#eef5ff" }) : { accent: summaryGreen, soft: "#f0f9f2" };
 
     context.save();
     context.shadowColor = "rgba(15, 23, 42, .10)";
@@ -864,11 +873,20 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
       context.fillText(category === "exclusivo" ? "EXCLUSIVO" : isBank ? "CUPÓN BANCARIO" : "TIENDA", x + cardWidth / 2, y + 33);
     }
 
-    context.textAlign = "center";
+    // Etiqueta de descuento: refuerza que cada tarjeta representa un ahorro.
+    const discountLabelWidth = Math.min(118, cardWidth - 36);
+    roundedRect(context, x + (cardWidth - discountLabelWidth) / 2, y + 66, discountLabelWidth, 25, 7);
     context.fillStyle = palette.accent;
-    fittedText(normalizeDiscount(coupon), x + cardWidth / 2, y + 122, cardWidth - 24, 46, 30, 800);
-    context.font = "600 16px \"Segoe UI\", Arial, sans-serif";
-    context.fillText("OFF", x + cardWidth / 2, y + 148);
+    context.fill();
+    context.fillStyle = "#ffffff";
+    context.textAlign = "center";
+    context.font = "800 12px \"Segoe UI\", Arial, sans-serif";
+    context.fillText("DESCUENTO", x + cardWidth / 2, y + 83);
+
+    context.fillStyle = palette.accent;
+    fittedText(normalizeDiscount(coupon), x + cardWidth / 2, y + 133, cardWidth - 24, 43, 29, 800);
+    context.font = "700 15px \"Segoe UI\", Arial, sans-serif";
+    context.fillText("OFF", x + cardWidth / 2, y + 156);
 
     // Sin código, sin botón y sin el texto “En productos seleccionados”.
     const infoY = y + 174;
