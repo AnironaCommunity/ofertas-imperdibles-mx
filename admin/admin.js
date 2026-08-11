@@ -605,20 +605,20 @@ function shareSummaryDate() {
 }
 
 const SHARE_BANKS = {
-  bbva: { label: "BBVA", aliases: ["bbva"] },
-  banamex: { label: "Banamex", aliases: ["banamex", "citibanamex", "citi banamex"] },
-  santander: { label: "Santander", aliases: ["santander"] },
-  hsbc: { label: "HSBC", aliases: ["hsbc"] },
+  bbva: { label: "BBVA", aliases: ["bbva", "bbva88", "bbvagol"] },
+  banamex: { label: "Banamex", aliases: ["banamex", "citibanamex", "citi banamex", "bnmx", "bnmx88"] },
+  santander: { label: "Santander", aliases: ["santander", "sant", "sant88", "santgol"] },
+  hsbc: { label: "HSBC", aliases: ["hsbc", "hsbc88", "hsbcgol"] },
   "american-express": { label: "American Express", aliases: ["american-express", "american_express", "american express", "amex"] },
-  afirme: { label: "Afirme", aliases: ["afirme"] },
-  inbursa: { label: "Inbursa", aliases: ["inbursa"] },
+  afirme: { label: "Afirme", aliases: ["afirme", "afrm", "afrm88", "afrmgol"] },
+  inbursa: { label: "Inbursa", aliases: ["inbursa", "inbr", "inbr88"] },
   banorte: { label: "Banorte", aliases: ["banorte"] },
   scotiabank: { label: "Scotiabank", aliases: ["scotiabank", "scotia"] },
-  openbank: { label: "Openbank", aliases: ["openbank", "open bank"] },
-  invex: { label: "Invex", aliases: ["invex"] },
-  mifel: { label: "Mifel", aliases: ["mifel"] },
+  openbank: { label: "Openbank", aliases: ["openbank", "open bank", "opba", "opba88"] },
+  invex: { label: "Invex", aliases: ["invex", "inve", "inve88"] },
+  mifel: { label: "Mifel", aliases: ["mifel", "mife", "mife88", "mifegol"] },
   "mercado-pago-visa": { label: "Mercado Pago Visa", aliases: ["mercado-pago-visa", "mercado_pago_visa", "mercado pago visa"] },
-  "mercado-pago": { label: "Mercado Pago", aliases: ["mercado-pago", "mercado_pago", "mercado pago"] },
+  "mercado-pago": { label: "Mercado Pago", aliases: ["mercado-pago", "mercado_pago", "mercado pago", "tcmp", "tcmpgol", "melimas", "melimasgol"] },
   "didi-card": { label: "DiDi Card", aliases: ["didi-card", "didi_card", "didi card", "didi"] },
   falabella: { label: "Falabella", aliases: ["falabella"] },
 };
@@ -688,13 +688,10 @@ function buildShareSummaryText(selectedCoupons, link, totalActive) {
   const lines = [
     `🔥 CUPONES DISPONIBLES HOY EN MERCADO LIBRE · ${date}`,
     "",
-    "",
     "Consulta los cupones y canjéalos aquí 👇",
     link,
     "",
-    "",
     "Ingresa desde nuestra página para copiar y canjear el cupón en Mercado Libre.",
-    "",
     "",
   ];
 
