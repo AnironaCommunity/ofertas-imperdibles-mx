@@ -54,7 +54,7 @@
   <link rel="stylesheet" href="css/header-dinamico-v68-3.css?v=70.0.0" />
   <link rel="stylesheet" href="css/estabilidad.css?v=77.15.5" />
   <link rel="stylesheet" href="css/cabecera-inteligente.css?v=77.15.1" />
-  <link rel="stylesheet" href="css/selector-cupones-oscuro.css?v=81.49.7" />
+  <link rel="stylesheet" href="css/selector-cupones-oscuro.css?v=81.53.0" />
   <script>
     try {
       const temaGuardado = JSON.parse(localStorage.getItem("ofertas_imperdibles_tema") || "null");
@@ -288,99 +288,33 @@
     </section>
 
     <nav class="navegacion-inferior selector-cupones-oscuro" aria-label="Tipos de descuentos">
-    <button
-      id="tab-todos"
-      class="tab-inferior activo"
-      type="button"
-      data-categoria="todos"
-      aria-pressed="true"
-      aria-label="Mostrar todos los cupones"
-    >
-      <span class="tab-icono tab-icono-todos" aria-hidden="true">
-        <svg viewBox="0 0 24 24" focusable="false">
-          <circle cx="6" cy="6" r="1.55"></circle><circle cx="12" cy="6" r="1.55"></circle><circle cx="18" cy="6" r="1.55"></circle>
-          <circle cx="6" cy="12" r="1.55"></circle><circle cx="12" cy="12" r="1.55"></circle><circle cx="18" cy="12" r="1.55"></circle>
-          <circle cx="6" cy="18" r="1.55"></circle><circle cx="12" cy="18" r="1.55"></circle><circle cx="18" cy="18" r="1.55"></circle>
-        </svg>
-      </span>
-      <span class="tab-textos">
-        <strong id="nombre-boton-todos" class="tab-etiqueta-principal">Todos</strong>
-      </span>
-    </button>
-    <button
-      id="tab-tienda"
-      class="tab-inferior"
-      type="button"
-      data-categoria="tienda"
-      aria-pressed="false"
-      aria-label="Mostrar descuentos para todos"
-    >
-      <span class="tab-icono tab-icono-tienda" aria-hidden="true">
-        <svg viewBox="0 0 24 24" focusable="false">
-          <path d="M6.5 8.5h11l1 11h-13l1-11Z"></path>
-          <path d="M9 9V7a3 3 0 0 1 6 0v2"></path>
-        </svg>
-      </span>
-      <span class="tab-textos">
-        <strong id="nombre-boton-tienda" class="tab-etiqueta-principal">Tienda</strong>
-      </span>
-      <span
-        id="contador-cupones-tienda"
-        class="contador-seccion contador-seccion-inferior"
-        aria-label="0 cupones"
-        hidden
-      >0</span>
-    </button>
-
-    <button
-      id="tab-bancarios"
-      class="tab-inferior"
-      type="button"
-      data-categoria="bancarios"
-      aria-pressed="false"
-      aria-label="Mostrar descuentos con tarjeta"
-    >
-      <span class="tab-icono tab-icono-tarjeta" aria-hidden="true">
-        <svg viewBox="0 0 24 24" focusable="false">
-          <rect x="2.5" y="5" width="19" height="14" rx="2.5" />
-          <path d="M3 9h18M6.5 15h4" />
-        </svg>
-      </span>
-      <span class="tab-textos">
-        <strong id="nombre-boton-bancarios" class="tab-etiqueta-principal">Bancarios</strong>
-      </span>
-      <span
-        id="contador-cupones-bancarios"
-        class="contador-seccion contador-seccion-inferior"
-        aria-label="0 cupones"
-        hidden
-      >0</span>
-    </button>
-    <button
-      id="tab-exclusivo"
-      class="tab-inferior"
-      type="button"
-      data-categoria="exclusivo"
-      aria-pressed="false"
-      aria-label="Mostrar cupones exclusivos"
-      hidden
-    >
-      <span class="tab-icono tab-icono-exclusivo" aria-hidden="true">
-        <svg viewBox="0 0 24 24" focusable="false">
-          <path d="M12 3.4l2.2 4.5 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5-3.6-3.5 5-.7L12 3.4Z"></path>
-        </svg>
-      </span>
-      <span class="tab-textos">
-        <strong id="nombre-boton-exclusivo" class="tab-etiqueta-principal">Exclusivo</strong>
-      </span>
-      <span
-        id="contador-cupones-exclusivo"
-        class="contador-seccion contador-seccion-inferior"
-        aria-label="0 cupones"
-        hidden
-      >0</span>
-    </button>
-  </nav>
+      <button id="tab-todos" class="tab-inferior activo" type="button" data-categoria="todos" aria-pressed="true" aria-label="Mostrar todos los cupones">
+        <span class="tab-icono tab-icono-todos" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M14 13h36v13a7 7 0 0 0 0 12v13H14V38a7 7 0 0 0 0-12V13Z"/><circle cx="25" cy="26" r="4"/><circle cx="39" cy="38" r="4"/><path class="icon-line" d="M40 23 24 42"/></svg></span>
+        <span class="tab-textos"><strong id="nombre-boton-todos" class="tab-etiqueta-principal">Todos</strong></span>
+      </button>
+      <button id="tab-tienda" class="tab-inferior" type="button" data-categoria="tienda" aria-pressed="false" aria-label="Mostrar cupones de tienda">
+        <span class="tab-icono tab-icono-tienda" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M17 20h30l3 34H14l3-34Z"/><path class="icon-line" d="M24 23v-5a8 8 0 0 1 16 0v5"/></svg></span>
+        <span class="tab-textos"><strong id="nombre-boton-tienda" class="tab-etiqueta-principal">Tienda</strong></span>
+        <span id="contador-cupones-tienda" class="contador-seccion contador-seccion-inferior" hidden>0</span>
+      </button>
+      <button id="tab-bancarios" class="tab-inferior" type="button" data-categoria="bancarios" aria-pressed="false" aria-label="Mostrar cupones bancarios">
+        <span class="tab-icono tab-icono-tarjeta" aria-hidden="true"><svg viewBox="0 0 64 64"><rect x="8" y="14" width="48" height="36" rx="7"/><path class="card-band" d="M8 23h48"/><path class="icon-line" d="M39 40h9"/></svg></span>
+        <span class="tab-textos"><strong id="nombre-boton-bancarios" class="tab-etiqueta-principal">Bancarios</strong></span>
+        <span id="contador-cupones-bancarios" class="contador-seccion contador-seccion-inferior" hidden>0</span>
+      </button>
+      <button id="tab-exclusivo" class="tab-inferior" type="button" data-categoria="exclusivo" aria-pressed="false" aria-label="Mostrar cupones exclusivos" hidden>
+        <span class="tab-icono tab-icono-exclusivo" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M11 15h42v12a7 7 0 0 0 0 14v8H11v-8a7 7 0 0 0 0-14V15Z"/><path class="star" d="m32 21 3.4 6.9 7.6 1.1-5.5 5.3 1.3 7.5-6.8-3.6-6.8 3.6 1.3-7.5-5.5-5.3 7.6-1.1L32 21Z"/></svg></span>
+        <span class="tab-textos"><strong id="nombre-boton-exclusivo" class="tab-etiqueta-principal">Exclusivos</strong></span>
+        <span id="contador-cupones-exclusivo" class="contador-seccion contador-seccion-inferior" hidden>0</span>
+      </button>
+    </nav>
+    <section class="resumen-cupones" aria-label="Resumen de cupones">
+      <div class="resumen-item"><span class="resumen-icono" aria-hidden="true">◇</span><strong id="resumen-cupones-disponibles">0</strong><span>Cupones disponibles</span></div>
+      <div class="resumen-separador" aria-hidden="true"></div>
+      <div class="resumen-item"><span class="resumen-icono resumen-ojo" aria-hidden="true">◉</span><strong id="resumen-visitas">0</strong><span>Visitas</span></div>
+      <div class="resumen-separador" aria-hidden="true"></div>
+      <div class="resumen-item"><span class="resumen-icono" aria-hidden="true">▣</span><strong id="resumen-copiados">0</strong><span>Copiados</span></div>
+    </section>
 
     <p id="estado-carga" class="estado-carga" aria-live="polite">
       Cargando cupones...
@@ -646,7 +580,7 @@
   </div>
 
 
-  <script type="module" src="js/app.js?v=81.52.0"></script>
+  <script type="module" src="js/app.js?v=81.53.0"></script>
   <script src="js/hero-redes.js?v=81.50.5" defer></script>
   <script src="js/header-dinamico-v68-3.js?v=70.0.0" defer></script>
   <script src="js/cabecera-inteligente.js?v=77.15.7" defer></script>

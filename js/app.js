@@ -51,6 +51,9 @@ const contadorCuponesExclusivo = document.querySelector(
 const selectorCupones = document.querySelector(
   ".navegacion-inferior.selector-cupones-oscuro"
 );
+const resumenCuponesDisponibles = document.querySelector("#resumen-cupones-disponibles");
+const resumenVisitas = document.querySelector("#resumen-visitas");
+const resumenCopiados = document.querySelector("#resumen-copiados");
 
 
 
@@ -204,7 +207,27 @@ function mostrarCantidadSeccion(elemento, cantidad, tipo) {
     `${total} ${total === 1 ? singular : plural}`;
 }
 
+function actualizarResumenCupones() {
+  const disponibles = todosLosCupones.filter((cupon) =>
+    cupon?.activo !== false && couponTimeState(cupon).state !== "finalizado"
+  );
+  const copiados = disponibles.reduce((total, cupon) => total + Math.max(0, Number(cupon?.clics) || 0), 0);
+  if (resumenCuponesDisponibles) resumenCuponesDisponibles.textContent = disponibles.length.toLocaleString("es-MX");
+  if (resumenCopiados) resumenCopiados.textContent = copiados.toLocaleString("es-MX");
+}
+
+async function cargarVisitasResumen() {
+  if (!resumenVisitas) return;
+  try {
+    const respuesta = await fetch("/api/cupones?action=visitantes", { cache: "no-store" });
+    if (!respuesta.ok) return;
+    const datos = await respuesta.json();
+    resumenVisitas.textContent = Math.max(0, Number(datos?.total_visitas) || 0).toLocaleString("es-MX");
+  } catch {}
+}
+
 function actualizarContadoresSecciones() {
+  actualizarResumenCupones();
   const cantidadTienda = todosLosCupones.filter(
     (cupon) =>
       cupon.activo !== false &&
@@ -3148,6 +3171,7 @@ activarSeccionDesdeUrl({
 });
 
 cargarCupones();
+cargarVisitasResumen();
 cargarPublicidad();
 
 
