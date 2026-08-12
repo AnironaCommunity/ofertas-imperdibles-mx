@@ -1587,6 +1587,14 @@ async function cargarCupones() {
     }
 
     actualizarContadoresSecciones();
+
+    // V81.55: la línea punteada final solo existe cuando realmente hay cupones visibles.
+    const separadorFinCupones = document.querySelector("#separador-fin-cupones");
+    const sinCuponesVisible = document.querySelector("#sin-cupones:not([hidden])");
+    if (separadorFinCupones) {
+      separadorFinCupones.style.display = sinCuponesVisible ? "none" : "";
+    }
+
     revisarAvisosNovedades();
     procesarNovedadDesdeUrl();
   } catch (error) {
