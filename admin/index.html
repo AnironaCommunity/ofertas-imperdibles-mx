@@ -8,7 +8,7 @@
   <title>Administrador | Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="../img/logo.png" />
-  <link rel="stylesheet" href="admin.css?v=81.54.0" />
+  <link rel="stylesheet" href="admin.css?v=81.62.0" />
 </head>
 
 <body>
@@ -1111,14 +1111,29 @@ Descuento máximo: $180"
               <small>Se muestra únicamente dentro de la barra fija; no modifica el eslogan principal.</small>
             </div>
 
-            <div class="campo">
-              <label for="hero-all-button-name">Nombre del botón Todos</label>
-              <input id="hero-all-button-name" type="text" maxlength="35" placeholder="Todos" />
-              <small>Texto del primer filtro que aparece arriba de los cupones.</small>
-            </div>
-            <div class="campo">
-              <label for="hero-store-button-name">Nombre del botón Tienda</label>
-              <input id="hero-store-button-name" type="text" maxlength="35" placeholder="Tienda" />
+            <div class="campo campo-completo configuracion-nombres-cupones">
+              <div class="configuracion-nombres-cupones-cabecera">
+                <h3>Nombres de los botones de cupones</h3>
+                <small>Cambia desde un solo lugar el texto visible de los cuatro botones principales. Los iconos y el funcionamiento no se modifican.</small>
+              </div>
+              <div class="configuracion-nombres-cupones-grid">
+                <div class="campo">
+                  <label for="hero-all-button-name">Todos</label>
+                  <input id="hero-all-button-name" type="text" maxlength="35" placeholder="Todos" />
+                </div>
+                <div class="campo">
+                  <label for="hero-store-button-name">Tienda</label>
+                  <input id="hero-store-button-name" type="text" maxlength="35" placeholder="Tienda" />
+                </div>
+                <div class="campo">
+                  <label for="hero-bank-button-name">Bancario</label>
+                  <input id="hero-bank-button-name" type="text" maxlength="35" placeholder="Bancarios" />
+                </div>
+                <div class="campo">
+                  <label for="hero-exclusive-button-name">Exclusivo</label>
+                  <input id="hero-exclusive-button-name" type="text" maxlength="35" placeholder="Exclusivos" />
+                </div>
+              </div>
             </div>
             <div class="campo">
               <label for="coupon-store-label">Nombre visible en tarjeta Tienda</label>
@@ -1143,10 +1158,6 @@ Descuento máximo: $180"
               <label for="coupon-action-color">Color botón Tienda y Exclusivo</label>
               <input id="coupon-action-color" type="color" value="#1cac17" />
               <small>Cambia en una sola configuración el botón “Copiar y Canjear” de Tienda y Exclusivo. Los bancarios conservan su color.</small>
-            </div>
-            <div class="campo">
-              <label for="hero-bank-button-name">Nombre del botón Bancarios</label>
-              <input id="hero-bank-button-name" type="text" maxlength="35" placeholder="Bancarios" />
             </div>
             <div class="campo campo-completo">
               <h3>Enlaces de redes sociales</h3>
@@ -1212,6 +1223,6 @@ Descuento máximo: $180"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=81.54.0"></script>
+  <script type="module" src="admin.js?v=81.62.0"></script>
 </body>
 </html>

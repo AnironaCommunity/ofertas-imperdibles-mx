@@ -2381,3 +2381,38 @@ table td {
   }
 }
 
+
+/* V81.62 — Configuración centralizada de nombres del selector de cupones */
+.configuracion-nombres-cupones {
+  border: 1px solid #dfe5df;
+  border-radius: 14px;
+  background: #fafcfa;
+  padding: 16px;
+}
+
+.configuracion-nombres-cupones-cabecera h3 {
+  margin: 0 0 4px;
+}
+
+.configuracion-nombres-cupones-cabecera small {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.configuracion-nombres-cupones-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .configuracion-nombres-cupones-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .configuracion-nombres-cupones-grid {
+    grid-template-columns: 1fr;
+  }
+}

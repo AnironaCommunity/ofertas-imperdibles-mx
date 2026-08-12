@@ -42,6 +42,7 @@ const couponExclusiveLabel = document.querySelector("#coupon-exclusive-label");
 const couponExclusiveColor = document.querySelector("#coupon-exclusive-color");
 const couponActionColor = document.querySelector("#coupon-action-color");
 const heroBankButtonName = document.querySelector("#hero-bank-button-name");
+const heroExclusiveButtonName = document.querySelector("#hero-exclusive-button-name");
 const heroWhatsappUrl = document.querySelector("#hero-whatsapp-url");
 const heroFacebookUrl = document.querySelector("#hero-facebook-url");
 const heroShowPattern = document.querySelector("#hero-show-pattern");
@@ -3144,6 +3145,7 @@ async function loadHeroConfig() {
     couponExclusiveColor.value = config.color_tarjeta_exclusivo || "#f5c400";
     couponActionColor.value = config.color_boton_tienda_exclusivo || "#1cac17";
     heroBankButtonName.value = config.nombre_boton_bancarios || "Bancarios";
+    heroExclusiveButtonName.value = config.nombre_boton_exclusivo || "Exclusivos";
     heroWhatsappUrl.value = config.enlace_whatsapp || "https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n";
     heroFacebookUrl.value = config.enlace_facebook || "https://www.facebook.com/OfertasImperdiblesView";
     heroShowPattern.checked = config.mostrar_patron_ofertas !== false;
@@ -3213,6 +3215,7 @@ async function saveHeroConfig(event) {
         color_tarjeta_exclusivo: couponExclusiveColor.value,
         color_boton_tienda_exclusivo: couponActionColor.value,
         nombre_boton_bancarios: heroBankButtonName.value.trim(),
+        nombre_boton_exclusivo: heroExclusiveButtonName.value.trim(),
         nombre_seccion_bancarios: preservedHeroConfig.nombre_seccion_bancarios || "Cupones bancarios",
         nombre_boton_comunidad: preservedHeroConfig.nombre_boton_comunidad || "Comunidad Anirona",
         descripcion_boton_comunidad: preservedHeroConfig.descripcion_boton_comunidad || "Rifas, novedades y publicaciones de la comunidad",

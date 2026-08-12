@@ -214,6 +214,7 @@
       colorTarjetaExclusivo: config.color_tarjeta_exclusivo || "#f5c400",
       colorBotonTiendaExclusivo: config.color_boton_tienda_exclusivo || "#1cac17",
       botonBancarios: (config.nombre_boton_bancarios || "").trim() || "Bancarios",
+      botonExclusivo: (config.nombre_boton_exclusivo || "").trim() || "Exclusivos",
       seccionBancarios: config.nombre_seccion_bancarios || "Cupones bancarios",
       botonComunidad: config.nombre_boton_comunidad || "Comunidad Anirona",
       descripcionComunidad: config.descripcion_boton_comunidad || "Rifas, novedades y publicaciones de la comunidad",
@@ -229,9 +230,11 @@
     const nombreBotonTodos = document.querySelector("#nombre-boton-todos");
     const nombreBotonTienda = document.querySelector("#nombre-boton-tienda");
     const nombreBotonBancarios = document.querySelector("#nombre-boton-bancarios");
+    const nombreBotonExclusivo = document.querySelector("#nombre-boton-exclusivo");
     if (nombreBotonTodos) nombreBotonTodos.textContent = labels.botonTodos;
     if (nombreBotonTienda) nombreBotonTienda.textContent = labels.botonTienda;
     if (nombreBotonBancarios) nombreBotonBancarios.textContent = labels.botonBancarios;
+    if (nombreBotonExclusivo) nombreBotonExclusivo.textContent = labels.botonExclusivo;
     document.querySelector("#nombre-boton-comunidad")?.replaceChildren(labels.botonComunidad);
     document.querySelector("#descripcion-boton-comunidad")?.replaceChildren(labels.descripcionComunidad);
     document.querySelector("#nombre-seccion-comunidad")?.replaceChildren(labels.seccionComunidad);

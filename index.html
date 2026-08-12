@@ -529,13 +529,16 @@
         const todos = document.querySelector("#nombre-boton-todos");
         const tienda = document.querySelector("#nombre-boton-tienda");
         const bancarios = document.querySelector("#nombre-boton-bancarios");
+        const exclusivo = document.querySelector("#nombre-boton-exclusivo");
         const nombreTodos = String(cache.nombre_boton_todos || "").trim();
         const nombreTienda = String(cache.nombre_boton_tienda || "").trim();
         const nombreBancarios = String(cache.nombre_boton_bancarios || "").trim();
+        const nombreExclusivo = String(cache.nombre_boton_exclusivo || "").trim();
 
         if (todos && nombreTodos) todos.textContent = nombreTodos;
         if (tienda && nombreTienda) tienda.textContent = nombreTienda;
         if (bancarios && nombreBancarios) bancarios.textContent = nombreBancarios;
+        if (exclusivo && nombreExclusivo) exclusivo.textContent = nombreExclusivo;
       } catch {}
     })();
   </script>
@@ -575,7 +578,7 @@
 
 
   <script type="module" src="js/app.js?v=81.59.0"></script>
-  <script src="js/hero-redes.js?v=81.59.0" defer></script>
+  <script src="js/hero-redes.js?v=81.62.0" defer></script>
   <script src="js/header-dinamico-v68-3.js?v=70.0.0" defer></script>
   <script src="js/cabecera-inteligente.js?v=77.15.7" defer></script>
 </body>
