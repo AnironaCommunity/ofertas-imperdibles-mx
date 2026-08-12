@@ -707,6 +707,39 @@ a {
   background: #e2f5f1;
 }
 
+.modal-acciones {
+  display: grid;
+  gap: 9px;
+  margin-top: 18px;
+}
+
+.modal-continuar,
+.modal-cancelar {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 12px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.modal-continuar {
+  border: 1px solid #e6cf00;
+  color: #2d3277;
+  background: #ffe600;
+}
+
+.modal-continuar:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.modal-cancelar {
+  border: 1px solid #d7e2df;
+  color: #47565e;
+  background: white;
+}
+
 footer {
   padding: 0 18px 27px;
   color: var(--gris);
@@ -7736,375 +7769,43 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   margin-top:1px;
 }
 
-
-/* V81.12 — Acciones centradas en cupones bancarios */
-.bank-coupon-card .coupon-actions,
-.bank-coupon-card .card-actions,
-.bank-coupon-card .actions,
-.bank-coupon-card .bank-actions,
-.cupon-bancario .coupon-actions,
-.cupon-bancario .card-actions,
-.cupon-bancario .actions,
-.cupon-bancario .bank-actions {
-  justify-content: center !important;
-  align-items: center !important;
-  text-align: center;
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* V81.13 — Acciones bancarias juntas y centradas como un solo grupo */
-.bank-coupon-card .coupon-actions,
-.bank-coupon-card .card-actions,
-.bank-coupon-card .actions,
-.bank-coupon-card .bank-actions,
-.cupon-bancario .coupon-actions,
-.cupon-bancario .card-actions,
-.cupon-bancario .actions,
-.cupon-bancario .bank-actions {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 8px !important;
-  width: 100% !important;
-}
-.bank-coupon-card .coupon-actions > *,
-.bank-coupon-card .card-actions > *,
-.bank-coupon-card .actions > *,
-.bank-coupon-card .bank-actions > *,
-.cupon-bancario .coupon-actions > *,
-.cupon-bancario .card-actions > *,
-.cupon-bancario .actions > *,
-.cupon-bancario .bank-actions > * {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  flex: 0 0 auto !important;
-}
-
-
 /* =========================================================
-   V81.14 — Corrección real: acciones bancarias juntas y centradas
-   El contenedor correcto es .banco-acciones-extra y las estadísticas
-   tenían margin-left:auto, por eso se iban a la derecha.
-   ========================================================= */
-.cupon-bancario-mini .banco-acciones-extra {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 5px !important;
-  width: 100% !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-.cupon-bancario-mini .banco-acciones-extra .banco-like,
-.cupon-bancario-mini .banco-acciones-extra .banco-compartir,
-.cupon-bancario-mini .banco-acciones-extra .banco-estadisticas {
-  flex: 0 0 auto !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-}
-
-.cupon-bancario-mini .banco-estadisticas {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 4px !important;
-  width: auto !important;
-}
-
-
-/* =========================================================
-   V81.15 — Identidad visual para Cupones de tienda
-   Moderniza sin cambiar dimensiones ni estructura base.
-   ========================================================= */
-.encabezado-cupones-tienda {
-  margin: 2px 0 10px;
-}
-.encabezado-cupones-tienda[hidden] { display: none !important; }
-.encabezado-cupones-tienda h2 {
-  margin: 0;
-  color: #344054;
-  font-size: 16px;
-  line-height: 1.2;
-  font-weight: 750;
-  letter-spacing: -0.01em;
-}
-.encabezado-cupones-tienda p {
-  margin: 3px 0 0;
-  color: #7b8493;
-  font-size: 12px;
-  line-height: 1.25;
-  font-weight: 500;
-}
-
-.cupon:not(.cupon-bancario) .franja-cupon-tienda {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 22px;
-  margin: -9px -10px 2px;
-  padding: 4px 8px;
-  color: #fff;
-  background: var(--tono-1);
-  font-size: 10px;
-  line-height: 1;
-  font-weight: 800;
-  letter-spacing: .055em;
-  text-transform: uppercase;
-}
-
-/* Misma lectura ligera de los bancarios, sin perder la jerarquía actual. */
-.cupon:not(.cupon-bancario) .descuento-maximo {
-  color: #667085;
-  font-size: 12px !important;
-  line-height: 1.25 !important;
-  font-weight: 500 !important;
-}
-.cupon:not(.cupon-bancario) .descuento-maximo strong {
-  color: #344054;
-  font-weight: 700 !important;
-}
-.cupon:not(.cupon-bancario) .compra-minima {
-  margin: 0 !important;
-  padding: 0 !important;
-  border-radius: 0 !important;
-  color: #667085 !important;
-  background: transparent !important;
-  font-size: 12px !important;
-  line-height: 1.25 !important;
-  font-weight: 500 !important;
-}
-
-@media (max-width: 640px) {
-  .encabezado-cupones-tienda {
-    margin-bottom: 8px;
-  }
-  .encabezado-cupones-tienda h2 {
-    font-size: 14px;
-  }
-  .encabezado-cupones-tienda p {
-    font-size: 11px;
-  }
-  .cupon:not(.cupon-bancario) .franja-cupon-tienda {
-    min-height: 20px;
-    padding: 3px 6px;
-    font-size: 9px;
-  }
-  .cupon:not(.cupon-bancario) .descuento-maximo,
-  .cupon:not(.cupon-bancario) .compra-minima {
-    font-size: 11px !important;
-  }
-}
-
-/* V81.16 — Selector inferior Todos | Tienda | Bancarios */
-.selector-cupones-oscuro {
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-}
-.selector-cupones-oscuro .tab-inferior {
-  min-width: 0 !important;
-}
-@media (max-width: 430px) {
-  .selector-cupones-oscuro {
-    gap: 4px !important;
-  }
-  .selector-cupones-oscuro .tab-textos small {
-    font-size: 9px !important;
-  }
-  .selector-cupones-oscuro .tab-etiqueta-principal {
-    font-size: 11px !important;
-  }
-}
-
-/* =========================================================
-   V81.17 — Todos juntos: Tienda primero, Bancarios después
+   V81.39 LTS — Estado visual consolidado
+   Reemplaza los overrides acumulados V81.12–V81.35.
    ========================================================= */
 
-/* Ya no existen encabezados independientes ni carrusel bancario. */
+/* Secciones: todos los cupones comparten una sola cuadrícula. */
 .encabezado-cupones-tienda,
 .bancarios-encabezado,
 .bancarios-carrusel-wrap,
 .bancarios-indicadores,
-.bancarios-flecha {
-  display: none !important;
-}
-
-/* Pequeño respiro entre categorías, sin línea ni texto.
-   Al ocupar todas las columnas obliga a que Bancarios empiece en una fila nueva. */
-.cupones-grid-compacta > .separacion-bancarios-grid {
-  grid-column: 1 / -1;
-  height: 8px;
-  min-height: 8px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
-}
-
-/* Bancarios pasan a comportarse como tarjetas normales de la misma cuadrícula. */
-.cupones-grid-compacta > .cupon-bancario-mini,
-.cupones-grid-compacta > .cupon-bancario-grid {
-  box-sizing: border-box !important;
-  width: 100% !important;
-  min-width: 0 !important;
-  max-width: none !important;
-  height: 100% !important;
-  min-height: 350px !important;
-  max-height: none !important;
-  flex: initial !important;
-  align-self: stretch !important;
-  scroll-snap-align: none !important;
-  margin: 0 !important;
-}
-
-/* La cuadrícula sigue siendo la misma que Tienda. */
-.cupones-grid-compacta {
-  align-items: stretch;
-}
-
-/* Selector inferior: tres botones, siempre en una sola línea. */
-.navegacion-inferior.selector-cupones-oscuro {
-  display: grid !important;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  gap: 4px !important;
-}
-.navegacion-inferior.selector-cupones-oscuro .tab-inferior {
-  width: 100% !important;
-  min-width: 0 !important;
-  justify-content: center !important;
-  white-space: nowrap !important;
-}
-.navegacion-inferior.selector-cupones-oscuro .tab-textos {
-  min-width: 0 !important;
-  flex: 0 1 auto !important;
-}
-.navegacion-inferior.selector-cupones-oscuro .tab-etiqueta-principal {
-  overflow: visible !important;
-  text-overflow: clip !important;
-  white-space: nowrap !important;
-}
-
-@media (max-width: 680px) {
-  .cupones-grid-compacta > .cupon-bancario-mini,
-  .cupones-grid-compacta > .cupon-bancario-grid {
-    height: 100% !important;
-    min-height: 350px !important;
-  }
-
-  .cupones-grid-compacta > .separacion-bancarios-grid {
-    height: 6px;
-    min-height: 6px;
-  }
-
-  .navegacion-inferior.selector-cupones-oscuro .tab-inferior {
-    gap: 4px !important;
-    padding-left: 4px !important;
-    padding-right: 4px !important;
-  }
-}
-
-/* V81.18 — Bancarios con exactamente las mismas dimensiones exteriores que Tienda */
-.cupones-grid-compacta > .cupon-bancario-mini,
-.cupones-grid-compacta > .cupon-bancario-grid {
-  width: 100% !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-  height: 100% !important;
-  min-height: 0 !important;
-  max-height: none !important;
-  align-self: stretch !important;
-  box-sizing: border-box !important;
-}
-
-/* Evita que reglas móviles anteriores vuelvan a forzar mayor altura. */
-@media (max-width: 680px) {
-  .cupones-grid-compacta > .cupon-bancario-mini,
-  .cupones-grid-compacta > .cupon-bancario-grid {
-    width: 100% !important;
-    height: 100% !important;
-    min-height: 0 !important;
-    max-height: none !important;
-  }
-}
-
-/* =========================================================
-   V81.19 — Más aire en Bancarios + Tienda simplificada
-   ========================================================= */
-
-/* Tienda vuelve a su presentación normal: sin etiqueta superior. */
-.cupon-tienda-etiqueta {
-  display: none !important;
-}
-
-/* Compra mínima y descuento máximo de Tienda usan el mismo lenguaje
-   tipográfico ligero de los datos bancarios. */
-.cupon:not(.cupon-bancario-mini) .cupon-meta,
-.cupon:not(.cupon-bancario-mini) .cupon-meta-item,
-.cupon:not(.cupon-bancario-mini) .cupon-dato,
-.cupon:not(.cupon-bancario-mini) .cupon-dato-label,
-.cupon:not(.cupon-bancario-mini) .cupon-dato-valor,
-.cupon:not(.cupon-bancario-mini) .compra-minima,
-.cupon:not(.cupon-bancario-mini) .descuento-maximo {
-  font-family: inherit !important;
-  font-weight: 500 !important;
-  letter-spacing: 0 !important;
-}
-
-/* El bloque de beneficio bancario puede crecer naturalmente. */
-.cupon-bancario-mini .banco-beneficio,
-.cupon-bancario-mini .banco-detalle,
-.cupon-bancario-mini .detalle-beneficio-bancario {
-  height: auto !important;
-  max-height: none !important;
-  overflow: visible !important;
-}
-
-/* Reserva un pequeño respiro antes de Copiar código.
-   Si el detalle bancario ocupa más líneas, la tarjeta puede crecer. */
-.cupon-bancario-mini .banco-boton-copiar,
-.cupon-bancario-mini .btn-copiar,
-.cupon-bancario-mini .copiar-codigo,
-.cupon-bancario-mini [data-action="copy"],
-.cupon-bancario-mini [data-accion="copiar"] {
-  margin-top: 10px !important;
-}
-
-/* Ya no forzamos a Bancarios a comprimir su contenido para igualar
-   estrictamente la altura de Tienda. Conserva el mismo ancho y puede
-   crecer verticalmente solo cuando el contenido lo necesita. */
-.cupones-grid-compacta > .cupon-bancario-mini,
-.cupones-grid-compacta > .cupon-bancario-grid {
-  width: 100% !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-  height: auto !important;
-  min-height: 0 !important;
-  max-height: none !important;
-  align-self: stretch !important;
-  box-sizing: border-box !important;
-}
-
-@media (max-width: 680px) {
-  .cupones-grid-compacta > .cupon-bancario-mini,
-  .cupones-grid-compacta > .cupon-bancario-grid {
-    height: auto !important;
-    min-height: 0 !important;
-  }
-}
-
-/* =========================================================
-   V81.20 — Corrección efectiva de V81.19
-   ========================================================= */
-
-/* CUPÓN DE TIENDA: eliminado desde JS; esto evita que una versión vieja
-   del marcado pueda volver a mostrarlo durante una recarga parcial. */
+.bancarios-flecha,
+.cupon-tienda-etiqueta,
 .franja-cupon-tienda {
   display: none !important;
 }
 
-/* Tienda: misma tipografía ligera de Compra mínima / Máx. descuento
-   que las tarjetas bancarias. */
+.cupones-grid-compacta {
+  align-items: stretch;
+}
+
+/* Bancarios: tarjeta normal dentro de la cuadrícula, con altura natural. */
+.cupones-grid-compacta > .cupon-bancario-mini,
+.cupones-grid-compacta > .cupon-bancario-grid {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  align-self: stretch !important;
+  box-sizing: border-box !important;
+  flex: initial !important;
+  scroll-snap-align: none !important;
+}
+
+/* Tienda: misma tipografía y tamaño que Compra mínima / Máx. descuento de Bancarios. */
 .cupon:not(.cupon-bancario-mini) .descuento-maximo,
 .cupon:not(.cupon-bancario-mini) .compra-minima {
   margin: 0 !important;
@@ -8114,8 +7815,9 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   border-radius: 0 !important;
   background: transparent !important;
   color: #343842 !important;
-  font-size: 12px !important;
-  line-height: 1.23 !important;
+  font-family: inherit !important;
+  font-size: 9.35px !important;
+  line-height: 1.13 !important;
   font-weight: 400 !important;
   letter-spacing: 0 !important;
 }
@@ -8123,14 +7825,34 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
 .cupon:not(.cupon-bancario-mini) .descuento-maximo strong,
 .cupon:not(.cupon-bancario-mini) .compra-minima strong {
   color: #202431 !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
   font-weight: 650 !important;
 }
 
-/* Bancarios: el detalle puede crecer a las líneas que necesite. */
+/* Bancarios: el detalle puede crecer, el pie permanece anclado abajo. */
+.cupon-bancario-mini {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.cupon-bancario-mini .banco-cuerpo {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  flex-direction: column !important;
+  min-height: 0 !important;
+}
+
+.cupon-bancario-mini .banco-info {
+  flex: 0 1 auto !important;
+  margin-bottom: 10px !important;
+}
+
 .cupon-bancario-mini .banco-detalle {
   display: block !important;
-  min-height: 0 !important;
   height: auto !important;
+  min-height: 0 !important;
   max-height: none !important;
   margin-bottom: 4px !important;
   overflow: visible !important;
@@ -8138,183 +7860,1220 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   -webkit-box-orient: initial !important;
 }
 
-/* El aire solicitado queda exactamente entre los datos/beneficio y el pie.
-   No se comprime Copiar código contra Compra mínima / Máx. descuento. */
-.cupon-bancario-mini .banco-info {
-  margin-bottom: 10px !important;
-}
-
 .cupon-bancario-mini .banco-pie {
-  margin-top: 0 !important;
+  display: flex !important;
+  flex: 0 0 auto !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 0 !important;
+  height: auto !important;
+  margin-top: auto !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
 }
 
-/* La tarjeta conserva el mismo ancho de Tienda, pero puede crecer un poco
-   verticalmente cuando el detalle bancario sea más largo. */
-.cupones-grid-compacta > .cupon-bancario-mini,
-.cupones-grid-compacta > .cupon-bancario-grid {
+.cupon-bancario-mini .banco-pie > * {
+  flex-shrink: 0 !important;
+}
+
+.cupon-bancario-mini .banco-pie .banco-canjear { order: 1 !important; }
+.cupon-bancario-mini .banco-pie .banco-acciones-extra { order: 2 !important; }
+.cupon-bancario-mini .banco-pie .mensaje { order: 3 !important; }
+.cupon-bancario-mini .banco-pie .estado-programacion {
+  order: 4 !important;
+  margin-top: 4px !important;
+}
+
+/* Acciones: agrupadas y centradas en Tienda y Bancarios. */
+.cupon:not(.cupon-bancario-mini) .acciones-secundarias,
+.cupon-bancario-mini .banco-acciones-extra {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   width: 100% !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-  height: auto !important;
-  min-height: 0 !important;
-  max-height: none !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.cupon:not(.cupon-bancario-mini) .acciones-secundarias { gap: 6px !important; }
+.cupon-bancario-mini .banco-acciones-extra { gap: 5px !important; }
+
+.cupon:not(.cupon-bancario-mini) .acciones-secundarias > *,
+.cupon-bancario-mini .banco-acciones-extra > * {
+  flex: 0 0 auto !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.cupon:not(.cupon-bancario-mini) .estadisticas-cupon,
+.cupon-bancario-mini .banco-estadisticas {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  margin-left: 0 !important;
+  gap: 4px !important;
+}
+
+/* Copiar código: misma geometría, identidad de color según tarjeta. */
+.cupon .acciones-bloque,
+.cupon .acciones-cupon,
+.cupon-bancario-mini .banco-pie {
   box-sizing: border-box !important;
+}
+
+.cupon .boton-canjear,
+.cupon-bancario-mini .banco-pie .banco-canjear {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 120px !important;
+  min-width: 120px !important;
+  max-width: 120px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  max-height: 30px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 0 9px !important;
+  border-radius: 9px !important;
+  box-sizing: border-box !important;
+  align-self: center !important;
+  line-height: 1 !important;
+  font-size: 10.5px !important;
+  font-weight: 800 !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+}
+
+.cupon .boton-canjear {
+  border: 1px solid #159b13 !important;
+  color: #fff !important;
+  background: linear-gradient(180deg, #35c72d 0%, #1cac17 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .22),
+    0 3px 8px rgba(26, 172, 23, .22) !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: .15px !important;
+}
+
+.cupon .boton-canjear:hover {
+  background: linear-gradient(180deg, #3bcf33 0%, #1da918 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .25),
+    0 4px 10px rgba(26, 172, 23, .26) !important;
+}
+
+.cupon-bancario-mini .banco-pie .banco-canjear {
+  flex: 0 0 120px !important;
+  border: 1px solid var(--banco-color) !important;
+  color: var(--banco-texto, #fff) !important;
+  background: var(--banco-color) !important;
+  background-image: none !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .18),
+    0 3px 9px color-mix(in srgb, var(--banco-color) 22%, transparent) !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: .15px !important;
+}
+
+.cupon-bancario-mini .banco-pie .banco-canjear:hover {
+  color: var(--banco-texto, #fff) !important;
+  background: var(--banco-color) !important;
+  filter: brightness(.94);
+}
+
+.cupon .boton-canjear svg,
+.cupon-bancario-mini .banco-pie .banco-canjear svg {
+  width: 13px !important;
+  height: 13px !important;
+  flex: 0 0 13px !important;
+  fill: currentColor !important;
+}
+
+.cupon .boton-canjear:disabled.boton-programado,
+.cupon-bancario-mini .banco-pie .banco-canjear:disabled.boton-programado {
+  color: #6c6652 !important;
+  border-color: #ded4a0 !important;
+  background: #f7f2d7 !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+
+/* Alineación del bloque informativo en cupones bancarios. */
+.cupon-bancario-mini .banco-info,
+.cupon-bancario-mini .banco-info h3,
+.cupon-bancario-mini .banco-detalle,
+.cupon-bancario-mini .banco-minimo,
+.cupon-bancario-mini .banco-maximo {
+  text-align: center !important;
+}
+
+/* Cupón Exclusivo: conserva la tarjeta normal y añade identidad propia. */
+.cupon-exclusivo {
+  border-color: #d8c76a;
+}
+
+.cupon-exclusivo .cupon-encabezado {
+  background: linear-gradient(135deg, #fff7c7 0%, #ffe98a 100%);
+}
+
+.etiqueta-exclusivo {
+  color: #725900 !important;
+  background: #fff2a8 !important;
+  border: 1px solid #ead26a !important;
+}
+
+.detalle-beneficio-exclusivo {
+  margin: 1px 0 2px;
+  color: #51564f;
+  font-size: 10.5px;
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+@media (max-width: 700px) {
+  .detalle-beneficio-exclusivo {
+    font-size: 9px;
+    line-height: 1.15;
+  }
+}
+
+/* Ayuda conservada en HTML para reactivarla después, pero oculta por configuración actual. */
+#ayuda-cupones[data-oculto-temporalmente="true"] {
+  display: none !important;
+}
+
+#ayuda-cupones[data-oculto-temporalmente="true"] + .separador-despues-ayuda {
+  display: none !important;
+}
+
+/* Estado vacío definitivo. */
+.mensaje-sin-cupones,
+.sin-cupones,
+.estado-sin-cupones {
+  line-height: 1.2 !important;
+}
+
+.mensaje-sin-cupones h2,
+.sin-cupones h2,
+.estado-sin-cupones h2 {
+  margin: 0 0 4px !important;
+  font-size: 14px !important;
+  line-height: 1.2 !important;
+}
+
+.mensaje-sin-cupones p,
+.sin-cupones p,
+.estado-sin-cupones p {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  margin: 3px 0 0 !important;
+  font-size: 12px !important;
+  line-height: 1.25 !important;
 }
 
 @media (max-width: 700px) {
   .cupon:not(.cupon-bancario-mini) .descuento-maximo,
   .cupon:not(.cupon-bancario-mini) .compra-minima {
-    font-size: 11.25px !important;
-    line-height: 1.2 !important;
+    font-size: 8.8px !important;
+    line-height: 1.12 !important;
   }
 
   .cupon-bancario-mini .banco-info {
     margin-bottom: 8px !important;
   }
+
+  .cupon .boton-canjear,
+  .cupon-bancario-mini .banco-pie .banco-canjear {
+    width: 120px !important;
+    min-width: 120px !important;
+    max-width: 120px !important;
+    height: 30px !important;
+    min-height: 30px !important;
+    max-height: 30px !important;
+    padding: 0 7px !important;
+    border-radius: 8px !important;
+    font-size: 10px !important;
+  }
+
+  .cupon-bancario-mini .banco-pie .banco-canjear {
+    flex-basis: 120px !important;
+  }
 }
 
 
-/* V81.23 — Selector Opción 6 FORZADO */
-body .navegacion-inferior.selector-cupones-oscuro {
-  display: grid !important;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  gap: 0 !important;
-  width: min(720px, calc(100% - 18px)) !important;
-  padding: 4px !important;
-  border: 1px solid rgba(112, 118, 132, .24) !important;
-  border-radius: 999px !important;
-  background: rgba(255,255,255,.97) !important;
-  background-image: none !important;
-  box-shadow: 0 8px 24px rgba(20, 26, 40, .14) !important;
+/* =========================================================
+   V81.49 — Tarjetas Tienda/Exclusivo con jerarquía Bancarios
+   Franja y color administrables sin alterar acciones ni tamaño base.
+   ========================================================= */
+.cupon:not(.cupon-bancario) .franja-categoria-cupon {
+  display:flex !important; align-items:center; justify-content:center;
+  min-height:22px; padding:4px 8px; box-sizing:border-box;
+  background:var(--categoria-cupon-color,#22c55e); color:var(--categoria-cupon-texto,#fff);
+  font-size:10px; line-height:1; font-weight:800; letter-spacing:.045em; text-transform:uppercase;
+}
+.cupon.cupon-exclusivo .franja-categoria-cupon { color:var(--categoria-cupon-texto,#202124); }
+.cupon:not(.cupon-bancario) .cupon-encabezado {
+  min-height:72px !important; height:auto !important; padding:12px 10px 8px !important;
+  background:#fff !important; display:flex !important; align-items:center !important; justify-content:center !important; gap:8px !important;
+}
+.cupon:not(.cupon-bancario) .cupon-encabezado .descuento {
+  margin:0 !important; color:var(--categoria-cupon-color,#22c55e) !important;
+  font-size:27px !important; line-height:1.05 !important; font-weight:850 !important; text-align:center !important; text-shadow:none !important;
+}
+.cupon:not(.cupon-bancario) .cupon-logo { max-height:38px !important; width:auto !important; object-fit:contain !important; }
+.cupon:not(.cupon-bancario) .cupon-contenido { padding-top:8px !important; }
+@media (max-width:640px) {
+  .cupon:not(.cupon-bancario) .franja-categoria-cupon { min-height:20px; padding:3px 5px; font-size:8.5px; }
+  .cupon:not(.cupon-bancario) .cupon-encabezado { min-height:62px !important; padding:9px 6px 6px !important; }
+  .cupon:not(.cupon-bancario) .cupon-encabezado .descuento { font-size:23px !important; }
+  .cupon:not(.cupon-bancario) .cupon-logo { max-height:32px !important; max-width:42px !important; }
+}
+
+
+/* =========================================================
+   V81.49.2 — Altura uniforme + descuento más compacto
+   - Todas las tarjetas visibles toman la altura natural de la
+     tarjeta más alta de la vista.
+   - Tienda/Exclusivo reducen el aire vertical alrededor del OFF.
+   - La altura la sincroniza JS después de renderizar temporizadores.
+   ========================================================= */
+.cupon:not(.cupon-bancario) .cupon-encabezado {
+  min-height: 50px !important;
+  padding: 6px 10px 5px !important;
+  gap: 6px !important;
+}
+
+.cupon:not(.cupon-bancario) .cupon-encabezado .descuento {
+  margin: 0 !important;
+  line-height: 1 !important;
+}
+
+.cupon:not(.cupon-bancario) .cupon-contenido {
+  padding-top: 6px !important;
+}
+
+/* El alto final lo fija la rutina de sincronización. Mantener flex
+   permite que el bloque de acciones permanezca alineado abajo. */
+.cupones-grid-compacta > .cupon,
+.cupones-grid-compacta > .cupon-bancario-mini,
+.cupones-grid-compacta > .cupon-bancario-grid {
+  box-sizing: border-box !important;
+  align-self: stretch !important;
+}
+
+@media (max-width: 640px) {
+  .cupon:not(.cupon-bancario) .cupon-encabezado {
+    min-height: 46px !important;
+    padding: 5px 6px 4px !important;
+    gap: 5px !important;
+  }
+
+  .cupon:not(.cupon-bancario) .cupon-contenido {
+    padding-top: 5px !important;
+  }
+}
+
+
+/* =========================================================
+   V81.49.3 — Tarjetas uniformes y estado "Ya copiado" compacto
+   - Altura fija por breakpoint: ya no depende de Exclusivo ni de
+     una tarjeta con contenido adicional.
+   - "Ya copiado" es un distintivo flotante; no crea una fila nueva.
+   - El botón siempre conserva la acción "Copiar código".
+   ========================================================= */
+:root {
+  --altura-cupon-estandar: 292px;
+}
+
+.cupones-grid-compacta > .cupon,
+.cupones-grid-compacta > .cupon-bancario-mini,
+.cupones-grid-compacta > .cupon-bancario-grid {
+  height: var(--altura-cupon-estandar) !important;
+  min-height: var(--altura-cupon-estandar) !important;
+  max-height: var(--altura-cupon-estandar) !important;
+}
+
+/* Evita que una etiqueta o detalle excepcional cambie la altura. */
+.cupon:not(.cupon-bancario) .cupon-etiquetas {
+  flex: 0 0 auto;
+  max-height: 24px;
+  overflow: hidden;
+}
+
+.cupon:not(.cupon-bancario) .detalle-beneficio-exclusivo {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.cupon:not(.cupon-bancario) .acciones-cupon {
+  position: relative;
+  overflow: visible;
+}
+
+.cupon-copiado-mini {
+  position: absolute;
+  z-index: 3;
+  top: -7px;
+  right: calc(50% - 64px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 15px;
+  padding: 1px 5px;
+  border: 1px solid #9bdcc9;
+  border-radius: 999px;
+  color: #087a63;
+  background: #f1fff9;
+  box-shadow: 0 1px 3px rgba(8, 122, 99, .10);
+  font-size: 7.5px;
+  line-height: 1;
+  font-weight: 800;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.cupon-copiado-mini[hidden] {
+  display: none !important;
+}
+
+/* La antigua fila ya no participa del layout aunque quede en caché. */
+.cupon-usado {
+  display: none !important;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --altura-cupon-estandar: 278px;
+  }
+
+  .cupon-copiado-mini {
+    top: -6px;
+    right: calc(50% - 62px);
+    min-height: 14px;
+    padding: 1px 4px;
+    font-size: 7px;
+  }
+}
+
+@media (max-width: 390px) {
+  :root {
+    --altura-cupon-estandar: 270px;
+  }
+}
+
+/* =========================================================
+   V81.49.4 — Compactación real de tarjetas
+   - Elimina reservas invisibles heredadas (etiqueta/temporizador).
+   - Recupera el espacio liberado por "Ya usaste este cupón".
+   - Conserva una altura exterior común para Tienda, Exclusivo y Bancarios.
+   - Los componentes visibles ocupan espacio solo cuando existen.
+   ========================================================= */
+:root {
+  --altura-cupon-estandar: 258px;
+}
+
+/* Ya no reservamos una fila para etiquetas que no existen. */
+.cupon:not(.cupon-bancario) .cupon-etiquetas {
+  min-height: 0 !important;
+  max-height: 24px !important;
+  margin-top: 0 !important;
+  margin-bottom: 2px !important;
+}
+
+.cupon:not(.cupon-bancario) .cupon-etiquetas:empty {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* La fila antigua de usado queda eliminada por completo. */
+.cupon-usado,
+.cupon-usado[hidden] {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Un temporizador oculto ya no deja un hueco invisible. */
+.cupon .estado-programacion[hidden],
+.cupon .estado-programacion.vacio,
+.cupon-bancario-mini .estado-programacion[hidden],
+.cupon-bancario-mini .estado-programacion.vacio {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+/* Quita la altura mínima heredada que seguía conservando aire en móvil. */
+.cupon:not(.cupon-bancario) .cupon-contenido {
+  flex: 1 1 auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+.cupon:not(.cupon-bancario) .acciones-bloque {
+  padding-top: 4px !important;
+}
+
+/* Mantiene el pie alineado sin fabricar una fila vacía. */
+.cupon:not(.cupon-bancario) .acciones-cupon,
+.cupon-bancario-mini .banco-pie {
+  min-height: 0 !important;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --altura-cupon-estandar: 258px;
+  }
+
+  .cupon:not(.cupon-bancario) .acciones-bloque {
+    padding-top: 3px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  :root {
+    --altura-cupon-estandar: 254px;
+  }
+}
+
+
+/* =========================================================
+   V81.49.6 — Corrección real de compactación + Ya copiado bancario
+   - Corrige el bloque V81.49.5 que quedó guardado con \n literales.
+   - Reduce de forma visible el espacio entre el descuento y las etiquetas.
+   - Mantiene "Ya copiado" en Tienda, Exclusivo y Bancarios sin ocupar fila.
+   ========================================================= */
+:root {
+  --altura-cupon-estandar: 248px;
+}
+
+/* Tienda / Exclusivo: compactar la transición OFF -> etiquetas. */
+.cupon:not(.cupon-bancario) .cupon-encabezado {
+  min-height: 40px !important;
+  padding: 3px 8px 1px !important;
+  gap: 4px !important;
+}
+
+.cupon:not(.cupon-bancario) .cupon-encabezado .descuento {
+  margin: 0 !important;
+  line-height: .98 !important;
+}
+
+.cupon:not(.cupon-bancario) .cupon-contenido {
+  padding-top: 2px !important;
+  gap: 4px !important;
+}
+
+.cupon:not(.cupon-bancario) .cupon-etiquetas {
+  margin: 0 0 1px !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  line-height: 1 !important;
+}
+
+/* Ya copiado bancario: flotante, sin sumar altura. */
+.cupon-bancario-mini .banco-pie {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.cupon-bancario-mini .banco-pie > .cupon-copiado-mini {
+  position: absolute !important;
+  z-index: 5 !important;
+  top: -7px !important;
+  right: 6px !important;
+  flex: none !important;
+  order: 0 !important;
+  margin: 0 !important;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --altura-cupon-estandar: 248px;
+  }
+
+  .cupon:not(.cupon-bancario) .cupon-encabezado {
+    min-height: 37px !important;
+    padding: 2px 5px 1px !important;
+    gap: 3px !important;
+  }
+
+  .cupon:not(.cupon-bancario) .cupon-contenido {
+    padding-top: 1px !important;
+    gap: 3px !important;
+  }
+
+  .cupon-bancario-mini .banco-pie > .cupon-copiado-mini {
+    top: -6px !important;
+    right: 5px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  :root {
+    --altura-cupon-estandar: 244px;
+  }
+}
+
+
+/* =========================================================
+   V81.49.9 — Configuración única del botón Tienda / Exclusivo
+   CAMBIA SOLO ESTE VALOR para modificar ambos botones.
+   Los botones bancarios conservan el color de cada banco.
+   ========================================================= */
+:root {
+  --color-boton-tienda-exclusivo: #1cac17;
+  --color-texto-boton-tienda-exclusivo: #ffffff;
+}
+
+.cupon:not(.cupon-bancario) .boton-canjear {
+  border-color: color-mix(in srgb, var(--color-boton-tienda-exclusivo) 82%, #000) !important;
+  color: var(--color-texto-boton-tienda-exclusivo) !important;
+  background: var(--color-boton-tienda-exclusivo) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .22),
+    0 3px 8px color-mix(in srgb, var(--color-boton-tienda-exclusivo) 22%, transparent) !important;
+}
+
+.cupon:not(.cupon-bancario) .boton-canjear:hover {
+  background: color-mix(in srgb, var(--color-boton-tienda-exclusivo) 90%, #fff) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .25),
+    0 4px 10px color-mix(in srgb, var(--color-boton-tienda-exclusivo) 26%, transparent) !important;
+}
+
+/* =========================================================
+   V81.49.8 — Contraste automático en franjas de categoría
+   El texto cambia entre claro/oscuro según el fondo elegido.
+   ========================================================= */
+.cupon:not(.cupon-bancario) .franja-categoria-cupon {
+  color: var(--categoria-cupon-texto, #fff) !important;
+}
+.cupon-bancario-mini .banco-franja {
+  background: var(--banco-color, #17139d) !important;
+  color: var(--banco-franja-texto, #fff) !important;
+}
+
+/* =========================================================
+   V81.50.2 — Tarjetas de cupones más compactas
+   - Reduce aproximadamente a la mitad el aire libre que quedaba
+     antes del botón "Copiar código" sin alterar su tamaño.
+   - Conserva la alineación inferior entre tarjetas.
+   - Compacta también el pie bancario de forma proporcional.
+   ========================================================= */
+:root {
+  --altura-cupon-estandar: 236px;
+}
+
+/* Tienda / Exclusivo: menos separación inmediata sobre el botón. */
+.cupon:not(.cupon-bancario) .acciones-bloque {
+  padding-top: 2px !important;
+}
+
+/* Bancarios: el bloque informativo deja la mitad del margen previo al pie. */
+.cupon-bancario-mini .banco-info {
+  margin-bottom: 5px !important;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --altura-cupon-estandar: 236px;
+  }
+
+  .cupon:not(.cupon-bancario) .acciones-bloque {
+    padding-top: 1px !important;
+  }
+
+  .cupon-bancario-mini .banco-info {
+    margin-bottom: 4px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  :root {
+    --altura-cupon-estandar: 232px;
+  }
+}
+
+
+/* =========================================================
+   V81.50.3 — Reduce 50% adicional del espacio antes de Copiar código
+   Mantiene el tamaño del botón y la alineación de las tarjetas.
+   ========================================================= */
+:root {
+  --altura-cupon-estandar: 224px;
+}
+
+.cupon:not(.cupon-bancario) .acciones-bloque {
+  padding-top: 0 !important;
+}
+
+.cupon-bancario-mini .banco-info {
+  margin-bottom: 2px !important;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --altura-cupon-estandar: 224px;
+  }
+
+  .cupon:not(.cupon-bancario) .acciones-bloque {
+    padding-top: 0 !important;
+  }
+
+  .cupon-bancario-mini .banco-info {
+    margin-bottom: 2px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  :root {
+    --altura-cupon-estandar: 220px;
+  }
+}
+
+
+/* =========================================================
+   V81.50.4 — Ajuste fino de separación antes de Copiar código
+   - Recupera ~30% de aire respecto al ajuste V81.50.3.
+   - Mantiene las tarjetas compactas y el tamaño del botón.
+   ========================================================= */
+:root {
+  --altura-cupon-estandar: 228px;
+}
+
+.cupon:not(.cupon-bancario) .acciones-bloque {
+  padding-top: 3px !important;
+}
+
+.cupon-bancario-mini .banco-info {
+  margin-bottom: 3px !important;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --altura-cupon-estandar: 228px;
+  }
+
+  .cupon:not(.cupon-bancario) .acciones-bloque {
+    padding-top: 3px !important;
+  }
+
+  .cupon-bancario-mini .banco-info {
+    margin-bottom: 3px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  :root {
+    --altura-cupon-estandar: 224px;
+  }
+}
+
+/* =========================================================
+   V81.51 — Etiquetas automáticas de cupones
+   Máximo 2 etiquetas visibles por tarjeta.
+   Prioridad: Última oportunidad > Últimas horas > Regresó >
+   Más usado > Popular > Mayor ahorro > Top > Nuevo.
+   Exclusivo cuenta como etiqueta visual y muestra 1 automática adicional.
+   ========================================================= */
+.cupon-etiquetas,
+.cupon-bancario-mini .banco-etiquetas {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 4px !important;
+  min-height: 0 !important;
+  max-height: 22px !important;
   overflow: hidden !important;
 }
 
-body .navegacion-inferior.selector-cupones-oscuro > .tab-inferior {
-  position: relative !important;
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 7px !important;
-  width: 100% !important;
-  min-width: 0 !important;
-  min-height: 46px !important;
-  padding: 8px 8px !important;
-  margin: 0 !important;
+.cupon-etiquetas .etiqueta-cupon {
+  flex: 0 1 auto;
+  max-width: 100%;
+  min-height: 18px !important;
+  padding: 3px 7px !important;
   border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  background-image: none !important;
-  color: #1f2430 !important;
-  box-shadow: none !important;
-  transform: none !important;
-}
-
-body .navegacion-inferior.selector-cupones-oscuro > .tab-inferior::before {
-  display: none !important;
-  content: none !important;
-}
-
-body .navegacion-inferior.selector-cupones-oscuro > .tab-inferior + .tab-inferior::after {
-  content: "" !important;
-  display: block !important;
-  position: absolute !important;
-  left: 0 !important;
-  top: 23% !important;
-  width: 1px !important;
-  height: 54% !important;
-  background: rgba(105,112,126,.20) !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  opacity: 1 !important;
-}
-
-body .navegacion-inferior.selector-cupones-oscuro > .tab-inferior.activo,
-body .navegacion-inferior.selector-cupones-oscuro > .tab-inferior[aria-pressed="true"] {
-  color: #fff !important;
-  background: #6438df !important;
-  background-image: linear-gradient(135deg, #7549eb 0%, #5b2fd6 100%) !important;
   border-radius: 999px !important;
-  box-shadow: 0 5px 14px rgba(92, 52, 214, .30) !important;
-  z-index: 3 !important;
-}
-
-body .navegacion-inferior.selector-cupones-oscuro > .tab-inferior.activo::after,
-body .navegacion-inferior.selector-cupones-oscuro > .tab-inferior[aria-pressed="true"]::after,
-body .navegacion-inferior.selector-cupones-oscuro > .tab-inferior.activo + .tab-inferior::after,
-body .navegacion-inferior.selector-cupones-oscuro > .tab-inferior[aria-pressed="true"] + .tab-inferior::after {
-  opacity: 0 !important;
-}
-
-body .navegacion-inferior.selector-cupones-oscuro .tab-icono {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 21px !important;
-  height: 21px !important;
-  min-width: 21px !important;
-  flex: 0 0 21px !important;
-  color: currentColor !important;
-  opacity: 1 !important;
-}
-
-body .navegacion-inferior.selector-cupones-oscuro .tab-icono svg {
-  display: block !important;
-  width: 19px !important;
-  height: 19px !important;
-  stroke: currentColor !important;
-  fill: none !important;
-  opacity: 1 !important;
-}
-
-body .navegacion-inferior.selector-cupones-oscuro .tab-textos {
-  display: inline-flex !important;
-  flex: 0 1 auto !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: center !important;
-  min-width: 0 !important;
-}
-
-body .navegacion-inferior.selector-cupones-oscuro .tab-etiqueta-principal {
-  display: inline !important;
-  color: currentColor !important;
-  font-size: 13px !important;
+  color: #fff !important;
+  font-size: 8px !important;
+  font-weight: 800 !important;
   line-height: 1 !important;
-  font-weight: 700 !important;
+  letter-spacing: -.08px;
   white-space: nowrap !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, .12) !important;
 }
 
-body .navegacion-inferior.selector-cupones-oscuro .tab-textos small,
-body .navegacion-inferior.selector-cupones-oscuro .contador-seccion-inferior {
+.etiqueta-ultima-oportunidad {
+  background: linear-gradient(135deg, #dc2626, #ef4444) !important;
+}
+
+.etiqueta-ultimas-horas {
+  background: linear-gradient(135deg, #ea580c, #f97316) !important;
+}
+
+.etiqueta-regreso {
+  background: linear-gradient(135deg, #7c3aed, #8b5cf6) !important;
+}
+
+.etiqueta-mas-usado {
+  background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+}
+
+.etiqueta-popular-integrada {
+  background: linear-gradient(135deg, #e11d48, #fb7185) !important;
+}
+
+.etiqueta-mayor-ahorro {
+  background: linear-gradient(135deg, #15803d, #22c55e) !important;
+}
+
+.etiqueta-top {
+  color: #4a3200 !important;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
+}
+
+.etiqueta-nuevo {
+  background: linear-gradient(135deg, #0f9f9a, #14b8a6) !important;
+}
+
+.etiqueta-exclusivo {
+  background: linear-gradient(135deg, #9333ea, #c026d3) !important;
+}
+
+/* El borde acompaña al estado más urgente sin cambiar el layout. */
+.cupon-ultima-oportunidad,
+.cupon-bancario-mini.cupon-ultima-oportunidad {
+  border-color: rgba(220, 38, 38, .42) !important;
+}
+
+.cupon-ultimas-horas,
+.cupon-bancario-mini.cupon-ultimas-horas {
+  border-color: rgba(249, 115, 22, .36) !important;
+}
+
+/* Bancarios: las etiquetas viven entre la franja y el cuerpo,
+   ocupando una fila compacta sin cambiar la altura exterior. */
+.cupon-bancario-mini .banco-etiquetas {
+  flex: 0 0 20px !important;
+  height: 20px !important;
+  margin: 0 !important;
+  padding: 2px 7px 0 !important;
+  background: #fff !important;
+  box-sizing: border-box !important;
+}
+
+.cupon-bancario-mini .banco-etiquetas:empty {
+  display: none !important;
+  flex-basis: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+}
+
+.cupon-bancario-mini .banco-etiquetas .etiqueta-cupon {
+  min-height: 16px !important;
+  padding: 2px 6px !important;
+  font-size: 7.5px !important;
+}
+
+@media (max-width: 700px) {
+  .cupon-etiquetas,
+  .cupon-bancario-mini .banco-etiquetas {
+    gap: 3px !important;
+    max-height: 20px !important;
+  }
+
+  .cupon-etiquetas .etiqueta-cupon {
+    min-height: 16px !important;
+    padding: 2px 5px !important;
+    font-size: 7px !important;
+  }
+
+  .cupon-bancario-mini .banco-etiquetas {
+    flex-basis: 18px !important;
+    height: 18px !important;
+    padding: 2px 5px 0 !important;
+  }
+
+  .cupon-bancario-mini .banco-etiquetas .etiqueta-cupon {
+    min-height: 14px !important;
+    padding: 2px 4px !important;
+    font-size: 6.7px !important;
+  }
+}
+
+/* =========================================================
+   V81.51.1 — Altura automática y contenido seguro en tarjetas
+   - Elimina la altura máxima rígida introducida por versiones compactas.
+   - Conserva una altura mínima compacta, pero cada tarjeta puede crecer
+     cuando etiquetas, detalle o textos necesitan más espacio.
+   - Evita que el bloque informativo bancario se comprima y se encime
+     con el botón "Copiar código".
+   ========================================================= */
+:root {
+  --altura-cupon-minima: 228px;
+}
+
+.cupones-grid-compacta > .cupon,
+.cupones-grid-compacta > .cupon-bancario-mini,
+.cupones-grid-compacta > .cupon-bancario-grid {
+  height: auto !important;
+  min-height: var(--altura-cupon-minima) !important;
+  max-height: none !important;
+  align-self: stretch !important;
+  overflow: visible !important;
+}
+
+/* El contenido central conserva su altura natural. El pie puede seguir
+   anclándose abajo gracias al flex de la tarjeta, sin invadir el texto. */
+.cupon:not(.cupon-bancario) .cupon-contenido,
+.cupon-bancario-mini .banco-cuerpo {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.cupon-bancario-mini .banco-cuerpo {
+  flex: 1 0 auto !important;
+  padding-top: 6px !important;
+}
+
+.cupon-bancario-mini .banco-info {
+  flex: 0 0 auto !important;
+  min-height: max-content !important;
+  height: auto !important;
+  max-height: none !important;
+  margin-bottom: 4px !important;
+  overflow: visible !important;
+}
+
+.cupon-bancario-mini .banco-info h3,
+.cupon-bancario-mini .banco-detalle,
+.cupon-bancario-mini .banco-minimo,
+.cupon-bancario-mini .banco-maximo {
+  position: static !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  flex-shrink: 0 !important;
+  overflow: visible !important;
+}
+
+/* Separación corta pero estable entre las líneas informativas. */
+.cupon-bancario-mini .banco-info {
+  gap: 2px !important;
+}
+
+.cupon-bancario-mini .banco-detalle {
+  margin: 0 0 2px !important;
+}
+
+.cupon-bancario-mini .banco-minimo,
+.cupon-bancario-mini .banco-maximo {
+  margin: 0 !important;
+}
+
+.cupon-bancario-mini .banco-pie,
+.cupon:not(.cupon-bancario) .acciones-bloque {
+  flex-shrink: 0 !important;
+  position: relative !important;
+}
+
+/* Las etiquetas pueden ocupar su fila real. Si son dos, la tarjeta crece
+   en vez de comprimir el bloque de información. */
+.cupon-etiquetas,
+.cupon-bancario-mini .banco-etiquetas {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.cupon-bancario-mini .banco-etiquetas:not(:empty) {
+  flex-basis: auto !important;
+  height: auto !important;
+  min-height: 20px !important;
+  padding-bottom: 2px !important;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --altura-cupon-minima: 224px;
+  }
+
+  .cupon-bancario-mini .banco-cuerpo {
+    padding-top: 5px !important;
+  }
+
+  .cupon-bancario-mini .banco-info {
+    gap: 2px !important;
+    margin-bottom: 4px !important;
+  }
+
+  .cupon-bancario-mini .banco-etiquetas:not(:empty) {
+    min-height: 18px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  :root {
+    --altura-cupon-minima: 220px;
+  }
+}
+
+/* =========================================================
+   V81.51.2 — Recuperar esquinas redondeadas con altura automática
+   - Mantiene el crecimiento dinámico introducido en V81.51.1.
+   - El recorte vuelve a realizarse en el contenedor exterior para que
+     encabezados, franjas, logos y fondos respeten el border-radius.
+   - Aplica a Tienda, Exclusivo y Bancarios sin imponer una altura fija.
+   ========================================================= */
+.cupones-grid-compacta > .cupon,
+.cupones-grid-compacta > .cupon-bancario-mini,
+.cupones-grid-compacta > .cupon-bancario-grid {
+  overflow: hidden !important;
+  background-clip: padding-box !important;
+  isolation: isolate;
+}
+
+/* Los bloques interiores ya pueden crecer de forma natural; el recorte
+   corresponde únicamente al perímetro visual de la tarjeta. */
+.cupon:not(.cupon-bancario) .cupon-contenido,
+.cupon-bancario-mini .banco-cuerpo,
+.cupon-bancario-mini .banco-info,
+.cupon-etiquetas,
+.cupon-bancario-mini .banco-etiquetas {
+  max-height: none !important;
+}
+
+/* =========================================================
+   V81.51.3 — Centrado de etiquetas en cupones bancarios
+   - Una etiqueta queda centrada horizontalmente.
+   - Dos etiquetas se centran juntas como grupo.
+   - No modifica Tienda/Exclusivo ni la altura automática.
+   ========================================================= */
+.cupon-bancario-mini .banco-etiquetas {
+  justify-content: center !important;
+  width: 100% !important;
+}
+
+
+/* =========================================================
+   V81.51.4 — Condiciones de cupón claras y centradas
+   - Aplica a Tienda, Bancarios y Exclusivos.
+   - Sustituye "Compra mínima" por "En compras desde".
+   - En cupones porcentuales muestra "Ahorra hasta" en segunda línea.
+   - Cupones de monto fijo omiten la línea redundante de ahorro máximo.
+   - Ambas líneas comparten tamaño, peso y centrado.
+   ========================================================= */
+.condiciones-cupon {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  margin: 2px 0 4px !important;
+  padding: 0 4px !important;
+  box-sizing: border-box !important;
+  text-align: center !important;
+}
+
+.condiciones-cupon .condicion-cupon {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #343842 !important;
+  font-family: inherit !important;
+  font-size: 11.25px !important;
+  line-height: 1.2 !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  text-align: center !important;
+  white-space: normal !important;
+}
+
+.condiciones-cupon .condicion-cupon strong {
+  color: #202431 !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  font-weight: 650 !important;
+}
+
+.cupon-bancario-mini .banco-info .condiciones-cupon {
+  margin: 2px 0 3px !important;
+  gap: 3px !important;
+}
+
+/* Neutraliza reglas históricas de los textos anteriores. */
+.cupon .descuento-maximo,
+.cupon .compra-minima,
+.cupon-bancario-mini .banco-minimo,
+.cupon-bancario-mini .banco-maximo {
   display: none !important;
 }
 
-@media (max-width: 430px) {
-  body .navegacion-inferior.selector-cupones-oscuro {
-    width: calc(100% - 12px) !important;
-    padding: 3px !important;
-  }
-
-  body .navegacion-inferior.selector-cupones-oscuro > .tab-inferior {
-    min-height: 42px !important;
-    gap: 5px !important;
-    padding: 7px 4px !important;
-  }
-
-  body .navegacion-inferior.selector-cupones-oscuro .tab-icono {
-    width: 18px !important;
-    height: 18px !important;
-    min-width: 18px !important;
-    flex-basis: 18px !important;
-  }
-
-  body .navegacion-inferior.selector-cupones-oscuro .tab-icono svg {
-    width: 17px !important;
-    height: 17px !important;
-  }
-
-  body .navegacion-inferior.selector-cupones-oscuro .tab-etiqueta-principal {
-    font-size: 11.5px !important;
+@media (max-width: 700px) {
+  .condiciones-cupon .condicion-cupon {
+    font-size: 11.25px !important;
   }
 }
+
+/* =========================================================
+   V81.52.0 — Banners clicables debajo de los cupones
+   ========================================================= */
+.banners-cupones { width:100%; margin:18px auto 4px; }
+.banners-cupones[hidden] { display:none !important; }
+.banners-cupones-lista { display:flex; flex-direction:column; gap:12px; width:100%; }
+.banner-cupones-enlace { display:block; width:100%; overflow:hidden; border:0; border-radius:10px; background:#fff; text-decoration:none; box-shadow:0 2px 10px rgba(17,24,39,.08); transition:transform .16s ease, box-shadow .16s ease; }
+.banner-cupones-enlace:hover { transform:translateY(-1px); box-shadow:0 5px 15px rgba(17,24,39,.12); }
+.banner-cupones-enlace:focus-visible { outline:3px solid rgba(0,156,118,.28); outline-offset:3px; }
+.banner-cupones-enlace img { display:block; width:100%; height:auto; max-height:230px; object-fit:cover; }
+@media (max-width:700px) {
+  .banners-cupones { margin-top:14px; }
+  .banners-cupones-lista { gap:9px; }
+  .banner-cupones-enlace { border-radius:8px; }
+  .banner-cupones-enlace img { max-height:none; }
+}
+
+/* =========================================================
+   V81.53.3 — Orilla #13: segmentos al 50%
+   - Conserva el grosor de la versión anterior.
+   - Segmentos al 50% del largo anterior y separación reducida al 50%.
+   - Tienda / Exclusivo: color de categoría.
+   - Bancarios: color automático de cada banco.
+   ========================================================= */
+.cupones-grid-compacta > .cupon:not(.cupon-bancario),
+.cupones-grid-compacta > .cupon-bancario-mini {
+  --orilla-color: var(--categoria-cupon-color, #009c76);
+  position: relative !important;
+  border: 0 !important;
+  box-shadow: 0 4px 14px rgba(27, 44, 38, .055) !important;
+  isolation: isolate;
+}
+
+.cupones-grid-compacta > .cupon-bancario-mini {
+  --orilla-color: var(--banco-color, #17139d);
+}
+
+.cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
+.cupones-grid-compacta > .cupon-bancario-mini::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  pointer-events: none;
+  z-index: 10;
+  background:
+    repeating-linear-gradient(90deg,
+      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 10px,
+      transparent 10px 14px) top / 100% 1.5px no-repeat,
+    repeating-linear-gradient(90deg,
+      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 10px,
+      transparent 10px 14px) bottom / 100% 1.5px no-repeat,
+    repeating-linear-gradient(0deg,
+      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 10px,
+      transparent 10px 14px) left / 1.5px 100% no-repeat,
+    repeating-linear-gradient(0deg,
+      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 10px,
+      transparent 10px 14px) right / 1.5px 100% no-repeat;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+@media (max-width: 700px) {
+  .cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
+  .cupones-grid-compacta > .cupon-bancario-mini::after {
+    padding: 1.25px;
+    background:
+      repeating-linear-gradient(90deg,
+        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 9px,
+        transparent 9px 12.5px) top / 100% 1.25px no-repeat,
+      repeating-linear-gradient(90deg,
+        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 9px,
+        transparent 9px 12.5px) bottom / 100% 1.25px no-repeat,
+      repeating-linear-gradient(0deg,
+        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 9px,
+        transparent 9px 12.5px) left / 1.25px 100% no-repeat,
+      repeating-linear-gradient(0deg,
+        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 9px,
+        transparent 9px 12.5px) right / 1.25px 100% no-repeat;
+  }
+}
+
+/* V81.53.5 — Orilla #13 al 50% con curva REAL
+   SOLO modifica el dibujo de la orilla.
+   El patrón discontinuo recorre el mismo rectángulo redondeado,
+   incluyendo las cuatro curvas, sin dejar huecos en las esquinas. */
+.cupon-card,
+.cupon-card.bancario,
+.cupon-card.exclusivo {
+  /* Desactiva únicamente las 4 capas que dibujaban lados rectos. */
+  background-image: none !important;
+}
+
+/* SVG embebido como máscara: el trazo sigue todo el radio de 16px.
+   La máscara toma el color que ya usa cada tarjeta mediante background-color. */
+.cupon-card::before,
+.cupon-card.bancario::before,
+.cupon-card.exclusivo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  background-color: var(--orilla-color, #009c76);
+  -webkit-mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' preserveAspectRatio='none'%3E%3Crect x='0.7' y='0.7' width='98.6' height='98.6' rx='5.5' ry='5.5' fill='none' stroke='black' stroke-width='1.4' stroke-dasharray='3.2 1.4' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E")
+    0 0 / 100% 100% no-repeat;
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' preserveAspectRatio='none'%3E%3Crect x='0.7' y='0.7' width='98.6' height='98.6' rx='5.5' ry='5.5' fill='none' stroke='black' stroke-width='1.4' stroke-dasharray='3.2 1.4' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E")
+    0 0 / 100% 100% no-repeat;
+}
+
+/* Mantiene el contenido exactamente encima de la orilla. */
+.cupon-card > *,
+.cupon-card.bancario > *,
+.cupon-card.exclusivo > * {
+  position: relative;
+  z-index: 1;
+}
+
+.cupon-card:not(.bancario):not(.exclusivo) { --orilla-color: #009c76; }
+.cupon-card.exclusivo { --orilla-color: var(--exclusive-color, #7e22ce); }
+
