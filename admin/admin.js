@@ -7,10 +7,12 @@ const logoutButton = document.querySelector("#cerrar-sesion");
 
 const tabCoupons = document.querySelector("#tab-cupones");
 const tabAds = document.querySelector("#tab-publicidad");
+const tabBanners = document.querySelector("#tab-banners");
 const tabAppearance = document.querySelector("#tab-apariencia");
 const tabEvents = document.querySelector("#tab-eventos");
 const couponsSection = document.querySelector("#seccion-cupones");
 const adsSection = document.querySelector("#seccion-publicidad");
+const bannersSection = document.querySelector("#seccion-banners");
 const appearanceSection = document.querySelector("#seccion-apariencia");
 const eventsSection = document.querySelector("#seccion-eventos");
 
@@ -165,7 +167,28 @@ const newAd = document.querySelector("#nueva-publicidad");
 const refreshAds = document.querySelector("#actualizar-publicidad");
 const adList = document.querySelector("#ad-list");
 const adListMessage = document.querySelector("#ad-list-message");
+
 const adSearch = document.querySelector("#buscar-publicaciones");
+
+/* Banners debajo de cupones */
+const bannerForm = document.querySelector("#banner-form");
+const bannerId = document.querySelector("#banner-id");
+const bannerImageUrl = document.querySelector("#banner-image-url");
+const bannerTitle = document.querySelector("#banner-title");
+const bannerLink = document.querySelector("#banner-link");
+const bannerOrder = document.querySelector("#banner-order");
+const bannerActive = document.querySelector("#banner-active");
+const bannerImage = document.querySelector("#banner-image");
+const bannerPreviewWrapper = document.querySelector("#banner-preview-wrapper");
+const bannerPreview = document.querySelector("#banner-preview");
+const bannerFormTitle = document.querySelector("#banner-form-title");
+const bannerFormMessage = document.querySelector("#banner-form-message");
+const cancelBanner = document.querySelector("#cancelar-banner");
+const newBanner = document.querySelector("#nuevo-banner");
+const refreshBanners = document.querySelector("#actualizar-banners");
+const bannerList = document.querySelector("#banner-list");
+const bannerListMessage = document.querySelector("#banner-list-message");
+
 const adsTotal = document.querySelector("#ads-total");
 const adsNew = document.querySelector("#ads-nuevos");
 const adsBestSellers = document.querySelector("#ads-mas-vendidos");
@@ -296,20 +319,24 @@ function logout() {
 function showSection(section) {
   const isCoupons = section === "cupones";
   const isAds = section === "publicidad";
+  const isBanners = section === "banners";
   const isEvents = section === "eventos";
   const isAppearance = section === "apariencia";
 
   tabCoupons.classList.toggle("activo", isCoupons);
   tabAds.classList.toggle("activo", isAds);
+  tabBanners?.classList.toggle("activo", isBanners);
   tabEvents?.classList.toggle("activo", isEvents);
   tabAppearance.classList.toggle("activo", isAppearance);
 
   couponsSection.hidden = !isCoupons;
   adsSection.hidden = !isAds;
+  if (bannersSection) bannersSection.hidden = !isBanners;
   if (eventsSection) eventsSection.hidden = !isEvents;
   appearanceSection.hidden = !isAppearance;
 
   if (isAppearance) loadHeroConfig();
+  if (isBanners) renderBannersAdmin();
 }
 
 /* ================= CUPONES ================= */
@@ -2197,17 +2224,19 @@ function productWebUrl(ad) {
 }
 
 function updateAdsSummary() {
-  if (adsTotal) adsTotal.textContent = String(ads.length);
-  if (adsNew) adsNew.textContent = String(ads.filter(productoNuevoVigente).length);
-  if (adsBestSellers) adsBestSellers.textContent = String(ads.filter((ad) => ad.es_mas_vendido).length);
-  if (adsRecommendations) adsRecommendations.textContent = String(ads.filter((ad) => ad.es_otra_recomendacion).length);
+  const publicaciones = ads.filter((ad) => !esBannerCupones(ad));
+  if (adsTotal) adsTotal.textContent = String(publicaciones.length);
+  if (adsNew) adsNew.textContent = String(publicaciones.filter(productoNuevoVigente).length);
+  if (adsBestSellers) adsBestSellers.textContent = String(publicaciones.filter((ad) => ad.es_mas_vendido).length);
+  if (adsRecommendations) adsRecommendations.textContent = String(publicaciones.filter((ad) => ad.es_otra_recomendacion).length);
 }
 
 function filteredAds() {
   const query = String(adSearch?.value || "").trim().toLocaleLowerCase("es");
-  if (!query) return ads;
+  const publicaciones = ads.filter((ad) => !esBannerCupones(ad));
+  if (!query) return publicaciones;
 
-  return ads.filter((ad) => {
+  return publicaciones.filter((ad) => {
     const links = adMarketplaceLinks(ad);
     return [
       ad.titulo,
@@ -2626,8 +2655,10 @@ async function loadAds() {
   try {
     ads = await api("/api/admin-publicidad");
     renderAds();
+    renderBannersAdmin();
     renderBulkPrices();
-    setMessage(adListMessage, `${ads.length} publicidades registradas.`);
+    const totalPublicidades = ads.filter((ad) => !esBannerCupones(ad)).length;
+    setMessage(adListMessage, `${totalPublicidades} publicidades registradas.`);
   } catch (error) {
     setMessage(adListMessage, error.message, true);
   } finally {
@@ -2821,6 +2852,255 @@ async function handleAdList(event) {
 }
 
 
+
+/* ================= BANNERS DEBAJO DE CUPONES ================= */
+function bannersRegistrados() {
+  return ads
+    .filter(esBannerCupones)
+    .sort((a, b) =>
+      (Number(a?.orden) || 0) - (Number(b?.orden) || 0) ||
+      (Number(a?.id) || 0) - (Number(b?.id) || 0)
+    );
+}
+
+function resetBannerForm() {
+  if (!bannerForm) return;
+  bannerForm.reset();
+  bannerId.value = "";
+  bannerImageUrl.value = "";
+  bannerOrder.value = "0";
+  bannerActive.checked = true;
+  bannerPreview.src = "";
+  bannerPreviewWrapper.hidden = true;
+  bannerFormTitle.textContent = "Agregar banner";
+  cancelBanner.hidden = true;
+  setMessage(bannerFormMessage);
+}
+
+function editBanner(banner) {
+  if (!bannerForm) return;
+  bannerId.value = banner.id;
+  bannerTitle.value = banner.titulo || "";
+  bannerLink.value =
+    banner.enlace_mercado_libre ||
+    banner.enlace ||
+    "";
+  bannerOrder.value = Number(banner.orden || 0);
+  bannerActive.checked = Boolean(banner.activo);
+  bannerImageUrl.value = banner.imagen_url || "";
+  bannerPreview.src = banner.imagen_url || "";
+  bannerPreviewWrapper.hidden = !banner.imagen_url;
+  bannerFormTitle.textContent = `Editar: ${banner.titulo || "Banner"}`;
+  cancelBanner.hidden = false;
+
+  window.scrollTo({
+    top: Math.max(0, (bannersSection?.offsetTop || 0) - 12),
+    behavior: "smooth",
+  });
+}
+
+function renderBannersAdmin() {
+  if (!bannerList || !bannerListMessage) return;
+
+  const banners = bannersRegistrados();
+  bannerList.replaceChildren();
+
+  if (!banners.length) {
+    bannerList.innerHTML =
+      '<div class="banner-admin-vacio">No hay banners registrados. Usa “+ Nuevo banner” para agregar el primero.</div>';
+    setMessage(bannerListMessage, "0 banners registrados.");
+    return;
+  }
+
+  const fragment = document.createDocumentFragment();
+
+  for (const banner of banners) {
+    const item = document.createElement("article");
+    item.className = "banner-admin-item";
+
+    item.innerHTML = `
+      <div class="banner-admin-imagen-wrap">
+        <img
+          src="${escapeHtml(banner.imagen_url || "")}"
+          alt="${escapeHtml(banner.titulo || "Banner")}"
+          loading="lazy"
+        />
+      </div>
+
+      <div class="banner-admin-info">
+        <div class="banner-admin-titulo-fila">
+          <h3>${escapeHtml(banner.titulo || "Banner")}</h3>
+          <span class="banner-admin-estado ${banner.activo ? "activo" : "inactivo"}">
+            ${banner.activo ? "ACTIVO" : "INACTIVO"}
+          </span>
+        </div>
+        <p>
+          <strong>Orden:</strong> ${Number(banner.orden || 0)}
+        </p>
+        <a
+          href="${escapeHtml(banner.enlace_mercado_libre || banner.enlace || "#")}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Abrir enlace de Mercado Libre ↗
+        </a>
+      </div>
+
+      <div class="banner-admin-acciones">
+        <button class="editar" data-banner-action="edit" data-id="${banner.id}" type="button">
+          Editar
+        </button>
+        <button class="estado" data-banner-action="toggle" data-id="${banner.id}" type="button">
+          ${banner.activo ? "Desactivar" : "Activar"}
+        </button>
+        <button class="eliminar" data-banner-action="delete" data-id="${banner.id}" type="button">
+          Eliminar
+        </button>
+      </div>
+    `;
+
+    fragment.appendChild(item);
+  }
+
+  bannerList.appendChild(fragment);
+  setMessage(
+    bannerListMessage,
+    `${banners.length} banner${banners.length === 1 ? "" : "s"} registrado${banners.length === 1 ? "" : "s"}.`
+  );
+}
+
+async function uploadBannerImage() {
+  const file = bannerImage?.files?.[0];
+
+  if (!file) {
+    return bannerImageUrl.value;
+  }
+
+  if (!file.type.startsWith("image/")) {
+    throw new Error("Selecciona una imagen válida.");
+  }
+
+  const dataUrl = await optimizeImage(file);
+
+  const result = await api("/api/admin-publicidad-imagen", {
+    method: "POST",
+    body: JSON.stringify({
+      data_url: dataUrl,
+      nombre: file.name,
+    }),
+  });
+
+  return result.imagen_url;
+}
+
+async function saveBanner(event) {
+  event.preventDefault();
+  if (!bannerForm) return;
+
+  const submit = bannerForm.querySelector('button[type="submit"]');
+  submit.disabled = true;
+  setMessage(bannerFormMessage, "Guardando banner...");
+
+  try {
+    const imageUrl = await uploadBannerImage();
+    const link = bannerLink.value.trim();
+
+    if (!imageUrl) {
+      throw new Error("Selecciona la imagen del banner.");
+    }
+
+    if (!link) {
+      throw new Error("Agrega el enlace de Mercado Libre.");
+    }
+
+    const payload = {
+      titulo: bannerTitle.value.trim(),
+      descripcion: MARCA_BANNER_CUPONES,
+      imagen_url: imageUrl,
+      enlace: link,
+      enlace_mercado_libre: link,
+      enlace_amazon: "",
+      disponible_mercado_libre: true,
+      disponible_amazon: false,
+      plataforma: "mercadolibre",
+      secciones: ["ofertas_dia"],
+      categoria: "ofertas_dia",
+      precio_publicado: "",
+      precio_cupon: "",
+      codigo_cupon: "",
+      es_nuevo: false,
+      fecha_nuevo: null,
+      es_mas_vendido: false,
+      es_otra_recomendacion: false,
+      orden: Number(bannerOrder.value) || 0,
+      activo: bannerActive.checked,
+    };
+
+    const id = Number(bannerId.value);
+
+    await api("/api/admin-publicidad", {
+      method: id ? "PUT" : "POST",
+      body: JSON.stringify(id ? { id, ...payload } : payload),
+    });
+
+    resetBannerForm();
+    await loadAds();
+    setMessage(bannerFormMessage, id ? "Banner actualizado." : "Banner agregado.");
+  } catch (error) {
+    setMessage(bannerFormMessage, error.message, true);
+  } finally {
+    submit.disabled = false;
+  }
+}
+
+async function handleBannerList(event) {
+  const button = event.target.closest("button[data-banner-action]");
+  if (!button) return;
+
+  const id = Number(button.dataset.id);
+  const banner = bannersRegistrados().find((item) => Number(item.id) === id);
+  if (!banner) return;
+
+  const action = button.dataset.bannerAction;
+
+  if (action === "edit") {
+    editBanner(banner);
+    return;
+  }
+
+  if (action === "toggle") {
+    try {
+      await api("/api/admin-publicidad", {
+        method: "PUT",
+        body: JSON.stringify({
+          id,
+          activo: !banner.activo,
+        }),
+      });
+      await loadAds();
+    } catch (error) {
+      setMessage(bannerListMessage, error.message, true);
+    }
+    return;
+  }
+
+  if (action === "delete") {
+    if (!confirm(`¿Eliminar el banner "${banner.titulo || "Banner"}"?`)) {
+      return;
+    }
+
+    try {
+      await api(`/api/admin-publicidad?id=${id}`, {
+        method: "DELETE",
+      });
+      await loadAds();
+    } catch (error) {
+      setMessage(bannerListMessage, error.message, true);
+    }
+  }
+}
+
+
 /* ================= APARIENCIA / LOGO COMPLETO ================= */
 function updateHeroAdminPreview() {
   heroAdminPreview.style.background =
@@ -2978,8 +3258,32 @@ passwordInput.addEventListener("keydown", (event) => {
 logoutButton.addEventListener("click", logout);
 tabCoupons.addEventListener("click", () => showSection("cupones"));
 tabAds.addEventListener("click", () => showSection("publicidad"));
+tabBanners?.addEventListener("click", () => showSection("banners"));
 tabEvents?.addEventListener("click", () => showSection("eventos"));
 tabAppearance.addEventListener("click", () => showSection("apariencia"));
+
+bannerForm?.addEventListener("submit", saveBanner);
+bannerList?.addEventListener("click", handleBannerList);
+newBanner?.addEventListener("click", () => {
+  resetBannerForm();
+  bannerTitle?.focus();
+});
+cancelBanner?.addEventListener("click", resetBannerForm);
+refreshBanners?.addEventListener("click", loadAds);
+
+bannerImage?.addEventListener("change", async () => {
+  const file = bannerImage.files?.[0];
+  if (!file) return;
+
+  try {
+    const dataUrl = await optimizeImage(file);
+    bannerPreview.src = dataUrl;
+    bannerPreviewWrapper.hidden = false;
+  } catch (error) {
+    setMessage(bannerFormMessage, error.message, true);
+  }
+});
+
 
 generateCommunityList?.addEventListener(
   "click",

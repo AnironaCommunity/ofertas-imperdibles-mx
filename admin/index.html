@@ -8,7 +8,7 @@
   <title>Administrador | Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="../img/logo.png" />
-  <link rel="stylesheet" href="admin.css?v=81.52.0" />
+  <link rel="stylesheet" href="admin.css?v=81.54.0" />
 </head>
 
 <body>
@@ -55,6 +55,15 @@
           data-seccion="publicidad"
         >
           📢 Publicidad
+        </button>
+
+        <button
+          id="tab-banners"
+          class="menu-opcion"
+          type="button"
+          data-seccion="banners"
+        >
+          🖼️ Banners
         </button>
 
 
@@ -646,13 +655,7 @@ Descuento máximo: $180"
                 <input id="ad-es-otra-recomendacion" type="checkbox" />
                 <span>Mostrar al final como <strong>Otra recomendación</strong></span>
               </label>
-
-              <label class="switch-row campo-ad-banner-cupones">
-                <input id="ad-es-banner-cupones" type="checkbox" />
-                <span>Mostrar como <strong>banner debajo de los cupones</strong></span>
-              </label>
-
-              <div class="campo campo-ad-precio" hidden>
+<div class="campo campo-ad-precio" hidden>
                 <label for="ad-price-published">Precio publicado</label>
                 <input
                   id="ad-price-published"
@@ -850,6 +853,124 @@ Descuento máximo: $180"
       </section>
 
       <!-- ================= APARIENCIA ================= -->
+
+
+      <!-- ================= BANNERS ================= -->
+      <section id="seccion-banners" class="seccion-admin" hidden>
+        <div class="cabecera-seccion">
+          <div>
+            <h2>🖼️ Banners debajo de los cupones</h2>
+            <p>
+              Agrega imágenes clicables que se muestran una debajo de otra
+              al terminar la sección de cupones.
+            </p>
+          </div>
+
+          <div class="acciones-cabecera">
+            <button id="nuevo-banner" class="boton-secundario" type="button">
+              + Nuevo banner
+            </button>
+            <button id="actualizar-banners" class="boton-secundario" type="button">
+              ↻ Actualizar
+            </button>
+          </div>
+        </div>
+
+        <section class="panel panel-banner-admin">
+          <h3 id="banner-form-title">Agregar banner</h3>
+
+          <form id="banner-form">
+            <input id="banner-id" type="hidden" />
+            <input id="banner-image-url" type="hidden" />
+
+            <div class="form-grid form-grid-banner">
+              <div class="campo campo-banner-titulo">
+                <label for="banner-title">Nombre del banner</label>
+                <input
+                  id="banner-title"
+                  type="text"
+                  maxlength="120"
+                  placeholder="Ej. OTTOCAST MINI PICO"
+                  required
+                />
+                <small>Solo se usa para identificarlo en el administrador.</small>
+              </div>
+
+              <div class="campo campo-banner-orden">
+                <label for="banner-order">Orden</label>
+                <input
+                  id="banner-order"
+                  type="number"
+                  min="0"
+                  value="0"
+                />
+                <small>0 aparece primero, después 1, 2, 3...</small>
+              </div>
+
+              <div class="campo campo-banner-enlace">
+                <label for="banner-link">Enlace de Mercado Libre</label>
+                <input
+                  id="banner-link"
+                  type="url"
+                  placeholder="https://meli.la/..."
+                  required
+                />
+              </div>
+
+              <div class="campo campo-banner-imagen">
+                <label for="banner-image">Imagen del banner</label>
+                <input
+                  id="banner-image"
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                />
+                <small>
+                  La imagen completa será clicable. Se optimiza antes de subirla.
+                </small>
+              </div>
+
+              <div id="banner-preview-wrapper" class="banner-preview-wrapper" hidden>
+                <img id="banner-preview" src="" alt="Vista previa del banner" />
+              </div>
+
+              <label class="switch-row campo-banner-activo">
+                <input id="banner-active" type="checkbox" checked />
+                <span>Mostrar banner en la página</span>
+              </label>
+            </div>
+
+            <div class="acciones">
+              <button class="boton-principal" type="submit">
+                Guardar banner
+              </button>
+              <button
+                id="cancelar-banner"
+                class="boton-secundario"
+                type="button"
+                hidden
+              >
+                Cancelar edición
+              </button>
+            </div>
+
+            <p id="banner-form-message" class="mensaje" aria-live="polite"></p>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="cabecera-panel">
+            <div>
+              <h3>Banners registrados</h3>
+              <p class="descripcion-panel">
+                Se muestran debajo de todos los cupones, ordenados de menor a mayor.
+              </p>
+            </div>
+          </div>
+
+          <p id="banner-list-message" class="mensaje" aria-live="polite"></p>
+          <div id="banner-list" class="banner-admin-list"></div>
+        </section>
+      </section>
 
       <!-- ================= EVENTOS V68 ================= -->
       <section id="seccion-eventos" class="seccion-admin" hidden>
@@ -1091,6 +1212,6 @@ Descuento máximo: $180"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=81.52.0"></script>
+  <script type="module" src="admin.js?v=81.54.0"></script>
 </body>
 </html>
