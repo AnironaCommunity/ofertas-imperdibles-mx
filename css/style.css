@@ -9035,45 +9035,37 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   }
 }
 
-/* V81.53.5 — Orilla #13 al 50% con curva REAL
-   SOLO modifica el dibujo de la orilla.
-   El patrón discontinuo recorre el mismo rectángulo redondeado,
-   incluyendo las cuatro curvas, sin dejar huecos en las esquinas. */
-.cupon-card,
-.cupon-card.bancario,
-.cupon-card.exclusivo {
-  /* Desactiva únicamente las 4 capas que dibujaban lados rectos. */
-  background-image: none !important;
-}
-
-/* SVG embebido como máscara: el trazo sigue todo el radio de 16px.
-   La máscara toma el color que ya usa cada tarjeta mediante background-color. */
-.cupon-card::before,
-.cupon-card.bancario::before,
-.cupon-card.exclusivo::before {
+/* =========================================================
+   V81.53.7 — Orilla #13: esquinas curvas REALES
+   SOLO modifica la orilla.
+   Corrección: las tarjetas reales son .cupon y .cupon-bancario-mini.
+   Se elimina el dibujo por 4 gradientes independientes y se usa
+   un único borde discontinuo redondeado que sigue las 4 curvas.
+   ========================================================= */
+.cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
+.cupones-grid-compacta > .cupon-bancario-mini::after {
   content: "";
   position: absolute;
   inset: 0;
+  box-sizing: border-box;
   border-radius: inherit;
+  padding: 0 !important;
   pointer-events: none;
-  z-index: 0;
-  background-color: var(--orilla-color, #009c76);
-  -webkit-mask:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' preserveAspectRatio='none'%3E%3Crect x='0.7' y='0.7' width='98.6' height='98.6' rx='5.5' ry='5.5' fill='none' stroke='black' stroke-width='1.4' stroke-dasharray='3.2 1.4' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E")
-    0 0 / 100% 100% no-repeat;
-  mask:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' preserveAspectRatio='none'%3E%3Crect x='0.7' y='0.7' width='98.6' height='98.6' rx='5.5' ry='5.5' fill='none' stroke='black' stroke-width='1.4' stroke-dasharray='3.2 1.4' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E")
-    0 0 / 100% 100% no-repeat;
+  z-index: 10;
+
+  /* Anula las 4 líneas rectas anteriores. */
+  background: none !important;
+  -webkit-mask: none !important;
+  mask: none !important;
+
+  /* Un solo borde: las rayas recorren también las esquinas. */
+  border: 1.5px dashed color-mix(in srgb, var(--orilla-color) 82%, transparent) !important;
 }
 
-/* Mantiene el contenido exactamente encima de la orilla. */
-.cupon-card > *,
-.cupon-card.bancario > *,
-.cupon-card.exclusivo > * {
-  position: relative;
-  z-index: 1;
+@media (max-width: 700px) {
+  .cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
+  .cupones-grid-compacta > .cupon-bancario-mini::after {
+    border-width: 1.25px !important;
+  }
 }
-
-.cupon-card:not(.bancario):not(.exclusivo) { --orilla-color: #009c76; }
-.cupon-card.exclusivo { --orilla-color: var(--exclusive-color, #7e22ce); }
 
