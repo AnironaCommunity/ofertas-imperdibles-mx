@@ -45,7 +45,7 @@
   }
 
   function sincronizarColorSelector(inicio, fin) {
-    const selector = document.querySelector(".navegacion-inferior.selector-cupones-oscuro");
+    const selector = document.querySelector(".selector-cupones-menu.selector-cupones-oscuro");
     if (!selector) return;
     if (inicio) selector.style.setProperty("--selector-color-inicio", inicio);
     if (fin) selector.style.setProperty("--selector-color-fin", fin);

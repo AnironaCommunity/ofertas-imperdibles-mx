@@ -49,7 +49,7 @@ const contadorCuponesExclusivo = document.querySelector(
   "#contador-cupones-exclusivo"
 );
 const selectorCupones = document.querySelector(
-  ".navegacion-inferior.selector-cupones-oscuro"
+  ".selector-cupones-menu.selector-cupones-oscuro"
 );
 const resumenCuponesDisponibles = document.querySelector("#resumen-cupones-disponibles");
 const resumenVisitas = document.querySelector("#resumen-visitas");
