@@ -8967,9 +8967,9 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
 }
 
 /* =========================================================
-   V81.53.2 — Orilla #13: segmentos intermedios
+   V81.53.3 — Orilla #13: segmentos al 50%
    - Conserva el grosor de la versión anterior.
-   - Trazo intermedio: entre la versión original y la versión de líneas largas.
+   - Segmentos al 50% del largo anterior y separación reducida al 50%.
    - Tienda / Exclusivo: color de categoría.
    - Bancarios: color automático de cada banco.
    ========================================================= */
@@ -8997,17 +8997,17 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   z-index: 10;
   background:
     repeating-linear-gradient(90deg,
-      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 20px,
-      transparent 20px 28px) top / 100% 1.5px no-repeat,
+      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 10px,
+      transparent 10px 14px) top / 100% 1.5px no-repeat,
     repeating-linear-gradient(90deg,
-      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 20px,
-      transparent 20px 28px) bottom / 100% 1.5px no-repeat,
+      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 10px,
+      transparent 10px 14px) bottom / 100% 1.5px no-repeat,
     repeating-linear-gradient(0deg,
-      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 20px,
-      transparent 20px 28px) left / 1.5px 100% no-repeat,
+      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 10px,
+      transparent 10px 14px) left / 1.5px 100% no-repeat,
     repeating-linear-gradient(0deg,
-      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 20px,
-      transparent 20px 28px) right / 1.5px 100% no-repeat;
+      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 10px,
+      transparent 10px 14px) right / 1.5px 100% no-repeat;
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
@@ -9021,17 +9021,17 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
     padding: 1.25px;
     background:
       repeating-linear-gradient(90deg,
-        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 18px,
-        transparent 18px 25px) top / 100% 1.25px no-repeat,
+        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 9px,
+        transparent 9px 12.5px) top / 100% 1.25px no-repeat,
       repeating-linear-gradient(90deg,
-        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 18px,
-        transparent 18px 25px) bottom / 100% 1.25px no-repeat,
+        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 9px,
+        transparent 9px 12.5px) bottom / 100% 1.25px no-repeat,
       repeating-linear-gradient(0deg,
-        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 18px,
-        transparent 18px 25px) left / 1.25px 100% no-repeat,
+        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 9px,
+        transparent 9px 12.5px) left / 1.25px 100% no-repeat,
       repeating-linear-gradient(0deg,
-        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 18px,
-        transparent 18px 25px) right / 1.25px 100% no-repeat;
+        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 9px,
+        transparent 9px 12.5px) right / 1.25px 100% no-repeat;
   }
 }
 
