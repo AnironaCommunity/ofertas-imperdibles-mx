@@ -1,0 +1,208 @@
+/* V81.59 — Selector independiente de estilos heredados de la navegación inferior */
+.selector-cupones-menu.selector-cupones-oscuro {
+  --selector-columnas: 4;
+  box-sizing: border-box !important;
+  display: grid !important;
+  grid-template-columns: repeat(var(--selector-columnas), minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+  width: min(100%, 860px) !important;
+  max-width: 860px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  gap: 0 !important;
+  position: relative !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  border: 0 !important;
+  border-bottom: 1px solid #e7e9eb !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  overflow: visible !important;
+}
+
+/* Todos, Tienda y Bancarios son siempre visibles. */
+.selector-cupones-menu > #tab-todos,
+.selector-cupones-menu > #tab-tienda,
+.selector-cupones-menu > #tab-bancarios {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Exclusivos sí conserva la lógica dinámica. */
+.selector-cupones-menu > #tab-exclusivo[hidden] { display: none !important; }
+.selector-cupones-menu > #tab-exclusivo:not([hidden]) {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Botones totalmente planos: ningún fondo, sombra, borde o resaltado. */
+.selector-cupones-menu > .tab-inferior,
+.selector-cupones-menu > .tab-inferior:hover,
+.selector-cupones-menu > .tab-inferior:focus,
+.selector-cupones-menu > .tab-inferior:focus-visible,
+.selector-cupones-menu > .tab-inferior:active,
+.selector-cupones-menu > .tab-inferior.activo,
+.selector-cupones-menu > .tab-inferior[aria-pressed="true"] {
+  box-sizing: border-box !important;
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 44px !important;
+  height: 44px !important;
+  margin: 0 !important;
+  padding: 0 0 3px !important;
+  gap: 0 !important;
+  border: 0 !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  color: #222 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  transform: none !important;
+  overflow: visible !important;
+  cursor: pointer !important;
+}
+
+.selector-cupones-menu > .tab-inferior::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Única señal de selección: línea verde. */
+.selector-cupones-menu > .tab-inferior::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 28% !important;
+  right: 28% !important;
+  bottom: -1px !important;
+  height: 3px !important;
+  border-radius: 999px !important;
+  background: #0aa84f !important;
+  box-shadow: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+.selector-cupones-menu > .tab-inferior.activo::before,
+.selector-cupones-menu > .tab-inferior[aria-pressed="true"]::before {
+  opacity: 1 !important;
+}
+
+.selector-cupones-menu .tab-icono {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 25px !important;
+  height: 25px !important;
+  min-width: 25px !important;
+  flex: 0 0 25px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+.selector-cupones-menu .tab-icono svg {
+  display: block !important;
+  width: 23px !important;
+  height: 23px !important;
+  filter: none !important;
+}
+
+.tab-icono-todos svg > path:first-child { fill: #08aa4b; }
+.tab-icono-todos svg circle { fill: #fff; }
+.tab-icono-todos .icon-line { fill: none; stroke: #fff; stroke-width: 4; stroke-linecap: round; }
+.tab-icono-tienda svg > path:first-child { fill: #ffc400; }
+.tab-icono-tienda .icon-line { fill: none; stroke: #f59b00; stroke-width: 4; stroke-linecap: round; }
+.tab-icono-tarjeta svg rect { fill: #147be6; }
+.tab-icono-tarjeta .card-band { fill: none; stroke: #064d9e; stroke-width: 8; }
+.tab-icono-tarjeta .icon-line { fill: none; stroke: #d8f4ff; stroke-width: 5; stroke-linecap: round; }
+.tab-icono-exclusivo svg > path:first-child { fill: #7837db; }
+.tab-icono-exclusivo .star { fill: #fff; }
+
+.selector-cupones-menu .tab-textos,
+.selector-cupones-menu .tab-etiqueta-principal {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.selector-cupones-menu .tab-etiqueta-principal,
+.selector-cupones-menu > .tab-inferior.activo .tab-etiqueta-principal,
+.selector-cupones-menu > .tab-inferior[aria-pressed="true"] .tab-etiqueta-principal {
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 10px !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  color: #222 !important;
+  text-transform: none !important;
+  white-space: nowrap !important;
+}
+
+.contador-seccion-inferior { display: none !important; }
+
+/* El separador punteado solo aparece si realmente hay cupones visibles. */
+#separador-fin-cupones { display: none !important; }
+body.hay-cupones-visibles #separador-fin-cupones { display: block !important; }
+
+@media (max-width: 600px) {
+  .selector-cupones-menu.selector-cupones-oscuro {
+    width: 100% !important;
+  }
+  .selector-cupones-menu > .tab-inferior,
+  .selector-cupones-menu > .tab-inferior:hover,
+  .selector-cupones-menu > .tab-inferior:focus,
+  .selector-cupones-menu > .tab-inferior:focus-visible,
+  .selector-cupones-menu > .tab-inferior:active,
+  .selector-cupones-menu > .tab-inferior.activo,
+  .selector-cupones-menu > .tab-inferior[aria-pressed="true"] {
+    min-height: 42px !important;
+    height: 42px !important;
+    padding-bottom: 2px !important;
+  }
+  .selector-cupones-menu .tab-icono {
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    flex-basis: 24px !important;
+  }
+  .selector-cupones-menu .tab-icono svg {
+    width: 22px !important;
+    height: 22px !important;
+  }
+  .selector-cupones-menu .tab-etiqueta-principal { font-size: 9.5px !important; }
+  .selector-cupones-menu > .tab-inferior::before { left: 25% !important; right: 25% !important; }
+}
+
+/* V81.60 — Único ajuste: separación entre el selector y el contenido de cupones. */
+#vista-cupones > #todos-wrapper:not([hidden]),
+#vista-cupones > #sin-cupones:not([hidden]) {
+  margin-top: 14px !important;
+}
