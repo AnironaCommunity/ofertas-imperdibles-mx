@@ -651,3 +651,93 @@
     font-size: 6.8px !important;
   }
 }
+
+
+/* ============================================================
+   V81.64 — Ajuste fino del encabezado Propuesta 3
+   Uniforma tipografía y alineación de accesos; WhatsApp usa W.
+   ============================================================ */
+.hero-redes.hero-redes-lista .hero-redes-boton {
+  font-family: inherit !important;
+  font-style: normal !important;
+  letter-spacing: normal !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-etiqueta,
+.hero-redes.hero-redes-lista .hero-redes-anirona::after {
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: #20242b !important;
+  font-family: inherit !important;
+  font-size: 8px !important;
+  font-style: normal !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-whatsapp > .hero-redes-icono-texto,
+.hero-redes.hero-redes-lista .hero-redes-facebook > .hero-redes-icono-texto,
+.hero-redes.hero-redes-lista .hero-redes-sorteo svg,
+.hero-redes.hero-redes-lista .hero-redes-anirona img {
+  margin-top: 0 !important;
+  margin-bottom: 1px !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-whatsapp > .hero-redes-icono-texto,
+.hero-redes.hero-redes-lista .hero-redes-facebook > .hero-redes-icono-texto {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 18px !important;
+  height: 18px !important;
+  flex: 0 0 18px !important;
+  border-radius: 50% !important;
+  color: #fff !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  line-height: 18px !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-whatsapp > .hero-redes-icono-texto {
+  background: #20b95a !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-facebook > .hero-redes-icono-texto {
+  background: #1767c8 !important;
+}
+
+/* Los cuatro accesos simples comparten exactamente la misma base vertical.
+   Comunidad conserva su composición propia porque muestra contador + etiqueta. */
+.hero-redes.hero-redes-lista .hero-redes-whatsapp,
+.hero-redes.hero-redes-lista .hero-redes-facebook,
+.hero-redes.hero-redes-lista .hero-redes-anirona,
+.hero-redes.hero-redes-lista .hero-redes-sorteo {
+  justify-content: center !important;
+  align-items: center !important;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-anirona::after {
+  content: "Anirona";
+}
+
+@media (max-width: 600px) {
+  .hero-redes.hero-redes-lista .hero-redes-etiqueta,
+  .hero-redes.hero-redes-lista .hero-redes-anirona::after {
+    font-size: 6.8px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-whatsapp > .hero-redes-icono-texto,
+  .hero-redes.hero-redes-lista .hero-redes-facebook > .hero-redes-icono-texto {
+    width: 15px !important;
+    height: 15px !important;
+    flex-basis: 15px !important;
+    font-size: 10px !important;
+    line-height: 15px !important;
+  }
+}
