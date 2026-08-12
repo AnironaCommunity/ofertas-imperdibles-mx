@@ -9035,45 +9035,26 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   }
 }
 
-/* V81.53.5 — Orilla #13 al 50% con curva REAL
-   SOLO modifica el dibujo de la orilla.
-   El patrón discontinuo recorre el mismo rectángulo redondeado,
-   incluyendo las cuatro curvas, sin dejar huecos en las esquinas. */
+/* V81.53.6 — Orilla #13: curva nativa en las cuatro esquinas
+   SOLO modifica la orilla. */
 .cupon-card,
 .cupon-card.bancario,
 .cupon-card.exclusivo {
-  /* Desactiva únicamente las 4 capas que dibujaban lados rectos. */
   background-image: none !important;
+  border-style: dashed !important;
+  border-width: 1.5px !important;
+  border-radius: 16px !important;
 }
 
-/* SVG embebido como máscara: el trazo sigue todo el radio de 16px.
-   La máscara toma el color que ya usa cada tarjeta mediante background-color. */
-.cupon-card::before,
-.cupon-card.bancario::before,
-.cupon-card.exclusivo::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: 0;
-  background-color: var(--orilla-color, #009c76);
-  -webkit-mask:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' preserveAspectRatio='none'%3E%3Crect x='0.7' y='0.7' width='98.6' height='98.6' rx='5.5' ry='5.5' fill='none' stroke='black' stroke-width='1.4' stroke-dasharray='3.2 1.4' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E")
-    0 0 / 100% 100% no-repeat;
-  mask:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' preserveAspectRatio='none'%3E%3Crect x='0.7' y='0.7' width='98.6' height='98.6' rx='5.5' ry='5.5' fill='none' stroke='black' stroke-width='1.4' stroke-dasharray='3.2 1.4' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E")
-    0 0 / 100% 100% no-repeat;
+/* Tienda */
+.cupon-card:not(.bancario):not(.exclusivo) {
+  border-color: #009c76 !important;
 }
 
-/* Mantiene el contenido exactamente encima de la orilla. */
-.cupon-card > *,
-.cupon-card.bancario > *,
-.cupon-card.exclusivo > * {
-  position: relative;
-  z-index: 1;
+/* Exclusivo: conserva el color propio configurado por la tarjeta cuando existe. */
+.cupon-card.exclusivo {
+  border-color: var(--exclusive-color, #7e22ce) !important;
 }
 
-.cupon-card:not(.bancario):not(.exclusivo) { --orilla-color: #009c76; }
-.cupon-card.exclusivo { --orilla-color: var(--exclusive-color, #7e22ce); }
+/* El bancario conserva el color que ya asigna el proyecto al borde. */
 
