@@ -8965,3 +8965,48 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   .banner-cupones-enlace { border-radius:8px; }
   .banner-cupones-enlace img { max-height:none; }
 }
+
+/* =========================================================
+   V81.53.0 — Orilla #13: borde interrumpido moderno
+   - Tienda: usa el color configurado de la categoría.
+   - Exclusivo: usa el color configurado de Exclusivo.
+   - Bancarios: usa automáticamente el color de cada banco.
+   - Mantiene radios, altura automática y estructura actual.
+   ========================================================= */
+.cupones-grid-compacta > .cupon:not(.cupon-bancario),
+.cupones-grid-compacta > .cupon-bancario-mini {
+  border-width: 1.5px !important;
+  border-style: dashed !important;
+  box-shadow: 0 4px 14px rgba(27, 44, 38, .055) !important;
+}
+
+.cupones-grid-compacta > .cupon:not(.cupon-bancario) {
+  border-color: color-mix(
+    in srgb,
+    var(--categoria-cupon-color, #009c76) 82%,
+    transparent
+  ) !important;
+}
+
+.cupones-grid-compacta > .cupon.cupon-exclusivo {
+  border-color: color-mix(
+    in srgb,
+    var(--categoria-cupon-color, #f5c400) 82%,
+    transparent
+  ) !important;
+}
+
+.cupones-grid-compacta > .cupon-bancario-mini {
+  border-color: color-mix(
+    in srgb,
+    var(--banco-color, #17139d) 82%,
+    transparent
+  ) !important;
+}
+
+@media (max-width: 700px) {
+  .cupones-grid-compacta > .cupon:not(.cupon-bancario),
+  .cupones-grid-compacta > .cupon-bancario-mini {
+    border-width: 1.25px !important;
+  }
+}
