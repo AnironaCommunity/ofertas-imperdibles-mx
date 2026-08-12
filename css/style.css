@@ -8883,3 +8883,68 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   justify-content: center !important;
   width: 100% !important;
 }
+
+
+/* =========================================================
+   V81.51.4 — Condiciones de cupón claras y centradas
+   - Aplica a Tienda, Bancarios y Exclusivos.
+   - Sustituye "Compra mínima" por "En compras desde".
+   - En cupones porcentuales muestra "Ahorra hasta" en segunda línea.
+   - Cupones de monto fijo omiten la línea redundante de ahorro máximo.
+   - Ambas líneas comparten tamaño, peso y centrado.
+   ========================================================= */
+.condiciones-cupon {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  margin: 2px 0 4px !important;
+  padding: 0 4px !important;
+  box-sizing: border-box !important;
+  text-align: center !important;
+}
+
+.condiciones-cupon .condicion-cupon {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #343842 !important;
+  font-family: inherit !important;
+  font-size: 11.25px !important;
+  line-height: 1.2 !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  text-align: center !important;
+  white-space: normal !important;
+}
+
+.condiciones-cupon .condicion-cupon strong {
+  color: #202431 !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  font-weight: 650 !important;
+}
+
+.cupon-bancario-mini .banco-info .condiciones-cupon {
+  margin: 2px 0 3px !important;
+  gap: 3px !important;
+}
+
+/* Neutraliza reglas históricas de los textos anteriores. */
+.cupon .descuento-maximo,
+.cupon .compra-minima,
+.cupon-bancario-mini .banco-minimo,
+.cupon-bancario-mini .banco-maximo {
+  display: none !important;
+}
+
+@media (max-width: 700px) {
+  .condiciones-cupon .condicion-cupon {
+    font-size: 11.25px !important;
+  }
+}

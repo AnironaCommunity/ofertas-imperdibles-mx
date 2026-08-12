@@ -1046,6 +1046,26 @@ function configuracionVisualCategoria(categoria) {
   };
 }
 
+function esCuponPorcentaje(cupon) {
+  const titulo = String(cupon?.titulo || "");
+  return /%|por\s*ciento/i.test(titulo);
+}
+
+function htmlCondicionesCupon(cupon) {
+  const compraMinima = escaparHtml(cupon.compra_minima || "Consultar");
+  const ahorroMaximo = escaparHtml(cupon.ahorro_maximo || "Consultar");
+  const lineaAhorro = esCuponPorcentaje(cupon)
+    ? `<p class="condicion-cupon condicion-ahorro">Ahorra hasta <strong>${ahorroMaximo}</strong></p>`
+    : "";
+
+  return `
+    <div class="condiciones-cupon">
+      <p class="condicion-cupon condicion-compra">En compras desde <strong>${compraMinima}</strong></p>
+      ${lineaAhorro}
+    </div>
+  `;
+}
+
 function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   const articulo = document.createElement("article");
   const categoria = normalizarCategoria(cupon);
@@ -1092,12 +1112,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
         : ""}
       ${esBancario ? `<p class="beneficio-bancario">${escaparHtml(cupon.titulo)}</p>` : ""}
 
-      ${esBancario
-        ? `<p class="descuento-maximo">Máx. descuento: <strong>${escaparHtml(cupon.ahorro_maximo || "Consultar")}</strong></p>
-           <p class="compra-minima">Compra mínima: ${escaparHtml(cupon.compra_minima || "Consultar")}</p>`
-        : `<p class="compra-minima condiciones-cupon">
-            En compras desde ${escaparHtml(cupon.compra_minima || "Consultar")}${String(cupon.titulo || "").includes("%") && cupon.ahorro_maximo ? ` · Ahorra hasta ${escaparHtml(cupon.ahorro_maximo)}` : ""}
-           </p>`}
+      ${htmlCondicionesCupon(cupon)}
 
       <div class="estado-programacion" hidden></div>
 
@@ -1240,8 +1255,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
       <div class="banco-info">
         <h3>${escaparHtml(cupon.titulo || "Beneficio bancario")}</h3>
         ${cupon.detalle_bancario ? `<p class="banco-detalle">${escaparHtml(cupon.detalle_bancario)}</p>` : ""}
-        <p class="banco-minimo">Compra mínima: <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
-        <p class="banco-maximo">Máx. descuento: <strong>${escaparHtml(cupon.ahorro_maximo || "Consultar")}</strong></p>
+        ${htmlCondicionesCupon(cupon)}
       </div>
       <div class="banco-pie">
         <div class="estado-programacion" hidden></div>
@@ -3155,7 +3169,10 @@ function crearCuponEjemploTutorial() {
     </div>
     <div class="cupon-contenido">
       <div class="cupon-etiquetas"><span class="etiqueta-cupon etiqueta-nuevo">✨ Nuevo</span></div>
-      <p class="compra-minima condiciones-cupon">En compras desde $1,000 · Ahorra hasta $250</p>
+      <div class="condiciones-cupon">
+        <p class="condicion-cupon condicion-compra">En compras desde <strong>$1,000</strong></p>
+        <p class="condicion-cupon condicion-ahorro">Ahorra hasta <strong>$250</strong></p>
+      </div>
       <div class="estado-programacion" hidden></div>
       <div class="acciones-bloque">
         <div class="acciones-cupon">
