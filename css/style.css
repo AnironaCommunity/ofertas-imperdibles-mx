@@ -9035,3 +9035,33 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   }
 }
 
+
+
+/* V81.53.4 — Orilla #13 50% con esquinas curvas
+   SOLO afecta la orilla: conserva largo, separación, grosor y colores.
+   Se añade una máscara del fondo en las esquinas para que el patrón
+   siga visualmente el radio redondeado de la tarjeta. */
+.cupon-card::after,
+.cupon-card.bancario::after,
+.cupon-card.exclusivo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  box-shadow:
+    inset 8px 8px 0 -7px var(--orilla-color, currentColor),
+    inset -8px 8px 0 -7px var(--orilla-color, currentColor),
+    inset 8px -8px 0 -7px var(--orilla-color, currentColor),
+    inset -8px -8px 0 -7px var(--orilla-color, currentColor);
+  clip-path: inset(0 round 16px);
+}
+
+/* El contenido permanece por encima del detalle de esquina. */
+.cupon-card > *,
+.cupon-card.bancario > *,
+.cupon-card.exclusivo > * {
+  position: relative;
+  z-index: 1;
+}
