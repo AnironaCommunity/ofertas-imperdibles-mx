@@ -1,134 +1,57 @@
-/* V81.53 — Navegación visual de cupones + resumen */
-.navegacion-inferior.selector-cupones-oscuro{--selector-columnas:3;display:grid!important;grid-template-columns:repeat(var(--selector-columnas),minmax(0,1fr))!important;width:min(100%,900px)!important;margin:4px auto 0!important;padding:0 0 10px!important;gap:10px!important;border:0!important;border-bottom:1px solid #e7e9eb!important;background:transparent!important;box-shadow:none!important;position:relative!important;inset:auto!important;z-index:1!important}
-.navegacion-inferior.selector-cupones-oscuro>.tab-inferior[hidden]{display:none!important}
-.navegacion-inferior.selector-cupones-oscuro>.tab-inferior{position:relative!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-start!important;min-width:0!important;min-height:106px!important;padding:7px 3px 12px!important;gap:5px!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#222!important;cursor:pointer!important;overflow:visible!important}
-.navegacion-inferior.selector-cupones-oscuro>.tab-inferior::before{content:"";position:absolute;left:20%;right:20%;bottom:-11px;height:4px;border-radius:99px;background:#0eae4b;opacity:0;transition:.18s}
-.navegacion-inferior.selector-cupones-oscuro>.tab-inferior.activo::before,.navegacion-inferior.selector-cupones-oscuro>.tab-inferior[aria-pressed="true"]::before{opacity:1}
-.navegacion-inferior.selector-cupones-oscuro>.tab-inferior:hover{background:transparent!important;transform:translateY(-1px)!important}
-.navegacion-inferior.selector-cupones-oscuro .tab-icono{display:flex;align-items:center;justify-content:center;width:68px;height:68px;flex:0 0 68px;background:transparent!important}
-.navegacion-inferior.selector-cupones-oscuro .tab-icono svg{display:block;width:64px;height:64px;stroke:none;filter:drop-shadow(0 3px 3px rgba(0,0,0,.10))}
-.tab-icono-todos svg>path:first-child{fill:#08aa4b}.tab-icono-todos svg circle{fill:#fff}.tab-icono-todos .icon-line{fill:none;stroke:#fff;stroke-width:4;stroke-linecap:round}
-.tab-icono-tienda svg>path:first-child{fill:#ffc400}.tab-icono-tienda .icon-line{fill:none;stroke:#f59b00;stroke-width:4;stroke-linecap:round}
-.tab-icono-tarjeta svg rect{fill:#147be6}.tab-icono-tarjeta .card-band{fill:none;stroke:#064d9e;stroke-width:8}.tab-icono-tarjeta .icon-line{fill:none;stroke:#d8f4ff;stroke-width:5;stroke-linecap:round}
-.tab-icono-exclusivo svg>path:first-child{fill:#7837db}.tab-icono-exclusivo .star{fill:#fff}
-.navegacion-inferior.selector-cupones-oscuro .tab-textos{display:flex;align-items:center;justify-content:center;min-width:0}.navegacion-inferior.selector-cupones-oscuro .tab-etiqueta-principal{font:700 15px/1.1 Arial,Helvetica,sans-serif;color:#222;text-transform:none;white-space:nowrap}.navegacion-inferior.selector-cupones-oscuro>.tab-inferior.activo .tab-etiqueta-principal{color:#08a447}.contador-seccion-inferior{display:none!important}
-.resumen-cupones{width:min(calc(100% - 18px),860px);min-height:70px;margin:20px auto 17px;padding:10px 20px;display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;align-items:center;gap:14px;border:1px solid #e6e9ea;border-radius:15px;background:#fff;box-shadow:0 3px 12px rgba(30,40,45,.05)}
-.resumen-item{display:flex;align-items:center;justify-content:center;gap:8px;min-width:0;font:500 14px/1.2 Arial,Helvetica,sans-serif;color:#25282a;white-space:nowrap}.resumen-item strong{font-size:19px;color:#08a447}.resumen-icono{display:inline-flex;align-items:center;justify-content:center;font-size:25px;line-height:1;color:#08a447;font-weight:700}.resumen-ojo{font-size:21px}.resumen-separador{width:1px;height:34px;background:#e2e5e6}
-@media(max-width:600px){.navegacion-inferior.selector-cupones-oscuro{width:100%!important;gap:2px!important;padding-bottom:8px!important}.navegacion-inferior.selector-cupones-oscuro>.tab-inferior{min-height:91px!important;padding:5px 1px 10px!important;gap:3px!important}.navegacion-inferior.selector-cupones-oscuro .tab-icono{width:54px;height:54px;flex-basis:54px}.navegacion-inferior.selector-cupones-oscuro .tab-icono svg{width:51px;height:51px}.navegacion-inferior.selector-cupones-oscuro .tab-etiqueta-principal{font-size:12px}.navegacion-inferior.selector-cupones-oscuro>.tab-inferior::before{left:14%;right:14%;bottom:-9px;height:3px}.resumen-cupones{width:calc(100% - 10px);min-height:59px;margin:14px auto 13px;padding:8px 5px;gap:3px;border-radius:12px}.resumen-item{gap:3px;font-size:9px;flex-wrap:wrap;text-align:center}.resumen-item strong{font-size:14px}.resumen-icono{font-size:18px}.resumen-separador{height:29px}}
-
-/* V81.54 — Corrección compacta: 4 accesos siempre visibles, activo solo con línea y resumen reducido */
+/* V81.57 — Selector de cupones plano, compacto y sin estadísticas */
 .navegacion-inferior.selector-cupones-oscuro {
-  width: min(calc(100% - 16px), 860px) !important;
+  --selector-columnas: 4;
+  display: grid !important;
+  grid-template-columns: repeat(var(--selector-columnas), minmax(0, 1fr)) !important;
+  width: min(calc(100% - 12px), 860px) !important;
   max-width: 860px !important;
-  grid-template-columns: repeat(var(--selector-columnas, 4), minmax(0, 1fr)) !important;
-  gap: 4px !important;
-  margin: 2px auto 0 !important;
-  padding: 0 0 7px !important;
-  overflow: visible !important;
-  transform: none !important;
-  background: transparent !important;
-  box-shadow: none !important;
-}
-.navegacion-inferior.selector-cupones-oscuro > .tab-inferior,
-.navegacion-inferior.selector-cupones-oscuro > .tab-inferior:hover,
-.navegacion-inferior.selector-cupones-oscuro > .tab-inferior:focus,
-.navegacion-inferior.selector-cupones-oscuro > .tab-inferior:active,
-.navegacion-inferior.selector-cupones-oscuro > .tab-inferior.activo,
-.navegacion-inferior.selector-cupones-oscuro > .tab-inferior[aria-pressed="true"] {
-  min-width: 0 !important;
-  width: auto !important;
-  min-height: 74px !important;
-  padding: 3px 2px 8px !important;
-  gap: 2px !important;
+  margin: 0 auto !important;
+  padding: 0 0 5px !important;
+  gap: 0 !important;
   border: 0 !important;
+  border-bottom: 1px solid #e7e9eb !important;
   border-radius: 0 !important;
   background: transparent !important;
-  background-color: transparent !important;
-  background-image: none !important;
   box-shadow: none !important;
-  transform: none !important;
-}
-.navegacion-inferior.selector-cupones-oscuro > .tab-inferior::after { display:none !important; }
-.navegacion-inferior.selector-cupones-oscuro > .tab-inferior::before {
-  left: 24% !important; right: 24% !important; bottom: -8px !important;
-  height: 3px !important; background:#0aa84f !important; opacity:0 !important;
-}
-.navegacion-inferior.selector-cupones-oscuro > .tab-inferior.activo::before,
-.navegacion-inferior.selector-cupones-oscuro > .tab-inferior[aria-pressed="true"]::before { opacity:1 !important; }
-.navegacion-inferior.selector-cupones-oscuro .tab-icono {
-  width: 43px !important; height:43px !important; min-width:43px !important; flex:0 0 43px !important;
-}
-.navegacion-inferior.selector-cupones-oscuro .tab-icono svg { width:41px !important; height:41px !important; }
-.navegacion-inferior.selector-cupones-oscuro .tab-etiqueta-principal { font-size:12px !important; line-height:1 !important; }
-
-.resumen-cupones {
-  width:min(calc(100% - 18px), 820px) !important;
-  min-height:0 !important;
-  margin:11px auto 12px !important;
-  padding:7px 12px !important;
-  grid-template-columns:minmax(0,1.25fr) 1px minmax(0,.9fr) 1px minmax(0,.9fr) !important;
-  gap:8px !important;
-  border-radius:12px !important;
-}
-.resumen-item { gap:5px !important; font-size:12px !important; line-height:1.05 !important; flex-wrap:nowrap !important; text-align:left !important; }
-.resumen-item strong { font-size:16px !important; line-height:1 !important; }
-.resumen-icono { width:19px !important; height:19px !important; flex:0 0 19px !important; font-size:0 !important; }
-.resumen-icono svg { width:19px !important; height:19px !important; fill:none !important; stroke:#0aa84f !important; stroke-width:1.9 !important; stroke-linecap:round !important; stroke-linejoin:round !important; }
-.resumen-icono svg circle { fill:none !important; }
-.resumen-separador { height:24px !important; }
-
-@media (max-width:600px) {
-  .navegacion-inferior.selector-cupones-oscuro,
-  .navegacion-inferior.selector-cupones-oscuro[style*="--selector-columnas: 4"] {
-    width:100% !important; max-width:100% !important; gap:0 !important; padding-bottom:6px !important;
-    grid-template-columns:repeat(var(--selector-columnas, 4), minmax(0,1fr)) !important;
-  }
-  .navegacion-inferior.selector-cupones-oscuro > .tab-inferior,
-  .navegacion-inferior.selector-cupones-oscuro[style*="--selector-columnas: 4"] > .tab-inferior {
-    min-height:66px !important; padding:2px 0 7px !important; gap:1px !important;
-  }
-  .navegacion-inferior.selector-cupones-oscuro .tab-icono,
-  .navegacion-inferior.selector-cupones-oscuro[style*="--selector-columnas: 4"] .tab-icono {
-    width:38px !important; height:38px !important; min-width:38px !important; flex-basis:38px !important;
-  }
-  .navegacion-inferior.selector-cupones-oscuro .tab-icono svg,
-  .navegacion-inferior.selector-cupones-oscuro[style*="--selector-columnas: 4"] .tab-icono svg { width:36px !important; height:36px !important; }
-  .navegacion-inferior.selector-cupones-oscuro .tab-etiqueta-principal,
-  .navegacion-inferior.selector-cupones-oscuro[style*="--selector-columnas: 4"] .tab-etiqueta-principal { font-size:10.5px !important; }
-  .resumen-cupones { width:calc(100% - 10px) !important; margin:9px auto 10px !important; padding:6px 5px !important; gap:4px !important; border-radius:10px !important; }
-  .resumen-item { gap:3px !important; font-size:9px !important; white-space:nowrap !important; }
-  .resumen-item strong { font-size:13px !important; }
-  .resumen-icono,.resumen-icono svg { width:15px !important; height:15px !important; flex-basis:15px !important; }
-  .resumen-separador { height:21px !important; }
-}
-@media (max-width:380px) {
-  .resumen-item { font-size:8px !important; }
-  .resumen-item strong { font-size:12px !important; }
-  .resumen-icono,.resumen-icono svg { width:14px !important; height:14px !important; flex-basis:14px !important; }
+  filter: none !important;
+  overflow: visible !important;
+  position: relative !important;
+  inset: auto !important;
+  z-index: 1 !important;
 }
 
-/* V81.56 — selector totalmente plano, tipografía normal y menor altura */
-.navegacion-inferior.selector-cupones-oscuro {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-  padding-bottom: 4px !important;
-  gap: 0 !important;
+.navegacion-inferior.selector-cupones-oscuro > .tab-inferior[hidden] {
+  display: none !important;
 }
+
+/* Neutraliza definitivamente los estilos antiguos de Tienda/Bancario/activo. */
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior,
+.navegacion-inferior.selector-cupones-oscuro > #tab-todos,
+.navegacion-inferior.selector-cupones-oscuro > #tab-tienda,
+.navegacion-inferior.selector-cupones-oscuro > #tab-bancarios,
+.navegacion-inferior.selector-cupones-oscuro > #tab-exclusivo,
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior:hover,
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior:focus,
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior:focus-visible,
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior:active,
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior.activo,
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior[aria-pressed="true"] {
-  min-height: 58px !important;
-  height: 58px !important;
-  padding: 1px 0 5px !important;
-  gap: 0 !important;
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 55px !important;
+  height: 55px !important;
   margin: 0 !important;
+  padding: 1px 0 5px !important;
+  gap: 1px !important;
   border: 0 !important;
   outline: 0 !important;
   border-radius: 0 !important;
+  color: #222 !important;
   background: transparent !important;
   background-color: transparent !important;
   background-image: none !important;
@@ -138,23 +61,43 @@
   -webkit-backdrop-filter: none !important;
   -webkit-appearance: none !important;
   appearance: none !important;
+  -webkit-tap-highlight-color: transparent !important;
   transform: none !important;
+  overflow: visible !important;
+  cursor: pointer !important;
 }
+
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior::after {
   content: none !important;
   display: none !important;
-  background: transparent !important;
-  box-shadow: none !important;
 }
+
+/* La única señal de selección es la línea verde inferior. */
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior::before {
-  bottom: -5px !important;
+  content: "" !important;
+  position: absolute !important;
+  left: 27% !important;
+  right: 27% !important;
+  bottom: -6px !important;
   height: 3px !important;
+  border-radius: 999px !important;
+  background: #0aa84f !important;
+  box-shadow: none !important;
+  opacity: 0 !important;
 }
+.navegacion-inferior.selector-cupones-oscuro > .tab-inferior.activo::before,
+.navegacion-inferior.selector-cupones-oscuro > .tab-inferior[aria-pressed="true"]::before {
+  opacity: 1 !important;
+}
+
 .navegacion-inferior.selector-cupones-oscuro .tab-icono {
-  width: 34px !important;
-  height: 34px !important;
-  min-width: 34px !important;
-  flex: 0 0 34px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 31px !important;
+  height: 31px !important;
+  min-width: 31px !important;
+  flex: 0 0 31px !important;
   margin: 0 !important;
   padding: 0 !important;
   border: 0 !important;
@@ -163,50 +106,95 @@
   filter: none !important;
 }
 .navegacion-inferior.selector-cupones-oscuro .tab-icono svg {
-  width: 32px !important;
-  height: 32px !important;
+  display: block !important;
+  width: 29px !important;
+  height: 29px !important;
   filter: none !important;
 }
-.navegacion-inferior.selector-cupones-oscuro .tab-textos {
+
+.tab-icono-todos svg > path:first-child { fill: #08aa4b; }
+.tab-icono-todos svg circle { fill: #fff; }
+.tab-icono-todos .icon-line { fill: none; stroke: #fff; stroke-width: 4; stroke-linecap: round; }
+.tab-icono-tienda svg > path:first-child { fill: #ffc400; }
+.tab-icono-tienda .icon-line { fill: none; stroke: #f59b00; stroke-width: 4; stroke-linecap: round; }
+.tab-icono-tarjeta svg rect { fill: #147be6; }
+.tab-icono-tarjeta .card-band { fill: none; stroke: #064d9e; stroke-width: 8; }
+.tab-icono-tarjeta .icon-line { fill: none; stroke: #d8f4ff; stroke-width: 5; stroke-linecap: round; }
+.tab-icono-exclusivo svg > path:first-child { fill: #7837db; }
+.tab-icono-exclusivo .star { fill: #fff; }
+
+.navegacion-inferior.selector-cupones-oscuro .tab-textos,
+.navegacion-inferior.selector-cupones-oscuro .tab-etiqueta-principal {
   margin: 0 !important;
   padding: 0 !important;
+  border: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
+}
+.navegacion-inferior.selector-cupones-oscuro .tab-textos {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 0 !important;
 }
 .navegacion-inferior.selector-cupones-oscuro .tab-etiqueta-principal,
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior.activo .tab-etiqueta-principal,
 .navegacion-inferior.selector-cupones-oscuro > .tab-inferior[aria-pressed="true"] .tab-etiqueta-principal {
   font-family: Arial, Helvetica, sans-serif !important;
-  font-size: 11px !important;
+  font-size: 10.5px !important;
   font-weight: 400 !important;
   line-height: 1 !important;
   color: #222 !important;
+  text-transform: none !important;
+  white-space: nowrap !important;
 }
-@media (max-width:600px) {
-  .navegacion-inferior.selector-cupones-oscuro { padding-bottom: 3px !important; }
+
+.contador-seccion-inferior { display: none !important; }
+
+/* Seguridad: el separador punteado no aparece cuando el bloque de cupones está oculto. */
+#separador-fin-cupones { display: none !important; }
+#todos-wrapper:not([hidden]) + #separador-fin-cupones { display: block !important; }
+#todos-wrapper[hidden] + #separador-fin-cupones { display: none !important; }
+
+@media (max-width: 600px) {
+  .navegacion-inferior.selector-cupones-oscuro {
+    width: 100% !important;
+    padding-bottom: 4px !important;
+  }
   .navegacion-inferior.selector-cupones-oscuro > .tab-inferior,
-  .navegacion-inferior.selector-cupones-oscuro[style*="--selector-columnas: 4"] > .tab-inferior {
-    min-height: 52px !important;
-    height: 52px !important;
+  .navegacion-inferior.selector-cupones-oscuro > #tab-todos,
+  .navegacion-inferior.selector-cupones-oscuro > #tab-tienda,
+  .navegacion-inferior.selector-cupones-oscuro > #tab-bancarios,
+  .navegacion-inferior.selector-cupones-oscuro > #tab-exclusivo,
+  .navegacion-inferior.selector-cupones-oscuro > .tab-inferior:hover,
+  .navegacion-inferior.selector-cupones-oscuro > .tab-inferior:focus,
+  .navegacion-inferior.selector-cupones-oscuro > .tab-inferior:focus-visible,
+  .navegacion-inferior.selector-cupones-oscuro > .tab-inferior:active,
+  .navegacion-inferior.selector-cupones-oscuro > .tab-inferior.activo,
+  .navegacion-inferior.selector-cupones-oscuro > .tab-inferior[aria-pressed="true"] {
+    min-height: 50px !important;
+    height: 50px !important;
     padding: 0 0 4px !important;
-    gap: 0 !important;
   }
-  .navegacion-inferior.selector-cupones-oscuro .tab-icono,
-  .navegacion-inferior.selector-cupones-oscuro[style*="--selector-columnas: 4"] .tab-icono {
-    width: 30px !important;
-    height: 30px !important;
-    min-width: 30px !important;
-    flex: 0 0 30px !important;
-  }
-  .navegacion-inferior.selector-cupones-oscuro .tab-icono svg,
-  .navegacion-inferior.selector-cupones-oscuro[style*="--selector-columnas: 4"] .tab-icono svg {
+  .navegacion-inferior.selector-cupones-oscuro .tab-icono {
     width: 28px !important;
     height: 28px !important;
+    min-width: 28px !important;
+    flex-basis: 28px !important;
+  }
+  .navegacion-inferior.selector-cupones-oscuro .tab-icono svg {
+    width: 26px !important;
+    height: 26px !important;
   }
   .navegacion-inferior.selector-cupones-oscuro .tab-etiqueta-principal,
-  .navegacion-inferior.selector-cupones-oscuro[style*="--selector-columnas: 4"] .tab-etiqueta-principal {
+  .navegacion-inferior.selector-cupones-oscuro > .tab-inferior.activo .tab-etiqueta-principal,
+  .navegacion-inferior.selector-cupones-oscuro > .tab-inferior[aria-pressed="true"] .tab-etiqueta-principal {
     font-size: 9.5px !important;
     font-weight: 400 !important;
   }
-  .navegacion-inferior.selector-cupones-oscuro > .tab-inferior::before { bottom: -4px !important; }
+  .navegacion-inferior.selector-cupones-oscuro > .tab-inferior::before {
+    left: 22% !important;
+    right: 22% !important;
+    bottom: -5px !important;
+  }
 }
