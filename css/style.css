@@ -8967,46 +8967,70 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
 }
 
 /* =========================================================
-   V81.53.0 — Orilla #13: borde interrumpido moderno
-   - Tienda: usa el color configurado de la categoría.
-   - Exclusivo: usa el color configurado de Exclusivo.
-   - Bancarios: usa automáticamente el color de cada banco.
-   - Mantiene radios, altura automática y estructura actual.
+   V81.53.1 — Orilla #13: segmentos más largos
+   - Conserva el grosor de la versión anterior.
+   - Trazo más largo y separación más corta entre segmentos.
+   - Tienda / Exclusivo: color de categoría.
+   - Bancarios: color automático de cada banco.
    ========================================================= */
 .cupones-grid-compacta > .cupon:not(.cupon-bancario),
 .cupones-grid-compacta > .cupon-bancario-mini {
-  border-width: 1.5px !important;
-  border-style: dashed !important;
+  --orilla-color: var(--categoria-cupon-color, #009c76);
+  position: relative !important;
+  border: 0 !important;
   box-shadow: 0 4px 14px rgba(27, 44, 38, .055) !important;
-}
-
-.cupones-grid-compacta > .cupon:not(.cupon-bancario) {
-  border-color: color-mix(
-    in srgb,
-    var(--categoria-cupon-color, #009c76) 82%,
-    transparent
-  ) !important;
-}
-
-.cupones-grid-compacta > .cupon.cupon-exclusivo {
-  border-color: color-mix(
-    in srgb,
-    var(--categoria-cupon-color, #f5c400) 82%,
-    transparent
-  ) !important;
+  isolation: isolate;
 }
 
 .cupones-grid-compacta > .cupon-bancario-mini {
-  border-color: color-mix(
-    in srgb,
-    var(--banco-color, #17139d) 82%,
-    transparent
-  ) !important;
+  --orilla-color: var(--banco-color, #17139d);
+}
+
+.cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
+.cupones-grid-compacta > .cupon-bancario-mini::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  pointer-events: none;
+  z-index: 10;
+  background:
+    repeating-linear-gradient(90deg,
+      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 26px,
+      transparent 26px 36px) top / 100% 1.5px no-repeat,
+    repeating-linear-gradient(90deg,
+      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 26px,
+      transparent 26px 36px) bottom / 100% 1.5px no-repeat,
+    repeating-linear-gradient(0deg,
+      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 26px,
+      transparent 26px 36px) left / 1.5px 100% no-repeat,
+    repeating-linear-gradient(0deg,
+      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 26px,
+      transparent 26px 36px) right / 1.5px 100% no-repeat;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
 }
 
 @media (max-width: 700px) {
-  .cupones-grid-compacta > .cupon:not(.cupon-bancario),
-  .cupones-grid-compacta > .cupon-bancario-mini {
-    border-width: 1.25px !important;
+  .cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
+  .cupones-grid-compacta > .cupon-bancario-mini::after {
+    padding: 1.25px;
+    background:
+      repeating-linear-gradient(90deg,
+        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 22px,
+        transparent 22px 30px) top / 100% 1.25px no-repeat,
+      repeating-linear-gradient(90deg,
+        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 22px,
+        transparent 22px 30px) bottom / 100% 1.25px no-repeat,
+      repeating-linear-gradient(0deg,
+        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 22px,
+        transparent 22px 30px) left / 1.25px 100% no-repeat,
+      repeating-linear-gradient(0deg,
+        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 22px,
+        transparent 22px 30px) right / 1.25px 100% no-repeat;
   }
 }
