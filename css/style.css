@@ -8948,3 +8948,20 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
     font-size: 11.25px !important;
   }
 }
+
+/* =========================================================
+   V81.52.0 — Banners clicables debajo de los cupones
+   ========================================================= */
+.banners-cupones { width:100%; margin:18px auto 4px; }
+.banners-cupones[hidden] { display:none !important; }
+.banners-cupones-lista { display:flex; flex-direction:column; gap:12px; width:100%; }
+.banner-cupones-enlace { display:block; width:100%; overflow:hidden; border:0; border-radius:10px; background:#fff; text-decoration:none; box-shadow:0 2px 10px rgba(17,24,39,.08); transition:transform .16s ease, box-shadow .16s ease; }
+.banner-cupones-enlace:hover { transform:translateY(-1px); box-shadow:0 5px 15px rgba(17,24,39,.12); }
+.banner-cupones-enlace:focus-visible { outline:3px solid rgba(0,156,118,.28); outline-offset:3px; }
+.banner-cupones-enlace img { display:block; width:100%; height:auto; max-height:230px; object-fit:cover; }
+@media (max-width:700px) {
+  .banners-cupones { margin-top:14px; }
+  .banners-cupones-lista { gap:9px; }
+  .banner-cupones-enlace { border-radius:8px; }
+  .banner-cupones-enlace img { max-height:none; }
+}

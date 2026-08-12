@@ -139,6 +139,7 @@ const adEsNuevo = document.querySelector("#ad-es-nuevo");
 const adFechaNuevo = document.querySelector("#ad-fecha-nuevo");
 const adEsMasVendido = document.querySelector("#ad-es-mas-vendido");
 const adEsOtraRecomendacion = document.querySelector("#ad-es-otra-recomendacion");
+const adEsBannerCupones = document.querySelector("#ad-es-banner-cupones");
 const adPricePublished = document.querySelector("#ad-price-published");
 const adPriceCoupon = document.querySelector("#ad-price-coupon");
 const adCouponCode = document.querySelector("#ad-coupon-code");
@@ -2074,6 +2075,26 @@ async function saveAllBulkPrices() {
 let adPriceTimer = null;
 
 /* ================= PUBLICIDAD ================= */
+const MARCA_BANNER_CUPONES = "[BANNER_CUPONES]";
+
+function esBannerCupones(ad) {
+  return String(ad?.descripcion || "")
+    .trim()
+    .startsWith(MARCA_BANNER_CUPONES);
+}
+
+function descripcionVisibleAd(ad) {
+  const descripcion = String(ad?.descripcion || "").trim();
+  if (!descripcion.startsWith(MARCA_BANNER_CUPONES)) return descripcion;
+  return descripcion.slice(MARCA_BANNER_CUPONES.length).trim();
+}
+
+function descripcionParaGuardarAd() {
+  const descripcion = adDescription.value.trim().slice(0, 250);
+  if (!adEsBannerCupones?.checked) return descripcion;
+  return `${MARCA_BANNER_CUPONES}${descripcion ? ` ${descripcion}` : ""}`;
+}
+
 const DURACION_NUEVO_PRODUCTO_MS = 5 * 24 * 60 * 60 * 1000;
 
 function productoNuevoVigente(ad) {
@@ -2094,6 +2115,7 @@ function resetAdForm() {
   adFechaNuevo.value = "";
   adEsMasVendido.checked = false;
   adEsOtraRecomendacion.checked = false;
+  if (adEsBannerCupones) adEsBannerCupones.checked = false;
   adPricePublished.value = "";
   adPriceCoupon.value = "";
   adCouponCode.value = "";
@@ -2118,7 +2140,8 @@ function resetAdForm() {
 function editAd(ad) {
   adId.value = ad.id;
   adTitle.value = ad.titulo || "";
-  adDescription.value = ad.descripcion || "";
+  adDescription.value = descripcionVisibleAd(ad);
+  if (adEsBannerCupones) adEsBannerCupones.checked = esBannerCupones(ad);
   const enlaceLegacy = String(ad.enlace || "").trim();
   const enlaceMercadoLibreGuardado = String(ad.enlace_mercado_libre || "").trim();
   const enlaceAmazonGuardado = String(ad.enlace_amazon || "").trim();
@@ -2188,7 +2211,7 @@ function filteredAds() {
     const links = adMarketplaceLinks(ad);
     return [
       ad.titulo,
-      ad.descripcion,
+      descripcionVisibleAd(ad),
       links.mercadoLibre,
       links.amazon,
       ad.es_mas_vendido ? "más vendido" : "",
@@ -2203,6 +2226,7 @@ function renderAdBadges(ad) {
   if (productoNuevoVigente(ad)) badges.push('<span class="publicacion-badge badge-nuevo">NUEVO</span>');
   if (ad.es_mas_vendido) badges.push('<span class="publicacion-badge badge-mas-vendido">MÁS VENDIDO</span>');
   if (ad.es_otra_recomendacion) badges.push('<span class="publicacion-badge badge-recomendacion">OTRA RECOMENDACIÓN</span>');
+  if (esBannerCupones(ad)) badges.push('<span class="publicacion-badge badge-banner">BANNER CUPONES</span>');
   if (!ad.activo) badges.push('<span class="publicacion-badge badge-inactivo">INACTIVA</span>');
   return badges.join("");
 }
@@ -2247,7 +2271,7 @@ function renderAds() {
           <h3>${escapeHtml(ad.titulo)}</h3>
           <div class="publicacion-badges">${renderAdBadges(ad)}</div>
         </div>
-        <p>${escapeHtml(ad.descripcion || "")}</p>
+        <p>${escapeHtml(descripcionVisibleAd(ad))}</p>
 
         <div class="accesos-rapidos" aria-label="Accesos rápidos">
           ${quickLinks}
@@ -2696,7 +2720,7 @@ async function saveAd(event) {
 
     const payload = {
       titulo: adTitle.value.trim(),
-      descripcion: adDescription.value.trim().slice(0, 250),
+      descripcion: descripcionParaGuardarAd(),
       enlace: enlaceCompatibilidad,
       enlace_mercado_libre: enlaceMercadoLibre,
       enlace_amazon: enlaceAmazon,

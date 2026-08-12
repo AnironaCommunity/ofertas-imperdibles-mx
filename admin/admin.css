@@ -2219,3 +2219,9 @@ table td {
     width: 100%;
   }
 }
+
+/* V81.52.0 — Banner clicable debajo de cupones */
+#seccion-publicidad .campo-ad-banner-cupones { grid-column:span 3; align-self:stretch; }
+.publicacion-badge.badge-banner { color:#075985; background:#e0f2fe; border-color:#7dd3fc; }
+@media (max-width:900px) { #seccion-publicidad .campo-ad-banner-cupones { grid-column:span 1; } }
+@media (max-width:640px) { #seccion-publicidad .campo-ad-banner-cupones { grid-column:1 / -1; } }

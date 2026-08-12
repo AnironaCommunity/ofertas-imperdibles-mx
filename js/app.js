@@ -1,6 +1,8 @@
 const cuponesContainer = document.querySelector("#cupones");
 const todosWrapper = document.querySelector("#todos-wrapper");
 const sinCupones = document.querySelector("#sin-cupones");
+const bannersCupones = document.querySelector("#banners-cupones");
+const bannersCuponesLista = document.querySelector("#banners-cupones-lista");
 const estadoCarga = document.querySelector("#estado-carga");
 const botonRecargar = document.querySelector("#boton-recargar");
 const contadorActualizacion = document.querySelector("#contador-actualizacion");
@@ -2129,6 +2131,75 @@ function crearTarjetaCanalAnirona() {
 
 
 
+const MARCA_BANNER_CUPONES = "[BANNER_CUPONES]";
+
+function esBannerCupones(publicidad) {
+  return String(publicidad?.descripcion || "")
+    .trim()
+    .startsWith(MARCA_BANNER_CUPONES);
+}
+
+function enlaceBannerCupones(publicidad) {
+  return String(
+    publicidad?.enlace_mercado_libre ||
+    publicidad?.enlace ||
+    ""
+  ).trim();
+}
+
+function renderizarBannersCupones() {
+  if (!bannersCupones || !bannersCuponesLista) return;
+
+  const items = todasLasPublicidades
+    .filter((item) =>
+      item?.activo !== false &&
+      esBannerCupones(item) &&
+      Boolean(item?.imagen_url) &&
+      Boolean(enlaceBannerCupones(item))
+    )
+    .sort((a, b) =>
+      (Number(a?.orden) || 0) - (Number(b?.orden) || 0) ||
+      (Number(a?.id) || 0) - (Number(b?.id) || 0)
+    );
+
+  bannersCuponesLista.replaceChildren();
+
+  if (!items.length) {
+    bannersCupones.hidden = true;
+    return;
+  }
+
+  const fragmento = document.createDocumentFragment();
+
+  for (const item of items) {
+    const enlace = document.createElement("a");
+    enlace.className = "banner-cupones-enlace";
+    enlace.href = enlaceBannerCupones(item);
+    enlace.target = "_blank";
+    enlace.rel = "noopener noreferrer";
+    enlace.setAttribute(
+      "aria-label",
+      `Abrir ${item.titulo || "promoción"} en Mercado Libre`
+    );
+
+    const imagen = document.createElement("img");
+    imagen.src = item.imagen_url;
+    imagen.alt = item.titulo || "Promoción de Mercado Libre";
+    imagen.loading = "lazy";
+    imagen.decoding = "async";
+
+    enlace.appendChild(imagen);
+    enlace.addEventListener("click", () => {
+      registrarClicPublicidad(item.id);
+    });
+
+    fragmento.appendChild(enlace);
+  }
+
+  bannersCuponesLista.appendChild(fragmento);
+  bannersCupones.hidden = false;
+}
+
 function normalizarSeccionesPublicidad(valor, categoria = "ofertas_dia") {
   let valores = [];
 
@@ -2174,6 +2245,14 @@ function normalizarSeccionesPublicidad(valor, categoria = "ofertas_dia") {
 }
 
 function publicidadPerteneceASeccion(publicidad, seccion) {
+  if (seccion === "banners_cupones") {
+    return esBannerCupones(publicidad);
+  }
+
+  if (esBannerCupones(publicidad)) {
+    return false;
+  }
+
   const secciones = normalizarSeccionesPublicidad(
     publicidad?.secciones,
     publicidad?.categoria
@@ -2402,6 +2481,7 @@ async function cargarPublicidad() {
 
     const datos = await respuesta.json();
     todasLasPublicidades = Array.isArray(datos) ? datos : [];
+    renderizarBannersCupones();
     actualizarContadoresSecciones();
     revisarAvisosNovedades();
 
