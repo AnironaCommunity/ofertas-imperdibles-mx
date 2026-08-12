@@ -1092,13 +1092,12 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
         : ""}
       ${esBancario ? `<p class="beneficio-bancario">${escaparHtml(cupon.titulo)}</p>` : ""}
 
-      <p class="descuento-maximo">
-        ${esBancario ? `Máx. descuento: <strong>${escaparHtml(cupon.ahorro_maximo || "Consultar")}</strong>` : `Descuento máximo de <strong>${escaparHtml(cupon.ahorro_maximo || "Consultar")}</strong>`}
-      </p>
-
-      <p class="compra-minima">
-        Compra mínima: ${escaparHtml(cupon.compra_minima || "Consultar")}
-      </p>
+      ${esBancario
+        ? `<p class="descuento-maximo">Máx. descuento: <strong>${escaparHtml(cupon.ahorro_maximo || "Consultar")}</strong></p>
+           <p class="compra-minima">Compra mínima: ${escaparHtml(cupon.compra_minima || "Consultar")}</p>`
+        : `<p class="compra-minima condiciones-cupon">
+            En compras desde ${escaparHtml(cupon.compra_minima || "Consultar")}${String(cupon.titulo || "").includes("%") && cupon.ahorro_maximo ? ` · Ahorra hasta ${escaparHtml(cupon.ahorro_maximo)}` : ""}
+           </p>`}
 
       <div class="estado-programacion" hidden></div>
 
@@ -3156,8 +3155,7 @@ function crearCuponEjemploTutorial() {
     </div>
     <div class="cupon-contenido">
       <div class="cupon-etiquetas"><span class="etiqueta-cupon etiqueta-nuevo">✨ Nuevo</span></div>
-      <p class="descuento-maximo">Descuento máximo de <strong>$250</strong></p>
-      <p class="compra-minima">Compra mínima: $1,000</p>
+      <p class="compra-minima condiciones-cupon">En compras desde $1,000 · Ahorra hasta $250</p>
       <div class="estado-programacion" hidden></div>
       <div class="acciones-bloque">
         <div class="acciones-cupon">
