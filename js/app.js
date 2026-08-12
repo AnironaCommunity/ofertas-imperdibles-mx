@@ -1431,6 +1431,8 @@ function renderizarCategoria() {
     (mostrarExclusivos ? cuponesExclusivos.length : 0) +
     (mostrarBancarios ? cuponesBancarios.length : 0);
 
+  document.body.classList.toggle("hay-cupones-visibles", totalVisible > 0);
+
   if (totalVisible === 0) {
     sinCupones.querySelector("h2").textContent = "¡No hay cupones disponibles!";
     sinCupones.querySelector("p").textContent = "Los cupones se agregan a partir de 8:30 a 9:00 a. m.";
@@ -1587,14 +1589,6 @@ async function cargarCupones() {
     }
 
     actualizarContadoresSecciones();
-
-    // V81.55: la línea punteada final solo existe cuando realmente hay cupones visibles.
-    const separadorFinCupones = document.querySelector("#separador-fin-cupones");
-    const sinCuponesVisible = document.querySelector("#sin-cupones:not([hidden])");
-    if (separadorFinCupones) {
-      separadorFinCupones.style.display = sinCuponesVisible ? "none" : "";
-    }
-
     revisarAvisosNovedades();
     procesarNovedadDesdeUrl();
   } catch (error) {
