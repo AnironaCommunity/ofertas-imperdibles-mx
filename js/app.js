@@ -1588,6 +1588,27 @@ function usarCuponDesdeBuscador(cupon) {
   });
 }
 
+function aplicarColorBotonBuscador(boton, cupon) {
+  if (!boton || !cupon) return;
+
+  const categoria = normalizarCategoria(cupon);
+  let color = "#16a34a";
+  let texto = "#ffffff";
+
+  if (categoria === "bancario") {
+    const bancoVisual = obtenerBancoVisual(cupon);
+    color = bancoVisual.color;
+    texto = bancoVisual.texto || colorTextoContraste(color);
+  } else {
+    const visual = configuracionVisualCupon(cupon);
+    color = visual.color;
+    texto = colorTextoContraste(color);
+  }
+
+  boton.style.setProperty("--buscador-accion-color", color);
+  boton.style.setProperty("--buscador-accion-texto", texto);
+}
+
 function renderResultadoBuscador(monto) {
   if (!buscadorCuponesResultado) return;
 
@@ -1609,17 +1630,18 @@ function renderResultadoBuscador(monto) {
     const { cupon, ahorro, totalFinal, minimo } = mejor;
     buscadorCuponesResultado.className = "buscador-cupones-resultado resultado-exito";
     buscadorCuponesResultado.innerHTML = `
-      <p class="buscador-resultado-titulo">🎟️ <strong>Tu mejor opción: ${escaparHtml(cupon.codigo)}</strong></p>
+      <p class="buscador-resultado-titulo">🎟️ <strong>Tu mejor opción</strong></p>
       <p class="buscador-resultado-texto">${escaparHtml(cupon.titulo)} · ${etiquetaCategoriaBuscador(cupon)}</p>
       <div class="buscador-resultado-resumen">
         <div class="buscador-resultado-dato"><span>Compra mínima</span><strong>${monedaBuscador(minimo)}</strong></div>
         <div class="buscador-resultado-dato"><span>Ahorras aprox.</span><strong>${monedaBuscador(ahorro)}</strong></div>
         <div class="buscador-resultado-dato"><span>Pagarías aprox.</span><strong>${monedaBuscador(totalFinal)}</strong></div>
       </div>
-      <button class="buscador-resultado-accion" type="button">📋 Usar este cupón</button>
+      <button class="buscador-resultado-accion" type="button">${iconoCopias()}<span>Usar este cupón</span></button>
     `;
-    buscadorCuponesResultado.querySelector(".buscador-resultado-accion")
-      ?.addEventListener("click", () => usarCuponDesdeBuscador(cupon));
+    const botonUsarCupon = buscadorCuponesResultado.querySelector(".buscador-resultado-accion");
+    aplicarColorBotonBuscador(botonUsarCupon, cupon);
+    botonUsarCupon?.addEventListener("click", () => usarCuponDesdeBuscador(cupon));
     return;
   }
 
@@ -1632,7 +1654,7 @@ function renderResultadoBuscador(monto) {
     buscadorCuponesResultado.className = "buscador-cupones-resultado resultado-cerca";
     buscadorCuponesResultado.innerHTML = `
       <p class="buscador-resultado-titulo">👀 <strong>¡Estás muy cerca!</strong></p>
-      <p class="buscador-resultado-texto">Agrega <strong>${monedaBuscador(cercano.faltante)} más</strong> a tu compra para alcanzar <strong>${escaparHtml(cercano.cupon.codigo)}</strong> (${escaparHtml(cercano.cupon.titulo)}).${ahorroTexto}</p>
+      <p class="buscador-resultado-texto">Agrega <strong>${monedaBuscador(cercano.faltante)} más</strong> a tu compra para acceder a una mejor opción (${escaparHtml(cercano.cupon.titulo)}).${ahorroTexto}</p>
     `;
     return;
   }
