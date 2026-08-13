@@ -364,3 +364,209 @@
   #buscador-cupones-monto { font-size: .80rem; }
   .buscador-cupones-filtros { margin-top: 4px; }
 }
+
+/* =========================================================
+   V81.76 — Buscador con identidad visual de Ofertas Imperdibles
+   Mantiene el módulo compacto, pero deja de verse como un formulario básico.
+   ========================================================= */
+.buscador-cupones {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(28, 172, 23, .16);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(28, 172, 23, .07), transparent 34%),
+    linear-gradient(180deg, #ffffff 0%, #fbfdfb 100%);
+  box-shadow: 0 5px 18px rgba(15, 23, 42, .055);
+}
+
+.buscador-cupones::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: linear-gradient(180deg, #32c82c 0%, #1cac17 100%);
+}
+
+.buscador-cupones-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.buscador-cupones-icono {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(28, 172, 23, .16);
+  border-radius: 10px;
+  background: rgba(28, 172, 23, .08);
+  font-size: .91rem;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+}
+
+.buscador-cupones-cabecera-texto {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.buscador-cupones-titulo-fila {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.buscador-cupones-titulo-fila h2 {
+  min-width: 0;
+}
+
+.buscador-cupones-badge {
+  flex: 0 0 auto;
+  padding: 2px 6px;
+  border: 1px solid rgba(28, 172, 23, .18);
+  border-radius: 999px;
+  background: rgba(28, 172, 23, .08);
+  color: #178513;
+  font-size: .52rem;
+  font-weight: 850;
+  line-height: 1.2;
+  letter-spacing: .01em;
+}
+
+.buscador-cupones-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.buscador-cupones-label small {
+  color: #8a929d;
+  font-size: .52rem;
+  font-weight: 750;
+  letter-spacing: .04em;
+}
+
+.buscador-cupones-input-wrap {
+  position: relative;
+  border-color: #dfe7e1;
+  background: #ffffff;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, .025);
+}
+
+.buscador-cupones-input-wrap:focus-within {
+  border-color: #28b523;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(28, 172, 23, .10), inset 0 1px 2px rgba(15,23,42,.02);
+}
+
+.buscador-cupones-moneda {
+  display: grid;
+  place-items: center;
+  align-self: stretch;
+  min-width: 34px;
+  padding: 0;
+  margin: 3px 0 3px 3px;
+  border-radius: 7px;
+  background: rgba(28, 172, 23, .09);
+  color: #168812;
+}
+
+#buscador-cupones-monto {
+  padding-left: 8px;
+  font-weight: 800;
+}
+
+#buscador-cupones-monto::placeholder {
+  color: #7f8793;
+  opacity: 1;
+  font-weight: 700;
+}
+
+.buscador-cupones-resultado {
+  overflow: hidden;
+  border-radius: 11px;
+  box-shadow: inset 3px 0 0 rgba(100, 116, 139, .24);
+}
+
+.buscador-cupones-resultado.resultado-exito {
+  background: linear-gradient(135deg, #f3fbf4 0%, #fbfefb 100%);
+  border-color: #c8e9cf;
+  box-shadow: inset 3px 0 0 #22a91d;
+}
+
+.buscador-cupones-resultado.resultado-cerca {
+  background: linear-gradient(135deg, #fff9e9 0%, #fffdf7 100%);
+  border-color: #f1dfa7;
+  box-shadow: inset 3px 0 0 #e8b51a;
+}
+
+.buscador-resultado-dato {
+  border: 1px solid rgba(15, 23, 42, .045);
+  background: rgba(255, 255, 255, .88);
+}
+
+.buscador-siguiente-oportunidad {
+  border: 1px dashed rgba(28, 172, 23, .18);
+  background: rgba(28, 172, 23, .045);
+}
+
+@media (max-width: 700px) {
+  .buscador-cupones {
+    padding: 7px 9px 8px 11px;
+  }
+
+  .buscador-cupones-cabecera {
+    gap: 7px;
+  }
+
+  .buscador-cupones-icono {
+    width: 28px;
+    height: 28px;
+    border-radius: 9px;
+    font-size: .84rem;
+  }
+
+  .buscador-cupones-titulo-fila {
+    gap: 5px;
+  }
+
+  .buscador-cupones-cabecera h2 {
+    font-size: .79rem;
+  }
+
+  .buscador-cupones-cabecera p {
+    margin-top: 1px;
+    font-size: .61rem;
+  }
+
+  .buscador-cupones-badge {
+    padding: 2px 5px;
+    font-size: .48rem;
+  }
+
+  .buscador-cupones-form {
+    margin-top: 5px;
+  }
+
+  .buscador-cupones-input-wrap {
+    height: 34px;
+  }
+
+  .buscador-cupones-moneda {
+    min-width: 32px;
+    font-size: .83rem;
+  }
+
+  #buscador-cupones-monto {
+    font-size: .82rem;
+  }
+}
+
+@media (max-width: 370px) {
+  .buscador-cupones-badge {
+    display: none;
+  }
+}

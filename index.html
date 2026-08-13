@@ -56,7 +56,7 @@
   <link rel="stylesheet" href="css/estabilidad.css?v=81.58.0" />
   <link rel="stylesheet" href="css/cabecera-inteligente.css?v=77.15.1" />
   <link rel="stylesheet" href="css/selector-cupones-oscuro.css?v=81.74.0" />
-  <link rel="stylesheet" href="css/buscador-cupones.css?v=81.74.0" />
+  <link rel="stylesheet" href="css/buscador-cupones.css?v=81.76.0" />
   <script>
     try {
       const temaGuardado = JSON.parse(localStorage.getItem("ofertas_imperdibles_tema") || "null");
@@ -313,15 +313,19 @@
 
     <section class="buscador-cupones" aria-labelledby="buscador-cupones-titulo">
       <div class="buscador-cupones-cabecera">
-        <div>
-          <h2 id="buscador-cupones-titulo">🔎 Te ayudamos a encontrar tu mejor cupón</h2>
-          <p>Ingresa el monto de tu compra y te decimos cuál te conviene más.</p>
+        <span class="buscador-cupones-icono" aria-hidden="true">🔎</span>
+        <div class="buscador-cupones-cabecera-texto">
+          <div class="buscador-cupones-titulo-fila">
+            <h2 id="buscador-cupones-titulo">Encuentra tu mejor cupón</h2>
+            <span class="buscador-cupones-badge">Automático</span>
+          </div>
+          <p>Ingresa cuánto vas a comprar y te mostramos cuál te conviene más.</p>
         </div>
       </div>
 
       <form id="buscador-cupones-form" class="buscador-cupones-form" novalidate>
         <label class="buscador-cupones-campo" for="buscador-cupones-monto">
-          <span>Monto de tu compra</span>
+          <span class="buscador-cupones-label">Monto de tu compra <small>MXN</small></span>
           <span class="buscador-cupones-input-wrap">
             <span class="buscador-cupones-moneda" aria-hidden="true">$</span>
             <input
