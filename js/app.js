@@ -748,8 +748,10 @@ function couponTimeState(coupon) {
       end,
       label:
         state === "ultimos-minutos"
-          ? "¡Últimos minutos!"
-          : "Termina en",
+          ? "🔥 ¡Últimos minutos!"
+          : state === "finaliza-pronto"
+            ? "🔥 Termina en"
+            : "Termina en",
       enabled: true,
     };
   }
@@ -1627,7 +1629,7 @@ function aplicarColorBotonBuscador(boton, cupon) {
   let color = "#1cac17";
   let texto = "#ffffff";
 
-  if (categoria === "bancario") {
+  if (categoria === "bancarios") {
     const bancoVisual = obtenerBancoVisual(cupon);
     color = bancoVisual.color;
     texto = bancoVisual.texto || colorTextoContraste(color);
@@ -1662,6 +1664,19 @@ function agregarCierreResultadoBuscador() {
   botonCerrar.textContent = "×";
   botonCerrar.addEventListener("click", cerrarResultadoBuscador);
   buscadorCuponesResultado.appendChild(botonCerrar);
+}
+
+function resaltarCuponRecomendado(cupon) {
+  document.querySelectorAll(".buscador-cupon-destacado").forEach((tarjeta) => {
+    tarjeta.classList.remove("buscador-cupon-destacado");
+  });
+  if (!cuponesContainer || !cupon) return;
+  const tarjeta = cuponesContainer.querySelector(`[data-id="${Number(cupon.id)}"]`);
+  if (!tarjeta) return;
+  // Reinicia la animación sin desplazar al usuario.
+  void tarjeta.offsetWidth;
+  tarjeta.classList.add("buscador-cupon-destacado");
+  window.setTimeout(() => tarjeta.classList.remove("buscador-cupon-destacado"), 1900);
 }
 
 function renderResultadoBuscador(monto) {
@@ -1708,6 +1723,7 @@ function renderResultadoBuscador(monto) {
     const botonUsarCupon = buscadorCuponesResultado.querySelector(".buscador-resultado-accion");
     aplicarColorBotonBuscador(botonUsarCupon, cupon);
     botonUsarCupon?.addEventListener("click", () => usarCuponDesdeBuscador(cupon));
+    resaltarCuponRecomendado(cupon);
     agregarCierreResultadoBuscador();
     return;
   }

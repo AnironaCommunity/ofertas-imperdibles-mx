@@ -298,3 +298,33 @@
   .buscador-cupones-form { grid-template-columns: 1fr; }
   .buscador-cupones-boton { font-size: 0.66rem; }
 }
+
+/* =========================================================
+   V81.72 — Pulido visual del asistente
+   Más compacto sin perder legibilidad ni funcionalidad.
+   ========================================================= */
+@media (max-width: 700px) {
+  .buscador-cupones {
+    margin: 5px auto 8px;
+    padding: 7px 9px 8px;
+  }
+  .buscador-cupones-cabecera h2 {
+    font-size: .82rem;
+    line-height: 1.15;
+  }
+  .buscador-cupones-cabecera p {
+    margin-top: 1px;
+    font-size: .66rem;
+    line-height: 1.18;
+  }
+  .buscador-cupones-form {
+    margin-top: 5px;
+  }
+  .buscador-cupones-campo {
+    gap: 2px;
+    font-size: .64rem;
+  }
+  .buscador-cupones-input-wrap {
+    height: 34px;
+  }
+}

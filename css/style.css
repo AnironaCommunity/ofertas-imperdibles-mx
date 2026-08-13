@@ -9069,3 +9069,61 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   }
 }
 
+
+/* =========================================================
+   V81.72 — Pulido final móvil solicitado
+   - Menos aire entre cabecera, categorías y buscador.
+   - Acciones secundarias alineadas.
+   - "Ya copiado" anclado al botón sin alterar el layout.
+   - Temporizador urgente más visible.
+   - Resaltado del cupón recomendado sin mover la pantalla.
+   ========================================================= */
+@media (max-width: 700px) {
+  .selector-cupones-menu.selector-cupones-oscuro {
+    margin-top: 5px !important;
+    margin-bottom: 5px !important;
+  }
+
+  .cupon:not(.cupon-bancario) .acciones-secundarias,
+  .cupon-bancario-mini .acciones-secundarias {
+    min-height: 34px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+  }
+
+  .cupon:not(.cupon-bancario) .estadisticas-cupon,
+  .cupon-bancario-mini .estadisticas-cupon {
+    min-height: 30px !important;
+    align-items: center !important;
+  }
+}
+
+.cupon:not(.cupon-bancario) .acciones-cupon > .cupon-copiado-mini {
+  top: -7px !important;
+  right: 8px !important;
+}
+
+.estado-programacion.finaliza-pronto,
+.estado-programacion.ultimos-minutos {
+  font-weight: 750 !important;
+}
+
+.estado-programacion.finaliza-pronto {
+  color: #c75b00 !important;
+}
+
+.estado-programacion.ultimos-minutos {
+  color: #d92d20 !important;
+}
+
+.buscador-cupon-destacado {
+  animation: oiCuponRecomendado 1.8s ease !important;
+}
+
+@keyframes oiCuponRecomendado {
+  0%, 100% { filter: none; }
+  25%, 72% {
+    filter: drop-shadow(0 0 5px rgba(22, 163, 74, .30));
+  }
+}
