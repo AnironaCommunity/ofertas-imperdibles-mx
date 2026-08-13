@@ -1,3 +1,14 @@
+
+.buscador-cupones {
+  scroll-margin-top: 10px;
+  scroll-margin-bottom: 18px;
+}
+
+.buscador-cupones.modo-teclado {
+  position: relative;
+  z-index: 20;
+}
+
 /* =========================================================
    V81.68 — Buscador inteligente compacto de cupones
    ========================================================= */
@@ -27,7 +38,7 @@
 
 .buscador-cupones-form {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   gap: 6px;
   align-items: end;
   margin-top: 7px;
@@ -273,7 +284,7 @@
   }
 
   .buscador-cupones-form {
-    grid-template-columns: minmax(0, 1fr) 92px;
+    grid-template-columns: minmax(0, 1fr);
     gap: 5px;
   }
 
@@ -284,6 +295,6 @@
 }
 
 @media (max-width: 340px) {
-  .buscador-cupones-form { grid-template-columns: 1fr 82px; }
+  .buscador-cupones-form { grid-template-columns: 1fr; }
   .buscador-cupones-boton { font-size: 0.66rem; }
 }

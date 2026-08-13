@@ -62,6 +62,9 @@ const buscadorCuponesResultado = document.querySelector("#buscador-cupones-resul
 const buscadorCuponesFiltros = Array.from(document.querySelectorAll("[data-buscador-filtro]"));
 const buscadorCuponesFiltrosContenedor = document.querySelector(".buscador-cupones-filtros");
 let filtroBuscadorCupones = "todos";
+const buscadorCuponesSeccion = document.querySelector(".buscador-cupones");
+let posicionAntesBuscador = null;
+let ajusteTecladoProgramado = null;
 
 
 
@@ -1731,6 +1734,23 @@ function renderResultadoBuscador(monto) {
     : `<p class="buscador-resultado-titulo"><strong>No hay cupones disponibles en esta categoría por ahora.</strong></p><p class="buscador-resultado-texto">Prueba con otro tipo de cupón.</p>`;
 }
 
+function ajustarBuscadorSobreTeclado({ resultado = false } = {}) {
+  if (!buscadorCuponesSeccion || document.activeElement !== buscadorCuponesMonto) return;
+
+  window.clearTimeout(ajusteTecladoProgramado);
+  ajusteTecladoProgramado = window.setTimeout(() => {
+    const objetivo = resultado && !buscadorCuponesResultado?.hidden
+      ? buscadorCuponesResultado
+      : buscadorCuponesSeccion;
+
+    objetivo?.scrollIntoView({
+      behavior: "smooth",
+      block: resultado ? "nearest" : "start",
+      inline: "nearest",
+    });
+  }, 90);
+}
+
 function ejecutarBuscadorCupones() {
   const monto = Number(buscadorCuponesMonto?.value || 0);
   renderResultadoBuscador(monto);
@@ -1757,8 +1777,44 @@ buscadorCuponesMonto?.addEventListener("input", () => {
 
   temporizadorBuscadorCupones = window.setTimeout(() => {
     ejecutarBuscadorCupones();
+    ajustarBuscadorSobreTeclado({ resultado: true });
   }, 180);
 });
+buscadorCuponesMonto?.addEventListener("focus", () => {
+  if (posicionAntesBuscador === null) posicionAntesBuscador = window.scrollY;
+  buscadorCuponesSeccion?.classList.add("modo-teclado");
+
+  // El teclado móvil tarda un instante en ocupar espacio; hacemos dos ajustes
+  // para que el campo y la recomendación permanezcan dentro del área visible.
+  window.setTimeout(() => ajustarBuscadorSobreTeclado(), 120);
+  window.setTimeout(() => ajustarBuscadorSobreTeclado({ resultado: true }), 360);
+});
+
+buscadorCuponesMonto?.addEventListener("blur", (evento) => {
+  window.clearTimeout(ajusteTecladoProgramado);
+
+  const siguienteFoco = evento.relatedTarget;
+  const sigueDentroBuscador = siguienteFoco && buscadorCuponesSeccion?.contains(siguienteFoco);
+
+  buscadorCuponesSeccion?.classList.remove("modo-teclado");
+
+  if (!sigueDentroBuscador && posicionAntesBuscador !== null) {
+    const destino = posicionAntesBuscador;
+    posicionAntesBuscador = null;
+    window.setTimeout(() => {
+      window.scrollTo({ top: destino, behavior: "smooth" });
+    }, 180);
+  }
+});
+
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", () => {
+    if (document.activeElement === buscadorCuponesMonto) {
+      ajustarBuscadorSobreTeclado({ resultado: true });
+    }
+  });
+}
+
 
 buscadorCuponesFiltros.forEach((boton) => {
   boton.addEventListener("click", () => {
