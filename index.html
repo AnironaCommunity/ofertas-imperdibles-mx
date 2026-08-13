@@ -55,6 +55,7 @@
   <link rel="stylesheet" href="css/estabilidad.css?v=81.58.0" />
   <link rel="stylesheet" href="css/cabecera-inteligente.css?v=77.15.1" />
   <link rel="stylesheet" href="css/selector-cupones-oscuro.css?v=81.66.0" />
+  <link rel="stylesheet" href="css/buscador-cupones.css?v=81.67.0" />
   <script>
     try {
       const temaGuardado = JSON.parse(localStorage.getItem("ofertas_imperdibles_tema") || "null");
@@ -309,6 +310,42 @@
       </button>
     </nav>
 
+    <section class="buscador-cupones" aria-labelledby="buscador-cupones-titulo">
+      <div class="buscador-cupones-cabecera">
+        <div>
+          <h2 id="buscador-cupones-titulo">🔎 Te ayudamos a encontrar tu mejor cupón</h2>
+          <p>Ingresa el monto de tu compra y te decimos cuál te conviene más.</p>
+        </div>
+      </div>
+
+      <form id="buscador-cupones-form" class="buscador-cupones-form" novalidate>
+        <label class="buscador-cupones-campo" for="buscador-cupones-monto">
+          <span>Monto de tu compra</span>
+          <span class="buscador-cupones-input-wrap">
+            <span class="buscador-cupones-moneda" aria-hidden="true">$</span>
+            <input
+              id="buscador-cupones-monto"
+              name="monto"
+              type="number"
+              inputmode="decimal"
+              min="1"
+              step="1"
+              placeholder="Ej. 3500"
+              autocomplete="off"
+            />
+          </span>
+        </label>
+        <button id="buscador-cupones-boton" class="buscador-cupones-boton" type="submit">Buscar cupón</button>
+      </form>
+
+      <div class="buscador-cupones-filtros" role="group" aria-label="Tipo de cupón a considerar">
+        <button class="buscador-filtro activo" type="button" data-buscador-filtro="todos" aria-pressed="true">Todos</button>
+        <button class="buscador-filtro" type="button" data-buscador-filtro="generales" aria-pressed="false">Generales</button>
+        <button class="buscador-filtro" type="button" data-buscador-filtro="bancarios" aria-pressed="false">Bancarios</button>
+      </div>
+
+      <div id="buscador-cupones-resultado" class="buscador-cupones-resultado" aria-live="polite" hidden></div>
+    </section>
 
     <p id="estado-carga" class="estado-carga" aria-live="polite">
       Cargando cupones...
@@ -577,7 +614,7 @@
   </div>
 
 
-  <script type="module" src="js/app.js?v=81.60.0"></script>
+  <script type="module" src="js/app.js?v=81.67.0"></script>
   <script src="js/hero-redes.js?v=81.62.0" defer></script>
   <script src="js/header-dinamico-v68-3.js?v=70.0.0" defer></script>
   <script src="js/cabecera-inteligente.js?v=77.15.7" defer></script>

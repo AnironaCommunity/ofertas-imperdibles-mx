@@ -55,6 +55,13 @@ const resumenCuponesDisponibles = document.querySelector("#resumen-cupones-dispo
 const resumenVisitas = document.querySelector("#resumen-visitas");
 const resumenCopiados = document.querySelector("#resumen-copiados");
 
+/* V81.67 — Buscador inteligente de cupones por monto */
+const buscadorCuponesForm = document.querySelector("#buscador-cupones-form");
+const buscadorCuponesMonto = document.querySelector("#buscador-cupones-monto");
+const buscadorCuponesResultado = document.querySelector("#buscador-cupones-resultado");
+const buscadorCuponesFiltros = Array.from(document.querySelectorAll("[data-buscador-filtro]"));
+let filtroBuscadorCupones = "todos";
+
 
 
 const carruselesPublicidad = [];
@@ -1387,6 +1394,237 @@ function normalizarCategoria(cupon) {
   return "tienda";
 }
 
+/* =========================================================
+   V81.67 — Asistente para encontrar el mejor cupón
+   Usa los mismos datos ya capturados en el administrador:
+   título, compra mínima, ahorro máximo, categoría y vigencia.
+   ========================================================= */
+function numeroDineroCupon(valor) {
+  const texto = String(valor ?? "").trim();
+  if (!texto) return 0;
+
+  // Los montos del administrador normalmente vienen como $2,500 o 2500.
+  // Conservamos el separador decimal cuando es inequívoco.
+  const limpio = texto.replace(/[^\d.,-]/g, "");
+  if (!limpio) return 0;
+
+  let normalizado = limpio;
+  const tienePunto = limpio.includes(".");
+  const tieneComa = limpio.includes(",");
+
+  if (tienePunto && tieneComa) {
+    normalizado = limpio.lastIndexOf(".") > limpio.lastIndexOf(",")
+      ? limpio.replace(/,/g, "")
+      : limpio.replace(/\./g, "").replace(",", ".");
+  } else if (tieneComa) {
+    const partes = limpio.split(",");
+    normalizado = partes.length === 2 && partes[1].length <= 2
+      ? `${partes[0]}.${partes[1]}`
+      : limpio.replace(/,/g, "");
+  }
+
+  const numero = Number(normalizado);
+  return Number.isFinite(numero) ? Math.max(0, numero) : 0;
+}
+
+function monedaBuscador(valor) {
+  return new Intl.NumberFormat("es-MX", {
+    style: "currency",
+    currency: "MXN",
+    minimumFractionDigits: Number.isInteger(Number(valor)) ? 0 : 2,
+    maximumFractionDigits: 2,
+  }).format(Number(valor) || 0);
+}
+
+function cuponAplicaFiltroBuscador(cupon) {
+  const categoria = normalizarCategoria(cupon);
+  if (filtroBuscadorCupones === "bancarios") return categoria === "bancarios";
+  if (filtroBuscadorCupones === "generales") return categoria !== "bancarios";
+  return true;
+}
+
+function cuponDisponibleParaBuscador(cupon) {
+  return Boolean(
+    cupon &&
+    cupon.activo !== false &&
+    couponTimeState(cupon).enabled &&
+    String(cupon.codigo || "").trim() &&
+    cuponAplicaFiltroBuscador(cupon)
+  );
+}
+
+function calcularBeneficioCupon(cupon, montoCompra) {
+  const monto = Number(montoCompra) || 0;
+  const minimo = numeroDineroCupon(cupon.compra_minima);
+  if (monto <= 0 || monto < minimo) return null;
+
+  const titulo = String(cupon.titulo || "").toUpperCase();
+  const maximo = numeroDineroCupon(cupon.ahorro_maximo);
+  const porcentaje = titulo.match(/(\d+(?:[.,]\d+)?)\s*%/);
+  const montoFijo = titulo.match(/^\s*\$\s*([\d,.]+)/)
+    || titulo.match(/\$?\s*([\d,.]+)\s*(?:OFF|DE DESCUENTO)/i);
+
+  let ahorro = 0;
+
+  if (porcentaje) {
+    const tasa = Number(porcentaje[1].replace(",", "."));
+    ahorro = monto * (tasa / 100);
+    if (maximo > 0) ahorro = Math.min(ahorro, maximo);
+  } else if (montoFijo) {
+    ahorro = numeroDineroCupon(montoFijo[1]);
+    if (maximo > 0) ahorro = Math.min(ahorro, maximo);
+  } else if (maximo > 0) {
+    // Respaldo para cupones capturados sin porcentaje/monto en el título.
+    ahorro = maximo;
+  }
+
+  ahorro = Math.min(Math.max(ahorro, 0), monto);
+  if (ahorro <= 0) return null;
+
+  return {
+    cupon,
+    minimo,
+    ahorro,
+    totalFinal: Math.max(0, monto - ahorro),
+  };
+}
+
+function obtenerMejorCuponParaMonto(monto) {
+  return todosLosCupones
+    .filter(cuponDisponibleParaBuscador)
+    .map((cupon) => calcularBeneficioCupon(cupon, monto))
+    .filter(Boolean)
+    .sort((a, b) => {
+      if (b.ahorro !== a.ahorro) return b.ahorro - a.ahorro;
+      if (a.totalFinal !== b.totalFinal) return a.totalFinal - b.totalFinal;
+      return b.minimo - a.minimo;
+    })[0] || null;
+}
+
+function obtenerCuponMasCercano(monto) {
+  return todosLosCupones
+    .filter(cuponDisponibleParaBuscador)
+    .map((cupon) => {
+      const minimo = numeroDineroCupon(cupon.compra_minima);
+      if (minimo <= monto) return null;
+      const calculoEnMinimo = calcularBeneficioCupon(cupon, minimo);
+      return {
+        cupon,
+        minimo,
+        faltante: minimo - monto,
+        ahorro: calculoEnMinimo?.ahorro || 0,
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => {
+      if (a.faltante !== b.faltante) return a.faltante - b.faltante;
+      return b.ahorro - a.ahorro;
+    })[0] || null;
+}
+
+function etiquetaCategoriaBuscador(cupon) {
+  const categoria = normalizarCategoria(cupon);
+  if (categoria === "bancarios") return "Bancario";
+  if (categoria === "exclusivo") return "Exclusivo";
+  return "Tienda";
+}
+
+function usarCuponDesdeBuscador(cupon) {
+  const categoria = normalizarCategoria(cupon);
+  cambiarCategoria(categoria, { actualizarHistorial: true, desplazamiento: "auto" });
+
+  window.requestAnimationFrame(() => {
+    const tarjeta = cuponesContainer?.querySelector(`[data-id="${Number(cupon.id)}"]`);
+    if (!tarjeta) return;
+
+    tarjeta.classList.add("buscador-cupon-destacado");
+    tarjeta.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    window.setTimeout(() => {
+      tarjeta.querySelector(".boton-canjear, .banco-canjear")?.click();
+    }, 360);
+    window.setTimeout(() => tarjeta.classList.remove("buscador-cupon-destacado"), 1600);
+  });
+}
+
+function renderResultadoBuscador(monto) {
+  if (!buscadorCuponesResultado) return;
+
+  const valor = Number(monto) || 0;
+  buscadorCuponesResultado.hidden = false;
+  buscadorCuponesResultado.className = "buscador-cupones-resultado resultado-aviso";
+
+  if (valor <= 0) {
+    buscadorCuponesResultado.innerHTML = `
+      <p class="buscador-resultado-titulo"><strong>Escribe el monto de tu compra.</strong></p>
+      <p class="buscador-resultado-texto">Por ejemplo: 2500.</p>
+    `;
+    return;
+  }
+
+  const mejor = obtenerMejorCuponParaMonto(valor);
+
+  if (mejor) {
+    const { cupon, ahorro, totalFinal, minimo } = mejor;
+    buscadorCuponesResultado.className = "buscador-cupones-resultado resultado-exito";
+    buscadorCuponesResultado.innerHTML = `
+      <p class="buscador-resultado-titulo">🎟️ <strong>Tu mejor opción: ${escaparHtml(cupon.codigo)}</strong></p>
+      <p class="buscador-resultado-texto">${escaparHtml(cupon.titulo)} · ${etiquetaCategoriaBuscador(cupon)}</p>
+      <div class="buscador-resultado-resumen">
+        <div class="buscador-resultado-dato"><span>Compra mínima</span><strong>${monedaBuscador(minimo)}</strong></div>
+        <div class="buscador-resultado-dato"><span>Ahorras aprox.</span><strong>${monedaBuscador(ahorro)}</strong></div>
+        <div class="buscador-resultado-dato"><span>Pagarías aprox.</span><strong>${monedaBuscador(totalFinal)}</strong></div>
+      </div>
+      <button class="buscador-resultado-accion" type="button">📋 Usar este cupón</button>
+    `;
+    buscadorCuponesResultado.querySelector(".buscador-resultado-accion")
+      ?.addEventListener("click", () => usarCuponDesdeBuscador(cupon));
+    return;
+  }
+
+  const cercano = obtenerCuponMasCercano(valor);
+  if (cercano) {
+    const ahorroTexto = cercano.ahorro > 0
+      ? ` Al llegar a ${monedaBuscador(cercano.minimo)} podrías ahorrar aproximadamente <strong>${monedaBuscador(cercano.ahorro)}</strong>.`
+      : ` Al llegar a ${monedaBuscador(cercano.minimo)} podrás intentar aplicar ese cupón.`;
+
+    buscadorCuponesResultado.className = "buscador-cupones-resultado resultado-cerca";
+    buscadorCuponesResultado.innerHTML = `
+      <p class="buscador-resultado-titulo">👀 <strong>¡Estás muy cerca!</strong></p>
+      <p class="buscador-resultado-texto">Agrega <strong>${monedaBuscador(cercano.faltante)} más</strong> a tu compra para alcanzar <strong>${escaparHtml(cercano.cupon.codigo)}</strong> (${escaparHtml(cercano.cupon.titulo)}).${ahorroTexto}</p>
+    `;
+    return;
+  }
+
+  const hayDisponibles = todosLosCupones.some(cuponDisponibleParaBuscador);
+  buscadorCuponesResultado.innerHTML = hayDisponibles
+    ? `<p class="buscador-resultado-titulo"><strong>No encontramos un cupón calculable para ese monto.</strong></p><p class="buscador-resultado-texto">Puedes revisar los cupones disponibles debajo para consultar sus condiciones.</p>`
+    : `<p class="buscador-resultado-titulo"><strong>No hay cupones disponibles en esta categoría por ahora.</strong></p><p class="buscador-resultado-texto">Prueba con otro tipo de cupón.</p>`;
+}
+
+function ejecutarBuscadorCupones() {
+  const monto = Number(buscadorCuponesMonto?.value || 0);
+  renderResultadoBuscador(monto);
+}
+
+buscadorCuponesForm?.addEventListener("submit", (evento) => {
+  evento.preventDefault();
+  ejecutarBuscadorCupones();
+});
+
+buscadorCuponesFiltros.forEach((boton) => {
+  boton.addEventListener("click", () => {
+    filtroBuscadorCupones = boton.dataset.buscadorFiltro || "todos";
+    buscadorCuponesFiltros.forEach((item) => {
+      const activo = item === boton;
+      item.classList.toggle("activo", activo);
+      item.setAttribute("aria-pressed", String(activo));
+    });
+
+    if (Number(buscadorCuponesMonto?.value || 0) > 0) ejecutarBuscadorCupones();
+  });
+});
+
 function cambiarCategoria(
   categoria,
   {
@@ -1624,6 +1862,10 @@ async function cargarCupones() {
     const contenidoCambio = nuevaFirmaCupones !== firmaUltimosCupones;
 
     todosLosCupones = nuevosCupones;
+
+    if (buscadorCuponesResultado && !buscadorCuponesResultado.hidden && Number(buscadorCuponesMonto?.value || 0) > 0) {
+      ejecutarBuscadorCupones();
+    }
 
     // Evita vaciar y reconstruir las tarjetas en cada consulta automática.
     // Solo se redibuja la sección cuando la información realmente cambió.

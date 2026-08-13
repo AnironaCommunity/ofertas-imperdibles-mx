@@ -1,0 +1,253 @@
+/* =========================================================
+   V81.67 — Buscador inteligente de cupones por monto
+   ========================================================= */
+.buscador-cupones {
+  width: min(100%, 980px);
+  margin: 12px auto 16px;
+  padding: 14px;
+  border: 1px solid rgba(17, 24, 39, 0.10);
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.buscador-cupones-cabecera h2 {
+  margin: 0;
+  font-size: clamp(1rem, 2.8vw, 1.22rem);
+  line-height: 1.2;
+  color: #111827;
+}
+
+.buscador-cupones-cabecera p {
+  margin: 4px 0 0;
+  font-size: 0.88rem;
+  line-height: 1.35;
+  color: #6b7280;
+}
+
+.buscador-cupones-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 9px;
+  align-items: end;
+  margin-top: 12px;
+}
+
+.buscador-cupones-campo {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #374151;
+}
+
+.buscador-cupones-input-wrap {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  overflow: hidden;
+  border: 1.5px solid #d8dde6;
+  border-radius: 13px;
+  background: #f9fafb;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.buscador-cupones-input-wrap:focus-within {
+  border-color: #111827;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
+}
+
+.buscador-cupones-moneda {
+  padding-left: 13px;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+#buscador-cupones-monto {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  padding: 0 12px 0 6px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 750;
+  color: #111827;
+}
+
+#buscador-cupones-monto::-webkit-outer-spin-button,
+#buscador-cupones-monto::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+.buscador-cupones-boton {
+  min-height: 44px;
+  padding: 0 17px;
+  border: 0;
+  border-radius: 13px;
+  background: #111827;
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.buscador-cupones-boton:hover { filter: brightness(1.08); }
+.buscador-cupones-boton:active { transform: translateY(1px); }
+
+.buscador-cupones-filtros {
+  display: flex;
+  gap: 6px;
+  margin-top: 9px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.buscador-cupones-filtros::-webkit-scrollbar { display: none; }
+
+.buscador-filtro {
+  flex: 0 0 auto;
+  min-height: 31px;
+  padding: 0 12px;
+  border: 1px solid #e1e5eb;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #5f6672;
+  font-size: 0.76rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.buscador-filtro.activo {
+  border-color: #111827;
+  background: #111827;
+  color: #ffffff;
+}
+
+.buscador-cupones-resultado {
+  margin-top: 11px;
+  padding: 12px 13px;
+  border-radius: 14px;
+  background: #f7f9fc;
+  border: 1px solid #e5eaf1;
+}
+
+.buscador-cupones-resultado.resultado-exito {
+  background: #f2fbf5;
+  border-color: #cdebd6;
+}
+
+.buscador-cupones-resultado.resultado-cerca {
+  background: #fff9e8;
+  border-color: #f1dfa7;
+}
+
+.buscador-cupones-resultado.resultado-aviso {
+  background: #f7f9fc;
+  border-color: #e5eaf1;
+}
+
+.buscador-resultado-titulo {
+  margin: 0;
+  color: #111827;
+  font-size: 0.94rem;
+  line-height: 1.25;
+}
+
+.buscador-resultado-texto {
+  margin: 5px 0 0;
+  color: #4b5563;
+  font-size: 0.82rem;
+  line-height: 1.38;
+}
+
+.buscador-resultado-resumen {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.buscador-resultado-dato {
+  min-width: 0;
+  padding: 8px 7px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.82);
+  text-align: center;
+}
+
+.buscador-resultado-dato span {
+  display: block;
+  color: #6b7280;
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.buscador-resultado-dato strong {
+  display: block;
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #111827;
+  font-size: 0.88rem;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.buscador-resultado-accion {
+  width: 100%;
+  min-height: 38px;
+  margin-top: 9px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 11px;
+  background: #16a34a;
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.buscador-resultado-accion:hover { filter: brightness(1.05); }
+
+.buscador-cupon-destacado {
+  animation: buscadorCuponDestacado 1.4s ease;
+}
+
+@keyframes buscadorCuponDestacado {
+  0%, 100% { box-shadow: inherit; }
+  30%, 70% { box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.20), 0 10px 26px rgba(15, 23, 42, 0.12); }
+}
+
+@media (max-width: 600px) {
+  .buscador-cupones {
+    margin-top: 9px;
+    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .buscador-cupones-form {
+    grid-template-columns: minmax(0, 1fr) 112px;
+    gap: 7px;
+  }
+
+  .buscador-cupones-boton { padding: 0 10px; }
+
+  .buscador-resultado-resumen { gap: 4px; }
+  .buscador-resultado-dato { padding: 7px 4px; }
+  .buscador-resultado-dato strong { font-size: 0.79rem; }
+}
+
+@media (max-width: 380px) {
+  .buscador-cupones-form { grid-template-columns: 1fr; }
+  .buscador-cupones-boton { width: 100%; }
+}
