@@ -242,6 +242,21 @@
 .buscador-resultado-cerrar:hover { background: rgba(15, 23, 42, .06); color: #334155; }
 .buscador-cupones-resultado .buscador-resultado-titulo { padding-right: 24px; }
 
+
+.buscador-siguiente-oportunidad {
+  margin-top: 6px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.045);
+  font-size: 0.64rem;
+  line-height: 1.35;
+  color: #475569;
+}
+
+.buscador-siguiente-oportunidad strong {
+  color: #1e293b;
+}
+
 .buscador-cupon-destacado { animation: buscadorCuponDestacado 1.4s ease; }
 
 @keyframes buscadorCuponDestacado {

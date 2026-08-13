@@ -1537,6 +1537,35 @@ function obtenerCuponMasCercano(monto) {
     })[0] || null;
 }
 
+function obtenerSiguienteOportunidadCupon(monto, mejorActual = null) {
+  const ahorroActual = Number(mejorActual?.ahorro || 0);
+
+  return todosLosCupones
+    .filter(cuponDisponibleParaBuscador)
+    .map((cupon) => {
+      const minimo = numeroDineroCupon(cupon.compra_minima);
+      if (minimo <= monto) return null;
+
+      const calculo = calcularBeneficioCupon(cupon, minimo);
+      if (!calculo || calculo.ahorro <= ahorroActual) return null;
+
+      return {
+        cupon,
+        minimo,
+        faltante: minimo - monto,
+        ahorro: calculo.ahorro,
+        totalFinal: calculo.totalFinal,
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => {
+      const prioridad = prioridadCategoriaBuscador(a.cupon) - prioridadCategoriaBuscador(b.cupon);
+      if (prioridad !== 0) return prioridad;
+      if (a.faltante !== b.faltante) return a.faltante - b.faltante;
+      return b.ahorro - a.ahorro;
+    })[0] || null;
+}
+
 function actualizarFiltrosBuscadorCupones() {
   if (!buscadorCuponesFiltrosContenedor) return;
 
@@ -1640,10 +1669,9 @@ function renderResultadoBuscador(monto) {
   buscadorCuponesResultado.className = "buscador-cupones-resultado resultado-aviso";
 
   if (valor <= 0) {
-    buscadorCuponesResultado.innerHTML = `
-      <p class="buscador-resultado-titulo"><strong>Escribe el monto de tu compra.</strong></p>
-      <p class="buscador-resultado-texto">Por ejemplo: 2500.</p>
-    `;
+    buscadorCuponesResultado.hidden = true;
+    buscadorCuponesResultado.innerHTML = "";
+    buscadorCuponesResultado.className = "buscador-cupones-resultado";
     return;
   }
 
@@ -1651,6 +1679,17 @@ function renderResultadoBuscador(monto) {
 
   if (mejor) {
     const { cupon, ahorro, totalFinal, minimo } = mejor;
+    const siguiente = obtenerSiguienteOportunidadCupon(valor, mejor);
+    const siguienteHtml = siguiente
+      ? `<div class="buscador-siguiente-oportunidad">
+          <strong>💡 Siguiente oportunidad:</strong>
+          Agrega <strong>${monedaBuscador(siguiente.faltante)} más</strong> para completar una compra de
+          <strong>${monedaBuscador(siguiente.minimo)}</strong>, obtener un descuento aproximado de
+          <strong>${monedaBuscador(siguiente.ahorro)}</strong> y pagar aproximadamente
+          <strong>${monedaBuscador(siguiente.totalFinal)}</strong>.
+        </div>`
+      : "";
+
     buscadorCuponesResultado.className = "buscador-cupones-resultado resultado-exito";
     buscadorCuponesResultado.innerHTML = `
       <p class="buscador-resultado-titulo">🎟️ <strong>Tu mejor opción</strong></p>
@@ -1661,6 +1700,7 @@ function renderResultadoBuscador(monto) {
         <div class="buscador-resultado-dato"><span>Pagarías aprox.</span><strong>${monedaBuscador(totalFinal)}</strong></div>
       </div>
       <button class="buscador-resultado-accion" type="button">${iconoCopias()}<span>Usar este cupón</span></button>
+      ${siguienteHtml}
     `;
     const botonUsarCupon = buscadorCuponesResultado.querySelector(".buscador-resultado-accion");
     aplicarColorBotonBuscador(botonUsarCupon, cupon);
@@ -1671,8 +1711,9 @@ function renderResultadoBuscador(monto) {
 
   const cercano = obtenerCuponMasCercano(valor);
   if (cercano) {
+    const totalCercano = Math.max(0, cercano.minimo - cercano.ahorro);
     const ahorroTexto = cercano.ahorro > 0
-      ? ` Al llegar a ${monedaBuscador(cercano.minimo)} podrías ahorrar aproximadamente <strong>${monedaBuscador(cercano.ahorro)}</strong>.`
+      ? ` Al llegar a ${monedaBuscador(cercano.minimo)} podrías ahorrar aproximadamente <strong>${monedaBuscador(cercano.ahorro)}</strong> y pagar alrededor de <strong>${monedaBuscador(totalCercano)}</strong>.`
       : ` Al llegar a ${monedaBuscador(cercano.minimo)} podrás intentar aplicar ese cupón.`;
 
     buscadorCuponesResultado.className = "buscador-cupones-resultado resultado-cerca";
@@ -1698,6 +1739,25 @@ function ejecutarBuscadorCupones() {
 buscadorCuponesForm?.addEventListener("submit", (evento) => {
   evento.preventDefault();
   ejecutarBuscadorCupones();
+});
+
+let temporizadorBuscadorCupones = null;
+buscadorCuponesMonto?.addEventListener("input", () => {
+  window.clearTimeout(temporizadorBuscadorCupones);
+
+  const valorTexto = String(buscadorCuponesMonto.value || "").trim();
+  if (!valorTexto || Number(valorTexto) <= 0) {
+    if (buscadorCuponesResultado) {
+      buscadorCuponesResultado.hidden = true;
+      buscadorCuponesResultado.innerHTML = "";
+      buscadorCuponesResultado.className = "buscador-cupones-resultado";
+    }
+    return;
+  }
+
+  temporizadorBuscadorCupones = window.setTimeout(() => {
+    ejecutarBuscadorCupones();
+  }, 180);
 });
 
 buscadorCuponesFiltros.forEach((boton) => {
