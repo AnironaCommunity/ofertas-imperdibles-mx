@@ -60,6 +60,7 @@ const buscadorCuponesForm = document.querySelector("#buscador-cupones-form");
 const buscadorCuponesMonto = document.querySelector("#buscador-cupones-monto");
 const buscadorCuponesResultado = document.querySelector("#buscador-cupones-resultado");
 const buscadorCuponesFiltros = Array.from(document.querySelectorAll("[data-buscador-filtro]"));
+const buscadorCuponesFiltrosContenedor = document.querySelector(".buscador-cupones-filtros");
 let filtroBuscadorCupones = "todos";
 
 
@@ -1489,12 +1490,24 @@ function calcularBeneficioCupon(cupon, montoCompra) {
   };
 }
 
+function prioridadCategoriaBuscador(cupon) {
+  const categoria = normalizarCategoria(cupon);
+  // Prioridad solicitada: Tienda primero. Bancarios quedan como segunda
+  // alternativa y Exclusivos al final porque suelen aplicar a menos artículos.
+  if (categoria === "tienda") return 0;
+  if (categoria === "bancarios") return 1;
+  if (categoria === "exclusivo") return 2;
+  return 3;
+}
+
 function obtenerMejorCuponParaMonto(monto) {
   return todosLosCupones
     .filter(cuponDisponibleParaBuscador)
     .map((cupon) => calcularBeneficioCupon(cupon, monto))
     .filter(Boolean)
     .sort((a, b) => {
+      const prioridad = prioridadCategoriaBuscador(a.cupon) - prioridadCategoriaBuscador(b.cupon);
+      if (prioridad !== 0) return prioridad;
       if (b.ahorro !== a.ahorro) return b.ahorro - a.ahorro;
       if (a.totalFinal !== b.totalFinal) return a.totalFinal - b.totalFinal;
       return b.minimo - a.minimo;
@@ -1517,9 +1530,37 @@ function obtenerCuponMasCercano(monto) {
     })
     .filter(Boolean)
     .sort((a, b) => {
+      const prioridad = prioridadCategoriaBuscador(a.cupon) - prioridadCategoriaBuscador(b.cupon);
+      if (prioridad !== 0) return prioridad;
       if (a.faltante !== b.faltante) return a.faltante - b.faltante;
       return b.ahorro - a.ahorro;
     })[0] || null;
+}
+
+function actualizarFiltrosBuscadorCupones() {
+  if (!buscadorCuponesFiltrosContenedor) return;
+
+  const disponibles = todosLosCupones.filter((cupon) => Boolean(
+    cupon &&
+    cupon.activo !== false &&
+    couponTimeState(cupon).enabled &&
+    String(cupon.codigo || "").trim()
+  ));
+
+  const hayGenerales = disponibles.some((cupon) => normalizarCategoria(cupon) !== "bancarios");
+  const hayBancarios = disponibles.some((cupon) => normalizarCategoria(cupon) === "bancarios");
+  const hayAlternativas = hayGenerales && hayBancarios;
+
+  buscadorCuponesFiltrosContenedor.hidden = !hayAlternativas;
+
+  if (!hayAlternativas) {
+    filtroBuscadorCupones = "todos";
+    buscadorCuponesFiltros.forEach((boton) => {
+      const activo = boton.dataset.buscadorFiltro === "todos";
+      boton.classList.toggle("activo", activo);
+      boton.setAttribute("aria-pressed", String(activo));
+    });
+  }
 }
 
 function etiquetaCategoriaBuscador(cupon) {
@@ -1862,6 +1903,7 @@ async function cargarCupones() {
     const contenidoCambio = nuevaFirmaCupones !== firmaUltimosCupones;
 
     todosLosCupones = nuevosCupones;
+    actualizarFiltrosBuscadorCupones();
 
     if (buscadorCuponesResultado && !buscadorCuponesResultado.hidden && Number(buscadorCuponesMonto?.value || 0) > 0) {
       ejecutarBuscadorCupones();
