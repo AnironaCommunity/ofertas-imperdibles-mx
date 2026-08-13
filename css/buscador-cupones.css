@@ -133,6 +133,7 @@
 }
 
 .buscador-cupones-resultado {
+  position: relative;
   margin-top: 6px;
   padding: 8px 9px;
   border-radius: 10px;
@@ -197,10 +198,11 @@
   min-height: 31px;
   margin-top: 6px;
   padding: 0 10px;
-  border: 0;
+  border: 1px solid color-mix(in srgb, var(--buscador-accion-color, #1cac17) 82%, #000);
   border-radius: 9px;
-  background: var(--buscador-accion-color, #16a34a);
+  background: var(--buscador-accion-color, #1cac17);
   color: var(--buscador-accion-texto, #ffffff);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 3px 8px color-mix(in srgb, var(--buscador-accion-color, #1cac17) 22%, transparent);
   font-size: 0.70rem;
   font-weight: 850;
   cursor: pointer;
@@ -218,7 +220,27 @@
   flex: 0 0 auto;
 }
 
-.buscador-resultado-accion:hover { filter: brightness(1.05); }
+.buscador-resultado-accion:hover { filter: brightness(.96); }
+
+
+.buscador-resultado-cerrar {
+  position: absolute;
+  top: 5px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #7a8290;
+  font-size: 19px;
+  line-height: 20px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.buscador-resultado-cerrar:hover { background: rgba(15, 23, 42, .06); color: #334155; }
+.buscador-cupones-resultado .buscador-resultado-titulo { padding-right: 24px; }
 
 .buscador-cupon-destacado { animation: buscadorCuponDestacado 1.4s ease; }
 
