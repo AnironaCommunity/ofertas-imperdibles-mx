@@ -1071,6 +1071,50 @@ function configuracionVisualCategoria(categoria) {
   };
 }
 
+/* =========================================================
+   V81.60 — Colores automáticos para cupones de Tienda
+   - Cada cupón de Tienda recibe un color de una paleta controlada.
+   - El color se calcula de forma estable a partir del cupón: no cambia
+     al recargar ni al cambiar de sección.
+   - Exclusivos y Bancarios conservan su comportamiento actual.
+   ========================================================= */
+const PALETA_CUPONES_TIENDA = [
+  "#ff4b35", // coral / rojo oferta
+  "#ffb000", // naranja dorado
+  "#20bfa9", // turquesa
+  "#16a6e8", // azul cielo
+  "#6f67e8", // violeta
+  "#e45b9a", // rosa
+  "#39ad69", // verde
+];
+
+function colorAutomaticoCuponTienda(cupon) {
+  const semilla = String(
+    cupon?.id ?? cupon?.codigo ?? cupon?.titulo ?? "cupon-tienda"
+  );
+
+  // Hash sencillo y determinista: se ve aleatorio, pero el mismo cupón
+  // conserva siempre su color entre recargas.
+  let hash = 0;
+  for (let i = 0; i < semilla.length; i += 1) {
+    hash = ((hash << 5) - hash + semilla.charCodeAt(i)) | 0;
+  }
+
+  return PALETA_CUPONES_TIENDA[Math.abs(hash) % PALETA_CUPONES_TIENDA.length];
+}
+
+function configuracionVisualCupon(cupon) {
+  const categoria = normalizarCategoria(cupon);
+  const visual = configuracionVisualCategoria(categoria);
+
+  if (categoria !== "tienda") return visual;
+
+  return {
+    ...visual,
+    color: colorAutomaticoCuponTienda(cupon),
+  };
+}
+
 function esCuponPorcentaje(cupon) {
   const titulo = String(cupon?.titulo || "");
   return /%|por\s*ciento/i.test(titulo);
@@ -1098,7 +1142,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   const esExclusivo = categoria === "exclusivo";
   const yaUsado = localStorage.getItem(claveUsado(cupon.id)) === "1";
   const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
-  const visualCategoria = configuracionVisualCategoria(categoria);
+  const visualCategoria = configuracionVisualCupon(cupon);
 
   const estados = Array.isArray(estadosDestacados) ? estadosDestacados.filter(Boolean) : [estadosDestacados].filter(Boolean);
   const clasesEstado = estados.map((estado) => ` cupon-${estado}`).join("");
@@ -3224,7 +3268,7 @@ document.addEventListener("ofertas:etiquetas-cargadas", () => {
   document.querySelectorAll(".cupon[data-id]:not(.cupon-bancario)").forEach((tarjeta) => {
     const cupon = todosLosCupones.find((item) => Number(item.id) === Number(tarjeta.dataset.id));
     if (!cupon) return;
-    const visual = configuracionVisualCategoria(normalizarCategoria(cupon));
+    const visual = configuracionVisualCupon(cupon);
     tarjeta.style.setProperty("--categoria-cupon-color", visual.color);
     tarjeta.style.setProperty("--categoria-cupon-texto", colorTextoContraste(visual.color));
     const franja = tarjeta.querySelector(".franja-categoria-cupon");
