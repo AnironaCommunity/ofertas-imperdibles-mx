@@ -328,3 +328,39 @@
     height: 34px;
   }
 }
+
+/* =========================================================
+   V81.74 — Buscador visiblemente más compacto en móvil
+   ========================================================= */
+@media (max-width: 700px) {
+  .buscador-cupones {
+    margin: 4px auto 7px;
+    padding: 6px 8px 7px;
+    border-radius: 12px;
+  }
+  .buscador-cupones-cabecera h2 {
+    font-size: .79rem;
+    line-height: 1.12;
+  }
+  .buscador-cupones-cabecera p {
+    margin-top: 0;
+    font-size: .63rem;
+    line-height: 1.15;
+  }
+  .buscador-cupones-form {
+    margin-top: 4px;
+    gap: 3px;
+  }
+  .buscador-cupones-campo {
+    gap: 1px;
+    font-size: .61rem;
+    line-height: 1.1;
+  }
+  .buscador-cupones-input-wrap {
+    height: 31px;
+    border-radius: 9px;
+  }
+  .buscador-cupones-moneda { padding-left: 9px; font-size: .82rem; }
+  #buscador-cupones-monto { font-size: .80rem; }
+  .buscador-cupones-filtros { margin-top: 4px; }
+}

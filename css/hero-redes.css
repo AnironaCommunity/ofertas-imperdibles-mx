@@ -757,3 +757,45 @@
  .hero-redes.hero-redes-lista .hero-redes-whatsapp > .hero-redes-icono-texto,
  .hero-redes.hero-redes-lista .hero-redes-facebook > .hero-redes-icono-texto {width:15px !important;height:15px !important;flex-basis:15px !important;font-size:14px !important;line-height:15px !important;}
 }
+
+/* ============================================================
+   V81.74 — Jerarquía visual y compactación real del encabezado
+   Mantiene Propuesta 3; baja el peso de accesos secundarios y
+   acerca el selector de categorías sin eliminar elementos.
+   ============================================================ */
+@media (max-width: 700px) {
+  .hero-redes.hero-redes-lista {
+    margin-bottom: 3px !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+
+  .hero-redes.hero-redes-lista #nombre-sitio {
+    font-size: 12px !important;
+    font-weight: 750 !important;
+  }
+
+  .hero-redes.hero-redes-lista #hero-texto-descriptivo {
+    color: #747b86 !important;
+    font-size: 7.25px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-boton,
+  .hero-redes.hero-redes-lista .hero-redes-visitantes {
+    color: #343941 !important;
+    font-weight: 450 !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-etiqueta,
+  .hero-redes.hero-redes-lista .hero-redes-visitantes::after,
+  .hero-redes.hero-redes-lista .hero-redes-anirona::after {
+    opacity: .84;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-botones .boton-avisos-novedades,
+  .hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial {
+    margin-top: 4px !important;
+    box-shadow: none !important;
+    color: #454b54 !important;
+  }
+}

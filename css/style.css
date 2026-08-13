@@ -9127,3 +9127,141 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
     filter: drop-shadow(0 0 5px rgba(22, 163, 74, .30));
   }
 }
+
+/* =========================================================
+   V81.74 — Pulido visual completo acordado
+   1) Tarjetas con altura flexible: se alinean por zonas y crecen
+      cuando el contenido lo necesita.
+   2) Acciones inferiores uniformes.
+   3) "Ya copiado" en posición fija y consistente.
+   4) Resaltado visible pero breve del cupón recomendado.
+   ========================================================= */
+
+/* Anula las alturas rígidas heredadas: conserva un mínimo compacto,
+   pero permite crecer para que nunca se encime el contenido. */
+.cupones-grid-compacta > .cupon,
+.cupones-grid-compacta > .cupon-bancario-mini,
+.cupones-grid-compacta > .cupon-bancario-grid {
+  height: auto !important;
+  min-height: 228px !important;
+  max-height: none !important;
+  align-self: stretch !important;
+}
+
+.cupon:not(.cupon-bancario) {
+  display: flex !important;
+  flex-direction: column !important;
+}
+.cupon:not(.cupon-bancario) .cupon-contenido {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  flex-direction: column !important;
+}
+.cupon:not(.cupon-bancario) .acciones-bloque {
+  margin-top: auto !important;
+}
+
+/* Pie de acciones: mismos diámetros, centrado y respiración uniforme. */
+.cupon:not(.cupon-bancario) .acciones-secundarias,
+.cupon-bancario-mini .acciones-secundarias {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 34px !important;
+  gap: 7px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.cupon:not(.cupon-bancario) .acciones-secundarias .boton-like,
+.cupon:not(.cupon-bancario) .acciones-secundarias .boton-compartir,
+.cupon-bancario-mini .acciones-secundarias .boton-like,
+.cupon-bancario-mini .acciones-secundarias .boton-compartir {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  flex: 0 0 32px !important;
+  padding: 0 !important;
+}
+
+.cupon:not(.cupon-bancario) .estadisticas-cupon,
+.cupon-bancario-mini .estadisticas-cupon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 32px !important;
+  gap: 6px !important;
+  margin: 0 !important;
+  padding: 0 1px !important;
+  line-height: 1 !important;
+}
+
+.cupon:not(.cupon-bancario) .estadistica-item,
+.cupon-bancario-mini .estadistica-item {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+  min-height: 24px !important;
+  line-height: 1 !important;
+}
+
+/* Ya copiado: anclado siempre a la esquina superior derecha del botón. */
+.cupon:not(.cupon-bancario) .acciones-cupon,
+.cupon-bancario-mini .banco-pie {
+  position: relative !important;
+  overflow: visible !important;
+}
+.cupon:not(.cupon-bancario) .acciones-cupon > .cupon-copiado-mini,
+.cupon-bancario-mini .banco-pie > .cupon-copiado-mini {
+  position: absolute !important;
+  z-index: 8 !important;
+  top: -7px !important;
+  right: 5px !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+
+/* Recomendación: borde/halo temporal perceptible sin scroll automático. */
+.buscador-cupon-destacado {
+  animation: oiCuponRecomendadoV8174 1.9s ease !important;
+  position: relative;
+  z-index: 2;
+}
+@keyframes oiCuponRecomendadoV8174 {
+  0%, 100% { box-shadow: inherit; transform: translateZ(0); }
+  20%, 72% {
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, .28), 0 8px 20px rgba(15, 23, 42, .10) !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .cupones-grid-compacta > .cupon,
+  .cupones-grid-compacta > .cupon-bancario-mini,
+  .cupones-grid-compacta > .cupon-bancario-grid {
+    min-height: 224px !important;
+  }
+
+  .cupon:not(.cupon-bancario) .acciones-secundarias,
+  .cupon-bancario-mini .acciones-secundarias {
+    min-height: 32px !important;
+    gap: 5px !important;
+  }
+
+  .cupon:not(.cupon-bancario) .acciones-secundarias .boton-like,
+  .cupon:not(.cupon-bancario) .acciones-secundarias .boton-compartir,
+  .cupon-bancario-mini .acciones-secundarias .boton-like,
+  .cupon-bancario-mini .acciones-secundarias .boton-compartir {
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
+    flex-basis: 30px !important;
+  }
+
+  .cupon:not(.cupon-bancario) .estadisticas-cupon,
+  .cupon-bancario-mini .estadisticas-cupon {
+    min-height: 30px !important;
+    gap: 4px !important;
+  }
+}

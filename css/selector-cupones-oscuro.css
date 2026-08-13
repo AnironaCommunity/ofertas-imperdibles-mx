@@ -278,3 +278,10 @@ body.hay-cupones-visibles #separador-fin-cupones { display: block !important; }
   content: none !important;
   display: none !important;
 }
+
+/* V81.74 — Menos espacio entre encabezado y categorías. */
+@media (max-width: 700px) {
+  .selector-cupones-menu.selector-cupones-oscuro {
+    margin: 0 auto 5px !important;
+  }
+}
