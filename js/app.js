@@ -63,6 +63,9 @@ const buscadorCuponesFiltros = Array.from(document.querySelectorAll("[data-busca
 const buscadorCuponesFiltrosContenedor = document.querySelector(".buscador-cupones-filtros");
 let filtroBuscadorCupones = "todos";
 let indiceAlternativaBuscador = 0;
+let temporizadorRegresoCuponPrincipal = null;
+let mantenerAlternativaHasta = 0;
+const TIEMPO_REGRESO_CUPON_PRINCIPAL = 12000; // V81.79: 12 s para permitir leer la alternativa.
 const buscadorCuponesSeccion = document.querySelector(".buscador-cupones");
 let posicionAntesBuscador = null;
 let ajusteTecladoProgramado = null;
@@ -1712,7 +1715,8 @@ function renderResultadoBuscador(monto, { conservarAlternativa = false } = {}) {
   }
 
   const aplicables = obtenerCuponesAplicablesOrdenados(valor);
-  if (!conservarAlternativa) indiceAlternativaBuscador = 0;
+  const conservarPorLectura = indiceAlternativaBuscador > 0 && Date.now() < mantenerAlternativaHasta;
+  if (!conservarAlternativa && !conservarPorLectura) indiceAlternativaBuscador = 0;
   if (aplicables.length > 0) {
     indiceAlternativaBuscador = Math.min(indiceAlternativaBuscador, aplicables.length - 1);
     const mejor = aplicables[indiceAlternativaBuscador];
@@ -1768,15 +1772,33 @@ function renderResultadoBuscador(monto, { conservarAlternativa = false } = {}) {
     aplicarColorBotonBuscador(botonUsarCupon, cupon);
     botonUsarCupon?.addEventListener("click", () => usarCuponDesdeBuscador(cupon));
 
+    const programarRegresoCuponPrincipal = () => {
+      window.clearTimeout(temporizadorRegresoCuponPrincipal);
+      mantenerAlternativaHasta = Date.now() + TIEMPO_REGRESO_CUPON_PRINCIPAL;
+      temporizadorRegresoCuponPrincipal = window.setTimeout(() => {
+        mantenerAlternativaHasta = 0;
+        indiceAlternativaBuscador = 0;
+        renderResultadoBuscador(valor, { conservarAlternativa: true });
+        ajustarBuscadorSobreTeclado({ resultado: true });
+      }, TIEMPO_REGRESO_CUPON_PRINCIPAL);
+    };
+
     buscadorCuponesResultado.querySelector(".buscador-ver-otro")?.addEventListener("click", () => {
       indiceAlternativaBuscador = Math.min(indiceAlternativaBuscador + 1, aplicables.length - 1);
       renderResultadoBuscador(valor, { conservarAlternativa: true });
+      programarRegresoCuponPrincipal();
       ajustarBuscadorSobreTeclado({ resultado: true });
     });
 
     buscadorCuponesResultado.querySelector(".buscador-anterior")?.addEventListener("click", () => {
       indiceAlternativaBuscador = Math.max(indiceAlternativaBuscador - 1, 0);
       renderResultadoBuscador(valor, { conservarAlternativa: true });
+      if (indiceAlternativaBuscador > 0) {
+        programarRegresoCuponPrincipal();
+      } else {
+        window.clearTimeout(temporizadorRegresoCuponPrincipal);
+        mantenerAlternativaHasta = 0;
+      }
       ajustarBuscadorSobreTeclado({ resultado: true });
     });
 
@@ -1836,6 +1858,8 @@ buscadorCuponesForm?.addEventListener("submit", (evento) => {
 let temporizadorBuscadorCupones = null;
 buscadorCuponesMonto?.addEventListener("input", () => {
   indiceAlternativaBuscador = 0;
+  mantenerAlternativaHasta = 0;
+  window.clearTimeout(temporizadorRegresoCuponPrincipal);
   window.clearTimeout(temporizadorBuscadorCupones);
 
   const valorTexto = String(buscadorCuponesMonto.value || "").trim();
