@@ -9280,7 +9280,7 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
 .estado-programacion.agotado { color: #ff3b4f !important; font-weight: 600 !important; letter-spacing: 0 !important; }
 .estado-agotado-mensaje {
   display: inline-flex; align-items: center; justify-content: center; gap: 4px;
-  color: #ff3b4f; font-size: 12px; line-height: 1.15; white-space: nowrap;
+  color: #ff3b4f; font-size: inherit; line-height: inherit; white-space: nowrap;
 }
 .estado-agotado-icono {
   display: inline-flex; align-items: center; justify-content: center;
@@ -9308,3 +9308,6 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
 /* V81.83 — Mensaje de cupón agotado sin negritas */
 .estado-agotado-mensaje { font-weight: 400 !important; }
 .estado-agotado-mensaje span { font-weight: 400 !important; }
+
+/* V81.84 — El aviso agotado usa exactamente el tamaño responsive del temporizador */
+.estado-agotado-mensaje, .estado-agotado-mensaje span { font-size: inherit !important; line-height: inherit; }
