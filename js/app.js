@@ -741,7 +741,7 @@ function couponTimeState(coupon) {
       target: end,
       start,
       end,
-      label: "el cupón se agotó.",
+      label: "El cupón se agotó.",
       enabled: false,
     };
   }
@@ -863,7 +863,7 @@ function updateCouponTimes() {
     if (timeState.state === "agotado") {
       status.hidden = false;
       status.className = "estado-programacion agotado";
-      status.innerHTML = `<div class="estado-linea"><span class="estado-agotado-mensaje"><span class="estado-agotado-icono" aria-hidden="true">!</span><span>el cupón se agotó.</span></span></div>`;
+      status.innerHTML = `<div class="estado-linea"><span class="estado-agotado-mensaje"><span class="estado-agotado-icono" aria-hidden="true">!</span><span>El cupón se agotó.</span></span></div>`;
       card.classList.add("cupon-agotado");
       redeemButton.disabled = true;
       redeemButton.classList.add("boton-agotado");
