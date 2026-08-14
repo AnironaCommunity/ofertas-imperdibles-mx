@@ -741,7 +741,7 @@ function couponTimeState(coupon) {
       target: end,
       start,
       end,
-      label: "El cupón se agotó.",
+      label: "el cupón se agotó.",
       enabled: false,
     };
   }
@@ -863,7 +863,7 @@ function updateCouponTimes() {
     if (timeState.state === "agotado") {
       status.hidden = false;
       status.className = "estado-programacion agotado";
-      status.innerHTML = `<div class="estado-linea"><span class="estado-agotado-mensaje"><span class="estado-agotado-icono" aria-hidden="true">!</span><span>El cupón se agotó.</span></span></div>`;
+      status.innerHTML = `<div class="estado-linea"><span class="estado-agotado-mensaje"><span class="estado-agotado-icono" aria-hidden="true">!</span><span>el cupón se agotó.</span></span></div>`;
       card.classList.add("cupon-agotado");
       redeemButton.disabled = true;
       redeemButton.classList.add("boton-agotado");
@@ -1229,7 +1229,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
       <div class="acciones-bloque">
         <div class="acciones-cupon">
           <span class="cupon-copiado-mini" ${yaUsado ? "" : "hidden"}>✓ Ya copiado</span>
-          <button class="boton-canjear" type="button">
+          <button class="boton-canjear" type="button" ${cupon.agotado === true ? "disabled aria-disabled=\"true\"" : ""}>
             ${contenidoBotonCopiar()}
           </button>
         </div>
@@ -1376,7 +1376,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
       <div class="banco-pie">
         <div class="estado-programacion" hidden></div>
         <span class="cupon-copiado-mini banco-copiado-mini" ${yaUsado ? "" : "hidden"}>✓ Ya copiado</span>
-        <button class="banco-canjear" type="button">${contenidoBotonCopiar()}</button>
+        <button class="banco-canjear" type="button" ${cupon.agotado === true ? "disabled aria-disabled=\"true\"" : ""}>${contenidoBotonCopiar()}</button>
         <div class="acciones-secundarias banco-acciones-extra" aria-label="Interacciones del cupón">
           <button
             class="boton-like banco-like ${yaLeGusta ? "activo" : ""}"
