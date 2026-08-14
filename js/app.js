@@ -62,6 +62,7 @@ const buscadorCuponesResultado = document.querySelector("#buscador-cupones-resul
 const buscadorCuponesFiltros = Array.from(document.querySelectorAll("[data-buscador-filtro]"));
 const buscadorCuponesFiltrosContenedor = document.querySelector(".buscador-cupones-filtros");
 let filtroBuscadorCupones = "todos";
+let indiceAlternativaBuscador = 0;
 const buscadorCuponesSeccion = document.querySelector(".buscador-cupones");
 let posicionAntesBuscador = null;
 let ajusteTecladoProgramado = null;
@@ -1505,18 +1506,32 @@ function prioridadCategoriaBuscador(cupon) {
   return 3;
 }
 
-function obtenerMejorCuponParaMonto(monto) {
+function ahorroPotencialBuscador(resultado) {
+  if (!resultado?.cupon) return 0;
+  const maximo = numeroDineroCupon(resultado.cupon.ahorro_maximo);
+  // Para ordenar las recomendaciones priorizamos el mayor beneficio publicado
+  // del cupón. Si no existe tope capturado, usamos el ahorro calculado al monto.
+  return maximo > 0 ? maximo : Number(resultado.ahorro || 0);
+}
+
+function obtenerCuponesAplicablesOrdenados(monto) {
   return todosLosCupones
     .filter(cuponDisponibleParaBuscador)
     .map((cupon) => calcularBeneficioCupon(cupon, monto))
     .filter(Boolean)
     .sort((a, b) => {
-      const prioridad = prioridadCategoriaBuscador(a.cupon) - prioridadCategoriaBuscador(b.cupon);
-      if (prioridad !== 0) return prioridad;
+      const potencial = ahorroPotencialBuscador(b) - ahorroPotencialBuscador(a);
+      if (potencial !== 0) return potencial;
       if (b.ahorro !== a.ahorro) return b.ahorro - a.ahorro;
       if (a.totalFinal !== b.totalFinal) return a.totalFinal - b.totalFinal;
+      const prioridad = prioridadCategoriaBuscador(a.cupon) - prioridadCategoriaBuscador(b.cupon);
+      if (prioridad !== 0) return prioridad;
       return b.minimo - a.minimo;
-    })[0] || null;
+    });
+}
+
+function obtenerMejorCuponParaMonto(monto) {
+  return obtenerCuponesAplicablesOrdenados(monto)[0] || null;
 }
 
 function obtenerCuponMasCercano(monto) {
@@ -1679,7 +1694,7 @@ function resaltarCuponRecomendado(cupon) {
   window.setTimeout(() => tarjeta.classList.remove("buscador-cupon-destacado"), 1900);
 }
 
-function renderResultadoBuscador(monto) {
+function renderResultadoBuscador(monto, { conservarAlternativa = false } = {}) {
   if (!buscadorCuponesResultado) return;
 
   const valor = Number(monto) || 0;
@@ -1687,16 +1702,20 @@ function renderResultadoBuscador(monto) {
   buscadorCuponesResultado.className = "buscador-cupones-resultado resultado-aviso";
 
   if (valor <= 0) {
+    indiceAlternativaBuscador = 0;
     buscadorCuponesResultado.hidden = true;
     buscadorCuponesResultado.innerHTML = "";
     buscadorCuponesResultado.className = "buscador-cupones-resultado";
     return;
   }
 
-  const mejor = obtenerMejorCuponParaMonto(valor);
-
-  if (mejor) {
+  const aplicables = obtenerCuponesAplicablesOrdenados(valor);
+  if (!conservarAlternativa) indiceAlternativaBuscador = 0;
+  if (aplicables.length > 0) {
+    indiceAlternativaBuscador = Math.min(indiceAlternativaBuscador, aplicables.length - 1);
+    const mejor = aplicables[indiceAlternativaBuscador];
     const { cupon, ahorro, totalFinal, minimo } = mejor;
+    const potencial = ahorroPotencialBuscador(mejor);
     const siguiente = obtenerSiguienteOportunidadCupon(valor, mejor);
     const siguienteHtml = siguiente
       ? `<div class="buscador-siguiente-oportunidad">
@@ -1708,23 +1727,47 @@ function renderResultadoBuscador(monto) {
         </div>`
       : "";
 
+    const esExclusivo = normalizarCategoria(cupon) === "exclusivo";
+    const avisoExclusivo = esExclusivo
+      ? `<div class="buscador-aviso-exclusivo"><strong>ℹ️ Cupón exclusivo:</strong> aplica únicamente en productos seleccionados.</div>`
+      : "";
+
+    const hayOtra = aplicables.length > 1;
+    const otraHtml = hayOtra
+      ? `<div class="buscador-otra-opcion">
+          <span>🎟️ <strong>Hay otro cupón que también puedes utilizar.</strong> Algunos cupones pueden no aplicar a todos los productos.</span>
+          <button class="buscador-ver-otro" type="button">Ver otro cupón</button>
+        </div>`
+      : "";
+
+    const tituloResultado = indiceAlternativaBuscador === 0 ? "Mayor ahorro disponible" : "Otra opción disponible";
+    const etiquetaAhorro = potencial > ahorro ? "Ahorro máximo" : "Ahorras aprox.";
+    const valorAhorro = potencial > ahorro ? potencial : ahorro;
+
     buscadorCuponesResultado.className = "buscador-cupones-resultado resultado-exito";
     buscadorCuponesResultado.innerHTML = `
-      <p class="buscador-resultado-titulo">🎟️ <strong>Tu mejor opción</strong></p>
+      <p class="buscador-resultado-titulo">🎟️ <strong>${tituloResultado}</strong></p>
       <p class="buscador-resultado-texto">${escaparHtml(cupon.titulo)} · ${etiquetaCategoriaBuscador(cupon)}</p>
       <div class="buscador-resultado-resumen">
         <div class="buscador-resultado-dato"><span>Compra mínima</span><strong>${monedaBuscador(minimo)}</strong></div>
-        <div class="buscador-resultado-dato"><span>Ahorras aprox.</span><strong>${monedaBuscador(ahorro)}</strong></div>
+        <div class="buscador-resultado-dato"><span>${etiquetaAhorro}</span><strong>${monedaBuscador(valorAhorro)}</strong></div>
         <div class="buscador-resultado-dato"><span>Pagarías aprox.</span><strong>${monedaBuscador(totalFinal)}</strong></div>
       </div>
+      ${avisoExclusivo}
       <button class="buscador-resultado-accion" type="button">${iconoCopias()}<span>Usar este cupón</span></button>
+      ${otraHtml}
       ${siguienteHtml}
     `;
     const botonUsarCupon = buscadorCuponesResultado.querySelector(".buscador-resultado-accion");
     aplicarColorBotonBuscador(botonUsarCupon, cupon);
     botonUsarCupon?.addEventListener("click", () => usarCuponDesdeBuscador(cupon));
-    // La sugerencia automática ya no resalta/parpadea la tarjeta.
-    // Solo se muestra la recomendación dentro del buscador.
+
+    buscadorCuponesResultado.querySelector(".buscador-ver-otro")?.addEventListener("click", () => {
+      indiceAlternativaBuscador = (indiceAlternativaBuscador + 1) % aplicables.length;
+      renderResultadoBuscador(valor, { conservarAlternativa: true });
+      ajustarBuscadorSobreTeclado({ resultado: true });
+    });
+
     agregarCierreResultadoBuscador();
     return;
   }
@@ -1780,6 +1823,7 @@ buscadorCuponesForm?.addEventListener("submit", (evento) => {
 
 let temporizadorBuscadorCupones = null;
 buscadorCuponesMonto?.addEventListener("input", () => {
+  indiceAlternativaBuscador = 0;
   window.clearTimeout(temporizadorBuscadorCupones);
 
   const valorTexto = String(buscadorCuponesMonto.value || "").trim();
@@ -1835,6 +1879,7 @@ if (window.visualViewport) {
 
 buscadorCuponesFiltros.forEach((boton) => {
   boton.addEventListener("click", () => {
+    indiceAlternativaBuscador = 0;
     filtroBuscadorCupones = boton.dataset.buscadorFiltro || "todos";
     buscadorCuponesFiltros.forEach((item) => {
       const activo = item === boton;

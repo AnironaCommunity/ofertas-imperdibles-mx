@@ -570,3 +570,50 @@
     display: none;
   }
 }
+
+
+/* V81.77 — alternativas y aviso de cupones exclusivos */
+.buscador-aviso-exclusivo,
+.buscador-otra-opcion {
+  margin-top: 6px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-size: .64rem;
+  line-height: 1.32;
+}
+
+.buscador-aviso-exclusivo {
+  border: 1px solid rgba(99, 102, 241, .16);
+  background: rgba(99, 102, 241, .055);
+  color: #475569;
+}
+
+.buscador-otra-opcion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 1px dashed rgba(15, 23, 42, .14);
+  background: rgba(255, 255, 255, .62);
+  color: #475569;
+}
+
+.buscador-ver-otro {
+  flex: 0 0 auto;
+  min-height: 25px;
+  padding: 0 9px;
+  border: 1px solid #d5dbe4;
+  border-radius: 7px;
+  background: #fff;
+  color: #334155;
+  font-size: .62rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.buscador-ver-otro:hover { background: #f8fafc; }
+
+@media (max-width: 520px) {
+  .buscador-otra-opcion { align-items: flex-start; }
+  .buscador-ver-otro { white-space: nowrap; }
+}
