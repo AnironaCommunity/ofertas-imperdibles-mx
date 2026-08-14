@@ -741,7 +741,7 @@ function couponTimeState(coupon) {
       target: end,
       start,
       end,
-      label: "AGOTADO",
+      label: "El cupón se agotó.",
       enabled: false,
     };
   }
@@ -863,7 +863,7 @@ function updateCouponTimes() {
     if (timeState.state === "agotado") {
       status.hidden = false;
       status.className = "estado-programacion agotado";
-      status.innerHTML = `<div class="estado-linea"><span>AGOTADO</span></div>`;
+      status.innerHTML = `<div class="estado-linea"><span class="estado-agotado-mensaje"><span class="estado-agotado-icono" aria-hidden="true">!</span><span>El cupón se agotó.</span></span></div>`;
       card.classList.add("cupon-agotado");
       redeemButton.disabled = true;
       redeemButton.classList.add("boton-agotado");
@@ -2018,17 +2018,26 @@ function renderizarCategoria() {
     .filter((cupon) => cupon.activo !== false)
     .filter((cupon) => couponTimeState(cupon).state !== "finalizado");
 
+  // V81.81 — En cada sección, los cupones activos siempre van antes que los agotados.
+  // Dentro de cada grupo se conserva el criterio existente por número de clics.
+  const ordenarActivosAntesAgotados = (a, b) => {
+    const agotadoA = a.agotado === true ? 1 : 0;
+    const agotadoB = b.agotado === true ? 1 : 0;
+    if (agotadoA !== agotadoB) return agotadoA - agotadoB;
+    return Number(b.clics || 0) - Number(a.clics || 0);
+  };
+
   const cuponesTienda = disponibles
     .filter((cupon) => normalizarCategoria(cupon) === "tienda")
-    .sort((a, b) => Number(b.clics || 0) - Number(a.clics || 0));
+    .sort(ordenarActivosAntesAgotados);
 
   const cuponesExclusivos = disponibles
     .filter((cupon) => normalizarCategoria(cupon) === "exclusivo")
-    .sort((a, b) => Number(b.clics || 0) - Number(a.clics || 0));
+    .sort(ordenarActivosAntesAgotados);
 
   const cuponesBancarios = disponibles
     .filter((cupon) => normalizarCategoria(cupon) === "bancarios")
-    .sort((a, b) => Number(b.clics || 0) - Number(a.clics || 0));
+    .sort(ordenarActivosAntesAgotados);
 
   const mostrarTienda =
     categoriaActiva === "todos" || categoriaActiva === "tienda";
@@ -2109,6 +2118,23 @@ function renderizarCategoria() {
       fragmentoBancos.appendChild(tarjeta);
     });
     cuponesContainer.appendChild(fragmentoBancos);
+  }
+
+  // En "Todos" también se garantiza el orden global: primero TODOS los activos
+  // y después TODOS los agotados, respetando el orden relativo ya renderizado.
+  if (categoriaActiva === "todos" && cuponesContainer) {
+    const tarjetas = Array.from(cuponesContainer.children);
+    const activas = [];
+    const agotadas = [];
+
+    tarjetas.forEach((tarjeta) => {
+      const cupon = todosLosCupones.find(
+        (item) => String(item.id) === String(tarjeta.dataset.id || "")
+      );
+      (cupon?.agotado === true ? agotadas : activas).push(tarjeta);
+    });
+
+    [...activas, ...agotadas].forEach((tarjeta) => cuponesContainer.appendChild(tarjeta));
   }
 
   todosWrapper.hidden = false;

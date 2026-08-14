@@ -9268,7 +9268,7 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
 
 
 /* =========================================================
-   V81.80 — Estado manual AGOTADO
+   V81.81 — Estado manual AGOTADO + mensaje visual
    ========================================================= */
 .cupon.cupon-agotado,
 .cupon-bancario-mini.cupon-agotado {
@@ -9277,7 +9277,16 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
 }
 .cupon.cupon-agotado:hover,
 .cupon-bancario-mini.cupon-agotado:hover { transform: none !important; }
-.estado-programacion.agotado { color: #b42318 !important; font-weight: 800 !important; letter-spacing: 0.7px; }
+.estado-programacion.agotado { color: #ff3b4f !important; font-weight: 600 !important; letter-spacing: 0 !important; }
+.estado-agotado-mensaje {
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  color: #ff3b4f; font-size: 12px; line-height: 1.15; white-space: nowrap;
+}
+.estado-agotado-icono {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 12px; height: 12px; border-radius: 50%; background: #ff3b4f; color: #fff;
+  font-size: 9px; font-weight: 800; line-height: 1; flex: 0 0 12px;
+}
 .boton-canjear:disabled.boton-agotado,
 .banco-canjear:disabled.boton-agotado {
   background: #e5e7eb !important; color: #6b7280 !important; border-color: #d1d5db !important;
