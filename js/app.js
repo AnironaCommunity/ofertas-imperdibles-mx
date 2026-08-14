@@ -1520,12 +1520,14 @@ function obtenerCuponesAplicablesOrdenados(monto) {
     .map((cupon) => calcularBeneficioCupon(cupon, monto))
     .filter(Boolean)
     .sort((a, b) => {
+      // Regla de recomendación: Tienda primero y Exclusivo siempre al final.
+      // Dentro de cada grupo conservamos la prioridad por mayor ahorro potencial.
+      const prioridad = prioridadCategoriaBuscador(a.cupon) - prioridadCategoriaBuscador(b.cupon);
+      if (prioridad !== 0) return prioridad;
       const potencial = ahorroPotencialBuscador(b) - ahorroPotencialBuscador(a);
       if (potencial !== 0) return potencial;
       if (b.ahorro !== a.ahorro) return b.ahorro - a.ahorro;
       if (a.totalFinal !== b.totalFinal) return a.totalFinal - b.totalFinal;
-      const prioridad = prioridadCategoriaBuscador(a.cupon) - prioridadCategoriaBuscador(b.cupon);
-      if (prioridad !== 0) return prioridad;
       return b.minimo - a.minimo;
     });
 }
@@ -1732,11 +1734,15 @@ function renderResultadoBuscador(monto, { conservarAlternativa = false } = {}) {
       ? `<div class="buscador-aviso-exclusivo"><strong>ℹ️ Cupón exclusivo:</strong> aplica únicamente en productos seleccionados.</div>`
       : "";
 
-    const hayOtra = aplicables.length > 1;
-    const otraHtml = hayOtra
+    const haySiguiente = indiceAlternativaBuscador < aplicables.length - 1;
+    const hayAnterior = indiceAlternativaBuscador > 0;
+    const otraHtml = haySiguiente || hayAnterior
       ? `<div class="buscador-otra-opcion">
-          <span>🎟️ <strong>Hay otro cupón que también puedes utilizar.</strong> Algunos cupones pueden no aplicar a todos los productos.</span>
-          <button class="buscador-ver-otro" type="button">Ver otro cupón</button>
+          <span>🎟️ <strong>${haySiguiente ? "Hay otro cupón que también puedes utilizar." : "Estás viendo la última opción disponible."}</strong> Algunos cupones pueden no aplicar a todos los productos.</span>
+          <div class="buscador-alternativas-acciones">
+            ${haySiguiente ? '<button class="buscador-ver-otro" type="button">Ver otro cupón</button>' : ''}
+            ${hayAnterior ? '<button class="buscador-anterior" type="button">Anterior</button>' : ''}
+          </div>
         </div>`
       : "";
 
@@ -1763,7 +1769,13 @@ function renderResultadoBuscador(monto, { conservarAlternativa = false } = {}) {
     botonUsarCupon?.addEventListener("click", () => usarCuponDesdeBuscador(cupon));
 
     buscadorCuponesResultado.querySelector(".buscador-ver-otro")?.addEventListener("click", () => {
-      indiceAlternativaBuscador = (indiceAlternativaBuscador + 1) % aplicables.length;
+      indiceAlternativaBuscador = Math.min(indiceAlternativaBuscador + 1, aplicables.length - 1);
+      renderResultadoBuscador(valor, { conservarAlternativa: true });
+      ajustarBuscadorSobreTeclado({ resultado: true });
+    });
+
+    buscadorCuponesResultado.querySelector(".buscador-anterior")?.addEventListener("click", () => {
+      indiceAlternativaBuscador = Math.max(indiceAlternativaBuscador - 1, 0);
       renderResultadoBuscador(valor, { conservarAlternativa: true });
       ajustarBuscadorSobreTeclado({ resultado: true });
     });

@@ -617,3 +617,32 @@
   .buscador-otra-opcion { align-items: flex-start; }
   .buscador-ver-otro { white-space: nowrap; }
 }
+
+
+/* V81.78 — navegación compacta entre cupones alternativos */
+.buscador-alternativas-acciones {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 3px;
+}
+
+.buscador-anterior {
+  min-height: 22px;
+  padding: 0 9px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: #64748b;
+  font-size: .60rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.buscador-anterior:hover { background: rgba(15, 23, 42, .045); }
+
+@media (max-width: 520px) {
+  .buscador-alternativas-acciones { min-width: 88px; }
+  .buscador-anterior { white-space: nowrap; }
+}
