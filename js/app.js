@@ -1723,7 +1723,8 @@ function renderResultadoBuscador(monto) {
     const botonUsarCupon = buscadorCuponesResultado.querySelector(".buscador-resultado-accion");
     aplicarColorBotonBuscador(botonUsarCupon, cupon);
     botonUsarCupon?.addEventListener("click", () => usarCuponDesdeBuscador(cupon));
-    resaltarCuponRecomendado(cupon);
+    // La sugerencia automática ya no resalta/parpadea la tarjeta.
+    // Solo se muestra la recomendación dentro del buscador.
     agregarCierreResultadoBuscador();
     return;
   }
