@@ -198,7 +198,7 @@ export default async function handler(request, response) {
     }
 
     const data = await requestSupabase(
-      "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,detalle_bancario,considerar_compartir,categoria,enlace,activo,likes,clics,fecha_inicio,fecha_fin,fecha_creacion,fecha_publicacion,imagen_url&order=id.desc"
+      "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,detalle_bancario,considerar_compartir,categoria,enlace,activo,agotado,likes,clics,fecha_inicio,fecha_fin,fecha_creacion,fecha_publicacion,imagen_url&order=id.desc"
     );
 
     response.setHeader(

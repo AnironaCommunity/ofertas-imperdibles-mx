@@ -2416,3 +2416,8 @@ table td {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* V81.80 — Estado agotado */
+.estado-automatico.agotado { color: #9f1239; background: #fff1f2; border-color: #fecdd3; }
+.acciones-tabla .estado-agotado { border-color: #fda4af; color: #9f1239; background: #fff1f2; }

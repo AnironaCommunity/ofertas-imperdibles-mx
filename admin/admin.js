@@ -82,6 +82,7 @@ const couponImageRemove = document.querySelector(
   "#coupon-image-remove"
 );
 const couponActive = document.querySelector("#coupon-active");
+const couponSoldOut = document.querySelector("#coupon-sold-out");
 const couponPublishNew = document.querySelector("#coupon-publish-new");
 const couponFormTitle = document.querySelector("#coupon-form-title");
 const couponFormMessage = document.querySelector("#coupon-form-message");
@@ -462,6 +463,13 @@ function couponAutomaticStatus(coupon) {
     };
   }
 
+  if (coupon.agotado === true) {
+    return {
+      key: "agotado",
+      label: "⛔ Agotado",
+    };
+  }
+
   return {
     key: "activo",
     label: "🟢 Activo",
@@ -478,6 +486,7 @@ function resetCouponForm() {
   couponStart.value = "";
   couponEnd.value = "";
   couponActive.checked = true;
+  if (couponSoldOut) couponSoldOut.checked = false;
   couponPublishNew.checked = true;
   couponFormTitle.textContent = "Agregar cupón";
   cancelCoupon.hidden = true;
@@ -509,6 +518,7 @@ function editCoupon(coupon) {
   }
   actualizarSelectorBanco();
   couponActive.checked = Boolean(coupon.activo);
+  if (couponSoldOut) couponSoldOut.checked = coupon.agotado === true;
   couponPublishNew.checked = false;
 
   couponFormTitle.textContent = `Editar cupón: ${coupon.titulo}`;
@@ -561,6 +571,10 @@ function renderCoupons() {
 
           <button class="estado" data-action="toggle" data-id="${coupon.id}">
             ${coupon.activo ? "Desactivar" : "Activar"}
+          </button>
+
+          <button class="estado estado-agotado" data-action="soldout" data-id="${coupon.id}">
+            ${coupon.agotado === true ? "Restaurar" : "Agotado"}
           </button>
 
           <button class="eliminar" data-action="delete" data-id="${coupon.id}">
@@ -1225,6 +1239,7 @@ async function saveCoupon(event) {
       enlace: couponLink.value.trim(),
       imagen_url: imageUrl || "",
       activo: couponActive.checked,
+      agotado: Boolean(couponSoldOut?.checked),
       publicar_como_nuevo: couponPublishNew.checked,
     };
 
@@ -1263,6 +1278,19 @@ async function handleCouponList(event) {
       body: JSON.stringify({
         id,
         activo: !coupon.activo,
+      }),
+    });
+
+    await loadCoupons();
+    return;
+  }
+
+  if (button.dataset.action === "soldout") {
+    await api("/api/admin-cupones", {
+      method: "PUT",
+      body: JSON.stringify({
+        id,
+        agotado: coupon.agotado !== true,
       }),
     });
 

@@ -9265,3 +9265,33 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
     gap: 4px !important;
   }
 }
+
+
+/* =========================================================
+   V81.80 — Estado manual AGOTADO
+   ========================================================= */
+.cupon.cupon-agotado,
+.cupon-bancario-mini.cupon-agotado {
+  opacity: 0.58;
+  filter: grayscale(0.35) saturate(0.7);
+}
+.cupon.cupon-agotado:hover,
+.cupon-bancario-mini.cupon-agotado:hover { transform: none !important; }
+.estado-programacion.agotado { color: #b42318 !important; font-weight: 800 !important; letter-spacing: 0.7px; }
+.boton-canjear:disabled.boton-agotado,
+.banco-canjear:disabled.boton-agotado {
+  background: #e5e7eb !important; color: #6b7280 !important; border-color: #d1d5db !important;
+  box-shadow: none !important; cursor: not-allowed !important;
+}
+.recordatorio-cupones-agotados {
+  display: flex; align-items: flex-start; gap: 10px; max-width: 760px; margin: 16px auto 4px;
+  padding: 12px 14px; border: 1px solid #e5e7eb; border-radius: 14px; background: #fafafa;
+  color: #4b5563; font-size: 12px; line-height: 1.45;
+}
+.recordatorio-cupones-agotados[hidden] { display: none !important; }
+.recordatorio-cupones-icono { font-size: 18px; line-height: 1; margin-top: 1px; }
+.recordatorio-cupones-agotados strong { color: #111827; }
+.recordatorio-cupones-agotados p { margin: 3px 0 0; }
+@media (max-width: 680px) {
+  .recordatorio-cupones-agotados { margin-top: 12px; padding: 10px 12px; font-size: 11px; }
+}

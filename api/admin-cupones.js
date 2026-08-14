@@ -225,7 +225,7 @@ export default async function handler(request, response) {
 
     if (request.method === "GET") {
       const data = await requestSupabase(
-        "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,detalle_bancario,considerar_compartir,categoria,enlace,activo,likes,clics,fecha_inicio,fecha_fin,fecha_creacion,fecha_publicacion,imagen_url&order=id.desc"
+        "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,detalle_bancario,considerar_compartir,categoria,enlace,activo,agotado,likes,clics,fecha_inicio,fecha_fin,fecha_creacion,fecha_publicacion,imagen_url&order=id.desc"
       );
 
       response.setHeader("Cache-Control", "no-store");
@@ -249,6 +249,7 @@ export default async function handler(request, response) {
         enlace: cleanText(request.body?.enlace),
         imagen_url: cleanText(request.body?.imagen_url),
         activo: request.body?.activo !== false,
+        agotado: request.body?.agotado === true,
         fecha_inicio: request.body?.fecha_inicio || null,
         fecha_fin: request.body?.fecha_fin || null,
         fecha_publicacion: publicarComoNuevo
@@ -311,6 +312,10 @@ export default async function handler(request, response) {
 
       if (Object.hasOwn(request.body || {}, "activo")) {
         payload.activo = Boolean(request.body.activo);
+      }
+
+      if (Object.hasOwn(request.body || {}, "agotado")) {
+        payload.agotado = request.body.agotado === true;
       }
 
       if (Object.hasOwn(request.body || {}, "fecha_inicio")) {

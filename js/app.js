@@ -52,6 +52,7 @@ const selectorCupones = document.querySelector(
   ".selector-cupones-menu.selector-cupones-oscuro"
 );
 const resumenCuponesDisponibles = document.querySelector("#resumen-cupones-disponibles");
+const recordatorioCuponesAgotados = document.querySelector("#recordatorio-cupones-agotados");
 const resumenVisitas = document.querySelector("#resumen-visitas");
 const resumenCopiados = document.querySelector("#resumen-copiados");
 
@@ -734,6 +735,17 @@ function couponTimeState(coupon) {
     };
   }
 
+  if (coupon.agotado === true) {
+    return {
+      state: "agotado",
+      target: end,
+      start,
+      end,
+      label: "AGOTADO",
+      enabled: false,
+    };
+  }
+
   if (end !== null) {
     const remaining = end - now;
 
@@ -848,6 +860,17 @@ function updateCouponTimes() {
       return;
     }
 
+    if (timeState.state === "agotado") {
+      status.hidden = false;
+      status.className = "estado-programacion agotado";
+      status.innerHTML = `<div class="estado-linea"><span>AGOTADO</span></div>`;
+      card.classList.add("cupon-agotado");
+      redeemButton.disabled = true;
+      redeemButton.classList.add("boton-agotado");
+      redeemButton.textContent = "Cupón agotado";
+      return;
+    }
+
     if (timeState.state === "finalizado") {
       card.remove();
 
@@ -859,8 +882,9 @@ function updateCouponTimes() {
       return;
     }
 
+    card.classList.remove("cupon-agotado");
     redeemButton.disabled = false;
-    redeemButton.classList.remove("boton-programado");
+    redeemButton.classList.remove("boton-programado", "boton-agotado");
 
     if (!redireccionEnProceso) {
       redeemButton.innerHTML = contenidoBotonCopiar();
@@ -1252,8 +1276,14 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
 
   if (!initialTimeState.enabled) {
     redeemButton.disabled = true;
-    redeemButton.classList.add("boton-programado");
-    redeemButton.textContent = "⏳ Disponible pronto";
+    if (initialTimeState.state === "agotado") {
+      articulo.classList.add("cupon-agotado");
+      redeemButton.classList.add("boton-agotado");
+      redeemButton.textContent = "Cupón agotado";
+    } else {
+      redeemButton.classList.add("boton-programado");
+      redeemButton.textContent = "⏳ Disponible pronto";
+    }
   }
 
   redeemButton.addEventListener("click", () => {
@@ -1386,7 +1416,13 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
   const estadoInicial = couponTimeState(cupon);
   if (!estadoInicial.enabled) {
     boton.disabled = true;
-    boton.textContent = "⏳ Disponible pronto";
+    if (estadoInicial.state === "agotado") {
+      articulo.classList.add("cupon-agotado");
+      boton.classList.add("boton-agotado");
+      boton.textContent = "Cupón agotado";
+    } else {
+      boton.textContent = "⏳ Disponible pronto";
+    }
   }
   boton.addEventListener("click", () => {
     if (couponTimeState(cupon).enabled) copiarYCanjear(cupon, articulo);
@@ -1457,6 +1493,7 @@ function cuponDisponibleParaBuscador(cupon) {
   return Boolean(
     cupon &&
     cupon.activo !== false &&
+    cupon.agotado !== true &&
     couponTimeState(cupon).enabled &&
     String(cupon.codigo || "").trim() &&
     cuponAplicaFiltroBuscador(cupon)
@@ -1597,6 +1634,7 @@ function actualizarFiltrosBuscadorCupones() {
   const disponibles = todosLosCupones.filter((cupon) => Boolean(
     cupon &&
     cupon.activo !== false &&
+    cupon.agotado !== true &&
     couponTimeState(cupon).enabled &&
     String(cupon.codigo || "").trim()
   ));
@@ -1970,6 +2008,7 @@ function limpiarVista() {
   cuponesContainer.replaceChildren();
   todosWrapper.hidden = true;
   sinCupones.hidden = true;
+  if (recordatorioCuponesAgotados) recordatorioCuponesAgotados.hidden = true;
 }
 
 function renderizarCategoria() {
@@ -2016,6 +2055,12 @@ function renderizarCategoria() {
     (mostrarBancarios ? cuponesBancarios.length : 0);
 
   document.body.classList.toggle("hay-cupones-visibles", totalVisible > 0);
+
+  const hayAgotadosVisibles =
+    (mostrarTienda && cuponesTienda.some((cupon) => cupon.agotado === true)) ||
+    (mostrarExclusivos && cuponesExclusivos.some((cupon) => cupon.agotado === true)) ||
+    (mostrarBancarios && cuponesBancarios.some((cupon) => cupon.agotado === true));
+  if (recordatorioCuponesAgotados) recordatorioCuponesAgotados.hidden = !hayAgotadosVisibles;
 
   if (totalVisible === 0) {
     sinCupones.querySelector("h2").textContent = "¡No hay cupones disponibles!";
