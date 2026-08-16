@@ -654,3 +654,21 @@
 .buscador-cupones::before {
   background: #090080 !important;
 }
+
+
+/* =========================================================
+   V81.92 — Azul #090080 en todos los resaltados izquierdos del sugeridor
+   ========================================================= */
+.buscador-cupones::before {
+  background: #090080 !important;
+}
+
+/* El bloque de "Mayor ahorro disponible" conservaba un acento verde. */
+.buscador-cupones-resultado.resultado-exito {
+  box-shadow: inset 3px 0 0 #090080 !important;
+}
+
+/* Si el cupón destacado agrega su propio acento lateral, usar el mismo azul. */
+.buscador-cupon-destacado {
+  border-left-color: #090080 !important;
+}
