@@ -1701,3 +1701,87 @@
   text-transform: none !important;
   margin: 0 !important;
 }
+
+
+/* ============================================================
+   V81.97 — Encabezado Mercado Libre
+   Opción 2: fondo amarillo suave en la zona del título
+   Opción 5: separador vertical con degradado
+   ============================================================ */
+
+/* Opción 2 — Amarillo suave SOLO detrás del bloque de título/subtítulo. */
+.hero-redes.hero-redes-lista .hero-redes-titulo-wrap,
+.hero-redes.hero-redes-lista .hero-redes-encabezado-texto {
+  position: relative;
+  border-radius: 9px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 230, 0, .20) 0%,
+    rgba(255, 230, 0, .11) 62%,
+    rgba(255, 230, 0, .05) 100%
+  ) !important;
+  padding: 4px 8px !important;
+}
+
+/* Fallback para la estructura actual si título y subtítulo viven directamente
+   dentro del contenedor informativo. Se pinta mediante pseudo-elemento para
+   no alterar el resto de accesos. */
+.hero-redes.hero-redes-lista .hero-redes-info {
+  position: relative !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-info::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  border-radius: 9px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 230, 0, .20) 0%,
+    rgba(255, 230, 0, .10) 68%,
+    rgba(255, 230, 0, .04) 100%
+  );
+  pointer-events: none;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-info > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Opción 5 — Sustituye la línea amarilla sólida por una barra de degradado.
+   Centro visible y extremos suaves. */
+.hero-redes.hero-redes-lista .hero-redes-separador,
+.hero-redes.hero-redes-lista .hero-redes-logo::after {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 230, 0, .08) 0%,
+    #FFE600 22%,
+    #FFE600 78%,
+    rgba(255, 230, 0, .08) 100%
+  ) !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  box-shadow: 0 0 5px rgba(255, 230, 0, .18) !important;
+}
+
+/* Si el separador actual está construido con border-right/left en el logo,
+   eliminamos ese borde y dibujamos la barra degradada sin mover contenido. */
+.hero-redes.hero-redes-lista .hero-redes-logo {
+  position: relative !important;
+  border-right-color: transparent !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-logo::after {
+  content: "";
+  position: absolute;
+  top: 7%;
+  right: -1px;
+  width: 3px;
+  height: 86%;
+  pointer-events: none;
+}
