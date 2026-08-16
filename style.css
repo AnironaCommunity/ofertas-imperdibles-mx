@@ -9035,26 +9035,304 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   }
 }
 
-/* V81.53.6 — Orilla #13: curva nativa en las cuatro esquinas
-   SOLO modifica la orilla. */
-.cupon-card,
-.cupon-card.bancario,
-.cupon-card.exclusivo {
-  background-image: none !important;
-  border-style: dashed !important;
-  border-width: 1.5px !important;
-  border-radius: 16px !important;
+/* =========================================================
+   V81.53.7 — Orilla #13: esquinas curvas REALES
+   SOLO modifica la orilla.
+   Corrección: las tarjetas reales son .cupon y .cupon-bancario-mini.
+   Se elimina el dibujo por 4 gradientes independientes y se usa
+   un único borde discontinuo redondeado que sigue las 4 curvas.
+   ========================================================= */
+.cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
+.cupones-grid-compacta > .cupon-bancario-mini::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  border-radius: inherit;
+  padding: 0 !important;
+  pointer-events: none;
+  z-index: 10;
+
+  /* Anula las 4 líneas rectas anteriores. */
+  background: none !important;
+  -webkit-mask: none !important;
+  mask: none !important;
+
+  /* Un solo borde: las rayas recorren también las esquinas. */
+  border: 1.5px dashed color-mix(in srgb, var(--orilla-color) 82%, transparent) !important;
 }
 
-/* Tienda */
-.cupon-card:not(.bancario):not(.exclusivo) {
-  border-color: #009c76 !important;
+@media (max-width: 700px) {
+  .cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
+  .cupones-grid-compacta > .cupon-bancario-mini::after {
+    border-width: 1.25px !important;
+  }
 }
 
-/* Exclusivo: conserva el color propio configurado por la tarjeta cuando existe. */
-.cupon-card.exclusivo {
-  border-color: var(--exclusive-color, #7e22ce) !important;
+
+/* =========================================================
+   V81.72 — Pulido final móvil solicitado
+   - Menos aire entre cabecera, categorías y buscador.
+   - Acciones secundarias alineadas.
+   - "Ya copiado" anclado al botón sin alterar el layout.
+   - Temporizador urgente más visible.
+   - Resaltado del cupón recomendado sin mover la pantalla.
+   ========================================================= */
+@media (max-width: 700px) {
+  .selector-cupones-menu.selector-cupones-oscuro {
+    margin-top: 5px !important;
+    margin-bottom: 5px !important;
+  }
+
+  .cupon:not(.cupon-bancario) .acciones-secundarias,
+  .cupon-bancario-mini .acciones-secundarias {
+    min-height: 34px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+  }
+
+  .cupon:not(.cupon-bancario) .estadisticas-cupon,
+  .cupon-bancario-mini .estadisticas-cupon {
+    min-height: 30px !important;
+    align-items: center !important;
+  }
 }
 
-/* El bancario conserva el color que ya asigna el proyecto al borde. */
+.cupon:not(.cupon-bancario) .acciones-cupon > .cupon-copiado-mini {
+  top: -7px !important;
+  right: 8px !important;
+}
 
+.estado-programacion.finaliza-pronto,
+.estado-programacion.ultimos-minutos {
+  font-weight: 750 !important;
+}
+
+.estado-programacion.finaliza-pronto {
+  color: #c75b00 !important;
+}
+
+.estado-programacion.ultimos-minutos {
+  color: #d92d20 !important;
+}
+
+.buscador-cupon-destacado {
+  animation: oiCuponRecomendado 1.8s ease !important;
+}
+
+@keyframes oiCuponRecomendado {
+  0%, 100% { filter: none; }
+  25%, 72% {
+    filter: drop-shadow(0 0 5px rgba(22, 163, 74, .30));
+  }
+}
+
+/* =========================================================
+   V81.74 — Pulido visual completo acordado
+   1) Tarjetas con altura flexible: se alinean por zonas y crecen
+      cuando el contenido lo necesita.
+   2) Acciones inferiores uniformes.
+   3) "Ya copiado" en posición fija y consistente.
+   4) Resaltado visible pero breve del cupón recomendado.
+   ========================================================= */
+
+/* Anula las alturas rígidas heredadas: conserva un mínimo compacto,
+   pero permite crecer para que nunca se encime el contenido. */
+.cupones-grid-compacta > .cupon,
+.cupones-grid-compacta > .cupon-bancario-mini,
+.cupones-grid-compacta > .cupon-bancario-grid {
+  height: auto !important;
+  min-height: 228px !important;
+  max-height: none !important;
+  align-self: stretch !important;
+}
+
+.cupon:not(.cupon-bancario) {
+  display: flex !important;
+  flex-direction: column !important;
+}
+.cupon:not(.cupon-bancario) .cupon-contenido {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  flex-direction: column !important;
+}
+.cupon:not(.cupon-bancario) .acciones-bloque {
+  margin-top: auto !important;
+}
+
+/* Pie de acciones: mismos diámetros, centrado y respiración uniforme. */
+.cupon:not(.cupon-bancario) .acciones-secundarias,
+.cupon-bancario-mini .acciones-secundarias {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 34px !important;
+  gap: 7px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.cupon:not(.cupon-bancario) .acciones-secundarias .boton-like,
+.cupon:not(.cupon-bancario) .acciones-secundarias .boton-compartir,
+.cupon-bancario-mini .acciones-secundarias .boton-like,
+.cupon-bancario-mini .acciones-secundarias .boton-compartir {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  flex: 0 0 32px !important;
+  padding: 0 !important;
+}
+
+.cupon:not(.cupon-bancario) .estadisticas-cupon,
+.cupon-bancario-mini .estadisticas-cupon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 32px !important;
+  gap: 6px !important;
+  margin: 0 !important;
+  padding: 0 1px !important;
+  line-height: 1 !important;
+}
+
+.cupon:not(.cupon-bancario) .estadistica-item,
+.cupon-bancario-mini .estadistica-item {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+  min-height: 24px !important;
+  line-height: 1 !important;
+}
+
+/* Ya copiado: anclado siempre a la esquina superior derecha del botón. */
+.cupon:not(.cupon-bancario) .acciones-cupon,
+.cupon-bancario-mini .banco-pie {
+  position: relative !important;
+  overflow: visible !important;
+}
+.cupon:not(.cupon-bancario) .acciones-cupon > .cupon-copiado-mini,
+.cupon-bancario-mini .banco-pie > .cupon-copiado-mini {
+  position: absolute !important;
+  z-index: 8 !important;
+  top: -7px !important;
+  right: 5px !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+
+/* Recomendación: borde/halo temporal perceptible sin scroll automático. */
+.buscador-cupon-destacado {
+  animation: oiCuponRecomendadoV8174 1.9s ease !important;
+  position: relative;
+  z-index: 2;
+}
+@keyframes oiCuponRecomendadoV8174 {
+  0%, 100% { box-shadow: inherit; transform: translateZ(0); }
+  20%, 72% {
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, .28), 0 8px 20px rgba(15, 23, 42, .10) !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .cupones-grid-compacta > .cupon,
+  .cupones-grid-compacta > .cupon-bancario-mini,
+  .cupones-grid-compacta > .cupon-bancario-grid {
+    min-height: 224px !important;
+  }
+
+  .cupon:not(.cupon-bancario) .acciones-secundarias,
+  .cupon-bancario-mini .acciones-secundarias {
+    min-height: 32px !important;
+    gap: 5px !important;
+  }
+
+  .cupon:not(.cupon-bancario) .acciones-secundarias .boton-like,
+  .cupon:not(.cupon-bancario) .acciones-secundarias .boton-compartir,
+  .cupon-bancario-mini .acciones-secundarias .boton-like,
+  .cupon-bancario-mini .acciones-secundarias .boton-compartir {
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
+    flex-basis: 30px !important;
+  }
+
+  .cupon:not(.cupon-bancario) .estadisticas-cupon,
+  .cupon-bancario-mini .estadisticas-cupon {
+    min-height: 30px !important;
+    gap: 4px !important;
+  }
+}
+
+
+/* =========================================================
+   V81.81 — Estado manual AGOTADO + mensaje visual
+   ========================================================= */
+.cupon.cupon-agotado,
+.cupon-bancario-mini.cupon-agotado {
+  opacity: 0.58;
+  filter: grayscale(0.35) saturate(0.7);
+}
+.cupon.cupon-agotado:hover,
+.cupon-bancario-mini.cupon-agotado:hover { transform: none !important; }
+.estado-programacion.agotado { color: #ff3b4f !important; font-weight: 600 !important; letter-spacing: 0 !important; }
+.estado-agotado-mensaje {
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  color: #ff3b4f; font-size: inherit; line-height: inherit; white-space: nowrap;
+}
+.estado-agotado-icono {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 12px; height: 12px; border-radius: 50%; background: #ff3b4f; color: #fff;
+  font-size: 9px; font-weight: 800; line-height: 1; flex: 0 0 12px;
+}
+.boton-canjear:disabled.boton-agotado,
+.banco-canjear:disabled.boton-agotado {
+  background: #e5e7eb !important; color: #6b7280 !important; border-color: #d1d5db !important;
+  box-shadow: none !important; cursor: not-allowed !important;
+}
+.recordatorio-cupones-agotados {
+  display: flex; align-items: flex-start; gap: 10px; max-width: 760px; margin: 16px auto 4px;
+  padding: 12px 14px; border: 1px solid #e5e7eb; border-radius: 14px; background: #fafafa;
+  color: #4b5563; font-size: 12px; line-height: 1.45;
+}
+.recordatorio-cupones-agotados[hidden] { display: none !important; }
+.recordatorio-cupones-icono { font-size: 18px; line-height: 1; margin-top: 1px; }
+.recordatorio-cupones-agotados strong { color: #111827; }
+.recordatorio-cupones-agotados p { margin: 3px 0 0; }
+@media (max-width: 680px) {
+  .recordatorio-cupones-agotados { margin-top: 12px; padding: 10px 12px; font-size: 11px; }
+}
+
+/* V81.83 — Mensaje de cupón agotado sin negritas */
+.estado-agotado-mensaje { font-weight: 400 !important; }
+.estado-agotado-mensaje span { font-weight: 400 !important; }
+
+/* V81.84 — El aviso agotado usa exactamente el tamaño responsive del temporizador */
+.estado-agotado-mensaje, .estado-agotado-mensaje span { font-size: inherit !important; line-height: inherit; }
+
+
+/* =========================================================
+   V81.88 — Cupones agotados con menor presencia visual
+   ========================================================= */
+.cupon.cupon-agotado,
+.cupon-bancario-mini.cupon-agotado {
+  opacity: 0.40 !important;
+  filter: grayscale(.78) saturate(.32) contrast(.92) !important;
+  box-shadow: none !important;
+}
+
+/* Conserva el aviso de agotado claramente identificable. */
+.cupon.cupon-agotado .estado-programacion.agotado,
+.cupon-bancario-mini.cupon-agotado .estado-programacion.agotado {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* Los controles agotados no deben sugerir interacción. */
+.cupon.cupon-agotado button,
+.cupon-bancario-mini.cupon-agotado button {
+  cursor: default !important;
+  box-shadow: none !important;
+}
