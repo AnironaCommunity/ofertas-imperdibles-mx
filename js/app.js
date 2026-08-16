@@ -3517,7 +3517,6 @@ function crearControlesAvisosNovedades() {
       </svg>
       <span class="avisos-badge">1</span>
     </span>
-    <span class="avisos-texto">Activar avisos</span>
     <span class="avisos-switch" aria-hidden="true"><span class="avisos-switch-knob"></span></span>
   `;
   boton.setAttribute("aria-pressed", "false");
@@ -3544,12 +3543,9 @@ function actualizarBotonAvisosNovedades() {
   const activos = avisosNovedadesActivos();
   boton.classList.toggle("activo", activos);
   boton.setAttribute("aria-pressed", activos ? "true" : "false");
-  const textoAvisos = boton.querySelector(".avisos-texto");
-  if (textoAvisos) {
-    textoAvisos.textContent = activos ? "Avisos activados" : "Activar avisos";
-  }
+  boton.setAttribute("aria-label", activos ? "Desactivar avisos" : "Activar avisos");
   boton.title = activos
-    ? "Recibirás avisos al detectar nuevos cupones o productos"
+    ? "Avisos activados. Toca para desactivarlos."
     : "Activa avisos de nuevos cupones y productos Anirona";
 }
 

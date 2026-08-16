@@ -9336,3 +9336,20 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   cursor: default !important;
   box-shadow: none !important;
 }
+
+
+/* =========================================================
+   V81.94 — Regresa el nivel de inhibición anterior de agotados
+   (previo al ajuste fuerte de V81.88)
+   ========================================================= */
+.cupon.cupon-agotado,
+.cupon-bancario-mini.cupon-agotado {
+  opacity: 0.58 !important;
+  filter: grayscale(0.35) saturate(0.70) !important;
+}
+
+/* Mantener sin animación/realce al pasar el cursor. */
+.cupon.cupon-agotado:hover,
+.cupon-bancario-mini.cupon-agotado:hover {
+  transform: none !important;
+}

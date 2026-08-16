@@ -1536,3 +1536,46 @@
     min-width: 132px !important;
   }
 }
+
+
+/* ============================================================
+   V81.94 — Avisos compactos: campana + badge + switch
+   ============================================================ */
+.hero-redes.hero-redes-lista .hero-controles-secundarios .boton-avisos-novedades {
+  min-width: 64px !important;
+  width: 64px !important;
+  max-width: 64px !important;
+  height: 27px !important;
+  padding: 4px 7px !important;
+  gap: 7px !important;
+  justify-content: center !important;
+}
+
+.hero-redes.hero-redes-lista .boton-avisos-novedades .avisos-texto {
+  display: none !important;
+}
+
+.hero-redes.hero-redes-lista .boton-avisos-novedades .avisos-campana {
+  width: 19px !important;
+  height: 19px !important;
+  flex: 0 0 19px !important;
+}
+
+.hero-redes.hero-redes-lista .boton-avisos-novedades .avisos-switch {
+  width: 27px !important;
+  flex: 0 0 27px !important;
+}
+
+.hero-redes.hero-redes-lista .boton-avisos-novedades.activo .avisos-switch-knob {
+  transform: translateX(12px) !important;
+}
+
+@media (max-width: 420px) {
+  .hero-redes.hero-redes-lista .hero-controles-secundarios .boton-avisos-novedades {
+    min-width: 62px !important;
+    width: 62px !important;
+    max-width: 62px !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+  }
+}
