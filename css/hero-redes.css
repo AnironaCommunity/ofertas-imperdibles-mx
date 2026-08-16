@@ -1857,3 +1857,52 @@
   box-shadow: 0 0 5px rgba(255,230,0,.16) !important;
   pointer-events: none !important;
 }
+
+
+/* ============================================================
+   V81.99 — Corrección urgente del encabezado
+   ============================================================ */
+
+/* El separador antiguo era un elemento independiente.
+   Se elimina por completo para conservar SOLO la barra degradada nueva. */
+.hero-redes.hero-redes-lista .hero-redes-separador {
+  display: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+
+/* Nueva barra degradada: doble de ancho (3px -> 6px). */
+.hero-redes.hero-redes-lista .hero-redes-logo::after {
+  width: 6px !important;
+  right: -3px !important;
+}
+
+/* Título y descripción comparten EXACTAMENTE el mismo ancho de fondo. */
+.hero-redes.hero-redes-lista #nombre-sitio,
+.hero-redes.hero-redes-lista #hero-texto-descriptivo {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  box-sizing: border-box !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255,230,0,.26) 0%,
+    rgba(255,230,0,.15) 72%,
+    rgba(255,230,0,.07) 100%
+  ) !important;
+}
+
+.hero-redes.hero-redes-lista #nombre-sitio {
+  padding: 4px 8px 1px !important;
+  border-radius: 9px 9px 0 0 !important;
+}
+
+.hero-redes.hero-redes-lista #hero-texto-descriptivo {
+  padding: 1px 8px 4px !important;
+  border-radius: 0 0 9px 9px !important;
+}
