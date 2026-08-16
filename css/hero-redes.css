@@ -1456,3 +1456,83 @@
     max-width: 146px !important;
   }
 }
+
+
+/* ============================================================
+   V81.93 — Fila independiente definitiva: Ver tutorial | Activar avisos
+   ============================================================ */
+.hero-redes.hero-redes-lista .hero-redes-botones .hero-controles-secundarios {
+  grid-column: 1 / -1 !important;
+  grid-row: 2 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 6px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 5px 0 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Dentro de esta fila ya no participan en el grid principal. */
+.hero-redes.hero-redes-lista .hero-controles-secundarios .boton-ver-tutorial,
+.hero-redes.hero-redes-lista .hero-controles-secundarios .boton-avisos-novedades {
+  position: static !important;
+  grid-column: auto !important;
+  grid-row: auto !important;
+  justify-self: auto !important;
+  align-self: center !important;
+  flex: 0 0 auto !important;
+  width: auto !important;
+  max-width: none !important;
+  margin: 0 !important;
+  transform: none !important;
+  z-index: auto !important;
+  box-sizing: border-box !important;
+}
+
+.hero-redes.hero-redes-lista .hero-controles-secundarios .boton-ver-tutorial {
+  min-width: 100px !important;
+}
+
+.hero-redes.hero-redes-lista .hero-controles-secundarios .boton-avisos-novedades {
+  min-width: 150px !important;
+}
+
+/* El texto del estado activo conserva su espacio. */
+.hero-redes.hero-redes-lista .hero-controles-secundarios .boton-avisos-novedades .avisos-texto {
+  min-width: 78px !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+}
+
+/* Ajuste progresivo solo de tamaño; nunca se superponen. */
+@media (max-width: 420px) {
+  .hero-redes.hero-redes-lista .hero-redes-botones .hero-controles-secundarios {
+    gap: 5px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-controles-secundarios .boton-ver-tutorial {
+    min-width: 92px !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-controles-secundarios .boton-avisos-novedades {
+    min-width: 140px !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-redes.hero-redes-lista .hero-controles-secundarios .boton-ver-tutorial {
+    min-width: 86px !important;
+    font-size: 6.4px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-controles-secundarios .boton-avisos-novedades {
+    min-width: 132px !important;
+  }
+}

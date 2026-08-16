@@ -3483,11 +3483,27 @@ function productosAnironaNotificables() {
   );
 }
 
+
+function obtenerFilaControlesSecundarios() {
+  const contenedor = document.querySelector(".hero-redes-botones");
+  if (!contenedor) return null;
+
+  let fila = contenedor.querySelector(".hero-controles-secundarios");
+  if (!fila) {
+    fila = document.createElement("div");
+    fila.className = "hero-controles-secundarios";
+    contenedor.appendChild(fila);
+  }
+  return fila;
+}
+
 function crearControlesAvisosNovedades() {
   if (document.querySelector("#boton-avisos-novedades")) return;
 
   const contenedor = document.querySelector(".hero-redes-botones");
   if (!contenedor) return;
+  const filaControles = obtenerFilaControlesSecundarios();
+  if (!filaControles) return;
 
   const boton = document.createElement("button");
   boton.id = "boton-avisos-novedades";
@@ -3505,7 +3521,7 @@ function crearControlesAvisosNovedades() {
     <span class="avisos-switch" aria-hidden="true"><span class="avisos-switch-knob"></span></span>
   `;
   boton.setAttribute("aria-pressed", "false");
-  contenedor.appendChild(boton);
+  filaControles.appendChild(boton);
 
   const toast = document.createElement("aside");
   toast.id = "aviso-novedades-toast";
@@ -3978,6 +3994,8 @@ function crearBotonTutorial() {
   if (document.querySelector("#boton-ver-tutorial")) return;
   const contenedor = document.querySelector(".hero-redes-botones");
   if (!contenedor) return;
+  const filaControles = obtenerFilaControlesSecundarios();
+  if (!filaControles) return;
   const boton = document.createElement("button");
   boton.id = "boton-ver-tutorial";
   boton.type = "button";
@@ -3985,9 +4003,9 @@ function crearBotonTutorial() {
   boton.innerHTML = '<span class="tutorial-icono" aria-hidden="true">▶</span><span class="tutorial-texto">Ver tutorial</span><span class="tutorial-destello" aria-hidden="true">✦</span>';
   boton.title = "Aprende a utilizar los cupones";
   boton.addEventListener("click", () => iniciarTutorialGuiado(false));
-  const botonAvisos = contenedor.querySelector("#boton-avisos-novedades");
-  if (botonAvisos) botonAvisos.insertAdjacentElement("afterend", boton);
-  else contenedor.appendChild(boton);
+  const botonAvisos = filaControles.querySelector("#boton-avisos-novedades");
+  if (botonAvisos) filaControles.insertBefore(boton, botonAvisos);
+  else filaControles.appendChild(boton);
 }
 
 function crearCuponEjemploTutorial() {
