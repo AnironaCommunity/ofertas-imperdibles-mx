@@ -1313,3 +1313,71 @@
     padding-right: 6px !important;
   }
 }
+
+
+/* ============================================================
+   V81.91 — Corrección: Tutorial | Activar avisos sin encimarse
+   ============================================================ */
+
+/* Reserva una sola franja horizontal a la derecha para ambos botones. */
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial {
+  grid-column: 3 / 4 !important;
+  grid-row: 2 !important;
+  justify-self: end !important;
+  align-self: center !important;
+  width: max-content !important;
+  min-width: 104px !important;
+  max-width: 118px !important;
+  margin: 5px 5px 0 0 !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-avisos-novedades {
+  grid-column: 4 / 6 !important;
+  grid-row: 2 !important;
+  justify-self: end !important;
+  align-self: center !important;
+  width: max-content !important;
+  min-width: 142px !important;
+  max-width: 158px !important;
+  margin: 5px 0 0 0 !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Evita que alguno invada la celda del otro. */
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial,
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-avisos-novedades {
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+/* En móvil siguen juntos y alineados a la derecha. */
+@media (max-width: 600px) {
+  .hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial {
+    grid-column: 3 / 4 !important;
+    min-width: 92px !important;
+    max-width: 104px !important;
+    margin-right: 4px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-botones .boton-avisos-novedades {
+    grid-column: 4 / 6 !important;
+    min-width: 132px !important;
+    max-width: 148px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial {
+    min-width: 86px !important;
+    max-width: 94px !important;
+    font-size: 6.4px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-botones .boton-avisos-novedades {
+    min-width: 126px !important;
+    max-width: 140px !important;
+  }
+}

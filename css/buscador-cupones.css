@@ -646,3 +646,11 @@
   .buscador-alternativas-acciones { min-width: 88px; }
   .buscador-anterior { white-space: nowrap; }
 }
+
+
+/* =========================================================
+   V81.91 — Resaltado izquierdo del buscador
+   ========================================================= */
+.buscador-cupones::before {
+  background: #090080 !important;
+}
