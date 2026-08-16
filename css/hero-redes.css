@@ -869,3 +869,209 @@
     line-height: 9px !important;
   }
 }
+
+
+/* ============================================================
+   V81.88 — Avisos tipo campana + switch / Tutorial premium
+   ============================================================ */
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-avisos-novedades {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  overflow: visible !important;
+  border: 1px solid rgba(25, 31, 40, .16) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(239,244,247,.96)) !important;
+  color: #30343a !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.95), 0 2px 5px rgba(22,31,41,.10) !important;
+}
+
+.hero-redes.hero-redes-lista .boton-avisos-novedades .avisos-campana {
+  position: relative;
+  display: inline-flex;
+  width: 19px;
+  height: 19px;
+  flex: 0 0 19px;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-redes.hero-redes-lista .boton-avisos-novedades .avisos-campana svg {
+  width: 19px;
+  height: 19px;
+  overflow: visible;
+}
+
+.hero-redes.hero-redes-lista .boton-avisos-novedades .avisos-campana svg > path:first-child {
+  fill: #f6ad2f;
+  stroke: #7a4a05;
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+
+.hero-redes.hero-redes-lista .boton-avisos-novedades .avisos-campana-badajo {
+  fill: none;
+  stroke: #7a4a05;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.hero-redes.hero-redes-lista .boton-avisos-novedades .avisos-badge {
+  position: absolute;
+  top: -4px;
+  right: -5px;
+  min-width: 10px;
+  height: 10px;
+  padding: 0 2px;
+  border: 1.5px solid #fff;
+  border-radius: 999px;
+  background: #e9272e;
+  color: #fff;
+  font-size: 6px;
+  font-weight: 800;
+  line-height: 8px;
+  text-align: center;
+}
+
+.hero-redes.hero-redes-lista .boton-avisos-novedades .avisos-texto {
+  min-width: 0;
+  font-size: inherit;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.hero-redes.hero-redes-lista .boton-avisos-novedades .avisos-switch {
+  position: relative;
+  display: inline-flex;
+  width: 28px;
+  height: 15px;
+  flex: 0 0 28px;
+  padding: 2px;
+  border: 1px solid rgba(55,65,81,.24);
+  border-radius: 999px;
+  background: #cbd2d8;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.10);
+  transition: background .2s ease, border-color .2s ease;
+}
+
+.hero-redes.hero-redes-lista .boton-avisos-novedades .avisos-switch-knob {
+  display: block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,.25);
+  transform: translateX(0);
+  transition: transform .2s ease;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-avisos-novedades.activo {
+  background: linear-gradient(180deg, #f8fffb, #eefaf4) !important;
+  color: #145e43 !important;
+  border-color: rgba(16, 150, 83, .24) !important;
+}
+
+.hero-redes.hero-redes-lista .boton-avisos-novedades.activo .avisos-switch {
+  background: #14b84f;
+  border-color: #0b923d;
+}
+
+.hero-redes.hero-redes-lista .boton-avisos-novedades.activo .avisos-switch-knob {
+  transform: translateX(13px);
+}
+
+/* Botón Ver tutorial: compacto, rojo brillante y con relieve. */
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial {
+  position: relative !important;
+  isolation: isolate;
+  overflow: hidden !important;
+  border: 1px solid #a90000 !important;
+  border-bottom-width: 3px !important;
+  background: linear-gradient(180deg, #ff2f34 0%, #ea050b 54%, #c90006 100%) !important;
+  color: #fff !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.48),
+    inset 0 -1px 0 rgba(105,0,0,.24),
+    0 3px 7px rgba(190,0,7,.25) !important;
+  font-weight: 800 !important;
+  letter-spacing: .15px;
+  text-shadow: 0 1px 1px rgba(90,0,0,.45);
+  transform: translateY(0);
+  transition: transform .16s ease, filter .16s ease, box-shadow .16s ease !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 1px;
+  left: 8%;
+  width: 84%;
+  height: 42%;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255,255,255,.30), rgba(255,255,255,0));
+  pointer-events: none;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial:hover,
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial:focus-visible {
+  background: linear-gradient(180deg, #ff4247 0%, #f20b11 54%, #d00007 100%) !important;
+  color: #fff !important;
+  filter: saturate(1.08);
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.52),
+    inset 0 -1px 0 rgba(105,0,0,.25),
+    0 5px 9px rgba(190,0,7,.30) !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial:active {
+  transform: translateY(1px);
+  border-bottom-width: 1px !important;
+  box-shadow: inset 0 1px 3px rgba(105,0,0,.28) !important;
+}
+
+.hero-redes.hero-redes-lista .boton-ver-tutorial .tutorial-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
+  border: 1px solid rgba(255,255,255,.72);
+  border-radius: 50%;
+  font-size: 6px;
+  line-height: 1;
+}
+
+.hero-redes.hero-redes-lista .boton-ver-tutorial .tutorial-texto {
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.hero-redes.hero-redes-lista .boton-ver-tutorial .tutorial-destello {
+  color: #ffe05b;
+  font-size: 10px;
+  text-shadow: 0 0 5px rgba(255,224,91,.55);
+}
+
+/* La antigua animación de invitación no debe reemplazar el diseño premium. */
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial.tutorial-boton-destacado {
+  border-color: #a90000 !important;
+  background: linear-gradient(180deg, #ff2f34 0%, #ea050b 54%, #c90006 100%) !important;
+  color: #fff !important;
+}
+
+/* Ajustes muy pequeños para pantallas estrechas sin perder el switch. */
+@media (max-width: 420px) {
+  .hero-redes.hero-redes-lista .boton-avisos-novedades .avisos-texto {
+    font-size: 6.6px;
+  }
+  .hero-redes.hero-redes-lista .boton-avisos-novedades .avisos-switch {
+    width: 25px;
+    flex-basis: 25px;
+  }
+  .hero-redes.hero-redes-lista .boton-avisos-novedades.activo .avisos-switch-knob {
+    transform: translateX(10px);
+  }
+}

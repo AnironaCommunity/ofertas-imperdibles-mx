@@ -9311,3 +9311,28 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
 
 /* V81.84 — El aviso agotado usa exactamente el tamaño responsive del temporizador */
 .estado-agotado-mensaje, .estado-agotado-mensaje span { font-size: inherit !important; line-height: inherit; }
+
+
+/* =========================================================
+   V81.88 — Cupones agotados con menor presencia visual
+   ========================================================= */
+.cupon.cupon-agotado,
+.cupon-bancario-mini.cupon-agotado {
+  opacity: 0.40 !important;
+  filter: grayscale(.78) saturate(.32) contrast(.92) !important;
+  box-shadow: none !important;
+}
+
+/* Conserva el aviso de agotado claramente identificable. */
+.cupon.cupon-agotado .estado-programacion.agotado,
+.cupon-bancario-mini.cupon-agotado .estado-programacion.agotado {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* Los controles agotados no deben sugerir interacción. */
+.cupon.cupon-agotado button,
+.cupon-bancario-mini.cupon-agotado button {
+  cursor: default !important;
+  box-shadow: none !important;
+}

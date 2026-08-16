@@ -3493,7 +3493,18 @@ function crearControlesAvisosNovedades() {
   boton.id = "boton-avisos-novedades";
   boton.type = "button";
   boton.className = "boton-avisos-novedades";
-  boton.innerHTML = "<span aria-hidden=\"true\">🔔</span><span>Activar avisos</span>";
+  boton.innerHTML = `
+    <span class="avisos-campana" aria-hidden="true">
+      <svg viewBox="0 0 32 32" focusable="false">
+        <path d="M16 3.5c-4.5 0-7.6 3.6-7.6 8.2v4.1c0 2.1-.8 4.1-2.3 5.6l-1 1h21.8l-1-1a7.9 7.9 0 0 1-2.3-5.6v-4.1c0-4.6-3.1-8.2-7.6-8.2Z"/>
+        <path class="avisos-campana-badajo" d="M12.7 24.1a3.5 3.5 0 0 0 6.6 0"/>
+      </svg>
+      <span class="avisos-badge">1</span>
+    </span>
+    <span class="avisos-texto">Activar avisos</span>
+    <span class="avisos-switch" aria-hidden="true"><span class="avisos-switch-knob"></span></span>
+  `;
+  boton.setAttribute("aria-pressed", "false");
   contenedor.appendChild(boton);
 
   const toast = document.createElement("aside");
@@ -3516,9 +3527,11 @@ function actualizarBotonAvisosNovedades() {
   if (!boton) return;
   const activos = avisosNovedadesActivos();
   boton.classList.toggle("activo", activos);
-  boton.querySelector("span:last-child").textContent = activos
-    ? "Avisos activados"
-    : "Activar avisos";
+  boton.setAttribute("aria-pressed", activos ? "true" : "false");
+  const textoAvisos = boton.querySelector(".avisos-texto");
+  if (textoAvisos) {
+    textoAvisos.textContent = activos ? "Avisos activados" : "Activar avisos";
+  }
   boton.title = activos
     ? "Recibirás avisos al detectar nuevos cupones o productos"
     : "Activa avisos de nuevos cupones y productos Anirona";
@@ -3969,7 +3982,7 @@ function crearBotonTutorial() {
   boton.id = "boton-ver-tutorial";
   boton.type = "button";
   boton.className = "boton-ver-tutorial";
-  boton.innerHTML = '<span aria-hidden="true">📖</span><span>Ver tutorial</span>';
+  boton.innerHTML = '<span class="tutorial-icono" aria-hidden="true">▶</span><span class="tutorial-texto">Ver tutorial</span><span class="tutorial-destello" aria-hidden="true">✦</span>';
   boton.title = "Aprende a utilizar los cupones";
   boton.addEventListener("click", () => iniciarTutorialGuiado(false));
   const botonAvisos = contenedor.querySelector("#boton-avisos-novedades");
