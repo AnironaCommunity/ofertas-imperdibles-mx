@@ -1075,3 +1075,151 @@
     transform: translateX(10px);
   }
 }
+
+
+/* ============================================================
+   V81.89 — Tutorial + Avisos juntos, compactos y alineados a la derecha
+   Basado en la opción 1 aprobada
+   ============================================================ */
+
+/* La fila secundaria deja de repartirse en columnas completas. */
+.hero-redes.hero-redes-lista .hero-redes-botones {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+}
+
+/* Mantiene los accesos principales ocupando su estructura habitual. */
+.hero-redes.hero-redes-lista .hero-redes-botones > a,
+.hero-redes.hero-redes-lista .hero-redes-botones > .hero-redes-item {
+  flex: initial;
+}
+
+/* Los dos controles quedan juntos y empujados hacia la derecha. */
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial,
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-avisos-novedades {
+  grid-column: auto !important;
+  width: auto !important;
+  flex: 0 0 auto !important;
+  margin-top: 5px !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial {
+  margin-left: auto !important;
+  margin-right: 6px !important;
+}
+
+/* Tutorial: opción 1, claro, discreto y elegante. */
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial,
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial.tutorial-boton-destacado {
+  min-width: 104px !important;
+  height: 27px !important;
+  min-height: 27px !important;
+  padding: 4px 9px !important;
+  gap: 5px !important;
+  border: 1px solid rgba(17, 24, 39, .13) !important;
+  border-bottom-width: 1px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(180deg, #ffffff 0%, #f7f8fa 100%) !important;
+  color: #20242b !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.96),
+    0 2px 6px rgba(17,24,39,.08) !important;
+  font-size: 8px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  text-shadow: none !important;
+  animation: none !important;
+  transform: none !important;
+  overflow: hidden !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial::before {
+  display: none !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial:hover,
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial:focus-visible {
+  background: #ffffff !important;
+  color: #111827 !important;
+  border-color: rgba(239, 68, 68, .38) !important;
+  box-shadow: 0 3px 8px rgba(17,24,39,.10) !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+.hero-redes.hero-redes-lista .boton-ver-tutorial .tutorial-icono {
+  width: 14px !important;
+  height: 14px !important;
+  flex: 0 0 14px !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background: #ef2b2f !important;
+  color: #ffffff !important;
+  font-size: 6px !important;
+  box-shadow: none !important;
+}
+
+.hero-redes.hero-redes-lista .boton-ver-tutorial .tutorial-texto {
+  color: inherit !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+}
+
+.hero-redes.hero-redes-lista .boton-ver-tutorial .tutorial-destello {
+  color: #f2c500 !important;
+  font-size: 9px !important;
+  text-shadow: none !important;
+}
+
+/* Avisos: un poco más largo para que "Avisos activados" siempre quepa. */
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-avisos-novedades {
+  min-width: 142px !important;
+  max-width: none !important;
+  height: 27px !important;
+  min-height: 27px !important;
+  padding: 4px 8px !important;
+  gap: 6px !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  white-space: nowrap !important;
+}
+
+.hero-redes.hero-redes-lista .boton-avisos-novedades .avisos-texto {
+  min-width: 67px !important;
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
+}
+
+/* En móvil conservamos ambos juntos a la derecha sin ocupar todo el ancho. */
+@media (max-width: 600px) {
+  .hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial,
+  .hero-redes.hero-redes-lista .hero-redes-botones .boton-avisos-novedades {
+    margin-top: 4px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial {
+    min-width: 96px !important;
+    padding-left: 7px !important;
+    padding-right: 7px !important;
+    margin-right: 5px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-botones .boton-avisos-novedades {
+    min-width: 136px !important;
+    padding-left: 7px !important;
+    padding-right: 7px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial {
+    min-width: 90px !important;
+    font-size: 6.8px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-botones .boton-avisos-novedades {
+    min-width: 132px !important;
+  }
+}
