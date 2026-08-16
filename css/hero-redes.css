@@ -1579,3 +1579,95 @@
     padding-right: 6px !important;
   }
 }
+
+
+/* ============================================================
+   V81.95 — Iconos modernos + resaltado compacto del tutorial
+   ============================================================ */
+
+/* Tutorial: icono vectorial moderno, consistente con la navegación principal. */
+.hero-redes.hero-redes-lista .boton-ver-tutorial .tutorial-icono {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 18px !important;
+  height: 18px !important;
+  flex: 0 0 18px !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.hero-redes.hero-redes-lista .boton-ver-tutorial .tutorial-icono svg {
+  width: 18px !important;
+  height: 18px !important;
+  display: block !important;
+}
+
+.hero-redes.hero-redes-lista .boton-ver-tutorial .tutorial-icono svg circle {
+  fill: #ef2b2f;
+}
+
+.hero-redes.hero-redes-lista .boton-ver-tutorial .tutorial-icono svg path {
+  fill: #ffffff;
+}
+
+/* Avisos: campana vectorial moderna, sin emoji. */
+.hero-redes.hero-redes-lista .boton-avisos-novedades .avisos-campana svg {
+  width: 19px !important;
+  height: 19px !important;
+  display: block !important;
+  overflow: visible !important;
+}
+
+.hero-redes.hero-redes-lista .boton-avisos-novedades .avisos-campana svg path:first-child {
+  fill: #f6ad2f !important;
+  stroke: #7a4a05 !important;
+  stroke-width: 1.25 !important;
+  stroke-linejoin: round !important;
+}
+
+.hero-redes.hero-redes-lista .boton-avisos-novedades .avisos-campana svg path:last-child {
+  fill: none !important;
+  stroke: #7a4a05 !important;
+  stroke-width: 1.35 !important;
+  stroke-linecap: round !important;
+}
+
+/* El resaltado vive solo dentro del botón, sin halo grande. */
+.hero-redes.hero-redes-lista .hero-controles-secundarios .boton-ver-tutorial,
+.hero-redes.hero-redes-lista .hero-controles-secundarios .boton-ver-tutorial.tutorial-boton-destacado {
+  border-color: rgba(239, 43, 47, .24) !important;
+  background: linear-gradient(180deg, #ffffff 0%, #fff8f8 100%) !important;
+  color: #20242b !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(239, 43, 47, .05),
+    0 1px 4px rgba(17, 24, 39, .06) !important;
+  animation: none !important;
+}
+
+/* Sin pseudo-elemento/halo exterior. */
+.hero-redes.hero-redes-lista .hero-controles-secundarios .boton-ver-tutorial::before,
+.hero-redes.hero-redes-lista .hero-controles-secundarios .boton-ver-tutorial::after {
+  display: none !important;
+}
+
+/* Resalte corto al pasar o enfocar, limitado al botón. */
+.hero-redes.hero-redes-lista .hero-controles-secundarios .boton-ver-tutorial:hover,
+.hero-redes.hero-redes-lista .hero-controles-secundarios .boton-ver-tutorial:focus-visible {
+  border-color: rgba(239, 43, 47, .42) !important;
+  background: #ffffff !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(239, 43, 47, .08),
+    0 2px 6px rgba(239, 43, 47, .10) !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* Ajuste leve para que el botón no crezca de más por el nuevo icono. */
+.hero-redes.hero-redes-lista .hero-controles-secundarios .boton-ver-tutorial {
+  min-width: 104px !important;
+  height: 27px !important;
+  padding: 4px 8px !important;
+  gap: 5px !important;
+}

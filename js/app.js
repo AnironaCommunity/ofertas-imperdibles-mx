@@ -3512,8 +3512,8 @@ function crearControlesAvisosNovedades() {
   boton.innerHTML = `
     <span class="avisos-campana" aria-hidden="true">
       <svg viewBox="0 0 32 32" focusable="false">
-        <path d="M16 3.5c-4.5 0-7.6 3.6-7.6 8.2v4.1c0 2.1-.8 4.1-2.3 5.6l-1 1h21.8l-1-1a7.9 7.9 0 0 1-2.3-5.6v-4.1c0-4.6-3.1-8.2-7.6-8.2Z"/>
-        <path class="avisos-campana-badajo" d="M12.7 24.1a3.5 3.5 0 0 0 6.6 0"/>
+        <path d="M16 4.5c-4.2 0-7 3.3-7 7.5v4.2c0 1.9-.7 3.8-2 5.3l-1.1 1.2h20.2L25 21.5c-1.3-1.5-2-3.4-2-5.3V12c0-4.2-2.8-7.5-7-7.5Z"/>
+        <path d="M12.4 24.4a3.8 3.8 0 0 0 7.2 0"/>
       </svg>
       <span class="avisos-badge">1</span>
     </span>
@@ -3996,7 +3996,15 @@ function crearBotonTutorial() {
   boton.id = "boton-ver-tutorial";
   boton.type = "button";
   boton.className = "boton-ver-tutorial";
-  boton.innerHTML = '<span class="tutorial-icono" aria-hidden="true">▶</span><span class="tutorial-texto">Ver tutorial</span><span class="tutorial-destello" aria-hidden="true">✦</span>';
+  boton.innerHTML = `
+    <span class="tutorial-icono" aria-hidden="true">
+      <svg viewBox="0 0 32 32" focusable="false">
+        <circle cx="16" cy="16" r="12.5"/>
+        <path d="M13 10.5 22 16l-9 5.5z"/>
+      </svg>
+    </span>
+    <span class="tutorial-texto">Ver tutorial</span>
+  `;
   boton.title = "Aprende a utilizar los cupones";
   boton.addEventListener("click", () => iniciarTutorialGuiado(false));
   const botonAvisos = filaControles.querySelector("#boton-avisos-novedades");
