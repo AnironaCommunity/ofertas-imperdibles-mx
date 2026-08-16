@@ -296,3 +296,14 @@ body.hay-cupones-visibles #separador-fin-cupones { display: block !important; }
     box-shadow: 0 3px 10px rgba(34, 58, 73, 0.06) !important;
   }
 }
+
+/* V81.87 — Iconos de Todos / Tienda / Bancarios / Exclusivo +20% */
+.tabs-inferiores .tab-icono {
+  width: 21.6px !important;
+  height: 21.6px !important;
+  flex: 0 0 21.6px !important;
+}
+.tabs-inferiores .tab-icono svg {
+  width: 21.6px !important;
+  height: 21.6px !important;
+}
