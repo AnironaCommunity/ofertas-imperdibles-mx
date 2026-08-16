@@ -1785,3 +1785,75 @@
   height: 86%;
   pointer-events: none;
 }
+
+
+/* ============================================================
+   V81.98 — Corrección encabezado
+   - Fondo amarillo suave visible en título + descripción
+   - Solo una franja vertical: la nueva con degradado
+   ============================================================ */
+
+/* Fondo amarillo suave real sobre los dos textos superiores. */
+.hero-redes.hero-redes-lista #nombre-sitio,
+.hero-redes.hero-redes-lista #hero-texto-descriptivo {
+  position: relative !important;
+  z-index: 2 !important;
+  background: linear-gradient(
+    90deg,
+    rgba(255,230,0,.26) 0%,
+    rgba(255,230,0,.15) 72%,
+    rgba(255,230,0,.07) 100%
+  ) !important;
+}
+
+.hero-redes.hero-redes-lista #nombre-sitio {
+  display: block !important;
+  padding: 4px 8px 1px !important;
+  border-radius: 9px 9px 0 0 !important;
+}
+
+.hero-redes.hero-redes-lista #hero-texto-descriptivo {
+  display: block !important;
+  padding: 1px 8px 4px !important;
+  border-radius: 0 0 9px 9px !important;
+}
+
+/* Anula el fondo fallback anterior para que no pinte una zona incorrecta. */
+.hero-redes.hero-redes-lista .hero-redes-info::before {
+  display: none !important;
+}
+
+/* Eliminar por completo la franja vertical original. */
+.hero-redes.hero-redes-lista .hero-redes-logo {
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-inline: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Mantener únicamente la nueva barra vertical degradada. */
+.hero-redes.hero-redes-lista .hero-redes-logo::before {
+  display: none !important;
+  content: none !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-logo::after {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  top: 7% !important;
+  right: -1px !important;
+  width: 3px !important;
+  height: 86% !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: linear-gradient(
+    180deg,
+    rgba(255,230,0,.05) 0%,
+    #FFE600 24%,
+    #FFE600 76%,
+    rgba(255,230,0,.05) 100%
+  ) !important;
+  box-shadow: 0 0 5px rgba(255,230,0,.16) !important;
+  pointer-events: none !important;
+}
