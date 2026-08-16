@@ -1223,3 +1223,93 @@
     min-width: 132px !important;
   }
 }
+
+
+/* ============================================================
+   V81.90 — Corrección urgente de distribución del encabezado
+   - WhatsApp / Facebook / Comunidad / Anirona / Sorteo conservan su grid original
+   - Ver tutorial + Activar avisos quedan juntos a la derecha
+   ============================================================ */
+
+/* Restaurar la cuadrícula original de los accesos principales. */
+.hero-redes.hero-redes-lista .hero-redes-botones {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+/* Los cinco accesos principales vuelven a ocupar una columna cada uno. */
+.hero-redes.hero-redes-lista .hero-redes-botones > a,
+.hero-redes.hero-redes-lista .hero-redes-botones > .hero-redes-item {
+  grid-column: auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  justify-self: stretch !important;
+}
+
+/* Segunda fila:
+   Tutorial ocupa columnas 3-4 en automático y Avisos la 5,
+   pero ambos con ancho según contenido y agrupados a la derecha. */
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial {
+  grid-column: 3 / 5 !important;
+  grid-row: 2 !important;
+  justify-self: end !important;
+  width: auto !important;
+  min-width: 104px !important;
+  margin: 5px 6px 0 0 !important;
+  flex: none !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-botones .boton-avisos-novedades {
+  grid-column: 5 / 6 !important;
+  grid-row: 2 !important;
+  justify-self: end !important;
+  width: auto !important;
+  min-width: 142px !important;
+  max-width: none !important;
+  margin: 5px 0 0 0 !important;
+  flex: none !important;
+}
+
+/* En pantallas pequeñas mantenemos los cinco accesos arriba
+   y los dos controles juntos a la derecha debajo. */
+@media (max-width: 600px) {
+  .hero-redes.hero-redes-lista .hero-redes-botones {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial {
+    grid-column: 3 / 5 !important;
+    grid-row: 2 !important;
+    justify-self: end !important;
+    min-width: 96px !important;
+    margin: 4px 5px 0 0 !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-botones .boton-avisos-novedades {
+    grid-column: 5 / 6 !important;
+    grid-row: 2 !important;
+    justify-self: end !important;
+    min-width: 136px !important;
+    margin: 4px 0 0 0 !important;
+  }
+}
+
+/* En móviles muy estrechos, reservar el ancho suficiente
+   sin alterar la posición de los cinco accesos principales. */
+@media (max-width: 390px) {
+  .hero-redes.hero-redes-lista .hero-redes-botones .boton-ver-tutorial {
+    min-width: 88px !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    font-size: 6.6px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-botones .boton-avisos-novedades {
+    min-width: 128px !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+  }
+}
