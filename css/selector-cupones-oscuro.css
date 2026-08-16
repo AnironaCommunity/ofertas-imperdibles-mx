@@ -8,7 +8,7 @@
   width: min(100%, 860px) !important;
   max-width: 860px !important;
   margin: 0 auto 16px !important;
-  padding: 0 !important;
+  padding: 4px 7px 0 !important;
   gap: 0 !important;
   position: relative !important;
   left: auto !important;
@@ -16,15 +16,15 @@
   top: auto !important;
   bottom: auto !important;
   transform: none !important;
-  border: 0 !important;
-  border-bottom: 1px solid #e7e9eb !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
+  border: 1px solid rgba(214, 224, 232, 0.72) !important;
+  border-bottom-color: rgba(205, 217, 226, 0.90) !important;
+  border-radius: 14px !important;
+  background: linear-gradient(105deg, rgba(232, 247, 255, 0.64), rgba(247, 250, 255, 0.76) 52%, rgba(235, 249, 246, 0.62)) !important;
+  box-shadow: 0 4px 14px rgba(34, 58, 73, 0.07) !important;
   filter: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  overflow: visible !important;
+  backdrop-filter: blur(9px) saturate(118%) !important;
+  -webkit-backdrop-filter: blur(9px) saturate(118%) !important;
+  overflow: hidden !important;
 }
 
 /* Todos, Tienda y Bancarios son siempre visibles. */
@@ -95,7 +95,7 @@
   position: absolute !important;
   left: 28% !important;
   right: 28% !important;
-  bottom: -1px !important;
+  bottom: 0 !important;
   height: 3px !important;
   border-radius: 999px !important;
   background: #0aa84f !important;
@@ -283,5 +283,16 @@ body.hay-cupones-visibles #separador-fin-cupones { display: block !important; }
 @media (max-width: 700px) {
   .selector-cupones-menu.selector-cupones-oscuro {
     margin: 0 auto 5px !important;
+  }
+}
+
+
+/* V81.85 — Contenedor translúcido de categorías, inspirado en el panel de referencia.
+   Los botones siguen siendo planos; solo el bloque completo recibe superficie visual. */
+@media (max-width: 600px) {
+  .selector-cupones-menu.selector-cupones-oscuro {
+    padding: 3px 4px 0 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 3px 10px rgba(34, 58, 73, 0.06) !important;
   }
 }

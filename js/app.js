@@ -166,6 +166,7 @@ let todosLosCupones = [];
 let firmaUltimosCupones = "";
 let todasLasPublicidades = [];
 let temporizadorEstados = null;
+let temporizadorPrioridadNuevo = null;
 
 const SECCIONES_URL = {
   todos: {
@@ -914,6 +915,29 @@ function updateCouponTimes() {
 
 }
 
+function programarFinPrioridadNuevo() {
+  if (temporizadorPrioridadNuevo) {
+    clearTimeout(temporizadorPrioridadNuevo);
+    temporizadorPrioridadNuevo = null;
+  }
+
+  const ahora = Date.now();
+  const vencimientos = todosLosCupones
+    .filter((cupon) => cupon.activo !== false && cupon.agotado !== true)
+    .map((cupon) => fechaPublicacionCupon(cupon))
+    .filter(Boolean)
+    .map((fecha) => fecha.getTime() + UNA_HORA_MS - ahora)
+    .filter((restante) => restante > 0);
+
+  if (!vencimientos.length) return;
+
+  const espera = Math.min(...vencimientos);
+  temporizadorPrioridadNuevo = window.setTimeout(() => {
+    temporizadorPrioridadNuevo = null;
+    renderizarCategoria();
+  }, espera + 80);
+}
+
 function startCouponTimers() {
   if (temporizadorEstados) {
     clearInterval(temporizadorEstados);
@@ -925,6 +949,9 @@ function startCouponTimers() {
     updateCouponTimes,
     1000
   );
+
+  // Reordena automáticamente justo cuando termina la hora de prioridad "Nuevo".
+  programarFinPrioridadNuevo();
 }
 
 
@@ -2018,26 +2045,43 @@ function renderizarCategoria() {
     .filter((cupon) => cupon.activo !== false)
     .filter((cupon) => couponTimeState(cupon).state !== "finalizado");
 
-  // V81.81 — En cada sección, los cupones activos siempre van antes que los agotados.
-  // Dentro de cada grupo se conserva el criterio existente por número de clics.
-  const ordenarActivosAntesAgotados = (a, b) => {
+  // V81.85 — Prioridad temporal de cupones NUEVOS.
+  // 1) Activos antes que agotados.
+  // 2) Durante su primera hora, los cupones con estado Nuevo suben al inicio.
+  // 3) Al cumplir la hora vuelven automáticamente al orden habitual por popularidad (clics).
+  const ordenarCupones = (a, b) => {
     const agotadoA = a.agotado === true ? 1 : 0;
     const agotadoB = b.agotado === true ? 1 : 0;
     if (agotadoA !== agotadoB) return agotadoA - agotadoB;
-    return Number(b.clics || 0) - Number(a.clics || 0);
+
+    const nuevoA = esCuponNuevo(a) ? 1 : 0;
+    const nuevoB = esCuponNuevo(b) ? 1 : 0;
+    if (nuevoA !== nuevoB) return nuevoB - nuevoA;
+
+    // Si hay varios nuevos al mismo tiempo, el publicado más recientemente va primero.
+    if (nuevoA && nuevoB) {
+      const fechaA = fechaPublicacionCupon(a)?.getTime() || 0;
+      const fechaB = fechaPublicacionCupon(b)?.getTime() || 0;
+      if (fechaB !== fechaA) return fechaB - fechaA;
+    }
+
+    const clicsA = Number(a.clics || 0);
+    const clicsB = Number(b.clics || 0);
+    if (clicsB !== clicsA) return clicsB - clicsA;
+    return Number(b.id || 0) - Number(a.id || 0);
   };
 
   const cuponesTienda = disponibles
     .filter((cupon) => normalizarCategoria(cupon) === "tienda")
-    .sort(ordenarActivosAntesAgotados);
+    .sort(ordenarCupones);
 
   const cuponesExclusivos = disponibles
     .filter((cupon) => normalizarCategoria(cupon) === "exclusivo")
-    .sort(ordenarActivosAntesAgotados);
+    .sort(ordenarCupones);
 
   const cuponesBancarios = disponibles
     .filter((cupon) => normalizarCategoria(cupon) === "bancarios")
-    .sort(ordenarActivosAntesAgotados);
+    .sort(ordenarCupones);
 
   const mostrarTienda =
     categoriaActiva === "todos" || categoriaActiva === "tienda";
@@ -2120,21 +2164,33 @@ function renderizarCategoria() {
     cuponesContainer.appendChild(fragmentoBancos);
   }
 
-  // En "Todos" también se garantiza el orden global: primero TODOS los activos
-  // y después TODOS los agotados, respetando el orden relativo ya renderizado.
+  // En "Todos", un cupón Nuevo también tiene prioridad GLOBAL durante su primera hora,
+  // aunque pertenezca a Tienda, Exclusivo o Bancarios. Al terminar esa hora recupera
+  // automáticamente su posición natural dentro de su categoría y por popularidad.
   if (categoriaActiva === "todos" && cuponesContainer) {
     const tarjetas = Array.from(cuponesContainer.children);
-    const activas = [];
-    const agotadas = [];
+    const mapaCupones = new Map(
+      todosLosCupones.map((cupon) => [String(cupon.id), cupon])
+    );
 
-    tarjetas.forEach((tarjeta) => {
-      const cupon = todosLosCupones.find(
-        (item) => String(item.id) === String(tarjeta.dataset.id || "")
-      );
-      (cupon?.agotado === true ? agotadas : activas).push(tarjeta);
-    });
+    tarjetas
+      .sort((tarjetaA, tarjetaB) => {
+        const cuponA = mapaCupones.get(String(tarjetaA.dataset.id || ""));
+        const cuponB = mapaCupones.get(String(tarjetaB.dataset.id || ""));
+        if (!cuponA || !cuponB) return 0;
 
-    [...activas, ...agotadas].forEach((tarjeta) => cuponesContainer.appendChild(tarjeta));
+        const agotadoA = cuponA.agotado === true ? 1 : 0;
+        const agotadoB = cuponB.agotado === true ? 1 : 0;
+        if (agotadoA !== agotadoB) return agotadoA - agotadoB;
+
+        const nuevoA = esCuponNuevo(cuponA) ? 1 : 0;
+        const nuevoB = esCuponNuevo(cuponB) ? 1 : 0;
+        if (nuevoA !== nuevoB) return nuevoB - nuevoA;
+
+        // Fuera del impulso de una hora no alteramos la agrupación normal por categoría.
+        return 0;
+      })
+      .forEach((tarjeta) => cuponesContainer.appendChild(tarjeta));
   }
 
   todosWrapper.hidden = false;
