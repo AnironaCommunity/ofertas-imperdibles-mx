@@ -4448,8 +4448,8 @@ function actualizarEstadoWhatsappFlotante() {
   const boton = document.querySelector("#whatsapp-flotante");
   if (!boton) return;
 
-  // Arriba se muestra logo + texto. Al empezar a bajar queda solo el logo.
-  const expandido = window.scrollY <= 24;
+  // Arriba se muestra como cápsula; al iniciar el desplazamiento queda circular.
+  const expandido = window.scrollY <= 12;
   boton.classList.toggle("whatsapp-flotante-expandido", expandido);
 }
 
