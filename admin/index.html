@@ -8,7 +8,7 @@
   <title>Administrador | Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="../img/logo.png" />
-  <link rel="stylesheet" href="admin.css?v=81.80.0" />
+  <link rel="stylesheet" href="admin.css?v=82.24.0" />
 </head>
 
 <body>
@@ -828,6 +828,23 @@ Descuento máximo: $180"
           ></p>
         </section>
 
+
+        <section class="panel panel-producto-rapido">
+          <div class="cabecera-panel"><div>
+            <h3>🛒 Compartir producto sin registrarlo</h3>
+            <p class="descripcion-panel">Crea una publicación rápida con el mejor cupón activo de <strong>Tienda</strong>. Los cupones Bancarios y Exclusivos no se consideran.</p>
+          </div></div>
+          <form id="producto-rapido-form" class="producto-rapido-form">
+            <label class="campo"><span>Nombre del producto</span><input id="producto-rapido-titulo" type="text" placeholder="Ej. Taladro inalámbrico Anirona" autocomplete="off" /></label>
+            <label class="campo"><span>Precio actual</span><input id="producto-rapido-precio" type="text" inputmode="decimal" placeholder="$0" autocomplete="off" /></label>
+            <label class="campo producto-rapido-enlace"><span>Enlace de compra</span><input id="producto-rapido-enlace" type="url" placeholder="https://meli.la/..." autocomplete="off" /></label>
+            <div class="producto-rapido-resultado"><span class="producto-rapido-label">Mejor cupón Tienda</span><div id="producto-rapido-cupon" class="producto-rapido-cupon"><span class="producto-rapido-sin-cupon">Completa nombre, precio y enlace para calcular.</span></div></div>
+            <label class="campo producto-rapido-vista"><span>Vista previa</span><textarea id="producto-rapido-texto" rows="8" readonly></textarea></label>
+            <div class="acciones producto-rapido-acciones"><button id="producto-rapido-copiar" class="boton-principal" type="button" disabled>📋 Copiar publicación</button></div>
+            <p id="producto-rapido-mensaje" class="mensaje" aria-live="polite"></p>
+          </form>
+        </section>
+
         <section class="panel">
           <div class="cabecera-panel">
             <h3>Publicidades registradas</h3>
@@ -1228,6 +1245,6 @@ Descuento máximo: $180"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=81.80.0"></script>
+  <script type="module" src="admin.js?v=82.24.0"></script>
 </body>
 </html>

@@ -2421,3 +2421,7 @@ table td {
 /* V81.80 — Estado agotado */
 .estado-automatico.agotado { color: #9f1239; background: #fff1f2; border-color: #fecdd3; }
 .acciones-tabla .estado-agotado { border-color: #fda4af; color: #9f1239; background: #fff1f2; }
+
+
+/* V82.24 — Compartir producto externo y copiar links */
+.producto-rapido-form{display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:12px;align-items:start}.producto-rapido-form .campo{margin:0}.producto-rapido-enlace,.producto-rapido-resultado,.producto-rapido-vista,.producto-rapido-acciones,#producto-rapido-mensaje{grid-column:1/-1}.producto-rapido-resultado{display:grid;gap:5px;padding:10px 12px;border:1px solid #dfe8e2;border-radius:12px;background:#f8fcf9}.producto-rapido-label{color:#627268;font-size:12px}.producto-rapido-cupon{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.producto-rapido-cupon strong{color:#087a35;font-size:15px}.producto-rapido-cupon span{color:#445149;font-size:13px}.producto-rapido-sin-cupon{color:#66736b!important}#producto-rapido-texto{width:100%;min-height:180px;resize:vertical;font-family:inherit;line-height:1.45}.acceso-copiar-ml,.acceso-copiar-amz{white-space:nowrap}@media(max-width:680px){.producto-rapido-form{grid-template-columns:1fr}.producto-rapido-enlace,.producto-rapido-resultado,.producto-rapido-vista,.producto-rapido-acciones,#producto-rapido-mensaje{grid-column:1}}

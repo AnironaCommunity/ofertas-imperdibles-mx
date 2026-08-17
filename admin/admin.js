@@ -172,6 +172,16 @@ const adListMessage = document.querySelector("#ad-list-message");
 
 const adSearch = document.querySelector("#buscar-publicaciones");
 
+/* Compartir producto externo (sin registrarlo como publicidad) */
+const quickShareForm = document.querySelector("#producto-rapido-form");
+const quickShareTitle = document.querySelector("#producto-rapido-titulo");
+const quickSharePrice = document.querySelector("#producto-rapido-precio");
+const quickShareLink = document.querySelector("#producto-rapido-enlace");
+const quickShareCoupon = document.querySelector("#producto-rapido-cupon");
+const quickSharePreview = document.querySelector("#producto-rapido-texto");
+const quickShareCopy = document.querySelector("#producto-rapido-copiar");
+const quickShareMessage = document.querySelector("#producto-rapido-mensaje");
+
 /* Banners debajo de cupones */
 const bannerForm = document.querySelector("#banner-form");
 const bannerId = document.querySelector("#banner-id");
@@ -2304,7 +2314,6 @@ function renderAds() {
   const fragment = document.createDocumentFragment();
   for (const ad of visibleAds) {
     const links = adMarketplaceLinks(ad);
-    const preferredLink = links.mercadoLibre || links.amazon;
     const item = document.createElement("article");
     item.className = "ad-item ad-item-productivo";
 
@@ -2312,13 +2321,16 @@ function renderAds() {
       links.mercadoLibre
         ? `<a class="acceso-rapido acceso-ml" href="${escapeHtml(links.mercadoLibre)}" target="_blank" rel="noopener noreferrer" aria-label="Abrir ${escapeHtml(ad.titulo)} en Mercado Libre">ML</a>`
         : "",
+      links.mercadoLibre
+        ? `<button class="acceso-rapido acceso-copiar acceso-copiar-ml" data-action="copy-link-ml" data-id="${ad.id}" type="button">Copiar ML</button>`
+        : "",
       links.amazon
         ? `<a class="acceso-rapido acceso-amz" href="${escapeHtml(links.amazon)}" target="_blank" rel="noopener noreferrer" aria-label="Abrir ${escapeHtml(ad.titulo)} en Amazon">AMZ</a>`
         : "",
-      `<a class="acceso-rapido acceso-web" href="${escapeHtml(productWebUrl(ad))}" target="_blank" rel="noopener noreferrer" aria-label="Ver ${escapeHtml(ad.titulo)} en la página">WEB</a>`,
-      preferredLink
-        ? `<button class="acceso-rapido acceso-copiar" data-action="copy-link" data-id="${ad.id}" type="button">Copiar</button>`
+      links.amazon
+        ? `<button class="acceso-rapido acceso-copiar acceso-copiar-amz" data-action="copy-link-amazon" data-id="${ad.id}" type="button">Copiar Amazon</button>`
         : "",
+      `<a class="acceso-rapido acceso-web" href="${escapeHtml(productWebUrl(ad))}" target="_blank" rel="noopener noreferrer" aria-label="Ver ${escapeHtml(ad.titulo)} en la página">WEB</a>`,
     ].join("");
 
     item.innerHTML = `
@@ -2365,11 +2377,13 @@ function activeProductShareCoupons() {
   const now = Date.now();
 
   return coupons.filter((coupon) => {
-    if (!coupon.activo || !String(coupon.codigo || "").trim()) return false;
+    if (!coupon.activo || coupon.agotado === true || !String(coupon.codigo || "").trim()) return false;
+
+    const categoria = String(coupon.categoria || "tienda").trim().toLowerCase();
+    if (categoria !== "tienda") return false;
 
     const start = coupon.fecha_inicio ? new Date(coupon.fecha_inicio).getTime() : null;
     const end = coupon.fecha_fin ? new Date(coupon.fecha_fin).getTime() : null;
-
     if (start !== null && Number.isFinite(start) && start > now) return false;
     if (end !== null && Number.isFinite(end) && end <= now) return false;
     return true;
@@ -2402,23 +2416,23 @@ function buildProductShareText(ad, productPrice, recommendation) {
   const link = productShareLink(ad);
   const title = formatProductShareTitle(ad.titulo);
   const priceText = formatMoney(productPrice);
-
-  if (!recommendation) {
-    return [
-      title,
-      `Enlace de compra ${link}`,
-      "",
-      `💰 Precio actual: *${priceText}*`,
-    ].join("\n");
-  }
-
-  return [
+  const lines = [
     title,
-    `Enlace de compra ${link}`,
     "",
     `💰 Precio actual: *${priceText}*`,
-    `🎟️ Usa el cupón *${recommendation.coupon.codigo}* y paga solo *${formatMoney(recommendation.finalPrice)}*`,
-  ].join("\n");
+    `🛒 Consíguelo aquí con descuento: ${link}`,
+  ];
+
+  if (recommendation) {
+    lines.push(`🎟️ Usa el cupón: ${recommendation.coupon.codigo} y paga solo *${formatMoney(recommendation.finalPrice)}*`);
+  }
+
+  lines.push("", "Consulta y canjea más cupones aquí 👇", "https://ofertasimperdiblesmx.vercel.app/");
+  return lines.join("\n");
+}
+
+function buildQuickProductShareText({ title, price, link, recommendation }) {
+  return buildProductShareText({ titulo: title, enlace_mercado_libre: link, enlace: link, plataforma: "mercadolibre" }, price, recommendation);
 }
 
 function ensureProductShareDialog() {
@@ -2845,14 +2859,21 @@ async function handleAdList(event) {
     return;
   }
 
-  if (button.dataset.action === "copy-link") {
+  if (button.dataset.action === "copy-link-ml") {
     const links = adMarketplaceLinks(ad);
     try {
-      await copyTextSafely(links.mercadoLibre || links.amazon);
-      setMessage(adListMessage, `✅ Enlace copiado: ${ad.titulo}`);
-    } catch (error) {
-      setMessage(adListMessage, error.message, true);
-    }
+      await copyTextSafely(links.mercadoLibre);
+      setMessage(adListMessage, `✅ Link de Mercado Libre copiado: ${ad.titulo}`);
+    } catch (error) { setMessage(adListMessage, error.message, true); }
+    return;
+  }
+
+  if (button.dataset.action === "copy-link-amazon") {
+    const links = adMarketplaceLinks(ad);
+    try {
+      await copyTextSafely(links.amazon);
+      setMessage(adListMessage, `✅ Link de Amazon copiado: ${ad.titulo}`);
+    } catch (error) { setMessage(adListMessage, error.message, true); }
     return;
   }
 
@@ -2880,6 +2901,48 @@ async function handleAdList(event) {
   }
 }
 
+
+
+/* ================= COMPARTIR PRODUCTO EXTERNO ================= */
+async function ensureCouponsForQuickShare() {
+  if (!coupons.length) await loadCoupons();
+}
+
+async function updateQuickProductShare() {
+  if (!quickShareForm) return;
+  await ensureCouponsForQuickShare();
+  const title = String(quickShareTitle?.value || "").trim();
+  const price = parseMoney(quickSharePrice?.value);
+  const link = String(quickShareLink?.value || "").trim();
+  if (!title || !price || !link) {
+    if (quickShareCoupon) quickShareCoupon.innerHTML = '<span class="producto-rapido-sin-cupon">Completa nombre, precio y enlace para calcular.</span>';
+    if (quickSharePreview) quickSharePreview.value = "";
+    if (quickShareCopy) quickShareCopy.disabled = true;
+    return;
+  }
+  const recommendation = couponOptionsForPrice(price)[0] || null;
+  if (quickShareCoupon) {
+    quickShareCoupon.innerHTML = recommendation
+      ? `<strong>${escapeHtml(recommendation.coupon.codigo)}</strong><span>Ahorra ${escapeHtml(formatMoney(recommendation.discount))} · Paga ${escapeHtml(formatMoney(recommendation.finalPrice))}</span>`
+      : '<span class="producto-rapido-sin-cupon">No hay cupón Tienda activo que aplique a este monto.</span>';
+  }
+  if (quickSharePreview) quickSharePreview.value = buildQuickProductShareText({ title, price, link, recommendation });
+  if (quickShareCopy) quickShareCopy.disabled = false;
+}
+
+let quickShareDebounce = 0;
+quickShareForm?.addEventListener("input", () => {
+  window.clearTimeout(quickShareDebounce);
+  quickShareDebounce = window.setTimeout(updateQuickProductShare, 120);
+});
+quickShareCopy?.addEventListener("click", async () => {
+  await updateQuickProductShare();
+  if (!quickSharePreview?.value) return;
+  try {
+    await copyTextSafely(quickSharePreview.value);
+    setMessage(quickShareMessage, "✅ Publicación copiada.");
+  } catch (error) { setMessage(quickShareMessage, error.message, true); }
+});
 
 
 /* ================= BANNERS DEBAJO DE CUPONES ================= */
