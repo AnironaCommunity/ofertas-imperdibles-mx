@@ -2559,3 +2559,38 @@
   min-width: 0 !important;
   transform-origin: left center !important;
 }
+
+
+/* ============================================================
+   V82.25 — Corrección exclusiva para escritorio/tablet
+   El móvil (<=600px) conserva exactamente su aspecto actual.
+   ============================================================ */
+@media (min-width: 601px) {
+  .hero-redes.hero-redes-lista .hero-promo-compacto.hero-promo-imagen {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: hidden !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-promo-compacto.hero-promo-imagen img {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    object-fit: contain !important;
+    object-position: center !important;
+  }
+
+  /* Un poco más de aire en escritorio sin alterar móvil. */
+  .hero-redes.hero-redes-lista {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-promo-compacto.hero-promo-imagen {
+    margin-bottom: 7px !important;
+  }
+}
