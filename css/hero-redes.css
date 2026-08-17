@@ -1940,3 +1940,166 @@
  .hero-redes.hero-redes-lista #nombre-sitio{transform:translateY(-8px)!important;padding:4px 7px 1px!important}
  .hero-redes.hero-redes-lista #hero-texto-descriptivo{transform:translateY(8px)!important;padding:1px 7px 4px!important}
 }
+
+
+/* ============================================================
+   V82.07 — Encabezado promocional compacto
+   ============================================================ */
+.hero-redes.hero-redes-lista {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: 72px minmax(0, 1fr) !important;
+  grid-template-rows: auto auto auto !important;
+  column-gap: 10px !important;
+  row-gap: 4px !important;
+  padding: 8px 10px 8px !important;
+  overflow: hidden !important;
+}
+
+/* Fila promocional compacta: texto + visual. */
+.hero-redes.hero-redes-lista .hero-promo-compacto {
+  grid-column: 1 / -1 !important;
+  grid-row: 1 !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 42% !important;
+  align-items: center !important;
+  min-height: 92px !important;
+  max-height: 108px !important;
+  overflow: hidden !important;
+  border-radius: 12px !important;
+  background:
+    radial-gradient(circle at 78% 28%, rgba(255,255,255,.32), transparent 32%),
+    linear-gradient(180deg, #FFE600 0%, #FFE94A 100%) !important;
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,.05) !important;
+}
+
+.hero-redes.hero-redes-lista .hero-promo-copy {
+  display: flex !important;
+  align-items: center !important;
+  height: 100% !important;
+  padding: 8px 6px 8px 14px !important;
+}
+
+.hero-redes.hero-redes-lista .hero-promo-copy strong {
+  display: block !important;
+  margin: 0 !important;
+  color: #1f1f1f !important;
+  font-size: clamp(18px, 4vw, 29px) !important;
+  font-weight: 900 !important;
+  line-height: .94 !important;
+  letter-spacing: -.02em !important;
+}
+
+.hero-redes.hero-redes-lista .hero-promo-visual {
+  position: relative !important;
+  height: 100% !important;
+  overflow: hidden !important;
+}
+
+.hero-redes.hero-redes-lista .hero-promo-visual img {
+  position: absolute !important;
+  right: 0 !important;
+  bottom: -4px !important;
+  width: 100% !important;
+  height: 108% !important;
+  object-fit: cover !important;
+  object-position: 60% 25% !important;
+  mix-blend-mode: multiply;
+}
+
+/* Logo + título/descripción pasan a la segunda fila. */
+.hero-redes.hero-redes-lista .hero-redes-logo {
+  grid-column: 1 !important;
+  grid-row: 2 !important;
+  width: 72px !important;
+  min-width: 72px !important;
+  align-self: center !important;
+  justify-self: center !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-contenido {
+  display: contents !important;
+}
+
+.hero-redes.hero-redes-lista #nombre-sitio,
+.hero-redes.hero-redes-lista #hero-texto-descriptivo {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  background: rgba(255,230,0,.14) !important;
+}
+
+.hero-redes.hero-redes-lista #nombre-sitio {
+  align-self: center !important;
+  transform: translateY(-8px) !important;
+  padding: 4px 8px 1px !important;
+  border-radius: 9px 9px 0 0 !important;
+}
+
+.hero-redes.hero-redes-lista #hero-texto-descriptivo {
+  align-self: center !important;
+  transform: translateY(8px) !important;
+  padding: 1px 8px 4px !important;
+  border-radius: 0 0 9px 9px !important;
+}
+
+/* Fila inferior con accesos sociales + tutorial + avisos. */
+.hero-redes.hero-redes-lista .hero-redes-botones {
+  grid-column: 1 / -1 !important;
+  grid-row: 3 !important;
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(40px, 1fr)) auto !important;
+  align-items: center !important;
+  gap: 0 !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+/* Más compacto en móvil. */
+@media (max-width: 600px) {
+  .hero-redes.hero-redes-lista {
+    grid-template-columns: 60px minmax(0,1fr) !important;
+    padding: 7px 8px !important;
+    row-gap: 3px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-promo-compacto {
+    min-height: 82px !important;
+    max-height: 94px !important;
+    grid-template-columns: minmax(0, 1fr) 44% !important;
+    border-radius: 10px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-promo-copy {
+    padding-left: 11px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-promo-copy strong {
+    font-size: clamp(16px, 4.9vw, 23px) !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-logo {
+    width: 60px !important;
+    min-width: 60px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-logo img {
+    width: 48px !important;
+    max-width: 48px !important;
+  }
+
+  .hero-redes.hero-redes-lista #nombre-sitio {
+    transform: translateY(-7px) !important;
+    padding: 3px 6px 1px !important;
+  }
+
+  .hero-redes.hero-redes-lista #hero-texto-descriptivo {
+    transform: translateY(7px) !important;
+    padding: 1px 6px 3px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-botones {
+    grid-template-columns: repeat(5, minmax(36px, 1fr)) auto !important;
+  }
+}
