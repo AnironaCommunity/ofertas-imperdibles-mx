@@ -9712,3 +9712,75 @@ body.hay-cupones-visibles #separador-fin-cupones {
     flex-basis: 33px !important;
   }
 }
+
+
+/* ============================================================
+   V82.21 — Logo WhatsApp +20%, cápsula intacta
+   ============================================================ */
+.whatsapp-flotante-logo {
+  width: 43px !important;
+  min-width: 43px !important;
+  height: 43px !important;
+  flex: 0 0 43px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.whatsapp-flotante-logo img {
+  display: block !important;
+  width: 43px !important;
+  height: 43px !important;
+  max-width: 43px !important;
+  max-height: 43px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.whatsapp-flotante.whatsapp-flotante-expandido .whatsapp-flotante-texto {
+  align-items: center !important;
+}
+
+.whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-logo,
+.whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-logo img {
+  width: 41px !important;
+  min-width: 41px !important;
+  height: 41px !important;
+  max-width: 41px !important;
+  max-height: 41px !important;
+  flex-basis: 41px !important;
+}
+
+@media (max-width: 600px) {
+  .whatsapp-flotante-logo,
+  .whatsapp-flotante-logo img {
+    width: 41px !important;
+    min-width: 41px !important;
+    height: 41px !important;
+    max-width: 41px !important;
+    max-height: 41px !important;
+    flex-basis: 41px !important;
+  }
+
+  .whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-logo,
+  .whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-logo img {
+    width: 40px !important;
+    min-width: 40px !important;
+    height: 40px !important;
+    max-width: 40px !important;
+    max-height: 40px !important;
+    flex-basis: 40px !important;
+  }
+}
