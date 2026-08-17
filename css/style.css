@@ -9378,3 +9378,153 @@ body.hay-cupones-visibles #separador-fin-cupones {
 .cupon-bancario-grid {
   animation: none !important;
 }
+
+
+/* ============================================================
+   V82.09 — Selector de categorías minimalista
+   Todos | Tienda | Bancario | Exclusivos
+   ============================================================ */
+.selector-cupones,
+.selector-categorias,
+.categorias-cupones,
+#selector-cupones {
+  background: #fff !important;
+  border: 1px solid rgba(17, 24, 39, .07) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(17, 24, 39, .035) !important;
+}
+
+/* La botonera se mantiene compacta y uniforme. */
+.selector-cupones button,
+.selector-categorias button,
+.categorias-cupones button,
+#selector-cupones button {
+  position: relative !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* Solo el seleccionado muestra la línea verde inferior. */
+.selector-cupones button.activo::after,
+.selector-cupones button.active::after,
+.selector-categorias button.activo::after,
+.selector-categorias button.active::after,
+.categorias-cupones button.activo::after,
+.categorias-cupones button.active::after,
+#selector-cupones button.activo::after,
+#selector-cupones button.active::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 20% !important;
+  right: 20% !important;
+  bottom: 0 !important;
+  height: 3px !important;
+  border-radius: 999px 999px 0 0 !important;
+  background: #00A650 !important;
+}
+
+/* Elimina fondos/resaltados heredados del diseño traslúcido anterior. */
+.selector-cupones button.activo,
+.selector-cupones button.active,
+.selector-categorias button.activo,
+.selector-categorias button.active,
+.categorias-cupones button.activo,
+.categorias-cupones button.active,
+#selector-cupones button.activo,
+#selector-cupones button.active {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+@media (max-width: 600px) {
+  .selector-cupones,
+  .selector-categorias,
+  .categorias-cupones,
+  #selector-cupones {
+    border-radius: 10px !important;
+  }
+}
+
+
+/* V82.09 — ajuste exacto a las clases reales de la botonera */
+.selector-cupones-menu.selector-cupones-oscuro {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+  background: #fff !important;
+  border: 1px solid rgba(17,24,39,.07) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(17,24,39,.035) !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+}
+
+.selector-cupones-menu.selector-cupones-oscuro .tab-inferior {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 2px !important;
+  min-height: 66px !important;
+  padding: 7px 3px 8px !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #222 !important;
+}
+
+.selector-cupones-menu.selector-cupones-oscuro .tab-inferior::before {
+  content: none !important;
+  display: none !important;
+}
+
+.selector-cupones-menu.selector-cupones-oscuro .tab-inferior.activo::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 22% !important;
+  right: 22% !important;
+  bottom: 0 !important;
+  height: 3px !important;
+  border-radius: 999px 999px 0 0 !important;
+  background: #00A650 !important;
+}
+
+.selector-cupones-menu.selector-cupones-oscuro .tab-icono {
+  width: 27px !important;
+  height: 27px !important;
+  margin: 0 auto 1px !important;
+}
+
+.selector-cupones-menu.selector-cupones-oscuro .tab-etiqueta-principal {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1.05 !important;
+  color: #222 !important;
+}
+
+.selector-cupones-menu.selector-cupones-oscuro .tab-inferior.activo .tab-etiqueta-principal {
+  font-weight: 500 !important;
+  color: #222 !important;
+}
+
+@media (max-width: 600px) {
+  .selector-cupones-menu.selector-cupones-oscuro {
+    border-radius: 10px !important;
+  }
+  .selector-cupones-menu.selector-cupones-oscuro .tab-inferior {
+    min-height: 61px !important;
+    padding: 6px 2px 7px !important;
+  }
+  .selector-cupones-menu.selector-cupones-oscuro .tab-icono {
+    width: 25px !important;
+    height: 25px !important;
+  }
+  .selector-cupones-menu.selector-cupones-oscuro .tab-etiqueta-principal {
+    font-size: 12px !important;
+  }
+}

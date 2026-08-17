@@ -2306,3 +2306,39 @@
     height: 38px !important;
   }
 }
+
+
+/* ============================================================
+   V82.09 — Banner Cupones de descuento exclusivos
+   ============================================================ */
+.hero-redes.hero-redes-lista .hero-promo-compacto.hero-promo-imagen {
+  grid-column: 1 / -1 !important;
+  display: block !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin: -2px 0 4px !important;
+  overflow: hidden !important;
+  border-radius: 12px !important;
+  background: #FFE600 !important;
+  box-shadow: none !important;
+}
+
+.hero-redes.hero-redes-lista .hero-promo-compacto.hero-promo-imagen img {
+  position: static !important;
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  mix-blend-mode: normal !important;
+}
+
+@media (max-width: 600px) {
+  .hero-redes.hero-redes-lista .hero-promo-compacto.hero-promo-imagen {
+    border-radius: 10px !important;
+    margin-bottom: 3px !important;
+  }
+}
