@@ -4457,3 +4457,43 @@ window.addEventListener("scroll", actualizarEstadoWhatsappFlotante, { passive: t
 window.addEventListener("pageshow", actualizarEstadoWhatsappFlotante);
 document.addEventListener("DOMContentLoaded", actualizarEstadoWhatsappFlotante);
 actualizarEstadoWhatsappFlotante();
+
+
+/* ============================================================
+   V82.23 — Ajuste automático del tamaño del título
+   ============================================================ */
+function ajustarTamanoTituloHero() {
+  const titulo = document.querySelector("#nombre-sitio");
+  if (!titulo) return;
+
+  const contenedor = titulo.parentElement;
+  if (!contenedor) return;
+
+  // Tamaños base aprobados.
+  const esMovil = window.matchMedia("(max-width: 600px)").matches;
+  const esMuyAngosto = window.matchMedia("(max-width: 380px)").matches;
+  const base = esMuyAngosto ? 13 : (esMovil ? 14 : 16);
+  const minimo = esMuyAngosto ? 10.5 : (esMovil ? 11 : 12);
+
+  titulo.style.fontSize = `${base}px`;
+
+  const anchoDisponible = titulo.getBoundingClientRect().width;
+  if (!anchoDisponible) return;
+
+  let size = base;
+
+  // scrollWidth refleja el ancho real del texto en una sola línea.
+  while (titulo.scrollWidth > titulo.clientWidth && size > minimo) {
+    size -= 0.25;
+    titulo.style.fontSize = `${size}px`;
+  }
+}
+
+window.addEventListener("resize", ajustarTamanoTituloHero);
+window.addEventListener("pageshow", ajustarTamanoTituloHero);
+document.addEventListener("DOMContentLoaded", ajustarTamanoTituloHero);
+
+// También reajusta tras cargar configuración dinámica del encabezado.
+document.addEventListener("ofertas:configuracion-cargada", ajustarTamanoTituloHero);
+
+window.setTimeout(ajustarTamanoTituloHero, 0);

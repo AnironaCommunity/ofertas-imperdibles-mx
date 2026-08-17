@@ -2545,3 +2545,17 @@
     font-size: 10.5px !important;
   }
 }
+
+
+/* ============================================================
+   V82.23 — Título responsive en una sola línea
+   Reduce tamaño automáticamente si no cabe.
+   ============================================================ */
+.hero-redes.hero-redes-lista #nombre-sitio {
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  transform-origin: left center !important;
+}
