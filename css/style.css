@@ -9592,3 +9592,123 @@ body.hay-cupones-visibles #separador-fin-cupones {
     line-height: 28px !important;
   }
 }
+
+
+/* ============================================================
+   V82.20 — Ajuste fino del logo WhatsApp
+   Conserva el tamaño de cápsula de V82.19.
+   ============================================================ */
+
+/* La cápsula mantiene exactamente las dimensiones definidas en V82.18. */
+.whatsapp-flotante.whatsapp-flotante-expandido {
+  width: 142px !important;
+  min-width: 142px !important;
+  height: 52px !important;
+  padding: 0 14px 0 9px !important;
+  gap: 7px !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+}
+
+/* Logo más grande, pero siempre contenido dentro de la cápsula. */
+.whatsapp-flotante-logo {
+  width: 36px !important;
+  min-width: 36px !important;
+  height: 36px !important;
+  flex: 0 0 36px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.whatsapp-flotante-logo img {
+  display: block !important;
+  width: 36px !important;
+  height: 36px !important;
+  max-width: 36px !important;
+  max-height: 36px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Texto centrado con el logo y sin posibilidad de salirse. */
+.whatsapp-flotante-texto,
+.whatsapp-flotante.whatsapp-flotante-expandido .whatsapp-flotante-texto {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  height: 36px !important;
+  max-width: 76px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  color: #fff !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 36px !important;
+  white-space: nowrap !important;
+  transform: none !important;
+}
+
+/* Al bajar: mismo círculo, logo grande y centrado. */
+.whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-logo,
+.whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-logo img {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  max-width: 34px !important;
+  max-height: 34px !important;
+  flex-basis: 34px !important;
+}
+
+.whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-texto {
+  display: none !important;
+}
+
+@media (max-width: 600px) {
+  .whatsapp-flotante.whatsapp-flotante-expandido {
+    width: 134px !important;
+    min-width: 134px !important;
+    height: 50px !important;
+    padding: 0 12px 0 8px !important;
+    gap: 6px !important;
+  }
+
+  .whatsapp-flotante-logo,
+  .whatsapp-flotante-logo img {
+    width: 34px !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    max-width: 34px !important;
+    max-height: 34px !important;
+    flex-basis: 34px !important;
+  }
+
+  .whatsapp-flotante-texto,
+  .whatsapp-flotante.whatsapp-flotante-expandido .whatsapp-flotante-texto {
+    height: 34px !important;
+    max-width: 72px !important;
+    font-size: 12.5px !important;
+    line-height: 34px !important;
+  }
+
+  .whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-logo,
+  .whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-logo img {
+    width: 33px !important;
+    min-width: 33px !important;
+    height: 33px !important;
+    max-width: 33px !important;
+    max-height: 33px !important;
+    flex-basis: 33px !important;
+  }
+}

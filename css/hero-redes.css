@@ -2498,3 +2498,50 @@
     font-size: calc(1em + 1px) !important;
   }
 }
+
+
+/* ============================================================
+   V82.20 — Corrección fina del título y descripción
+   ============================================================ */
+.hero-redes.hero-redes-lista #nombre-sitio {
+  font-size: 16px !important;
+  line-height: 1.15 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 100% !important;
+}
+
+.hero-redes.hero-redes-lista #hero-texto-descriptivo {
+  font-size: 12px !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 100% !important;
+  opacity: 1 !important;
+}
+
+@media (max-width: 600px) {
+  .hero-redes.hero-redes-lista #nombre-sitio {
+    font-size: 14px !important;
+    line-height: 1.12 !important;
+    white-space: nowrap !important;
+  }
+
+  .hero-redes.hero-redes-lista #hero-texto-descriptivo {
+    font-size: 11px !important;
+    line-height: 1.15 !important;
+    white-space: nowrap !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero-redes.hero-redes-lista #nombre-sitio {
+    font-size: 13px !important;
+  }
+
+  .hero-redes.hero-redes-lista #hero-texto-descriptivo {
+    font-size: 10.5px !important;
+  }
+}
