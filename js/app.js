@@ -915,6 +915,20 @@ function updateCouponTimes() {
 
 }
 
+
+function renderizarCategoriaConScrollEstable() {
+  const scrollAntes = window.scrollY;
+  renderizarCategoria();
+
+  requestAnimationFrame(() => {
+    window.scrollTo({
+      left: 0,
+      top: scrollAntes,
+      behavior: "auto",
+    });
+  });
+}
+
 function programarFinPrioridadNuevo() {
   if (temporizadorPrioridadNuevo) {
     clearTimeout(temporizadorPrioridadNuevo);
@@ -934,7 +948,7 @@ function programarFinPrioridadNuevo() {
   const espera = Math.min(...vencimientos);
   temporizadorPrioridadNuevo = window.setTimeout(() => {
     temporizadorPrioridadNuevo = null;
-    renderizarCategoria();
+    renderizarCategoriaConScrollEstable();
   }, espera + 80);
 }
 
@@ -1521,6 +1535,7 @@ function cuponDisponibleParaBuscador(cupon) {
     cupon &&
     cupon.activo !== false &&
     cupon.agotado !== true &&
+    normalizarCategoria(cupon) !== "exclusivo" &&
     couponTimeState(cupon).enabled &&
     String(cupon.codigo || "").trim() &&
     cuponAplicaFiltroBuscador(cupon)
@@ -1999,11 +2014,13 @@ function cambiarCategoria(
     desplazamiento = "smooth",
   } = {}
 ) {
+  const scrollAntesDeCambiarCategoria = window.scrollY;
   categoriaActiva = categoria;
 
   cambiarVista("cupones", {
     actualizarHistorial: false,
     desplazamiento,
+    moverAlInicio: false,
   });
 
   const esTodos = categoria === "todos";
@@ -2025,6 +2042,16 @@ function cambiarCategoria(
   );
 
   renderizarCategoria();
+
+  // Mantiene exactamente la posición vertical del usuario al navegar entre
+  // Todos / Tienda / Bancarios / Exclusivo. Se restaura tras el layout final.
+  requestAnimationFrame(() => {
+    window.scrollTo({
+      left: 0,
+      top: scrollAntesDeCambiarCategoria,
+      behavior: "auto",
+    });
+  });
 
   if (actualizarHistorial) {
     actualizarUrlSeccion(categoria);
@@ -2255,6 +2282,36 @@ function actualizarTextoContador() {
   }
 }
 
+
+function firmaEstructuralCupones(cupones = []) {
+  return JSON.stringify(
+    cupones.map((cupon) => {
+      const copia = { ...cupon };
+      // likes/clics cambian frecuentemente y no requieren reconstruir tarjetas.
+      delete copia.likes;
+      delete copia.clics;
+      return copia;
+    })
+  );
+}
+
+function actualizarEstadisticasCuponesEnPantalla(cupones = []) {
+  if (!cuponesContainer) return;
+
+  const mapa = new Map(cupones.map((cupon) => [String(cupon.id), cupon]));
+  cuponesContainer
+    .querySelectorAll(".cupon[data-id], .cupon-bancario-mini[data-id]")
+    .forEach((tarjeta) => {
+      const cupon = mapa.get(String(tarjeta.dataset.id || ""));
+      if (!cupon) return;
+
+      const likes = tarjeta.querySelector(".numero-likes");
+      const clics = tarjeta.querySelector(".numero-clics");
+      if (likes) likes.textContent = String(Number(cupon.likes || 0));
+      if (clics) clics.textContent = String(Number(cupon.clics || 0));
+    });
+}
+
 async function cargarCupones() {
   if (cargando || redireccionEnProceso) return;
 
@@ -2287,7 +2344,7 @@ async function cargarCupones() {
 
     const cupones = await respuesta.json();
     const nuevosCupones = Array.isArray(cupones) ? cupones : [];
-    const nuevaFirmaCupones = JSON.stringify(nuevosCupones);
+    const nuevaFirmaCupones = firmaEstructuralCupones(nuevosCupones);
     const contenidoCambio = nuevaFirmaCupones !== firmaUltimosCupones;
 
     todosLosCupones = nuevosCupones;
@@ -2301,7 +2358,15 @@ async function cargarCupones() {
     // Solo se redibuja la sección cuando la información realmente cambió.
     if (contenidoCambio) {
       firmaUltimosCupones = nuevaFirmaCupones;
-      renderizarCategoria();
+      if (esCargaInicial) {
+        renderizarCategoria();
+      } else {
+        renderizarCategoriaConScrollEstable();
+      }
+    } else {
+      // Si únicamente cambiaron likes/clics, actualizamos los números sin
+      // destruir ni reconstruir tarjetas. Evita el destello periódico.
+      actualizarEstadisticasCuponesEnPantalla(nuevosCupones);
     }
 
     actualizarContadoresSecciones();

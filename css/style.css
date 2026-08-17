@@ -9367,3 +9367,14 @@ body.hay-cupones-visibles #separador-fin-cupones {
     margin-top: 18px !important;
   }
 }
+
+
+/* =========================================================
+   V82.04 — Estabilidad visual de tarjetas
+   Evita destellos al actualizar o navegar entre categorías.
+   ========================================================= */
+.cupon,
+.cupon-bancario-mini,
+.cupon-bancario-grid {
+  animation: none !important;
+}
