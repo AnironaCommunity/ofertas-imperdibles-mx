@@ -9520,3 +9520,75 @@ body.hay-cupones-visibles #separador-fin-cupones {
     font-size: 13px !important;
   }
 }
+
+
+/* ============================================================
+   V82.19 — Logo original de WhatsApp, sin deformación
+   ============================================================ */
+.whatsapp-flotante-logo {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 30px !important;
+  min-width: 30px !important;
+  height: 30px !important;
+  flex: 0 0 30px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.whatsapp-flotante-logo img {
+  display: block !important;
+  width: 30px !important;
+  height: 30px !important;
+  max-width: 30px !important;
+  max-height: 30px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Centrado vertical exacto entre logo y texto. */
+.whatsapp-flotante.whatsapp-flotante-expandido {
+  align-items: center !important;
+}
+
+.whatsapp-flotante.whatsapp-flotante-expandido .whatsapp-flotante-texto {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  height: 30px !important;
+  line-height: 30px !important;
+}
+
+@media (max-width: 600px) {
+  .whatsapp-flotante-logo,
+  .whatsapp-flotante-logo img {
+    width: 28px !important;
+    min-width: 28px !important;
+    height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
+    flex-basis: 28px !important;
+  }
+
+  .whatsapp-flotante.whatsapp-flotante-expandido .whatsapp-flotante-texto {
+    height: 28px !important;
+    line-height: 28px !important;
+  }
+}
