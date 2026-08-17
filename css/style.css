@@ -9435,3 +9435,129 @@ body.hay-cupones-visibles #separador-fin-cupones {
     font-size: 26px !important;
   }
 }
+
+
+/* ============================================================
+   V82.13 — WhatsApp flotante expandido arriba / compacto al bajar
+   ============================================================ */
+.whatsapp-flotante {
+  position: fixed !important;
+  right: max(14px, env(safe-area-inset-right)) !important;
+  bottom: max(16px, calc(env(safe-area-inset-bottom) + 12px)) !important;
+  z-index: 25000 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  width: 52px !important;
+  min-width: 52px !important;
+  height: 52px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border-radius: 999px !important;
+  background: #25D366 !important;
+  border: 2px solid #fff !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,.18) !important;
+  text-decoration: none !important;
+  transition:
+    width .24s ease,
+    min-width .24s ease,
+    padding .24s ease,
+    transform .18s ease,
+    box-shadow .18s ease !important;
+}
+
+.whatsapp-flotante.whatsapp-flotante-expandido {
+  width: 128px !important;
+  min-width: 128px !important;
+  padding: 0 14px 0 10px !important;
+}
+
+.whatsapp-flotante-logo {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 30px !important;
+  min-width: 30px !important;
+  height: 30px !important;
+  margin: 0 auto !important;
+  flex: 0 0 30px !important;
+}
+
+.whatsapp-flotante.whatsapp-flotante-expandido .whatsapp-flotante-logo {
+  margin: 0 !important;
+}
+
+.whatsapp-flotante-logo svg {
+  display: block !important;
+  width: 30px !important;
+  height: 30px !important;
+}
+
+.whatsapp-flotante-logo svg circle {
+  fill: #25D366 !important;
+}
+
+.whatsapp-flotante-logo svg path {
+  fill: #fff !important;
+}
+
+.whatsapp-flotante-texto {
+  display: inline-block !important;
+  max-width: 0 !important;
+  opacity: 0 !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  color: #fff !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  transform: translateX(-4px) !important;
+  transition:
+    max-width .24s ease,
+    opacity .18s ease,
+    transform .24s ease !important;
+}
+
+.whatsapp-flotante.whatsapp-flotante-expandido .whatsapp-flotante-texto {
+  max-width: 74px !important;
+  opacity: 1 !important;
+  transform: translateX(0) !important;
+}
+
+.whatsapp-flotante:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 8px 22px rgba(0,0,0,.22) !important;
+}
+
+.whatsapp-flotante:active {
+  transform: scale(.96) !important;
+}
+
+@media (max-width: 600px) {
+  .whatsapp-flotante {
+    right: 12px !important;
+    bottom: max(12px, calc(env(safe-area-inset-bottom) + 10px)) !important;
+    width: 48px !important;
+    min-width: 48px !important;
+    height: 48px !important;
+  }
+
+  .whatsapp-flotante.whatsapp-flotante-expandido {
+    width: 118px !important;
+    min-width: 118px !important;
+    padding: 0 12px 0 9px !important;
+  }
+
+  .whatsapp-flotante-logo,
+  .whatsapp-flotante-logo svg {
+    width: 28px !important;
+    min-width: 28px !important;
+    height: 28px !important;
+    flex-basis: 28px !important;
+  }
+
+  .whatsapp-flotante-texto {
+    font-size: 13px !important;
+  }
+}

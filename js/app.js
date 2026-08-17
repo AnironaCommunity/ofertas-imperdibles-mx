@@ -4439,3 +4439,21 @@ window.setTimeout(() => {
   crearBotonTutorial();
   resaltarBotonTutorialAlEntrar();
 }, 1200);
+
+
+/* ============================================================
+   V82.13 — Contraer WhatsApp flotante al desplazarse
+   ============================================================ */
+function actualizarEstadoWhatsappFlotante() {
+  const boton = document.querySelector("#whatsapp-flotante");
+  if (!boton) return;
+
+  // Arriba se muestra logo + texto. Al empezar a bajar queda solo el logo.
+  const expandido = window.scrollY <= 24;
+  boton.classList.toggle("whatsapp-flotante-expandido", expandido);
+}
+
+window.addEventListener("scroll", actualizarEstadoWhatsappFlotante, { passive: true });
+window.addEventListener("pageshow", actualizarEstadoWhatsappFlotante);
+document.addEventListener("DOMContentLoaded", actualizarEstadoWhatsappFlotante);
+actualizarEstadoWhatsappFlotante();
