@@ -9796,3 +9796,119 @@ body.hay-cupones-visibles #separador-fin-cupones {
     max-width: 84px !important;
   }
 }
+
+
+/* ============================================================
+   V82.16 — Corrección final botón flotante WhatsApp
+   Cápsula uniforme + logo sin recuadro/círculo adicional
+   ============================================================ */
+.whatsapp-flotante,
+.whatsapp-flotante.whatsapp-flotante-expandido {
+  background: #25D366 !important;
+  border-color: #ffffff !important;
+}
+
+/* Arriba: cápsula compacta y proporcionada. */
+.whatsapp-flotante.whatsapp-flotante-expandido {
+  width: 146px !important;
+  min-width: 146px !important;
+  height: 52px !important;
+  padding: 0 15px 0 11px !important;
+  gap: 8px !important;
+  border-radius: 999px !important;
+}
+
+/* Al desplazarse: círculo del mismo verde. */
+.whatsapp-flotante:not(.whatsapp-flotante-expandido) {
+  width: 52px !important;
+  min-width: 52px !important;
+  height: 52px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  justify-content: center !important;
+}
+
+/* No se dibuja ninguna forma detrás del logo. */
+.whatsapp-flotante-logo {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  flex: 0 0 32px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* El PNG original tenía fondo verde. Se mezcla con la cápsula y no se escala
+   como un bloque cuadrado grande. */
+.whatsapp-flotante-logo img {
+  display: block !important;
+  width: 32px !important;
+  height: 32px !important;
+  max-width: 32px !important;
+  object-fit: contain !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Texto más pequeño para que se vea completo y equilibrado. */
+.whatsapp-flotante-texto {
+  flex: 0 0 auto !important;
+  color: #ffffff !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+}
+
+.whatsapp-flotante.whatsapp-flotante-expandido .whatsapp-flotante-texto {
+  max-width: 76px !important;
+  opacity: 1 !important;
+  overflow: visible !important;
+  transform: none !important;
+}
+
+/* En modo reducido desaparece por completo el texto. */
+.whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-texto {
+  display: none !important;
+}
+
+@media (max-width: 600px) {
+  .whatsapp-flotante.whatsapp-flotante-expandido {
+    width: 136px !important;
+    min-width: 136px !important;
+    height: 50px !important;
+    padding: 0 13px 0 10px !important;
+    gap: 7px !important;
+  }
+
+  .whatsapp-flotante:not(.whatsapp-flotante-expandido) {
+    width: 50px !important;
+    min-width: 50px !important;
+    height: 50px !important;
+  }
+
+  .whatsapp-flotante-logo,
+  .whatsapp-flotante-logo img {
+    width: 30px !important;
+    min-width: 30px !important;
+    height: 30px !important;
+    max-width: 30px !important;
+    flex-basis: 30px !important;
+  }
+
+  .whatsapp-flotante-texto {
+    font-size: 13px !important;
+  }
+}
