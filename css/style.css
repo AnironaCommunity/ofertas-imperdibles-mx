@@ -9353,3 +9353,17 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
 .cupon-bancario-mini.cupon-agotado:hover {
   transform: none !important;
 }
+
+
+/* =========================================================
+   Ajuste: separación entre los cupones y el separador final
+   ========================================================= */
+body.hay-cupones-visibles #separador-fin-cupones {
+  margin-top: 20px !important;
+}
+
+@media (max-width: 600px) {
+  body.hay-cupones-visibles #separador-fin-cupones {
+    margin-top: 18px !important;
+  }
+}
