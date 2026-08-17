@@ -1920,3 +1920,23 @@
     width: 58px !important;
   }
 }
+
+/* V82.06 — título y descripción unidos, fondo Mercado Libre tenue */
+.hero-redes.hero-redes-lista #nombre-sitio,
+.hero-redes.hero-redes-lista #hero-texto-descriptivo{
+  grid-column:2!important;grid-row:1!important;width:100%!important;max-width:none!important;
+  box-sizing:border-box!important;background:rgba(255,230,0,.16)!important;
+  margin-left:0!important;margin-right:0!important;
+}
+.hero-redes.hero-redes-lista #nombre-sitio{
+  align-self:center!important;transform:translateY(-9px)!important;margin:0!important;
+  padding:5px 9px 1px!important;border-radius:9px 9px 0 0!important;
+}
+.hero-redes.hero-redes-lista #hero-texto-descriptivo{
+  align-self:center!important;transform:translateY(9px)!important;margin:0!important;
+  padding:1px 9px 5px!important;border-radius:0 0 9px 9px!important;
+}
+@media(max-width:600px){
+ .hero-redes.hero-redes-lista #nombre-sitio{transform:translateY(-8px)!important;padding:4px 7px 1px!important}
+ .hero-redes.hero-redes-lista #hero-texto-descriptivo{transform:translateY(8px)!important;padding:1px 7px 4px!important}
+}
