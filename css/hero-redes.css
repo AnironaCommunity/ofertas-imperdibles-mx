@@ -2103,3 +2103,206 @@
     grid-template-columns: repeat(5, minmax(36px, 1fr)) auto !important;
   }
 }
+
+
+/* ============================================================
+   V82.08 — Encabezado minimalista aprobado
+   Sin Facebook
+   ============================================================ */
+.hero-redes.hero-redes-lista {
+  display: grid !important;
+  grid-template-columns: 82px minmax(0, 1fr) !important;
+  grid-template-rows: auto auto !important;
+  column-gap: 10px !important;
+  row-gap: 7px !important;
+  padding: 11px 12px 10px !important;
+  border-radius: 16px !important;
+  background: #fff !important;
+  overflow: visible !important;
+}
+
+/* El banner promocional continúa arriba, pero deja de formar parte de la
+   cuadrícula interna de navegación. */
+.hero-redes.hero-redes-lista .hero-promo-compacto {
+  grid-column: 1 / -1 !important;
+  grid-row: auto !important;
+  margin: -2px 0 3px !important;
+}
+
+/* Logo + título / descripción. */
+.hero-redes.hero-redes-lista .hero-redes-logo {
+  grid-column: 1 !important;
+  grid-row: 2 !important;
+  width: 82px !important;
+  min-width: 82px !important;
+  align-self: center !important;
+  justify-self: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-logo img {
+  width: 58px !important;
+  max-width: 58px !important;
+  height: auto !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-contenido {
+  display: contents !important;
+}
+
+.hero-redes.hero-redes-lista #nombre-sitio,
+.hero-redes.hero-redes-lista #hero-texto-descriptivo {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  background: none !important;
+  border-radius: 0 !important;
+}
+
+.hero-redes.hero-redes-lista #nombre-sitio {
+  align-self: center !important;
+  transform: translateY(-9px) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.hero-redes.hero-redes-lista #hero-texto-descriptivo {
+  align-self: center !important;
+  transform: translateY(10px) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Segunda fila: 4 accesos + utilidades compactas a la derecha. */
+.hero-redes.hero-redes-lista .hero-redes-botones {
+  grid-column: 1 / -1 !important;
+  grid-row: 3 !important;
+  display: grid !important;
+  grid-template-columns:
+    repeat(4, minmax(54px, 1fr))
+    auto !important;
+  align-items: center !important;
+  gap: 0 !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 5px 0 0 !important;
+  border-top: 1px solid rgba(17,24,39,.07) !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-botones > .hero-redes-boton,
+.hero-redes.hero-redes-lista .hero-redes-botones > .hero-redes-visitantes {
+  min-width: 0 !important;
+  width: 100% !important;
+  min-height: 52px !important;
+  margin: 0 !important;
+  padding-top: 3px !important;
+  padding-bottom: 2px !important;
+  border-right: 1px solid rgba(17,24,39,.07) !important;
+}
+
+/* Al ya no existir Facebook, el orden queda:
+   WhatsApp | Comunidad | Anirona | Sorteo */
+.hero-redes.hero-redes-lista .hero-redes-whatsapp { grid-column: 1 !important; }
+.hero-redes.hero-redes-lista #hero-contador-visitantes { grid-column: 2 !important; }
+.hero-redes.hero-redes-lista #boton-anirona-hero { grid-column: 3 !important; }
+.hero-redes.hero-redes-lista #boton-sorteo-hero { grid-column: 4 !important; }
+
+/* Tutorial y avisos: una sola zona de utilidades discreta. */
+.hero-redes.hero-redes-lista .hero-controles-secundarios {
+  position: static !important;
+  grid-column: 5 !important;
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 6px !important;
+  width: auto !important;
+  min-width: max-content !important;
+  margin: 0 0 0 8px !important;
+  padding: 0 !important;
+  transform: none !important;
+}
+
+.hero-redes.hero-redes-lista .boton-ver-tutorial {
+  min-width: 112px !important;
+  width: auto !important;
+  height: 40px !important;
+  padding: 0 11px !important;
+  border: 1px solid rgba(17,24,39,.12) !important;
+  border-radius: 999px !important;
+  background: #fff !important;
+  box-shadow: 0 2px 7px rgba(17,24,39,.06) !important;
+}
+
+.hero-redes.hero-redes-lista .boton-avisos-novedades {
+  flex: 0 0 66px !important;
+  width: 66px !important;
+  min-width: 66px !important;
+  height: 40px !important;
+  border: 1px solid rgba(17,24,39,.12) !important;
+  border-radius: 999px !important;
+  background: #fff !important;
+  box-shadow: 0 2px 7px rgba(17,24,39,.06) !important;
+}
+
+/* Móvil: misma composición, reducida para conservar el estilo compacto. */
+@media (max-width: 600px) {
+  .hero-redes.hero-redes-lista {
+    grid-template-columns: 68px minmax(0, 1fr) !important;
+    column-gap: 8px !important;
+    row-gap: 5px !important;
+    padding: 8px 9px 8px !important;
+    border-radius: 14px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-logo {
+    width: 68px !important;
+    min-width: 68px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-logo img {
+    width: 51px !important;
+    max-width: 51px !important;
+  }
+
+  .hero-redes.hero-redes-lista #nombre-sitio {
+    transform: translateY(-8px) !important;
+  }
+
+  .hero-redes.hero-redes-lista #hero-texto-descriptivo {
+    transform: translateY(9px) !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-botones {
+    grid-template-columns:
+      repeat(4, minmax(47px, 1fr))
+      auto !important;
+    padding-top: 4px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-botones > .hero-redes-boton,
+  .hero-redes.hero-redes-lista .hero-redes-botones > .hero-redes-visitantes {
+    min-height: 48px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-controles-secundarios {
+    gap: 4px !important;
+    margin-left: 4px !important;
+  }
+
+  .hero-redes.hero-redes-lista .boton-ver-tutorial {
+    min-width: 98px !important;
+    height: 38px !important;
+    padding: 0 8px !important;
+  }
+
+  .hero-redes.hero-redes-lista .boton-avisos-novedades {
+    flex-basis: 60px !important;
+    width: 60px !important;
+    min-width: 60px !important;
+    height: 38px !important;
+  }
+}
