@@ -2342,3 +2342,134 @@
     margin-bottom: 3px !important;
   }
 }
+
+
+/* ============================================================
+   V82.10 — Encabezado ultra compacto temporal
+   Se ocultan accesos secundarios sin eliminarlos del proyecto.
+   ============================================================ */
+
+/* Banner HD: compacto y sin deformación. */
+.hero-redes.hero-redes-lista .hero-promo-compacto.hero-promo-imagen {
+  margin: 0 0 5px !important;
+  border-radius: 11px !important;
+  overflow: hidden !important;
+  background: #FFE600 !important;
+}
+
+.hero-redes.hero-redes-lista .hero-promo-compacto.hero-promo-imagen img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  max-height: 118px !important;
+  object-fit: cover !important;
+  object-position: center !important;
+}
+
+/* De momento estos accesos quedan ocultos, pero siguen en HTML/JS. */
+.hero-redes.hero-redes-lista .hero-redes-whatsapp,
+.hero-redes.hero-redes-lista #hero-contador-visitantes,
+.hero-redes.hero-redes-lista #boton-anirona-hero,
+.hero-redes.hero-redes-lista #boton-sorteo-hero,
+.hero-redes.hero-redes-lista .hero-controles-secundarios {
+  display: none !important;
+}
+
+/* La fila de accesos ya no ocupa espacio. */
+.hero-redes.hero-redes-lista .hero-redes-botones {
+  display: none !important;
+  min-height: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+}
+
+/* Encabezado reducido a banner + logo + título/descripción. */
+.hero-redes.hero-redes-lista {
+  display: grid !important;
+  grid-template-columns: 62px minmax(0, 1fr) !important;
+  grid-template-rows: auto auto !important;
+  column-gap: 7px !important;
+  row-gap: 4px !important;
+  padding: 7px 8px 7px !important;
+  border-radius: 13px !important;
+}
+
+.hero-redes.hero-redes-lista .hero-promo-compacto {
+  grid-column: 1 / -1 !important;
+  grid-row: 1 !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-logo {
+  grid-column: 1 !important;
+  grid-row: 2 !important;
+  width: 62px !important;
+  min-width: 62px !important;
+  height: 52px !important;
+  min-height: 52px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-logo img {
+  width: 48px !important;
+  max-width: 48px !important;
+  height: 48px !important;
+  object-fit: contain !important;
+}
+
+.hero-redes.hero-redes-lista #nombre-sitio,
+.hero-redes.hero-redes-lista #hero-texto-descriptivo {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+  width: 100% !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.hero-redes.hero-redes-lista #nombre-sitio {
+  align-self: center !important;
+  transform: translateY(-8px) !important;
+}
+
+.hero-redes.hero-redes-lista #hero-texto-descriptivo {
+  align-self: center !important;
+  transform: translateY(9px) !important;
+}
+
+/* Móvil: todavía más compacto para que los cupones aparezcan antes. */
+@media (max-width: 600px) {
+  .hero-redes.hero-redes-lista {
+    grid-template-columns: 55px minmax(0, 1fr) !important;
+    column-gap: 6px !important;
+    row-gap: 3px !important;
+    padding: 6px 7px 6px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-promo-compacto.hero-promo-imagen img {
+    max-height: 96px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-logo {
+    width: 55px !important;
+    min-width: 55px !important;
+    height: 46px !important;
+    min-height: 46px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-logo img {
+    width: 43px !important;
+    max-width: 43px !important;
+    height: 43px !important;
+  }
+
+  .hero-redes.hero-redes-lista #nombre-sitio {
+    transform: translateY(-7px) !important;
+  }
+
+  .hero-redes.hero-redes-lista #hero-texto-descriptivo {
+    transform: translateY(8px) !important;
+  }
+}
