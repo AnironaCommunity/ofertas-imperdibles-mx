@@ -9784,3 +9784,222 @@ body.hay-cupones-visibles #separador-fin-cupones {
     flex-basis: 40px !important;
   }
 }
+
+
+/* ============================================================
+   V82.22 — Logo WhatsApp vectorial definitivo
+   Sin PNG, sin fondo blanco, cápsula intacta.
+   ============================================================ */
+.whatsapp-flotante-logo {
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.whatsapp-flotante-svg {
+  display: block !important;
+  width: 43px !important;
+  height: 43px !important;
+  max-width: 43px !important;
+  max-height: 43px !important;
+  flex: 0 0 43px !important;
+  fill: #ffffff !important;
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+.whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-svg {
+  width: 41px !important;
+  height: 41px !important;
+  max-width: 41px !important;
+  max-height: 41px !important;
+}
+
+@media (max-width: 600px) {
+  .whatsapp-flotante-svg {
+    width: 41px !important;
+    height: 41px !important;
+    max-width: 41px !important;
+    max-height: 41px !important;
+  }
+
+  .whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-svg {
+    width: 40px !important;
+    height: 40px !important;
+    max-width: 40px !important;
+    max-height: 40px !important;
+  }
+}
+
+
+/* ============================================================
+   V82.27 — Menú flotante "Más" (abajo izquierda)
+   ============================================================ */
+.menu-mas-flotante {
+  position: fixed !important;
+  left: max(12px, env(safe-area-inset-left)) !important;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 12px)) !important;
+  z-index: 24990 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+}
+
+.boton-mas-flotante {
+  display: inline-flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 54px !important;
+  height: 54px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background: #5b35d5 !important;
+  color: #fff !important;
+  box-shadow: 0 7px 20px rgba(30, 20, 80, .20) !important;
+  cursor: pointer !important;
+  font-family: inherit !important;
+}
+
+.boton-mas-puntos {
+  display: block !important;
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  line-height: .65 !important;
+  letter-spacing: 1px !important;
+}
+
+.boton-mas-texto {
+  display: block !important;
+  margin-top: 4px !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+
+.menu-mas-panel {
+  display: grid;
+  gap: 2px;
+  min-width: 156px;
+  padding: 6px;
+  border: 1px solid rgba(17, 24, 39, .08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .98);
+  box-shadow: 0 10px 28px rgba(17, 24, 39, .16);
+  transform-origin: bottom left;
+  animation: menuMasAparecer .16s ease-out;
+}
+
+.menu-mas-panel[hidden] {
+  display: none !important;
+}
+
+.menu-mas-opcion {
+  display: flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+  width: 100% !important;
+  min-height: 44px !important;
+  padding: 7px 9px !important;
+  border: 0 !important;
+  border-radius: 10px !important;
+  background: transparent !important;
+  color: #222 !important;
+  font-family: inherit !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+  cursor: pointer !important;
+}
+
+.menu-mas-opcion:hover {
+  background: #f5f7fb !important;
+}
+
+.menu-mas-opcion.activo {
+  background: #eefaf2 !important;
+  color: #087a35 !important;
+}
+
+.menu-mas-icono {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  flex: 0 0 28px !important;
+  border-radius: 50% !important;
+}
+
+.menu-mas-icono svg {
+  display: block !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.menu-mas-icono-tutorial {
+  background: #e8f7ef !important;
+}
+
+.menu-mas-icono-tutorial svg circle {
+  fill: #18a05e !important;
+  stroke: none !important;
+}
+
+.menu-mas-icono-tutorial svg path {
+  fill: #fff !important;
+}
+
+.menu-mas-icono-avisos {
+  background: #f0ecff !important;
+}
+
+.menu-mas-icono-avisos svg path {
+  fill: none !important;
+  stroke: #5b35d5 !important;
+  stroke-width: 2 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
+.menu-mas-opcion.activo .menu-mas-icono-avisos {
+  background: #e7f8ed !important;
+}
+
+.menu-mas-opcion.activo .menu-mas-icono-avisos svg path {
+  stroke: #087a35 !important;
+}
+
+@keyframes menuMasAparecer {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* En móvil no interfiere con WhatsApp, que está del lado derecho. */
+@media (max-width: 600px) {
+  .menu-mas-flotante {
+    left: 10px !important;
+    bottom: max(12px, calc(env(safe-area-inset-bottom) + 10px)) !important;
+  }
+
+  .boton-mas-flotante {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+  .menu-mas-panel {
+    min-width: 148px !important;
+  }
+}

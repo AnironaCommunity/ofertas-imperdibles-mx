@@ -3612,6 +3612,8 @@ function actualizarBotonAvisosNovedades() {
   boton.title = activos
     ? "Avisos activados. Toca para desactivarlos."
     : "Activa avisos de nuevos cupones y productos Anirona";
+
+  if (typeof actualizarTextoAvisosMenuMas === "function") actualizarTextoAvisosMenuMas();
 }
 
 function guardarReferenciaActualAvisos() {
@@ -4497,3 +4499,75 @@ document.addEventListener("DOMContentLoaded", ajustarTamanoTituloHero);
 document.addEventListener("ofertas:configuracion-cargada", ajustarTamanoTituloHero);
 
 window.setTimeout(ajustarTamanoTituloHero, 0);
+
+
+/* ============================================================
+   V82.27 — Menú flotante "Más"
+   Reutiliza Tutorial y Notificaciones existentes.
+   ============================================================ */
+function actualizarTextoAvisosMenuMas() {
+  const texto = document.querySelector("#menu-mas-avisos-texto");
+  const boton = document.querySelector("#menu-mas-avisos");
+  if (!texto || !boton) return;
+
+  const activos =
+    typeof avisosNovedadesActivos === "function" && avisosNovedadesActivos();
+
+  texto.textContent = activos ? "Avisos activados" : "Notificaciones";
+  boton.classList.toggle("activo", Boolean(activos));
+}
+
+function cerrarMenuMasFlotante() {
+  const panel = document.querySelector("#menu-mas-panel");
+  const boton = document.querySelector("#boton-mas-flotante");
+  if (!panel || !boton) return;
+
+  panel.hidden = true;
+  boton.setAttribute("aria-expanded", "false");
+  document.querySelector("#menu-mas-flotante")?.classList.remove("abierto");
+}
+
+function inicializarMenuMasFlotante() {
+  const contenedor = document.querySelector("#menu-mas-flotante");
+  const panel = document.querySelector("#menu-mas-panel");
+  const boton = document.querySelector("#boton-mas-flotante");
+  const tutorial = document.querySelector("#menu-mas-tutorial");
+  const avisos = document.querySelector("#menu-mas-avisos");
+
+  if (!contenedor || !panel || !boton || !tutorial || !avisos) return;
+
+  actualizarTextoAvisosMenuMas();
+
+  boton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const abrir = panel.hidden;
+    panel.hidden = !abrir;
+    boton.setAttribute("aria-expanded", abrir ? "true" : "false");
+    contenedor.classList.toggle("abierto", abrir);
+  });
+
+  tutorial.addEventListener("click", () => {
+    cerrarMenuMasFlotante();
+    if (typeof iniciarTutorialGuiado === "function") {
+      iniciarTutorialGuiado(false);
+    }
+  });
+
+  avisos.addEventListener("click", async () => {
+    if (typeof activarAvisosNovedades === "function") {
+      await activarAvisosNovedades();
+      actualizarTextoAvisosMenuMas();
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!contenedor.contains(event.target)) cerrarMenuMasFlotante();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") cerrarMenuMasFlotante();
+  });
+}
+
+document.addEventListener("DOMContentLoaded", inicializarMenuMasFlotante);
+document.addEventListener("visibilitychange", actualizarTextoAvisosMenuMas);

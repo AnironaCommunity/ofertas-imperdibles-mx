@@ -48,7 +48,7 @@
   <link rel="icon" type="image/png" sizes="48x48" href="img/favicon-48.png?v=81.73" />
   <link rel="icon" type="image/png" sizes="192x192" href="img/icon-192.png?v=81.72" />
   <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png?v=81.73" />
-  <link rel="stylesheet" href="css/style.css?v=82.22.0" />
+  <link rel="stylesheet" href="css/style.css?v=82.27.0" />
   <link rel="stylesheet" href="css/hero-redes.css?v=82.25.0" />
   <link rel="stylesheet" href="css/ajustes-visuales-v67-16.css?v=70.0.0" />
   <link rel="stylesheet" href="css/eventos-v68.css?v=70.0.0" />
@@ -620,7 +620,7 @@
   </div>
 
 
-  <script type="module" src="js/app.js?v=82.23.0"></script>
+  <script type="module" src="js/app.js?v=82.27.0"></script>
   <script src="js/hero-redes.js?v=81.62.0" defer></script>
   <script src="js/header-dinamico-v68-3.js?v=70.0.0" defer></script>
   <script src="js/cabecera-inteligente.js?v=77.15.7" defer></script>
@@ -641,6 +641,44 @@
     </span>
     <span class="whatsapp-flotante-texto">WhatsApp</span>
   </a>
+
+
+  <div id="menu-mas-flotante" class="menu-mas-flotante" aria-live="polite">
+    <div id="menu-mas-panel" class="menu-mas-panel" hidden>
+      <button id="menu-mas-tutorial" class="menu-mas-opcion" type="button">
+        <span class="menu-mas-icono menu-mas-icono-tutorial" aria-hidden="true">
+          <svg viewBox="0 0 32 32" focusable="false">
+            <circle cx="16" cy="16" r="13"></circle>
+            <path d="M13 10.5 22 16l-9 5.5z"></path>
+          </svg>
+        </span>
+        <span>Ver tutorial</span>
+      </button>
+
+      <button id="menu-mas-avisos" class="menu-mas-opcion" type="button">
+        <span class="menu-mas-icono menu-mas-icono-avisos" aria-hidden="true">
+          <svg viewBox="0 0 32 32" focusable="false">
+            <path d="M16 4.5c-4.2 0-7 3.3-7 7.5v4.2c0 1.9-.7 3.8-2 5.3l-1.1 1.2h20.2L25 21.5c-1.3-1.5-2-3.4-2-5.3V12c0-4.2-2.8-7.5-7-7.5Z"></path>
+            <path d="M12.4 24.4a3.8 3.8 0 0 0 7.2 0"></path>
+          </svg>
+        </span>
+        <span id="menu-mas-avisos-texto">Notificaciones</span>
+      </button>
+    </div>
+
+    <button
+      id="boton-mas-flotante"
+      class="boton-mas-flotante"
+      type="button"
+      aria-expanded="false"
+      aria-controls="menu-mas-panel"
+      aria-label="Más opciones"
+      title="Más opciones"
+    >
+      <span class="boton-mas-puntos" aria-hidden="true">•••</span>
+      <span class="boton-mas-texto">Más</span>
+    </button>
+  </div>
 
 </body>
 </html>
