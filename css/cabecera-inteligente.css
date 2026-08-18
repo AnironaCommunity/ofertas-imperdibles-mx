@@ -383,3 +383,37 @@ html {
 .navegacion-principal-oi {
   z-index: 1150;
 }
+
+
+/* ============================================================
+   V82.26 — Sticky solo en móvil
+   Escritorio/tablet (>600px): encabezado sigue el flujo normal.
+   Móvil (<=600px): conserva exactamente el sticky actual.
+   ============================================================ */
+@media (min-width: 601px) {
+  .cabecera-fija-original,
+  .encabezado > .cabecera-fija-original {
+    position: relative !important;
+    top: auto !important;
+  }
+
+  .cabecera-fija-original.esta-pegada {
+    border-bottom-color: transparent !important;
+    background: rgba(255, 255, 255, .985) !important;
+    box-shadow: none !important;
+  }
+
+  html {
+    scroll-padding-top: 14px !important;
+  }
+
+  .titulo-seccion,
+  .seccion-ofertas-categoria,
+  .modulo-ofertas-categoria,
+  #vista-cupones,
+  #seccion-ofertas-mercado-libre,
+  #seccion-ofertas-amazon,
+  #seccion-comunidad-anirona {
+    scroll-margin-top: 14px !important;
+  }
+}
