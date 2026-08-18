@@ -4227,81 +4227,128 @@ function crearInterfazTutorial() {
 const pasosTutorial = [
   {
     titulo: "¡Bienvenido a Ofertas Imperdibles MX!",
-    texto: "En menos de un minuto aprenderás a encontrar, copiar y compartir los cupones publicados.",
+    texto: "Te mostraremos paso a paso cómo encontrar, entender, copiar y compartir los cupones para aprovecharlos a tiempo.",
     icono: "👋",
     preparar: async () => {
+      cerrarMenuMasFlotante?.();
       window.scrollTo({ top: 0, behavior: "auto" });
-      await esperarTutorial(60);
+      await esperarTutorial(80);
     },
   },
   {
     selector: "#tab-todos",
-    titulo: "Todos los cupones",
-    texto: "Esta es la vista principal. Aquí aparecen primero los cupones de tienda y después los cupones bancarios.",
+    titulo: "Todos",
+    texto: "Esta es la vista principal. Aquí puedes consultar en un solo lugar los cupones disponibles de las diferentes secciones.",
     icono: "▦",
-    preparar: async () => { tabTodos?.click(); await esperarTutorial(350); },
+    preparar: async () => {
+      cerrarMenuMasFlotante?.();
+      tabTodos?.click();
+      await esperarTutorial(350);
+    },
   },
   {
     selector: "#tab-tienda",
-    titulo: "Cupones",
-    texto: "Aquí puedes ver únicamente los cupones generales o de tienda disponibles para tus compras.",
+    titulo: "Tienda",
+    texto: "Aquí encontrarás los cupones generales que pueden aplicar en todo Mercado Libre, siempre de acuerdo con las condiciones y restricciones indicadas en cada cupón.",
     icono: "🛍️",
-    preparar: async () => { tabTienda?.click(); await esperarTutorial(350); },
+    preparar: async () => {
+      cerrarMenuMasFlotante?.();
+      tabTienda?.click();
+      await esperarTutorial(350);
+    },
   },
   {
     selector: "#tab-bancarios",
     titulo: "Bancarios",
-    texto: "Aquí puedes ver únicamente los beneficios exclusivos de bancos y métodos de pago participantes.",
+    texto: "Aquí se muestran descuentos y beneficios vinculados a bancos, tarjetas o métodos de pago participantes. Revisa las condiciones de cada promoción antes de comprar.",
     icono: "💳",
-    preparar: async () => { tabBancarios?.click(); await esperarTutorial(350); },
+    preparar: async () => {
+      cerrarMenuMasFlotante?.();
+      tabBancarios?.click();
+      await esperarTutorial(350);
+    },
+  },
+  {
+    selector: "#tab-exclusivo",
+    titulo: "Exclusivos",
+    texto: "Son códigos especiales de descuento o beneficios personalizados que Mercado Libre o sus marcas asociadas pueden otorgar a ciertos usuarios, productos o promociones.",
+    icono: "🎟️",
+    preparar: async () => {
+      cerrarMenuMasFlotante?.();
+      if (tabExclusivo) tabExclusivo.hidden = false;
+      tabExclusivo?.click();
+      await esperarTutorial(350);
+    },
   },
   {
     objetivo: objetivoDentroCupon(null),
     cupon: true,
     titulo: "Información del cupón",
-    texto: "Cada tarjeta indica el descuento, la compra mínima, el ahorro máximo y si el cupón es nuevo, popular o destacado.",
-    icono: "🎟️",
+    texto: "Cada tarjeta te muestra la información importante del cupón, como descuento, compra mínima, ahorro máximo, vigencia y etiquetas especiales.",
+    icono: "🔎",
   },
   {
     objetivo: objetivoDentroCupon(".boton-canjear"),
     cupon: true,
     titulo: "Copiar código",
-    texto: "Este botón copia el código y te lleva a Mercado Libre para que puedas pegarlo al momento de comprar.",
+    texto: "Este botón copia el código y te lleva a Mercado Libre. Después debes ingresar ese código en el apartado de cupones, desde la opción “Ingresar código”, para intentar aplicarlo a tu compra.",
     icono: "📋",
   },
   {
     objetivo: objetivoDentroCupon(".boton-like"),
     cupon: true,
     titulo: "Me gusta",
-    texto: "Marca Me gusta cuando un cupón te resulte útil. Así ayudas a la comunidad a reconocer las mejores oportunidades.",
+    texto: "Si un cupón te resulta útil, marca Me gusta. Esto ayuda a la comunidad a identificar las oportunidades que están funcionando mejor.",
     icono: "👍",
   },
   {
     objetivo: objetivoDentroCupon(".boton-compartir"),
     cupon: true,
     titulo: "Compartir",
-    texto: "Envía el cupón rápidamente a familiares o amigos para que también puedan aprovecharlo.",
+    texto: "Comparte rápidamente el cupón con familiares o amigos para que también puedan aprovechar el descuento antes de que termine.",
     icono: "🔗",
   },
   {
-    selector: "#boton-avisos-novedades",
+    selector: "#menu-mas-avisos",
     titulo: "Activa los avisos",
-    texto: "Recibe una alerta cuando publiquemos un nuevo cupón, sin tener que revisar la página constantemente.",
+    texto: "Desde el botón Más puedes encontrar Notificaciones. Actívalas para recibir avisos cuando publiquemos nuevos cupones y oportunidades.",
     icono: "🔔",
-    preparar: async () => { limpiarCuponTutorial(); window.scrollTo({ top: 0, behavior: "smooth" }); },
+    preparar: async () => {
+      limpiarCuponTutorial();
+      window.scrollTo({ top: 0, behavior: "auto" });
+      await esperarTutorial(80);
+      const panel = document.querySelector("#menu-mas-panel");
+      const boton = document.querySelector("#boton-mas-flotante");
+      if (panel && boton) {
+        panel.hidden = false;
+        boton.setAttribute("aria-expanded", "true");
+        document.querySelector("#menu-mas-flotante")?.classList.add("abierto");
+      }
+      await esperarTutorial(180);
+    },
   },
   {
-    selector: ".hero-redes-whatsapp, .hero-redes-facebook",
-    titulo: "Síguenos",
-    texto: "Únete a WhatsApp y Facebook para recibir promociones, novedades y recordatorios de cupones.",
+    selector: "#whatsapp-flotante",
+    titulo: "Únete al canal de WhatsApp",
+    texto: "Usa esta cápsula para entrar a nuestro canal de WhatsApp y recibir promociones, cupones y novedades de Ofertas Imperdibles MX.",
     icono: "📲",
-    preparar: async () => window.scrollTo({ top: 0, behavior: "smooth" }),
+    preparar: async () => {
+      cerrarMenuMasFlotante?.();
+      window.scrollTo({ top: 0, behavior: "auto" });
+      await esperarTutorial(80);
+      actualizarEstadoWhatsappFlotante?.();
+      await esperarTutorial(160);
+    },
   },
   {
     titulo: "¡Listo para ahorrar!",
-    texto: "Ya conoces las funciones principales de los cupones. Puedes repetir este recorrido cuando quieras desde Ver tutorial.",
+    texto: "Ya conoces las funciones principales. Revisa los cupones, consulta sus condiciones y aprovéchalos a tiempo. Puedes repetir este tutorial cuando quieras desde el botón Más.",
     icono: "🎉",
     finalizarEnTienda: true,
+    preparar: async () => {
+      cerrarMenuMasFlotante?.();
+      await esperarTutorial(80);
+    },
   },
 ];
 
@@ -4410,12 +4457,14 @@ function iniciarTutorialGuiado(automatico = false) {
 function finalizarTutorialGuiado(completado = false, irATienda = false) {
   tutorialActivo = false;
   document.documentElement.classList.remove("tutorial-en-curso");
+  cerrarMenuMasFlotante?.();
   limpiarCuponTutorial();
   if (tutorialElementos) {
     tutorialElementos.foco.hidden = true;
     tutorialElementos.tarjeta.hidden = true;
   }
   if (completado) localStorage.setItem(CLAVE_TUTORIAL_COMPLETADO, "1");
+  if (typeof actualizarContadoresSecciones === "function") actualizarContadoresSecciones();
   if (irATienda) {
     // Al terminar el tutorial regresamos a la vista principal: Todos.
     tabTodos?.click();

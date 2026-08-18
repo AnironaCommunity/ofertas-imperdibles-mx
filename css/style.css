@@ -10003,3 +10003,66 @@ body.hay-cupones-visibles #separador-fin-cupones {
     min-width: 148px !important;
   }
 }
+
+
+/* ============================================================
+   V82.28 — Tutorial Mercado Libre: identidad amarilla
+   ============================================================ */
+.tutorial-foco {
+  border-color: #FFE600 !important;
+  box-shadow:
+    0 0 0 9999px rgba(20, 20, 20, .68),
+    0 0 0 5px rgba(255, 230, 0, .32) !important;
+}
+
+.tutorial-tarjeta {
+  border-color: rgba(216, 182, 0, .38) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 230, 0, .12), rgba(255,255,255,1) 38%) !important;
+  color: #242424 !important;
+  box-shadow: 0 18px 50px rgba(35, 31, 0, .28) !important;
+}
+
+.tutorial-contador {
+  color: #8a7200 !important;
+}
+
+.tutorial-cerrar {
+  background: #fff7bf !important;
+  color: #332d00 !important;
+}
+
+.tutorial-tarjeta h2 {
+  color: #292400 !important;
+}
+
+.tutorial-icono {
+  filter: none !important;
+}
+
+.tutorial-anterior {
+  background: #f4f4f4 !important;
+  color: #333 !important;
+  border: 1px solid #e3e3e3 !important;
+}
+
+.tutorial-siguiente {
+  background: #FFE600 !important;
+  color: #242424 !important;
+  box-shadow: 0 3px 8px rgba(181, 152, 0, .20) !important;
+}
+
+.tutorial-siguiente:hover {
+  background: #f5dc00 !important;
+}
+
+.tutorial-siguiente:active {
+  transform: translateY(1px) !important;
+}
+
+/* El cupón de ejemplo también recibe un pequeño acento amarillo
+   mientras está siendo utilizado por el tutorial. */
+.tutorial-cupon-objetivo,
+.tutorial-cupon-demo {
+  box-shadow: 0 0 0 3px rgba(255, 230, 0, .28) !important;
+}
