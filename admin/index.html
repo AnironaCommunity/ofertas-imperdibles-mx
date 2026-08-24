@@ -8,14 +8,14 @@
   <title>Administrador | Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="../img/logo.png" />
-  <link rel="stylesheet" href="admin.css?v=82.24.0" />
+  <link rel="stylesheet" href="admin.css?v=82.33.0" />
 </head>
 
 <body>
   <header class="encabezado">
     <img src="../img/logo.png" alt="Ofertas Imperdibles MX" class="logo" />
     <h1>Panel de Administración</h1>
-    <p>Administra cupones y publicidad desde un solo lugar.</p>
+    <p>Administra cupones, Ofertazo y publicidad desde un solo lugar.</p>
   </header>
 
   <main class="contenedor">
@@ -46,6 +46,15 @@
           data-seccion="cupones"
         >
           🎟️ Cupones
+        </button>
+
+        <button
+          id="tab-ofertazo"
+          class="menu-opcion"
+          type="button"
+          data-seccion="ofertazo"
+        >
+          🔥 Ofertazo
         </button>
 
         <button
@@ -497,6 +506,91 @@ Descuento máximo: $180"
               <tbody id="coupon-list"></tbody>
             </table>
           </div>
+        </section>
+      </section>
+
+      <!-- ================= OFERTAZO ================= -->
+      <section id="seccion-ofertazo" class="seccion-admin" hidden>
+        <div class="cabecera-seccion">
+          <div>
+            <h2>🔥 Ofertazo</h2>
+            <p>Da de alta y administra los productos que aparecen en la sección Ofertazo.</p>
+          </div>
+          <button id="nuevo-ofertazo" class="boton-secundario" type="button">+ Nuevo producto</button>
+        </div>
+
+        <section class="panel panel-formulario-compacto panel-ofertazo-admin">
+          <h3 id="ofertazo-form-title">Agregar producto</h3>
+          <form id="ofertazo-form" class="formulario-compacto">
+            <input id="ofertazo-id" type="hidden" />
+            <input id="ofertazo-image-url" type="hidden" />
+
+            <div class="form-grid form-grid-ofertazo">
+              <div class="campo">
+                <label for="ofertazo-categoria">Categoría / texto corto</label>
+                <input id="ofertazo-categoria" type="text" maxlength="60" placeholder="Ej. Kit de taladro" />
+              </div>
+              <div class="campo campo-ofertazo-titulo">
+                <label for="ofertazo-titulo">Nombre del producto</label>
+                <input id="ofertazo-titulo" type="text" maxlength="180" placeholder="Ej. Kit de taladro inalámbrico..." required />
+              </div>
+              <div class="campo">
+                <label for="ofertazo-precio-actual">Precio oferta</label>
+                <input id="ofertazo-precio-actual" type="text" inputmode="decimal" placeholder="Ej. 197" required />
+              </div>
+              <div class="campo">
+                <label for="ofertazo-precio-anterior">Precio anterior</label>
+                <input id="ofertazo-precio-anterior" type="text" inputmode="decimal" placeholder="Ej. 849" />
+                <small>El porcentaje de descuento se calcula automáticamente.</small>
+              </div>
+              <div class="campo">
+                <label for="ofertazo-expira">Expira</label>
+                <input id="ofertazo-expira" type="datetime-local" />
+              </div>
+              <div class="campo">
+                <label for="ofertazo-orden">Orden</label>
+                <input id="ofertazo-orden" type="number" min="0" value="0" />
+              </div>
+              <div class="campo campo-completo">
+                <label for="ofertazo-enlace">Enlace de Mercado Libre</label>
+                <input id="ofertazo-enlace" type="url" placeholder="https://meli.la/..." required />
+              </div>
+              <div class="campo campo-completo">
+                <label for="ofertazo-descripcion">Descripción (opcional)</label>
+                <textarea id="ofertazo-descripcion" rows="2" maxlength="250" placeholder="Información breve adicional"></textarea>
+              </div>
+              <div class="campo">
+                <label for="ofertazo-imagen">Foto del producto</label>
+                <input id="ofertazo-imagen" type="file" accept="image/png,image/jpeg,image/webp" />
+                <small>Se optimiza automáticamente antes de subir.</small>
+              </div>
+              <div id="ofertazo-preview-wrapper" class="preview-wrapper" hidden>
+                <img id="ofertazo-preview" src="" alt="Vista previa" />
+              </div>
+              <label class="switch-row campo-ofertazo-activo">
+                <input id="ofertazo-activo" type="checkbox" checked />
+                <span>Mostrar producto</span>
+              </label>
+            </div>
+
+            <div class="acciones">
+              <button class="boton-principal" type="submit">Guardar producto</button>
+              <button id="cancelar-ofertazo" class="boton-secundario" type="button" hidden>Cancelar edición</button>
+            </div>
+            <p id="ofertazo-form-message" class="mensaje" aria-live="polite"></p>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="cabecera-panel">
+            <div>
+              <h3>Productos publicados en Ofertazo</h3>
+              <p>Estos son únicamente los productos de la nueva sección Ofertazo.</p>
+            </div>
+            <button id="actualizar-ofertazo" class="boton-secundario" type="button">↻ Actualizar</button>
+          </div>
+          <p id="ofertazo-list-message" class="mensaje" aria-live="polite"></p>
+          <div id="ofertazo-lista" class="ofertazo-admin-lista"></div>
         </section>
       </section>
 
@@ -1245,6 +1339,6 @@ Descuento máximo: $180"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=82.24.0"></script>
+  <script type="module" src="admin.js?v=82.33.0"></script>
 </body>
 </html>

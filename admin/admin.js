@@ -7,11 +7,13 @@ const logoutButton = document.querySelector("#cerrar-sesion");
 
 const tabCoupons = document.querySelector("#tab-cupones");
 const tabAds = document.querySelector("#tab-publicidad");
+const tabOfertazo = document.querySelector("#tab-ofertazo");
 const tabBanners = document.querySelector("#tab-banners");
 const tabAppearance = document.querySelector("#tab-apariencia");
 const tabEvents = document.querySelector("#tab-eventos");
 const couponsSection = document.querySelector("#seccion-cupones");
 const adsSection = document.querySelector("#seccion-publicidad");
+const ofertazoSection = document.querySelector("#seccion-ofertazo");
 const bannersSection = document.querySelector("#seccion-banners");
 const appearanceSection = document.querySelector("#seccion-apariencia");
 const eventsSection = document.querySelector("#seccion-eventos");
@@ -124,6 +126,30 @@ const importUseGeneralLink = document.querySelector("#import-use-general-link");
 const importSummary = document.querySelector("#import-summary");
 const importCategory = document.querySelector("#import-category");
 const importExpirationTime = document.querySelector("#import-expiration-time");
+
+/* Ofertazo */
+const ofertazoForm = document.querySelector("#ofertazo-form");
+const ofertazoId = document.querySelector("#ofertazo-id");
+const ofertazoImageUrl = document.querySelector("#ofertazo-image-url");
+const ofertazoCategoria = document.querySelector("#ofertazo-categoria");
+const ofertazoTitulo = document.querySelector("#ofertazo-titulo");
+const ofertazoPrecioActual = document.querySelector("#ofertazo-precio-actual");
+const ofertazoPrecioAnterior = document.querySelector("#ofertazo-precio-anterior");
+const ofertazoExpira = document.querySelector("#ofertazo-expira");
+const ofertazoOrden = document.querySelector("#ofertazo-orden");
+const ofertazoEnlace = document.querySelector("#ofertazo-enlace");
+const ofertazoDescripcion = document.querySelector("#ofertazo-descripcion");
+const ofertazoImagen = document.querySelector("#ofertazo-imagen");
+const ofertazoPreviewWrapper = document.querySelector("#ofertazo-preview-wrapper");
+const ofertazoPreview = document.querySelector("#ofertazo-preview");
+const ofertazoActivo = document.querySelector("#ofertazo-activo");
+const ofertazoFormTitle = document.querySelector("#ofertazo-form-title");
+const ofertazoFormMessage = document.querySelector("#ofertazo-form-message");
+const cancelarOfertazo = document.querySelector("#cancelar-ofertazo");
+const nuevoOfertazo = document.querySelector("#nuevo-ofertazo");
+const actualizarOfertazo = document.querySelector("#actualizar-ofertazo");
+const ofertazoListMessage = document.querySelector("#ofertazo-list-message");
+const ofertazoLista = document.querySelector("#ofertazo-lista");
 
 /* Publicidad */
 const adForm = document.querySelector("#ad-form");
@@ -331,24 +357,28 @@ function logout() {
 function showSection(section) {
   const isCoupons = section === "cupones";
   const isAds = section === "publicidad";
+  const isOfertazo = section === "ofertazo";
   const isBanners = section === "banners";
   const isEvents = section === "eventos";
   const isAppearance = section === "apariencia";
 
   tabCoupons.classList.toggle("activo", isCoupons);
   tabAds.classList.toggle("activo", isAds);
+  tabOfertazo?.classList.toggle("activo", isOfertazo);
   tabBanners?.classList.toggle("activo", isBanners);
   tabEvents?.classList.toggle("activo", isEvents);
   tabAppearance.classList.toggle("activo", isAppearance);
 
   couponsSection.hidden = !isCoupons;
   adsSection.hidden = !isAds;
+  if (ofertazoSection) ofertazoSection.hidden = !isOfertazo;
   if (bannersSection) bannersSection.hidden = !isBanners;
   if (eventsSection) eventsSection.hidden = !isEvents;
   appearanceSection.hidden = !isAppearance;
 
   if (isAppearance) loadHeroConfig();
   if (isBanners) renderBannersAdmin();
+  if (isOfertazo) renderOfertazoAdmin();
 }
 
 /* ================= CUPONES ================= */
@@ -2372,6 +2402,164 @@ function renderAds() {
 }
 
 
+
+/* ================= OFERTAZO ADMIN ================= */
+function esRegistroOfertazo(ad) {
+  const sections = normalizarSeccionesPublicidad(ad?.secciones, ad?.categoria);
+  return sections.includes("ofertas_mercado_libre") || ad?.categoria === "ofertas_mercado_libre";
+}
+
+function ofertazoLocalDateTime(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return "";
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function resetOfertazoForm() {
+  if (!ofertazoForm) return;
+  ofertazoForm.reset();
+  ofertazoId.value = "";
+  ofertazoImageUrl.value = "";
+  ofertazoOrden.value = "0";
+  ofertazoActivo.checked = true;
+  ofertazoPreview.src = "";
+  ofertazoPreviewWrapper.hidden = true;
+  ofertazoFormTitle.textContent = "Agregar producto";
+  cancelarOfertazo.hidden = true;
+  setMessage(ofertazoFormMessage, "");
+}
+
+function editarOfertazo(ad) {
+  ofertazoId.value = ad.id;
+  ofertazoCategoria.value = ad.categoria_producto || "";
+  ofertazoTitulo.value = ad.titulo || "";
+  ofertazoPrecioActual.value = ad.precio_publicado || "";
+  ofertazoPrecioAnterior.value = ad.precio_anterior || "";
+  ofertazoExpira.value = ofertazoLocalDateTime(ad.fecha_expiracion);
+  ofertazoOrden.value = Number(ad.orden || 0);
+  ofertazoEnlace.value = ad.enlace_mercado_libre || ad.enlace || "";
+  ofertazoDescripcion.value = ad.descripcion || "";
+  ofertazoImageUrl.value = ad.imagen_url || "";
+  ofertazoActivo.checked = Boolean(ad.activo);
+  if (ad.imagen_url) {
+    ofertazoPreview.src = ad.imagen_url;
+    ofertazoPreviewWrapper.hidden = false;
+  }
+  ofertazoFormTitle.textContent = `Editar: ${ad.titulo || "producto"}`;
+  cancelarOfertazo.hidden = false;
+  setMessage(ofertazoFormMessage, "");
+  window.scrollTo({ top: ofertazoSection.offsetTop, behavior: "smooth" });
+}
+
+function renderOfertazoAdmin() {
+  if (!ofertazoLista) return;
+  const items = ads.filter(esRegistroOfertazo).sort((a,b) => Number(a.orden||0)-Number(b.orden||0) || Number(a.id||0)-Number(b.id||0));
+  ofertazoLista.replaceChildren();
+  if (!items.length) {
+    ofertazoLista.innerHTML = "<p>No hay productos registrados en Ofertazo.</p>";
+    setMessage(ofertazoListMessage, "0 productos en Ofertazo.");
+    return;
+  }
+  const fragment = document.createDocumentFragment();
+  for (const ad of items) {
+    const item = document.createElement("article");
+    item.className = "ofertazo-admin-item";
+    const actual = String(ad.precio_publicado || "").trim();
+    const anterior = String(ad.precio_anterior || "").trim();
+    const expira = ad.fecha_expiracion ? new Date(ad.fecha_expiracion).toLocaleString("es-MX", {dateStyle:"short", timeStyle:"short"}) : "Sin vencimiento";
+    item.innerHTML = `
+      <img src="${escapeHtml(ad.imagen_url || "")}" alt="" loading="lazy" />
+      <div class="ofertazo-admin-info">
+        <span class="ofertazo-admin-badge">OFERTAZO</span>
+        <h3>${escapeHtml(ad.titulo || "Sin título")}</h3>
+        <p>${escapeHtml(ad.categoria_producto || "Sin categoría")} · <span class="ofertazo-admin-precio">${escapeHtml(actual || "Sin precio")}</span>${anterior ? ` · Antes ${escapeHtml(anterior)}` : ""}</p>
+        <small>Orden: ${Number(ad.orden||0)} · ${ad.activo ? "Activo" : "Inactivo"} · Expira: ${escapeHtml(expira)} · Visitas: ${Number(ad.visitas||0)}</small>
+      </div>
+      <div class="ofertazo-admin-acciones">
+        <button class="editar" data-ofertazo-action="edit" data-id="${ad.id}" type="button">Editar</button>
+        <button class="estado" data-ofertazo-action="toggle" data-id="${ad.id}" type="button">${ad.activo ? "Desactivar" : "Activar"}</button>
+        <button class="eliminar" data-ofertazo-action="delete" data-id="${ad.id}" type="button">Eliminar</button>
+      </div>`;
+    fragment.appendChild(item);
+  }
+  ofertazoLista.appendChild(fragment);
+  setMessage(ofertazoListMessage, `${items.length} producto${items.length===1?"":"s"} en Ofertazo.`);
+}
+
+async function subirImagenOfertazo() {
+  const file = ofertazoImagen?.files?.[0];
+  if (!file) return ofertazoImageUrl.value;
+  if (!file.type.startsWith("image/")) throw new Error("Selecciona una imagen válida.");
+  const dataUrl = await optimizeImage(file);
+  const result = await api("/api/admin-publicidad-imagen", {
+    method: "POST",
+    body: JSON.stringify({ data_url: dataUrl, nombre: file.name }),
+  });
+  return result.imagen_url;
+}
+
+async function guardarOfertazo(event) {
+  event.preventDefault();
+  const submit = ofertazoForm.querySelector('button[type="submit"]');
+  submit.disabled = true;
+  setMessage(ofertazoFormMessage, "Guardando producto...");
+  try {
+    const imageUrl = await subirImagenOfertazo();
+    if (!imageUrl) throw new Error("Selecciona una foto del producto.");
+    const link = ofertazoEnlace.value.trim();
+    if (!link) throw new Error("Ingresa el enlace de Mercado Libre.");
+    const payload = {
+      titulo: ofertazoTitulo.value.trim(),
+      descripcion: ofertazoDescripcion.value.trim(),
+      categoria_producto: ofertazoCategoria.value.trim(),
+      precio_publicado: ofertazoPrecioActual.value.trim(),
+      precio_anterior: ofertazoPrecioAnterior.value.trim(),
+      fecha_expiracion: ofertazoExpira.value ? new Date(ofertazoExpira.value).toISOString() : null,
+      enlace: link,
+      enlace_mercado_libre: link,
+      enlace_amazon: "",
+      plataforma: "mercadolibre",
+      categoria: "ofertas_mercado_libre",
+      secciones: ["ofertas_mercado_libre"],
+      imagen_url: imageUrl,
+      orden: Number(ofertazoOrden.value) || 0,
+      activo: ofertazoActivo.checked,
+    };
+    if (!payload.titulo || !payload.precio_publicado) throw new Error("Nombre y precio de oferta son obligatorios.");
+    const id = Number(ofertazoId.value);
+    await api("/api/admin-publicidad", { method: id ? "PUT" : "POST", body: JSON.stringify(id ? {id, ...payload} : payload) });
+    resetOfertazoForm();
+    await loadAds();
+    renderOfertazoAdmin();
+    setMessage(ofertazoFormMessage, id ? "Producto actualizado." : "Producto agregado a Ofertazo.");
+  } catch (error) {
+    setMessage(ofertazoFormMessage, error.message, true);
+  } finally {
+    submit.disabled = false;
+  }
+}
+
+async function manejarListaOfertazo(event) {
+  const button = event.target.closest("button[data-ofertazo-action]");
+  if (!button) return;
+  const id = Number(button.dataset.id);
+  const ad = ads.find((item) => Number(item.id) === id);
+  if (!ad) return;
+  const action = button.dataset.ofertazoAction;
+  if (action === "edit") return editarOfertazo(ad);
+  if (action === "toggle") {
+    await api("/api/admin-publicidad", {method:"PUT", body:JSON.stringify({id, activo:!ad.activo})});
+    await loadAds(); renderOfertazoAdmin(); return;
+  }
+  if (action === "delete") {
+    if (!confirm(`¿Eliminar de Ofertazo "${ad.titulo}"?`)) return;
+    await api(`/api/admin-publicidad?id=${id}`, {method:"DELETE"});
+    await loadAds(); renderOfertazoAdmin();
+  }
+}
+
 /* ================= COMPARTIR PRODUCTO CON CUPÓN ================= */
 function activeProductShareCoupons() {
   const now = Date.now();
@@ -2700,6 +2888,7 @@ async function loadAds() {
     renderAds();
     renderBannersAdmin();
     renderBulkPrices();
+    renderOfertazoAdmin();
     const totalPublicidades = ads.filter((ad) => !esBannerCupones(ad)).length;
     setMessage(adListMessage, `${totalPublicidades} publicidades registradas.`);
   } catch (error) {
@@ -3352,9 +3541,24 @@ passwordInput.addEventListener("keydown", (event) => {
 logoutButton.addEventListener("click", logout);
 tabCoupons.addEventListener("click", () => showSection("cupones"));
 tabAds.addEventListener("click", () => showSection("publicidad"));
+tabOfertazo?.addEventListener("click", () => showSection("ofertazo"));
 tabBanners?.addEventListener("click", () => showSection("banners"));
 tabEvents?.addEventListener("click", () => showSection("eventos"));
 tabAppearance.addEventListener("click", () => showSection("apariencia"));
+
+ofertazoForm?.addEventListener("submit", guardarOfertazo);
+ofertazoLista?.addEventListener("click", manejarListaOfertazo);
+nuevoOfertazo?.addEventListener("click", () => { resetOfertazoForm(); ofertazoTitulo?.focus(); });
+cancelarOfertazo?.addEventListener("click", resetOfertazoForm);
+actualizarOfertazo?.addEventListener("click", async () => { await loadAds(); renderOfertazoAdmin(); });
+ofertazoImagen?.addEventListener("change", async () => {
+  const file = ofertazoImagen.files?.[0];
+  if (!file) return;
+  try {
+    ofertazoPreview.src = await optimizeImage(file);
+    ofertazoPreviewWrapper.hidden = false;
+  } catch (error) { setMessage(ofertazoFormMessage, error.message, true); }
+});
 
 bannerForm?.addEventListener("submit", saveBanner);
 bannerList?.addEventListener("click", handleBannerList);
