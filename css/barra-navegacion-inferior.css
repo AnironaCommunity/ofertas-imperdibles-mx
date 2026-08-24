@@ -1,0 +1,100 @@
+/* ============================================================
+   V82.29 — Barra inferior móvil: Cupones | Ofertazo
+   Referencia visual Mercado Libre, formato compacto.
+   ============================================================ */
+
+.barra-navegacion-inferior {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --barra-inferior-alto: 70px;
+  }
+
+  body {
+    padding-bottom: calc(var(--barra-inferior-alto) + env(safe-area-inset-bottom) + 8px) !important;
+  }
+
+  .barra-navegacion-inferior {
+    position: fixed;
+    z-index: 24980;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    width: 100%;
+    min-height: var(--barra-inferior-alto);
+    padding: 2px max(10px, env(safe-area-inset-right)) env(safe-area-inset-bottom) max(10px, env(safe-area-inset-left));
+    background: #fff;
+    border-top: 1px solid #e6e6e6;
+    box-shadow: 0 -4px 14px rgba(0, 0, 0, .08);
+  }
+
+  .barra-inferior-item {
+    appearance: none;
+    -webkit-appearance: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 66px;
+    padding: 1px 8px 2px;
+    margin: 0;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .barra-inferior-item img {
+    display: block;
+    width: auto;
+    height: 62px;
+    max-width: 106px;
+    object-fit: contain;
+    object-position: center;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .barra-inferior-item.activo {
+    background: #fafafa;
+  }
+
+  .barra-inferior-item:active {
+    background: #f3f3f3;
+  }
+
+  .barra-inferior-item:focus-visible {
+    outline: 2px solid #3483fa;
+    outline-offset: -3px;
+  }
+
+  /* Los accesos flotantes existentes permanecen disponibles sin tapar la barra. */
+  .whatsapp-flotante {
+    bottom: calc(var(--barra-inferior-alto) + 12px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .menu-mas-flotante {
+    bottom: calc(var(--barra-inferior-alto) + 12px + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+@media (max-width: 380px) {
+  :root {
+    --barra-inferior-alto: 66px;
+  }
+
+  .barra-inferior-item {
+    min-height: 62px;
+  }
+
+  .barra-inferior-item img {
+    height: 58px;
+    max-width: 98px;
+  }
+}

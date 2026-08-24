@@ -27,6 +27,8 @@ const tabTienda = document.querySelector("#tab-tienda");
 const tabBancarios = document.querySelector("#tab-bancarios");
 const tabExclusivo = document.querySelector("#tab-exclusivo");
 const vistaCupones = document.querySelector("#vista-cupones");
+const barraInferiorCupones = document.querySelector("#barra-inferior-cupones");
+const barraInferiorOfertazo = document.querySelector("#barra-inferior-ofertazo");
 const botonesMenuOfertas = document.querySelectorAll(".menu-ofertas [data-vista]");
 const botonComunidadAnirona = document.querySelector("#boton-anirona-hero[data-vista]");
 const menuOfertas = document.querySelector(".menu-ofertas");
@@ -414,6 +416,17 @@ enlaceLogoInicio?.addEventListener("click", (event) => {
 });
 
 botonRecargar?.addEventListener("click", cargarCupones);
+
+function actualizarBarraNavegacionInferior() {
+  const cuponesActivos = vistaActiva === "cupones";
+  const ofertazoActivo = vistaActiva === "ofertas_mercado_libre";
+
+  barraInferiorCupones?.classList.toggle("activo", cuponesActivos);
+  barraInferiorCupones?.setAttribute("aria-pressed", String(cuponesActivos));
+  barraInferiorOfertazo?.classList.toggle("activo", ofertazoActivo);
+  barraInferiorOfertazo?.setAttribute("aria-pressed", String(ofertazoActivo));
+}
+
 function actualizarNavegacionPrincipal(seccion) {
   const mapa = {
     todos: tabTodos,
@@ -448,6 +461,20 @@ tabBancarios.addEventListener("click", () => {
 tabExclusivo?.addEventListener("click", () => {
   cambiarCategoria("exclusivo", { actualizarHistorial: true, desplazamiento: "auto" });
   actualizarNavegacionPrincipal("exclusivo");
+});
+
+barraInferiorCupones?.addEventListener("click", () => {
+  cambiarCategoria("todos", {
+    actualizarHistorial: true,
+    desplazamiento: "smooth",
+  });
+});
+
+barraInferiorOfertazo?.addEventListener("click", () => {
+  cambiarVista("ofertas_mercado_libre", {
+    actualizarHistorial: true,
+    desplazamiento: "smooth",
+  });
 });
 
 
@@ -592,6 +619,7 @@ function cambiarVista(
   } = {}
 ) {
   vistaActiva = vista;
+  actualizarBarraNavegacionInferior();
 
   // La navegación ML/Amazon es una cuadrícula fija; nunca conserva desplazamiento horizontal.
   if (menuOfertas) menuOfertas.scrollLeft = 0;
