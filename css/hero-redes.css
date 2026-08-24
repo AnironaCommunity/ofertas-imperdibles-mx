@@ -2665,3 +2665,28 @@
     letter-spacing: -0.08px !important;
   }
 }
+
+/* ============================================================
+   V82.36 — Contención real del título variable en móvil
+   El ancho del texto lo resuelve JS según el contenido actual.
+   ============================================================ */
+@media (max-width: 600px) {
+  .hero-redes.hero-redes-lista .hero-redes-contenido {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .hero-redes.hero-redes-lista #nombre-sitio {
+    display: block !important;
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: clip !important;
+    padding-right: 2px !important;
+  }
+}
