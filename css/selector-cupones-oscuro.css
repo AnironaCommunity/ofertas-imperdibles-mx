@@ -320,3 +320,10 @@ body.hay-cupones-visibles #separador-fin-cupones { display: block !important; }
     margin-right: auto !important;
   }
 }
+
+/* V82.36 — Cápsula del selector con fondo blanco */
+.selector-cupones-menu.selector-cupones-oscuro {
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
