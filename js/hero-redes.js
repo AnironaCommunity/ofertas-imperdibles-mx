@@ -297,3 +297,42 @@
   hero.classList.remove("hero-redes-pendiente");
   hero.classList.add("hero-redes-lista");
 })();
+/* ============================================================
+   V82.27 — Ajuste automático de la descripción del hero móvil
+   ============================================================ */
+(function configurarAjusteDescripcionHero() {
+  function ajustarDescripcionHero() {
+    const texto = document.querySelector('#hero-texto-descriptivo');
+    if (!texto) return;
+
+    if (!window.matchMedia('(max-width: 600px)').matches) {
+      texto.style.removeProperty('font-size');
+      texto.style.removeProperty('letter-spacing');
+      return;
+    }
+
+    const ancho = texto.clientWidth;
+    if (!ancho) return;
+
+    let size = window.innerWidth <= 360 ? 9.3 : 10.2;
+    const minimo = 7.2;
+    texto.style.fontSize = `${size}px`;
+    texto.style.letterSpacing = '-0.12px';
+
+    while (texto.scrollWidth > ancho && size > minimo) {
+      size -= 0.2;
+      texto.style.fontSize = `${size}px`;
+    }
+
+    if (texto.scrollWidth > ancho) {
+      texto.style.letterSpacing = '-0.3px';
+    }
+  }
+
+  const ejecutar = () => requestAnimationFrame(ajustarDescripcionHero);
+  document.addEventListener('DOMContentLoaded', ejecutar);
+  document.addEventListener('ofertas:etiquetas-cargadas', ejecutar);
+  window.addEventListener('resize', ejecutar, { passive: true });
+  window.addEventListener('pageshow', ejecutar);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(ejecutar).catch(() => {});
+})();

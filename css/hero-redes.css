@@ -2612,3 +2612,36 @@
     max-width: 100% !important;
   }
 }
+
+/* ============================================================
+   V82.27 — Corrección definitiva descripción del encabezado móvil
+   Fuerza el texto dentro del ancho real disponible con Inter.
+   ============================================================ */
+@media (max-width: 600px) {
+  .hero-redes.hero-redes-lista {
+    box-sizing: border-box !important;
+    width: calc(100% - 12px) !important;
+    max-width: calc(100% - 12px) !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-contenido {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .hero-redes.hero-redes-lista #hero-texto-descriptivo {
+    display: block !important;
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: clip !important;
+    transform-origin: left center !important;
+  }
+}
