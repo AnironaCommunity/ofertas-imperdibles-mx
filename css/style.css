@@ -10291,3 +10291,52 @@ body.hay-cupones-visibles #separador-fin-cupones {
     font-size: 10px;
   }
 }
+
+/* =========================================================
+   V82.36 — Cupones tipo catálogo en WEB
+   3 columnas en escritorio medio y 4 en escritorio amplio.
+   Exclusivo de WEB: no modifica la distribución móvil.
+   ========================================================= */
+@media (min-width: 769px) {
+  #cupones.cupones-grid-compacta {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  #cupones.cupones-grid-compacta > .cupon {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    border-radius: 14px !important;
+  }
+
+  #cupones .cupon-encabezado {
+    min-height: 66px !important;
+    padding: 10px 10px !important;
+  }
+
+  #cupones .descuento {
+    font-size: clamp(24px, 2.4vw, 31px) !important;
+    line-height: 1.02 !important;
+  }
+
+  #cupones .subtitulo {
+    font-size: 12px !important;
+  }
+
+  #cupones .cupon-cuerpo {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  #cupones.cupones-grid-compacta {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  #cupones .descuento {
+    font-size: 27px !important;
+  }
+}
