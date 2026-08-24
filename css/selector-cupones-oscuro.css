@@ -307,3 +307,16 @@ body.hay-cupones-visibles #separador-fin-cupones { display: block !important; }
   width: 21.6px !important;
   height: 21.6px !important;
 }
+
+/* =========================================================
+   V82.34 — WEB: selector alineado al ancho del contenido
+   Solo escritorio. Móvil conserva exactamente sus medidas.
+   ========================================================= */
+@media (min-width: 701px) {
+  .selector-cupones-menu.selector-cupones-oscuro {
+    width: 100% !important;
+    max-width: 1120px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
