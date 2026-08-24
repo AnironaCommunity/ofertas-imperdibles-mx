@@ -2594,3 +2594,21 @@
     margin-bottom: 7px !important;
   }
 }
+
+/* ============================================================
+   V82.26 — Ajuste de Inter en descripción del encabezado móvil
+   Mantiene "Cupones de Mercado Libre | Hoy ..." en una sola línea
+   y dentro del ancho disponible, sin alterar escritorio.
+   ============================================================ */
+@media (max-width: 600px) {
+  .hero-redes.hero-redes-lista #hero-texto-descriptivo {
+    font-size: clamp(8.4px, 2.68vw, 10.4px) !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.12px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: clip !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+}
