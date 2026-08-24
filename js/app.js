@@ -1287,7 +1287,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
         ${htmlEtiquetasCupon(esExclusivo ? estados.slice(0, 1) : estados)}
       </div>
 
-      ${esExclusivo && cupon.detalle_bancario
+      ${(esExclusivo || categoria === "tienda") && cupon.detalle_bancario
         ? `<p class="detalle-beneficio-exclusivo">${escaparHtml(cupon.detalle_bancario)}</p>`
         : ""}
       ${esBancario ? `<p class="beneficio-bancario">${escaparHtml(cupon.titulo)}</p>` : ""}
@@ -4634,7 +4634,9 @@ actualizarEstadoWhatsappFlotante();
 
 
 /* ============================================================
-   V82.23 — Ajuste automático del tamaño del título
+   V82.35 — Ajuste automático real del título del encabezado
+   Mantiene el texto completo en una sola línea y adapta su tamaño
+   al ancho disponible, incluso cuando cambia la fecha o la fuente.
    ============================================================ */
 function ajustarTamanoTituloHero() {
   const titulo = document.querySelector("#nombre-sitio");
@@ -4643,34 +4645,63 @@ function ajustarTamanoTituloHero() {
   const contenedor = titulo.parentElement;
   if (!contenedor) return;
 
-  // Tamaños base aprobados.
   const esMovil = window.matchMedia("(max-width: 600px)").matches;
   const esMuyAngosto = window.matchMedia("(max-width: 380px)").matches;
+
+  // Mantiene el tamaño aprobado cuando hay espacio y solo reduce si hace falta.
   const base = esMuyAngosto ? 13 : (esMovil ? 14 : 16);
-  const minimo = esMuyAngosto ? 10.5 : (esMovil ? 11 : 12);
+  const minimo = esMovil ? 8.5 : 11;
+  const paso = 0.1;
 
-  titulo.style.fontSize = `${base}px`;
+  // El CSS usa !important, por eso el ajuste dinámico debe tener la misma prioridad.
+  titulo.style.setProperty("font-size", `${base}px`, "important");
+  titulo.style.setProperty("white-space", "nowrap", "important");
+  titulo.style.setProperty("width", "100%", "important");
+  titulo.style.setProperty("max-width", "100%", "important");
+  titulo.style.setProperty("min-width", "0", "important");
 
-  const anchoDisponible = titulo.getBoundingClientRect().width;
+  const anchoDisponible = Math.floor(contenedor.getBoundingClientRect().width);
   if (!anchoDisponible) return;
 
   let size = base;
 
-  // scrollWidth refleja el ancho real del texto en una sola línea.
-  while (titulo.scrollWidth > titulo.clientWidth && size > minimo) {
-    size -= 0.25;
-    titulo.style.fontSize = `${size}px`;
+  // scrollWidth mide el texto completo aunque el elemento tenga overflow oculto.
+  while (titulo.scrollWidth > anchoDisponible + 0.5 && size > minimo) {
+    size = Math.max(minimo, size - paso);
+    titulo.style.setProperty("font-size", `${size.toFixed(1)}px`, "important");
   }
 }
 
-window.addEventListener("resize", ajustarTamanoTituloHero);
-window.addEventListener("pageshow", ajustarTamanoTituloHero);
-document.addEventListener("DOMContentLoaded", ajustarTamanoTituloHero);
+function programarAjusteTituloHero() {
+  window.requestAnimationFrame(() => {
+    ajustarTamanoTituloHero();
+    window.requestAnimationFrame(ajustarTamanoTituloHero);
+  });
+}
 
-// También reajusta tras cargar configuración dinámica del encabezado.
-document.addEventListener("ofertas:configuracion-cargada", ajustarTamanoTituloHero);
+window.addEventListener("resize", programarAjusteTituloHero, { passive: true });
+window.addEventListener("pageshow", programarAjusteTituloHero);
+document.addEventListener("DOMContentLoaded", programarAjusteTituloHero);
+document.addEventListener("ofertas:configuracion-cargada", programarAjusteTituloHero);
 
-window.setTimeout(ajustarTamanoTituloHero, 0);
+// La fecha se escribe desde hero-redes.js después de iniciar la página.
+// Observamos el texto para reajustar también meses/días más largos.
+const tituloHeroObservable = document.querySelector("#nombre-sitio");
+if (tituloHeroObservable) {
+  const observadorTituloHero = new MutationObserver(programarAjusteTituloHero);
+  observadorTituloHero.observe(tituloHeroObservable, {
+    childList: true,
+    characterData: true,
+    subtree: true
+  });
+}
+
+if (document.fonts?.ready) {
+  document.fonts.ready.then(programarAjusteTituloHero).catch(() => {});
+}
+
+window.setTimeout(programarAjusteTituloHero, 0);
+window.setTimeout(programarAjusteTituloHero, 250);
 
 
 /* ============================================================

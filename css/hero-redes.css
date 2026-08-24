@@ -2645,3 +2645,23 @@
     transform-origin: left center !important;
   }
 }
+
+
+/* ============================================================
+   V82.35 — Contención del título dinámico
+   El JS reduce la tipografía hasta mostrar el texto completo.
+   Overflow oculto evita cualquier desborde durante la carga.
+   ============================================================ */
+@media (max-width: 600px) {
+  .hero-redes.hero-redes-lista #nombre-sitio {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: clip !important;
+    letter-spacing: -0.08px !important;
+  }
+}
