@@ -10141,3 +10141,20 @@ body.hay-cupones-visibles #separador-fin-cupones {
 @media (max-width: 360px) {
   #ofertas-mercado-libre.ofertas-grid-compacta { grid-template-columns: 1fr; }
 }
+
+/* =========================================================
+   V82.33 — Orilla punteada Ofertazo aplicada a Cupones
+   - Solo cambia el aspecto del perímetro de las tarjetas.
+   - Conserva tamaños, contenido, colores, acciones y comportamiento.
+   ========================================================= */
+.cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
+.cupones-grid-compacta > .cupon-bancario-mini::after {
+  border: 2px dashed #9b9b9b !important;
+}
+
+@media (max-width: 700px) {
+  .cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
+  .cupones-grid-compacta > .cupon-bancario-mini::after {
+    border-width: 2px !important;
+  }
+}
