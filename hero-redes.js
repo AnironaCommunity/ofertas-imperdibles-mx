@@ -1,0 +1,301 @@
+(async function iniciarBarra() {
+  const hero = document.querySelector(".hero-redes");
+  if (!hero) return;
+
+  const image = hero.querySelector(".hero-redes-logo img");
+  const defaultImage = image?.getAttribute("src") || "";
+  const mainIcon = document.querySelector("#logo-principal-icono");
+  const defaultMainIcon = mainIcon?.getAttribute("src") || "";
+  const mainSiteName = document.querySelector("#nombre-sitio-principal");
+  const mainSlogan = document.querySelector("#eslogan-sitio-principal");
+  const barSiteName = document.querySelector("#nombre-sitio");
+  const barDescription = document.querySelector("#hero-texto-descriptivo");
+  const visitorBox = document.querySelector("#hero-contador-visitantes");
+  const visitorTotal = document.querySelector("#hero-total-visitantes");
+
+  const STORAGE_KEY = "ofertas_imperdibles_ultima_visita";
+  const CONFIG_CACHE_KEY = "ofertas_imperdibles_config_cache";
+  const ONE_DAY = 24 * 60 * 60 * 1000;
+
+  function obtenerTextoFechaActual() {
+    const partes = new Intl.DateTimeFormat("es-MX", {
+      timeZone: "America/Mexico_City",
+      day: "numeric",
+      month: "long",
+    }).formatToParts(new Date());
+
+    const dia = partes.find((parte) => parte.type === "day")?.value || "";
+    const mes = partes.find((parte) => parte.type === "month")?.value || "";
+
+    return `Cupones de Mercado Libre | Hoy ${dia} de ${mes}`;
+  }
+
+  function actualizarNombreBarraConFecha() {
+    if (!barSiteName) return;
+    barSiteName.textContent = obtenerTextoFechaActual();
+  }
+
+  actualizarNombreBarraConFecha();
+
+  function formatNumber(value) {
+    const number = Number(value);
+    return Number.isFinite(number)
+      ? new Intl.NumberFormat("es-MX").format(number)
+      : "0";
+  }
+
+  function sincronizarColorSelector(inicio, fin) {
+    const selector = document.querySelector(".selector-cupones-menu.selector-cupones-oscuro");
+    if (!selector) return;
+    if (inicio) selector.style.setProperty("--selector-color-inicio", inicio);
+    if (fin) selector.style.setProperty("--selector-color-fin", fin);
+  }
+
+  function colorTextoContraste(colorFondo) {
+    const valor = String(colorFondo || "").trim();
+    const hex = valor.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+    if (!hex) return "#ffffff";
+
+    let limpio = hex[1];
+    if (limpio.length === 3) limpio = limpio.split("").map((c) => c + c).join("");
+
+    const r = parseInt(limpio.slice(0, 2), 16) / 255;
+    const g = parseInt(limpio.slice(2, 4), 16) / 255;
+    const b = parseInt(limpio.slice(4, 6), 16) / 255;
+    const convertir = (v) => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+    const luminancia = 0.2126 * convertir(r) + 0.7152 * convertir(g) + 0.0722 * convertir(b);
+
+    return luminancia > 0.179 ? "#111827" : "#ffffff";
+  }
+
+  // V81.50.5 — Aplica inmediatamente la configuración visual guardada.
+  // Evita que los botones Tienda/Exclusivo muestren primero el color CSS
+  // por defecto mientras llega la configuración desde Supabase.
+  function aplicarConfiguracionCacheada() {
+    try {
+      const cache = JSON.parse(localStorage.getItem(CONFIG_CACHE_KEY) || "{}");
+      const colorBoton = String(cache.color_boton_tienda_exclusivo || "").trim();
+
+      if (colorBoton) {
+        document.documentElement.style.setProperty(
+          "--color-boton-tienda-exclusivo",
+          colorBoton
+        );
+        document.documentElement.style.setProperty(
+          "--color-texto-boton-tienda-exclusivo",
+          colorTextoContraste(colorBoton)
+        );
+      }
+    } catch {}
+  }
+
+  aplicarConfiguracionCacheada();
+
+  function renderMainSiteName(element, value) {
+    if (!element) return;
+    const words = String(value || "Ofertas Imperdibles").trim().split(/\s+/).filter(Boolean);
+    const highlighted = words.pop() || "Imperdibles";
+    element.replaceChildren();
+    if (words.length) element.append(document.createTextNode(`${words.join(" ")} `));
+    const span = document.createElement("span");
+    span.className = "marca-principal-destacado";
+    span.textContent = highlighted;
+    element.append(span);
+  }
+
+  async function cargarConfiguracion() {
+    const response = await fetch(
+      `/api/cupones?action=hero-config&_=${Date.now()}`,
+      { cache: "no-store" }
+    );
+
+    if (!response.ok) return;
+
+    const config = await response.json();
+
+    try {
+      const anterior = JSON.parse(localStorage.getItem(CONFIG_CACHE_KEY) || "{}");
+      localStorage.setItem(CONFIG_CACHE_KEY, JSON.stringify({ ...anterior, ...config }));
+    } catch {}
+
+    if (config.color_inicio) {
+      hero.style.setProperty("--hero-color-inicio", config.color_inicio);
+      document.documentElement.style.setProperty("--tema-color-inicio", config.color_inicio);
+    }
+
+    if (config.color_fin) {
+      hero.style.setProperty("--hero-color-fin", config.color_fin);
+      document.documentElement.style.setProperty("--tema-color-fin", config.color_fin);
+    }
+
+    sincronizarColorSelector(
+      config.color_inicio || getComputedStyle(document.documentElement).getPropertyValue("--tema-color-inicio").trim(),
+      config.color_fin || getComputedStyle(document.documentElement).getPropertyValue("--tema-color-fin").trim()
+    );
+
+    const colorBotonTiendaExclusivo = config.color_boton_tienda_exclusivo || "#1cac17";
+    document.documentElement.style.setProperty(
+      "--color-boton-tienda-exclusivo",
+      colorBotonTiendaExclusivo
+    );
+    document.documentElement.style.setProperty(
+      "--color-texto-boton-tienda-exclusivo",
+      colorTextoContraste(colorBotonTiendaExclusivo)
+    );
+
+    try {
+      localStorage.setItem(
+        "ofertas_imperdibles_tema",
+        JSON.stringify({
+          inicio: config.color_inicio || "#e9cdff",
+          fin: config.color_fin || "#fae8fa",
+        })
+      );
+    } catch {}
+
+    if (mainIcon) {
+      mainIcon.src = config.logo_icono_url || defaultMainIcon;
+    }
+
+    if (image) {
+      image.src = config.imagen_url || defaultImage;
+    }
+
+    const configuredName = config.nombre_sitio || "Ofertas Imperdibles";
+    if (mainSiteName) renderMainSiteName(mainSiteName, configuredName);
+    actualizarNombreBarraConFecha();
+
+    if (mainSlogan) {
+      mainSlogan.textContent = config.eslogan || "Las mejores ofertas, siempre";
+      mainSlogan.hidden = config.mostrar_eslogan === false;
+    }
+
+    if (barDescription) {
+      barDescription.textContent = config.texto_descriptivo || "Cupones, promociones y novedades todos los días.";
+      barDescription.hidden = false;
+    }
+
+    const whatsappButton = hero.querySelector(".hero-redes-whatsapp");
+    const facebookButton = hero.querySelector(".hero-redes-facebook");
+    if (whatsappButton && config.enlace_whatsapp) {
+      whatsappButton.href = config.enlace_whatsapp;
+    }
+    if (facebookButton && config.enlace_facebook) {
+      facebookButton.href = config.enlace_facebook;
+    }
+    hero.dataset.patronVisible = config.mostrar_patron_ofertas === false ? "false" : "true";
+    hero.dataset.patronPosicion = ["izquierda", "centro", "derecha"].includes(config.posicion_patron_ofertas)
+      ? config.posicion_patron_ofertas
+      : "centro";
+    const bannerWhatsapp = document.querySelector("#enlace-banner-whatsapp");
+    if (bannerWhatsapp) {
+      bannerWhatsapp.href = config.enlace_banner_whatsapp || config.enlace_whatsapp || bannerWhatsapp.href;
+    }
+
+    const enlacesPrincipales = {
+      mercadoLibre: config.enlace_mercado_libre || "https://www.mercadolibre.com.mx/",
+      amazon: config.enlace_amazon || "https://www.amazon.com.mx/",
+    };
+    window.ofertasEnlacesPrincipales = enlacesPrincipales;
+    const botonMercadoLibre = document.querySelector('[data-vista="ofertas_mercado_libre"]');
+    const botonAmazon = document.querySelector('[data-vista="ofertas_amazon"]');
+    if (botonMercadoLibre) botonMercadoLibre.dataset.enlaceExterno = enlacesPrincipales.mercadoLibre;
+    if (botonAmazon) botonAmazon.dataset.enlaceExterno = enlacesPrincipales.amazon;
+    document.dispatchEvent(new CustomEvent("ofertas:enlaces-principales-cargados", { detail: enlacesPrincipales }));
+
+    const labels = {
+      textoDescriptivo: config.texto_descriptivo || "Cupones, promociones y novedades todos los días.",
+      botonTodos: (config.nombre_boton_todos || "").trim() || "Todos",
+      botonTienda: (config.nombre_boton_tienda || "").trim() || "Tienda",
+      seccionTienda: config.nombre_seccion_tienda || "Cupones de tienda",
+      tarjetaTienda: (config.nombre_tarjeta_tienda || "").trim() || "CUPÓN DE TIENDA",
+      colorTarjetaTienda: config.color_tarjeta_tienda || "#22c55e",
+      tarjetaExclusivo: (config.nombre_tarjeta_exclusivo || "").trim() || "CUPÓN EXCLUSIVO",
+      colorTarjetaExclusivo: config.color_tarjeta_exclusivo || "#f5c400",
+      colorBotonTiendaExclusivo: config.color_boton_tienda_exclusivo || "#1cac17",
+      botonBancarios: (config.nombre_boton_bancarios || "").trim() || "Bancarios",
+      botonExclusivo: (config.nombre_boton_exclusivo || "").trim() || "Exclusivos",
+      seccionBancarios: config.nombre_seccion_bancarios || "Cupones bancarios",
+      botonComunidad: config.nombre_boton_comunidad || "Comunidad Anirona",
+      descripcionComunidad: config.descripcion_boton_comunidad || "Rifas, novedades y publicaciones de la comunidad",
+      seccionComunidad: config.nombre_seccion_comunidad || "Comunidad Anirona",
+      botonMercadoLibre: config.nombre_boton_mercado_libre || "Ofertas Mercado Libre",
+      botonAmazon: config.nombre_boton_amazon || "Ofertas Amazon",
+    };
+
+    window.ofertasEtiquetas = labels;
+    const heroDescription = document.querySelector("#hero-texto-descriptivo");
+    heroDescription?.replaceChildren(labels.textoDescriptivo);
+    if (heroDescription) heroDescription.hidden = false;
+    const nombreBotonTodos = document.querySelector("#nombre-boton-todos");
+    const nombreBotonTienda = document.querySelector("#nombre-boton-tienda");
+    const nombreBotonBancarios = document.querySelector("#nombre-boton-bancarios");
+    const nombreBotonExclusivo = document.querySelector("#nombre-boton-exclusivo");
+    if (nombreBotonTodos) nombreBotonTodos.textContent = labels.botonTodos;
+    if (nombreBotonTienda) nombreBotonTienda.textContent = labels.botonTienda;
+    if (nombreBotonBancarios) nombreBotonBancarios.textContent = labels.botonBancarios;
+    if (nombreBotonExclusivo) nombreBotonExclusivo.textContent = labels.botonExclusivo;
+    document.querySelector("#nombre-boton-comunidad")?.replaceChildren(labels.botonComunidad);
+    document.querySelector("#descripcion-boton-comunidad")?.replaceChildren(labels.descripcionComunidad);
+    document.querySelector("#nombre-seccion-comunidad")?.replaceChildren(labels.seccionComunidad);
+    document.querySelector("#nombre-boton-mercado-libre")?.replaceChildren(labels.botonMercadoLibre);
+    document.querySelector("#nombre-boton-amazon")?.replaceChildren(labels.botonAmazon);
+    document.dispatchEvent(new CustomEvent("ofertas:etiquetas-cargadas", { detail: labels }));
+  }
+
+  async function cargarVisitantes() {
+    if (!visitorBox || !visitorTotal) return;
+
+    let registrar = true;
+
+    try {
+      const ultimaVisita = Number(localStorage.getItem(STORAGE_KEY) || 0);
+      registrar = !ultimaVisita || Date.now() - ultimaVisita >= ONE_DAY;
+    } catch {
+      registrar = true;
+    }
+
+    const response = await fetch(
+      `/api/cupones?action=visitantes&_=${Date.now()}`,
+      {
+        method: registrar ? "POST" : "GET",
+        headers: { "Content-Type": "application/json" },
+        cache: "no-store",
+      }
+    );
+
+    if (!response.ok) {
+      visitorTotal.textContent = "0";
+      return;
+    }
+
+    const data = await response.json();
+    const totalFormateado = formatNumber(data.total_visitas);
+    visitorTotal.textContent = totalFormateado;
+    visitorBox.hidden = false;
+
+    try {
+      const anterior = JSON.parse(localStorage.getItem(CONFIG_CACHE_KEY) || "{}");
+      localStorage.setItem(
+        CONFIG_CACHE_KEY,
+        JSON.stringify({ ...anterior, total_visitantes: totalFormateado })
+      );
+    } catch {}
+
+    if (registrar) {
+      try {
+        localStorage.setItem(STORAGE_KEY, String(Date.now()));
+      } catch {}
+    }
+  }
+
+  await Promise.allSettled([
+    cargarConfiguracion(),
+    cargarVisitantes(),
+  ]);
+
+  hero.classList.remove("hero-redes-pendiente");
+  hero.classList.add("hero-redes-lista");
+})();
+/* V82.38: el ajuste del bloque de encabezado se centraliza en css/hero-redes.css y js/app.js.
+   Se retiró el redimensionador legado de la descripción para evitar reglas simultáneas. */

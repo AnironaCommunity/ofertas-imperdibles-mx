@@ -27,6 +27,9 @@ const tabTienda = document.querySelector("#tab-tienda");
 const tabBancarios = document.querySelector("#tab-bancarios");
 const tabExclusivo = document.querySelector("#tab-exclusivo");
 const vistaCupones = document.querySelector("#vista-cupones");
+const barraInferiorCupones = document.querySelector("#barra-inferior-cupones");
+const barraInferiorOfertazo = document.querySelector("#barra-inferior-ofertazo");
+const barraInferiorMas = document.querySelector("#barra-inferior-mas");
 const botonesMenuOfertas = document.querySelectorAll(".menu-ofertas [data-vista]");
 const botonComunidadAnirona = document.querySelector("#boton-anirona-hero[data-vista]");
 const menuOfertas = document.querySelector(".menu-ofertas");
@@ -414,6 +417,17 @@ enlaceLogoInicio?.addEventListener("click", (event) => {
 });
 
 botonRecargar?.addEventListener("click", cargarCupones);
+
+function actualizarBarraNavegacionInferior() {
+  const cuponesActivos = vistaActiva === "cupones";
+  const ofertazoActivo = vistaActiva === "ofertas_mercado_libre";
+
+  barraInferiorCupones?.classList.toggle("activo", cuponesActivos);
+  barraInferiorCupones?.setAttribute("aria-pressed", String(cuponesActivos));
+  barraInferiorOfertazo?.classList.toggle("activo", ofertazoActivo);
+  barraInferiorOfertazo?.setAttribute("aria-pressed", String(ofertazoActivo));
+}
+
 function actualizarNavegacionPrincipal(seccion) {
   const mapa = {
     todos: tabTodos,
@@ -448,6 +462,20 @@ tabBancarios.addEventListener("click", () => {
 tabExclusivo?.addEventListener("click", () => {
   cambiarCategoria("exclusivo", { actualizarHistorial: true, desplazamiento: "auto" });
   actualizarNavegacionPrincipal("exclusivo");
+});
+
+barraInferiorCupones?.addEventListener("click", () => {
+  cambiarCategoria("todos", {
+    actualizarHistorial: true,
+    desplazamiento: "smooth",
+  });
+});
+
+barraInferiorOfertazo?.addEventListener("click", () => {
+  cambiarVista("ofertas_mercado_libre", {
+    actualizarHistorial: true,
+    desplazamiento: "smooth",
+  });
 });
 
 
@@ -592,6 +620,7 @@ function cambiarVista(
   } = {}
 ) {
   vistaActiva = vista;
+  actualizarBarraNavegacionInferior();
 
   // La navegación ML/Amazon es una cuadrícula fija; nunca conserva desplazamiento horizontal.
   if (menuOfertas) menuOfertas.scrollLeft = 0;
@@ -915,6 +944,20 @@ function updateCouponTimes() {
 
 }
 
+
+function renderizarCategoriaConScrollEstable() {
+  const scrollAntes = window.scrollY;
+  renderizarCategoria();
+
+  requestAnimationFrame(() => {
+    window.scrollTo({
+      left: 0,
+      top: scrollAntes,
+      behavior: "auto",
+    });
+  });
+}
+
 function programarFinPrioridadNuevo() {
   if (temporizadorPrioridadNuevo) {
     clearTimeout(temporizadorPrioridadNuevo);
@@ -934,7 +977,7 @@ function programarFinPrioridadNuevo() {
   const espera = Math.min(...vencimientos);
   temporizadorPrioridadNuevo = window.setTimeout(() => {
     temporizadorPrioridadNuevo = null;
-    renderizarCategoria();
+    renderizarCategoriaConScrollEstable();
   }, espera + 80);
 }
 
@@ -1244,7 +1287,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
         ${htmlEtiquetasCupon(esExclusivo ? estados.slice(0, 1) : estados)}
       </div>
 
-      ${esExclusivo && cupon.detalle_bancario
+      ${(esExclusivo || categoria === "tienda") && cupon.detalle_bancario
         ? `<p class="detalle-beneficio-exclusivo">${escaparHtml(cupon.detalle_bancario)}</p>`
         : ""}
       ${esBancario ? `<p class="beneficio-bancario">${escaparHtml(cupon.titulo)}</p>` : ""}
@@ -1521,6 +1564,7 @@ function cuponDisponibleParaBuscador(cupon) {
     cupon &&
     cupon.activo !== false &&
     cupon.agotado !== true &&
+    normalizarCategoria(cupon) !== "exclusivo" &&
     couponTimeState(cupon).enabled &&
     String(cupon.codigo || "").trim() &&
     cuponAplicaFiltroBuscador(cupon)
@@ -1999,11 +2043,13 @@ function cambiarCategoria(
     desplazamiento = "smooth",
   } = {}
 ) {
+  const scrollAntesDeCambiarCategoria = window.scrollY;
   categoriaActiva = categoria;
 
   cambiarVista("cupones", {
     actualizarHistorial: false,
     desplazamiento,
+    moverAlInicio: false,
   });
 
   const esTodos = categoria === "todos";
@@ -2025,6 +2071,16 @@ function cambiarCategoria(
   );
 
   renderizarCategoria();
+
+  // Mantiene exactamente la posición vertical del usuario al navegar entre
+  // Todos / Tienda / Bancarios / Exclusivo. Se restaura tras el layout final.
+  requestAnimationFrame(() => {
+    window.scrollTo({
+      left: 0,
+      top: scrollAntesDeCambiarCategoria,
+      behavior: "auto",
+    });
+  });
 
   if (actualizarHistorial) {
     actualizarUrlSeccion(categoria);
@@ -2255,6 +2311,36 @@ function actualizarTextoContador() {
   }
 }
 
+
+function firmaEstructuralCupones(cupones = []) {
+  return JSON.stringify(
+    cupones.map((cupon) => {
+      const copia = { ...cupon };
+      // likes/clics cambian frecuentemente y no requieren reconstruir tarjetas.
+      delete copia.likes;
+      delete copia.clics;
+      return copia;
+    })
+  );
+}
+
+function actualizarEstadisticasCuponesEnPantalla(cupones = []) {
+  if (!cuponesContainer) return;
+
+  const mapa = new Map(cupones.map((cupon) => [String(cupon.id), cupon]));
+  cuponesContainer
+    .querySelectorAll(".cupon[data-id], .cupon-bancario-mini[data-id]")
+    .forEach((tarjeta) => {
+      const cupon = mapa.get(String(tarjeta.dataset.id || ""));
+      if (!cupon) return;
+
+      const likes = tarjeta.querySelector(".numero-likes");
+      const clics = tarjeta.querySelector(".numero-clics");
+      if (likes) likes.textContent = String(Number(cupon.likes || 0));
+      if (clics) clics.textContent = String(Number(cupon.clics || 0));
+    });
+}
+
 async function cargarCupones() {
   if (cargando || redireccionEnProceso) return;
 
@@ -2287,7 +2373,7 @@ async function cargarCupones() {
 
     const cupones = await respuesta.json();
     const nuevosCupones = Array.isArray(cupones) ? cupones : [];
-    const nuevaFirmaCupones = JSON.stringify(nuevosCupones);
+    const nuevaFirmaCupones = firmaEstructuralCupones(nuevosCupones);
     const contenidoCambio = nuevaFirmaCupones !== firmaUltimosCupones;
 
     todosLosCupones = nuevosCupones;
@@ -2301,7 +2387,15 @@ async function cargarCupones() {
     // Solo se redibuja la sección cuando la información realmente cambió.
     if (contenidoCambio) {
       firmaUltimosCupones = nuevaFirmaCupones;
-      renderizarCategoria();
+      if (esCargaInicial) {
+        renderizarCategoria();
+      } else {
+        renderizarCategoriaConScrollEstable();
+      }
+    } else {
+      // Si únicamente cambiaron likes/clics, actualizamos los números sin
+      // destruir ni reconstruir tarjetas. Evita el destello periódico.
+      actualizarEstadisticasCuponesEnPantalla(nuevosCupones);
     }
 
     actualizarContadoresSecciones();
@@ -2707,6 +2801,55 @@ function esProductoNuevoVigente(publicidad) {
   return Number.isFinite(fecha) && Date.now() - fecha < DURACION_NUEVO_CATALOGO_MS;
 }
 
+function numeroPrecioOferta(valor) {
+  const limpio = String(valor ?? "").replace(/[^0-9.,-]/g, "").replace(/,/g, "");
+  const numero = Number(limpio);
+  return Number.isFinite(numero) ? numero : 0;
+}
+
+function monedaOferta(valor) {
+  const numero = numeroPrecioOferta(valor);
+  if (!numero) return String(valor || "");
+  return new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: numero % 1 ? 2 : 0 }).format(numero);
+}
+
+function descuentoOferta(publicidad) {
+  const actual = numeroPrecioOferta(publicidad?.precio_publicado);
+  const anterior = numeroPrecioOferta(publicidad?.precio_anterior);
+  if (!(actual > 0 && anterior > actual)) return 0;
+  return Math.max(1, Math.min(99, Math.round((1 - actual / anterior) * 100)));
+}
+
+function textoExpiracionOferta(fecha) {
+  const fin = new Date(fecha || "").getTime();
+  if (!Number.isFinite(fin)) return "";
+  const restante = fin - Date.now();
+  if (restante <= 0) return "Finalizada";
+  const minutos = Math.max(1, Math.floor(restante / 60000));
+  const dias = Math.floor(minutos / 1440);
+  const horas = Math.floor((minutos % 1440) / 60);
+  const mins = minutos % 60;
+  if (dias > 0) return `${dias}d ${horas}h`;
+  if (horas > 0) return `${horas}h ${mins}m`;
+  return `${mins}m`;
+}
+
+function ofertaExpirada(publicidad) {
+  if (!publicidad?.fecha_expiracion) return false;
+  const fin = new Date(publicidad.fecha_expiracion).getTime();
+  return Number.isFinite(fin) && fin <= Date.now();
+}
+
+function actualizarTemporizadoresOfertazo() {
+  document.querySelectorAll("[data-ofertazo-expira]").forEach((elemento) => {
+    const texto = textoExpiracionOferta(elemento.dataset.ofertazoExpira);
+    elemento.textContent = texto || "Sin límite";
+    const tarjeta = elemento.closest(".tarjeta-oferta-ofertazo");
+    tarjeta?.classList.toggle("oferta-expirada", texto === "Finalizada");
+    if (tarjeta && texto === "Finalizada") tarjeta.hidden = true;
+  });
+}
+
 function crearTarjetaOferta(publicidad, categoria) {
   const articulo = document.createElement("article");
   articulo.className = "tarjeta-oferta";
@@ -2729,6 +2872,53 @@ function crearTarjetaOferta(publicidad, categoria) {
   const disponibleAmazon = publicidad.disponible_amazon !== false;
   const productoNuevo = esProductoNuevoVigente(publicidad);
   const productoMasVendido = publicidad.es_mas_vendido === true;
+
+  if (categoria === "ofertas_mercado_libre") {
+    articulo.classList.add("tarjeta-oferta-ofertazo");
+    const porcentaje = descuentoOferta(publicidad);
+    const precioActual = monedaOferta(publicidad.precio_publicado);
+    const precioAnterior = monedaOferta(publicidad.precio_anterior);
+    const categoriaProducto = String(publicidad.categoria_producto || "Oferta destacada").trim();
+    const expira = publicidad.fecha_expiracion ? textoExpiracionOferta(publicidad.fecha_expiracion) : "";
+
+    articulo.innerHTML = `
+      <div class="ofertazo-cabecera">
+        <strong class="ofertazo-descuento">${porcentaje ? `-${porcentaje}%` : "OFERTA"}</strong>
+        <div class="ofertazo-expira">
+          <span>EXPIRA EN</span>
+          <strong>◷ <b data-ofertazo-expira="${escaparHtml(publicidad.fecha_expiracion || "")}">${escaparHtml(expira || "Sin límite")}</b></strong>
+        </div>
+      </div>
+      <button class="oferta-imagen-contenedor ofertazo-imagen-contenedor" type="button" aria-label="${escaparHtml(`Abrir ${publicidad.titulo || "oferta"}`)}">
+        <img class="oferta-imagen" src="${escaparHtml(publicidad.imagen_url || "")}" alt="${escaparHtml(publicidad.titulo || "Oferta")}" loading="lazy" />
+      </button>
+      <div class="oferta-contenido ofertazo-contenido">
+        <strong class="ofertazo-categoria">${escaparHtml(categoriaProducto)}</strong>
+        <h3>${escaparHtml(publicidad.titulo || "Oferta destacada")}</h3>
+        ${publicidad.descripcion ? `<p class="oferta-descripcion">${escaparHtml(publicidad.descripcion)}</p>` : ""}
+        <div class="ofertazo-precios">
+          ${precioActual ? `<strong>${escaparHtml(precioActual)}</strong>` : ""}
+          ${precioAnterior ? `<del>${escaparHtml(precioAnterior)}</del>` : ""}
+        </div>
+        <button class="oferta-ver ofertazo-ver" type="button"><span aria-hidden="true">↗</span> Ver Oferta <span aria-hidden="true">💰</span></button>
+        <div class="ofertazo-pie">
+          <button class="oferta-compartir ofertazo-compartir" type="button" aria-label="Compartir oferta" title="Compartir">${iconoCompartir()}</button>
+          <span class="oferta-visitas" data-visitas-id="${Number(publicidad.id) || 0}">${Number(publicidad.visitas) || 0} visitas</span>
+        </div>
+      </div>
+    `;
+
+    const abrirOferta = () => abrirPublicidad(publicidad, { copiarCuponAsignado: false });
+    articulo.querySelector(".ofertazo-ver")?.addEventListener("click", abrirOferta);
+    articulo.querySelector(".ofertazo-imagen-contenedor")?.addEventListener("click", abrirOferta);
+    articulo.querySelector(".ofertazo-compartir")?.addEventListener("click", () => compartirPublicidad(publicidad, {}));
+    const imagen = articulo.querySelector(".oferta-imagen");
+    imagen?.addEventListener("error", () => {
+      imagen.closest(".oferta-imagen-contenedor")?.classList.add("sin-imagen");
+      imagen.remove();
+    }, { once: true });
+    return articulo;
+  }
 
   if (esComunidadAnirona) articulo.classList.add("tarjeta-oferta-anirona");
 
@@ -3114,7 +3304,8 @@ function renderizarModuloOfertas(categoria, contenedor, seccion) {
   }
 
   const items = todasLasPublicidades.filter((item) =>
-    publicidadPerteneceASeccion(item, categoria)
+    publicidadPerteneceASeccion(item, categoria) &&
+    !(categoria === "ofertas_mercado_libre" && ofertaExpirada(item))
   );
 
   contenedor.replaceChildren();
@@ -3132,6 +3323,7 @@ function renderizarModuloOfertas(categoria, contenedor, seccion) {
     items.forEach((item) => {
       contenedor.appendChild(crearTarjetaOferta(item, categoria));
     });
+    if (categoria === "ofertas_mercado_libre") actualizarTemporizadoresOfertazo();
   }
 
 }
@@ -3163,7 +3355,8 @@ function visitaPublicidadVigente(id, plataforma) {
 function actualizarVisitasEnPantalla(id, visitas) {
   document.querySelectorAll(`[data-visitas-id="${id}"]`).forEach((elemento) => {
     const total = Number(visitas) || 0;
-    elemento.textContent = `👁️ ${total} ${total === 1 ? "visita" : "visitas"}`;
+    const esOfertazo = Boolean(elemento.closest(".tarjeta-oferta-ofertazo"));
+    elemento.textContent = `${esOfertazo ? "" : "👁️ "}${total} ${total === 1 ? "visita" : "visitas"}`;
   });
 }
 
@@ -3381,8 +3574,9 @@ function textoCompartirPublicidad(publicidad) {
   return lineas.join("\n");
 }
 
-async function compartirPublicidad(publicidad, control) {
+async function compartirPublicidad(publicidad, control = {}) {
   const texto = textoCompartirPublicidad(publicidad);
+  const mensaje = control?.mensaje || null;
   try {
     if (navigator.share) {
       let archivoImagen = null;
@@ -3402,18 +3596,18 @@ async function compartirPublicidad(publicidad, control) {
       } else {
         await navigator.share({ title: publicidad.titulo || "Oferta", text: texto });
       }
-      control.mensaje.textContent = "Oferta compartida.";
+      if (mensaje) mensaje.textContent = "Oferta compartida.";
     } else {
       await copiarTexto(texto);
-      control.mensaje.textContent = "Información de la oferta copiada.";
+      if (mensaje) mensaje.textContent = "Información de la oferta copiada.";
     }
   } catch (error) {
     if (error?.name !== "AbortError") {
       console.error(error);
-      control.mensaje.textContent = "No fue posible compartir la oferta.";
+      if (mensaje) mensaje.textContent = "No fue posible compartir la oferta.";
     }
   }
-  setTimeout(() => { control.mensaje.textContent = ""; }, 3500);
+  if (mensaje) setTimeout(() => { mensaje.textContent = ""; }, 3500);
 }
 
 async function abrirPublicidad(publicidad, { copiarCuponAsignado = true } = {}) {
@@ -3483,11 +3677,27 @@ function productosAnironaNotificables() {
   );
 }
 
+
+function obtenerFilaControlesSecundarios() {
+  const contenedor = document.querySelector(".hero-redes-botones");
+  if (!contenedor) return null;
+
+  let fila = contenedor.querySelector(".hero-controles-secundarios");
+  if (!fila) {
+    fila = document.createElement("div");
+    fila.className = "hero-controles-secundarios";
+    contenedor.appendChild(fila);
+  }
+  return fila;
+}
+
 function crearControlesAvisosNovedades() {
   if (document.querySelector("#boton-avisos-novedades")) return;
 
   const contenedor = document.querySelector(".hero-redes-botones");
   if (!contenedor) return;
+  const filaControles = obtenerFilaControlesSecundarios();
+  if (!filaControles) return;
 
   const boton = document.createElement("button");
   boton.id = "boton-avisos-novedades";
@@ -3496,16 +3706,15 @@ function crearControlesAvisosNovedades() {
   boton.innerHTML = `
     <span class="avisos-campana" aria-hidden="true">
       <svg viewBox="0 0 32 32" focusable="false">
-        <path d="M16 3.5c-4.5 0-7.6 3.6-7.6 8.2v4.1c0 2.1-.8 4.1-2.3 5.6l-1 1h21.8l-1-1a7.9 7.9 0 0 1-2.3-5.6v-4.1c0-4.6-3.1-8.2-7.6-8.2Z"/>
-        <path class="avisos-campana-badajo" d="M12.7 24.1a3.5 3.5 0 0 0 6.6 0"/>
+        <path d="M16 4.5c-4.2 0-7 3.3-7 7.5v4.2c0 1.9-.7 3.8-2 5.3l-1.1 1.2h20.2L25 21.5c-1.3-1.5-2-3.4-2-5.3V12c0-4.2-2.8-7.5-7-7.5Z"/>
+        <path d="M12.4 24.4a3.8 3.8 0 0 0 7.2 0"/>
       </svg>
       <span class="avisos-badge">1</span>
     </span>
-    <span class="avisos-texto">Activar avisos</span>
     <span class="avisos-switch" aria-hidden="true"><span class="avisos-switch-knob"></span></span>
   `;
   boton.setAttribute("aria-pressed", "false");
-  contenedor.appendChild(boton);
+  filaControles.appendChild(boton);
 
   const toast = document.createElement("aside");
   toast.id = "aviso-novedades-toast";
@@ -3528,13 +3737,12 @@ function actualizarBotonAvisosNovedades() {
   const activos = avisosNovedadesActivos();
   boton.classList.toggle("activo", activos);
   boton.setAttribute("aria-pressed", activos ? "true" : "false");
-  const textoAvisos = boton.querySelector(".avisos-texto");
-  if (textoAvisos) {
-    textoAvisos.textContent = activos ? "Avisos activados" : "Activar avisos";
-  }
+  boton.setAttribute("aria-label", activos ? "Desactivar avisos" : "Activar avisos");
   boton.title = activos
-    ? "Recibirás avisos al detectar nuevos cupones o productos"
+    ? "Avisos activados. Toca para desactivarlos."
     : "Activa avisos de nuevos cupones y productos Anirona";
+
+  if (typeof actualizarTextoAvisosMenuMas === "function") actualizarTextoAvisosMenuMas();
 }
 
 function guardarReferenciaActualAvisos() {
@@ -3978,16 +4186,26 @@ function crearBotonTutorial() {
   if (document.querySelector("#boton-ver-tutorial")) return;
   const contenedor = document.querySelector(".hero-redes-botones");
   if (!contenedor) return;
+  const filaControles = obtenerFilaControlesSecundarios();
+  if (!filaControles) return;
   const boton = document.createElement("button");
   boton.id = "boton-ver-tutorial";
   boton.type = "button";
   boton.className = "boton-ver-tutorial";
-  boton.innerHTML = '<span class="tutorial-icono" aria-hidden="true">▶</span><span class="tutorial-texto">Ver tutorial</span><span class="tutorial-destello" aria-hidden="true">✦</span>';
+  boton.innerHTML = `
+    <span class="tutorial-icono" aria-hidden="true">
+      <svg viewBox="0 0 32 32" focusable="false">
+        <circle cx="16" cy="16" r="12.5"/>
+        <path d="M13 10.5 22 16l-9 5.5z"/>
+      </svg>
+    </span>
+    <span class="tutorial-texto">Ver tutorial</span>
+  `;
   boton.title = "Aprende a utilizar los cupones";
   boton.addEventListener("click", () => iniciarTutorialGuiado(false));
-  const botonAvisos = contenedor.querySelector("#boton-avisos-novedades");
-  if (botonAvisos) botonAvisos.insertAdjacentElement("afterend", boton);
-  else contenedor.appendChild(boton);
+  const botonAvisos = filaControles.querySelector("#boton-avisos-novedades");
+  if (botonAvisos) filaControles.insertBefore(boton, botonAvisos);
+  else filaControles.appendChild(boton);
 }
 
 function crearCuponEjemploTutorial() {
@@ -4138,81 +4356,122 @@ function crearInterfazTutorial() {
 const pasosTutorial = [
   {
     titulo: "¡Bienvenido a Ofertas Imperdibles MX!",
-    texto: "En menos de un minuto aprenderás a encontrar, copiar y compartir los cupones publicados.",
+    texto: "Te mostraremos paso a paso cómo encontrar, entender, copiar y compartir los cupones para aprovecharlos a tiempo.",
     icono: "👋",
     preparar: async () => {
+      cerrarMenuMasFlotante?.();
       window.scrollTo({ top: 0, behavior: "auto" });
-      await esperarTutorial(60);
+      await esperarTutorial(80);
     },
   },
   {
     selector: "#tab-todos",
-    titulo: "Todos los cupones",
-    texto: "Esta es la vista principal. Aquí aparecen primero los cupones de tienda y después los cupones bancarios.",
+    titulo: "Todos",
+    texto: "Esta es la vista principal. Aquí puedes consultar en un solo lugar los cupones disponibles de las diferentes secciones.",
     icono: "▦",
-    preparar: async () => { tabTodos?.click(); await esperarTutorial(350); },
+    preparar: async () => {
+      cerrarMenuMasFlotante?.();
+      tabTodos?.click();
+      await esperarTutorial(350);
+    },
   },
   {
     selector: "#tab-tienda",
-    titulo: "Cupones",
-    texto: "Aquí puedes ver únicamente los cupones generales o de tienda disponibles para tus compras.",
+    titulo: "Tienda",
+    texto: "Aquí encontrarás los cupones generales que pueden aplicar en todo Mercado Libre, siempre de acuerdo con las condiciones y restricciones indicadas en cada cupón.",
     icono: "🛍️",
-    preparar: async () => { tabTienda?.click(); await esperarTutorial(350); },
+    preparar: async () => {
+      cerrarMenuMasFlotante?.();
+      tabTienda?.click();
+      await esperarTutorial(350);
+    },
   },
   {
     selector: "#tab-bancarios",
     titulo: "Bancarios",
-    texto: "Aquí puedes ver únicamente los beneficios exclusivos de bancos y métodos de pago participantes.",
+    texto: "Aquí se muestran descuentos y beneficios vinculados a bancos, tarjetas o métodos de pago participantes. Revisa las condiciones de cada promoción antes de comprar.",
     icono: "💳",
-    preparar: async () => { tabBancarios?.click(); await esperarTutorial(350); },
+    preparar: async () => {
+      cerrarMenuMasFlotante?.();
+      tabBancarios?.click();
+      await esperarTutorial(350);
+    },
+  },
+  {
+    selector: "#tab-exclusivo",
+    titulo: "Exclusivos",
+    texto: "Son códigos especiales de descuento o beneficios personalizados que Mercado Libre o sus marcas asociadas pueden otorgar a ciertos usuarios, productos o promociones.",
+    icono: "🎟️",
+    preparar: async () => {
+      cerrarMenuMasFlotante?.();
+      if (tabExclusivo) tabExclusivo.hidden = false;
+      tabExclusivo?.click();
+      await esperarTutorial(350);
+    },
   },
   {
     objetivo: objetivoDentroCupon(null),
     cupon: true,
     titulo: "Información del cupón",
-    texto: "Cada tarjeta indica el descuento, la compra mínima, el ahorro máximo y si el cupón es nuevo, popular o destacado.",
-    icono: "🎟️",
+    texto: "Cada tarjeta te muestra la información importante del cupón, como descuento, compra mínima, ahorro máximo, vigencia y etiquetas especiales.",
+    icono: "🔎",
   },
   {
     objetivo: objetivoDentroCupon(".boton-canjear"),
     cupon: true,
     titulo: "Copiar código",
-    texto: "Este botón copia el código y te lleva a Mercado Libre para que puedas pegarlo al momento de comprar.",
+    texto: "Este botón copia el código y te lleva a Mercado Libre. Después debes ingresar ese código en el apartado de cupones, desde la opción “Ingresar código”, para intentar aplicarlo a tu compra.",
     icono: "📋",
   },
   {
     objetivo: objetivoDentroCupon(".boton-like"),
     cupon: true,
     titulo: "Me gusta",
-    texto: "Marca Me gusta cuando un cupón te resulte útil. Así ayudas a la comunidad a reconocer las mejores oportunidades.",
+    texto: "Si un cupón te resulta útil, marca Me gusta. Esto ayuda a la comunidad a identificar las oportunidades que están funcionando mejor.",
     icono: "👍",
   },
   {
     objetivo: objetivoDentroCupon(".boton-compartir"),
     cupon: true,
     titulo: "Compartir",
-    texto: "Envía el cupón rápidamente a familiares o amigos para que también puedan aprovecharlo.",
+    texto: "Comparte rápidamente el cupón con familiares o amigos para que también puedan aprovechar el descuento antes de que termine.",
     icono: "🔗",
   },
   {
-    selector: "#boton-avisos-novedades",
+    selector: "#menu-mas-avisos",
     titulo: "Activa los avisos",
-    texto: "Recibe una alerta cuando publiquemos un nuevo cupón, sin tener que revisar la página constantemente.",
+    texto: "En la nueva barra inferior toca Más y después Activar notificaciones para recibir avisos cuando publiquemos nuevos cupones y oportunidades.",
     icono: "🔔",
-    preparar: async () => { limpiarCuponTutorial(); window.scrollTo({ top: 0, behavior: "smooth" }); },
+    preparar: async () => {
+      limpiarCuponTutorial();
+      window.scrollTo({ top: 0, behavior: "auto" });
+      await esperarTutorial(80);
+      abrirMenuMasInferior?.();
+      await esperarTutorial(180);
+    },
   },
   {
-    selector: ".hero-redes-whatsapp, .hero-redes-facebook",
-    titulo: "Síguenos",
-    texto: "Únete a WhatsApp y Facebook para recibir promociones, novedades y recordatorios de cupones.",
+    selector: "#whatsapp-flotante",
+    titulo: "Únete al canal de WhatsApp",
+    texto: "Usa esta cápsula para entrar a nuestro canal de WhatsApp y recibir promociones, cupones y novedades de Ofertas Imperdibles MX.",
     icono: "📲",
-    preparar: async () => window.scrollTo({ top: 0, behavior: "smooth" }),
+    preparar: async () => {
+      cerrarMenuMasFlotante?.();
+      window.scrollTo({ top: 0, behavior: "auto" });
+      await esperarTutorial(80);
+      actualizarEstadoWhatsappFlotante?.();
+      await esperarTutorial(160);
+    },
   },
   {
     titulo: "¡Listo para ahorrar!",
-    texto: "Ya conoces las funciones principales de los cupones. Puedes repetir este recorrido cuando quieras desde Ver tutorial.",
+    texto: "Ya conoces las funciones principales. Revisa los cupones, consulta sus condiciones y aprovéchalos a tiempo. Puedes repetir este tutorial cuando quieras desde Más, en la nueva barra inferior.",
     icono: "🎉",
     finalizarEnTienda: true,
+    preparar: async () => {
+      cerrarMenuMasFlotante?.();
+      await esperarTutorial(80);
+    },
   },
 ];
 
@@ -4321,12 +4580,14 @@ function iniciarTutorialGuiado(automatico = false) {
 function finalizarTutorialGuiado(completado = false, irATienda = false) {
   tutorialActivo = false;
   document.documentElement.classList.remove("tutorial-en-curso");
+  cerrarMenuMasFlotante?.();
   limpiarCuponTutorial();
   if (tutorialElementos) {
     tutorialElementos.foco.hidden = true;
     tutorialElementos.tarjeta.hidden = true;
   }
   if (completado) localStorage.setItem(CLAVE_TUTORIAL_COMPLETADO, "1");
+  if (typeof actualizarContadoresSecciones === "function") actualizarContadoresSecciones();
   if (irATienda) {
     // Al terminar el tutorial regresamos a la vista principal: Todos.
     tabTodos?.click();
@@ -4352,3 +4613,220 @@ window.setTimeout(() => {
   crearBotonTutorial();
   resaltarBotonTutorialAlEntrar();
 }, 1200);
+
+
+/* ============================================================
+   V82.13 — Contraer WhatsApp flotante al desplazarse
+   ============================================================ */
+function actualizarEstadoWhatsappFlotante() {
+  const boton = document.querySelector("#whatsapp-flotante");
+  if (!boton) return;
+
+  // Arriba se muestra como cápsula; al iniciar el desplazamiento queda circular.
+  const expandido = window.scrollY <= 12;
+  boton.classList.toggle("whatsapp-flotante-expandido", expandido);
+}
+
+window.addEventListener("scroll", actualizarEstadoWhatsappFlotante, { passive: true });
+window.addEventListener("pageshow", actualizarEstadoWhatsappFlotante);
+document.addEventListener("DOMContentLoaded", actualizarEstadoWhatsappFlotante);
+actualizarEstadoWhatsappFlotante();
+
+
+/* ============================================================
+   V82.38 — Ajuste real del título dinámico del encabezado móvil
+   Usa el ancho físico del propio bloque de texto (no parentElement,
+   que antes era display:contents y devolvía 0). Ajusta el tamaño al
+   contenido real y vuelve a medir cuando cambia fecha/fuente/viewport.
+   ============================================================ */
+function ajustarTamanoTituloHero() {
+  const titulo = document.querySelector("#nombre-sitio");
+  if (!titulo) return;
+
+  const movil = window.matchMedia("(max-width: 600px)").matches;
+
+  // En escritorio dejamos que la hoja de estilos gobierne el título.
+  if (!movil) {
+    titulo.style.removeProperty("font-size");
+    titulo.style.removeProperty("letter-spacing");
+    titulo.style.removeProperty("transform");
+    return;
+  }
+
+  const contenido = titulo.closest(".hero-redes-contenido");
+  if (!contenido) return;
+
+  // El contenedor ahora tiene un ancho físico real. Dejamos un margen
+  // de seguridad para subpíxeles y para que la última letra nunca toque
+  // el borde derecho de la tarjeta.
+  const anchoDisponible = Math.floor(contenido.getBoundingClientRect().width) - 5;
+  if (anchoDisponible <= 0) return;
+
+  const base = window.innerWidth <= 380 ? 14 : 15;
+  const minimo = 8.2;
+
+  titulo.style.setProperty("font-size", `${base}px`, "important");
+  titulo.style.setProperty("letter-spacing", "-0.08px", "important");
+  titulo.style.setProperty("transform", "none", "important");
+
+  // Medimos con un canvas usando exactamente la fuente calculada.
+  const canvas = ajustarTamanoTituloHero.canvas ||
+    (ajustarTamanoTituloHero.canvas = document.createElement("canvas"));
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  const medir = () => {
+    const estilo = getComputedStyle(titulo);
+    ctx.font = `${estilo.fontStyle} ${estilo.fontWeight} ${estilo.fontSize} ${estilo.fontFamily}`;
+    const texto = titulo.textContent || "";
+    const anchoTexto = ctx.measureText(texto).width;
+    const espaciado = parseFloat(estilo.letterSpacing) || 0;
+    return anchoTexto + Math.max(0, texto.length - 1) * espaciado;
+  };
+
+  let anchoTexto = medir();
+  if (anchoTexto <= anchoDisponible) return;
+
+  // Aproximación proporcional inicial.
+  let size = Math.max(minimo, Math.min(base, base * (anchoDisponible / anchoTexto)));
+  titulo.style.setProperty("font-size", `${size.toFixed(2)}px`, "important");
+  anchoTexto = medir();
+
+  // Afinado de seguridad para diferencias de rasterizado entre navegadores.
+  let intentos = 0;
+  while (anchoTexto > anchoDisponible && size > minimo && intentos < 80) {
+    size = Math.max(minimo, size - 0.1);
+    titulo.style.setProperty("font-size", `${size.toFixed(2)}px`, "important");
+    anchoTexto = medir();
+    intentos += 1;
+  }
+
+  // Caso extremo: si el texto sigue siendo demasiado largo al llegar al
+  // mínimo, reducimos el tracking antes de considerar cualquier recorte.
+  if (anchoTexto > anchoDisponible) {
+    titulo.style.setProperty("letter-spacing", "-0.35px", "important");
+    anchoTexto = medir();
+  }
+
+  // Último seguro para textos excepcionalmente largos: escala horizontal
+  // solo el texto, manteniéndolo completo y dentro del contenedor.
+  if (anchoTexto > anchoDisponible && anchoTexto > 0) {
+    const escala = Math.max(0.72, Math.min(1, anchoDisponible / anchoTexto));
+    titulo.style.setProperty("transform", `scaleX(${escala.toFixed(4)})`, "important");
+  }
+}
+
+function programarAjusteTituloHero() {
+  requestAnimationFrame(() => {
+    ajustarTamanoTituloHero();
+    requestAnimationFrame(ajustarTamanoTituloHero);
+  });
+}
+
+window.addEventListener("resize", programarAjusteTituloHero, { passive: true });
+window.addEventListener("orientationchange", programarAjusteTituloHero, { passive: true });
+window.addEventListener("pageshow", programarAjusteTituloHero);
+document.addEventListener("DOMContentLoaded", programarAjusteTituloHero);
+document.addEventListener("ofertas:configuracion-cargada", programarAjusteTituloHero);
+document.addEventListener("ofertas:etiquetas-cargadas", programarAjusteTituloHero);
+
+const tituloHeroObservable = document.querySelector("#nombre-sitio");
+if (tituloHeroObservable) {
+  new MutationObserver(programarAjusteTituloHero).observe(tituloHeroObservable, {
+    childList: true,
+    characterData: true,
+    subtree: true
+  });
+}
+
+if (document.fonts?.ready) {
+  document.fonts.ready.then(programarAjusteTituloHero).catch(() => {});
+}
+
+window.setTimeout(programarAjusteTituloHero, 0);
+window.setTimeout(programarAjusteTituloHero, 150);
+window.setTimeout(programarAjusteTituloHero, 500);
+
+
+/* ============================================================
+   V82.31 — Menú “Más” integrado en la barra inferior
+   Reutiliza Tutorial y Notificaciones existentes.
+   ============================================================ */
+function actualizarTextoAvisosMenuMas() {
+  const texto = document.querySelector("#menu-mas-avisos-texto");
+  const boton = document.querySelector("#menu-mas-avisos");
+  if (!texto || !boton) return;
+
+  const activos =
+    typeof avisosNovedadesActivos === "function" && avisosNovedadesActivos();
+
+  texto.textContent = activos ? "Avisos activados" : "Activar notificaciones";
+  boton.classList.toggle("activo", Boolean(activos));
+}
+
+function cerrarMenuMasFlotante() {
+  const panel = document.querySelector("#menu-mas-panel");
+  const boton = document.querySelector("#barra-inferior-mas");
+  if (!panel || !boton) return;
+
+  panel.hidden = true;
+  boton.setAttribute("aria-expanded", "false");
+}
+
+function abrirMenuMasInferior() {
+  const panel = document.querySelector("#menu-mas-panel");
+  const boton = document.querySelector("#barra-inferior-mas");
+  if (!panel || !boton) return;
+
+  actualizarTextoAvisosMenuMas();
+  panel.hidden = false;
+  boton.setAttribute("aria-expanded", "true");
+}
+
+function inicializarMenuMasFlotante() {
+  const panel = document.querySelector("#menu-mas-panel");
+  const boton = document.querySelector("#barra-inferior-mas");
+  const tutorial = document.querySelector("#menu-mas-tutorial");
+  const avisos = document.querySelector("#menu-mas-avisos");
+
+  if (!panel || !boton || !tutorial || !avisos) return;
+
+  actualizarTextoAvisosMenuMas();
+
+  boton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const abrir = panel.hidden;
+    if (abrir) abrirMenuMasInferior();
+    else cerrarMenuMasFlotante();
+  });
+
+  tutorial.addEventListener("click", () => {
+    cerrarMenuMasFlotante();
+    if (typeof iniciarTutorialGuiado === "function") {
+      iniciarTutorialGuiado(false);
+    }
+  });
+
+  avisos.addEventListener("click", async () => {
+    if (typeof activarAvisosNovedades === "function") {
+      await activarAvisosNovedades();
+      actualizarTextoAvisosMenuMas();
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!panel.hidden && !panel.contains(event.target) && !boton.contains(event.target)) {
+      cerrarMenuMasFlotante();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") cerrarMenuMasFlotante();
+  });
+}
+
+document.addEventListener("DOMContentLoaded", inicializarMenuMasFlotante);
+document.addEventListener("visibilitychange", actualizarTextoAvisosMenuMas);
+
+
+window.setInterval(actualizarTemporizadoresOfertazo, 60 * 1000);
