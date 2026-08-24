@@ -88,7 +88,7 @@
     display: block;
     max-width: 100%;
     margin: -1px 0 0;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
     font-size: 11px;
     font-weight: 400;
     line-height: 12px;
@@ -200,7 +200,7 @@
   }
 
   .menu-mas-contenido-inferior strong {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
     font-size: 14px;
     font-weight: 600;
     line-height: 17px;
@@ -208,7 +208,7 @@
   }
 
   .menu-mas-contenido-inferior small {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
     font-size: 11.5px;
     font-weight: 400;
     line-height: 15px;
@@ -367,7 +367,7 @@
   .barra-inferior-texto {
     display: block;
     margin-top: -1px;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
     font-size: 11px;
     font-weight: 400;
     line-height: 12px;
@@ -454,7 +454,7 @@
   }
 
   .menu-mas-contenido-inferior strong {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
     font-size: 14px;
     font-weight: 600;
     line-height: 17px;
@@ -462,7 +462,7 @@
   }
 
   .menu-mas-contenido-inferior small {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
     font-size: 11.5px;
     line-height: 15px;
     color: #666;

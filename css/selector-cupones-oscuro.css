@@ -157,7 +157,7 @@
 .selector-cupones-menu .tab-etiqueta-principal,
 .selector-cupones-menu > .tab-inferior.activo .tab-etiqueta-principal,
 .selector-cupones-menu > .tab-inferior[aria-pressed="true"] .tab-etiqueta-principal {
-  font-family: Arial, Helvetica, sans-serif !important;
+  font-family: 'Inter', Arial, Helvetica, sans-serif !important;
   font-size: 10px !important;
   font-weight: 400 !important;
   line-height: 1 !important;
