@@ -1,6 +1,6 @@
 /* ============================================================
-   V82.29 — Barra inferior móvil: Cupones | Ofertazo
-   Referencia visual Mercado Libre, formato compacto.
+   V82.30 — Barra inferior móvil: Cupones | Ofertazo
+   Iconos vectoriales recreados + texto HTML editable.
    ============================================================ */
 
 .barra-navegacion-inferior {
@@ -9,7 +9,7 @@
 
 @media (max-width: 700px) {
   :root {
-    --barra-inferior-alto: 70px;
+    --barra-inferior-alto: 68px;
   }
 
   body {
@@ -30,35 +30,58 @@
     padding: 2px max(10px, env(safe-area-inset-right)) env(safe-area-inset-bottom) max(10px, env(safe-area-inset-left));
     background: #fff;
     border-top: 1px solid #e6e6e6;
-    box-shadow: 0 -4px 14px rgba(0, 0, 0, .08);
+    box-shadow: 0 -3px 12px rgba(0, 0, 0, .07);
   }
 
   .barra-inferior-item {
     appearance: none;
     -webkit-appearance: none;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 1px;
     min-width: 0;
-    min-height: 66px;
-    padding: 1px 8px 2px;
+    min-height: 64px;
+    padding: 2px 8px 3px;
     margin: 0;
     border: 0;
-    border-radius: 10px;
+    border-radius: 9px;
     background: transparent;
+    color: #222;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
   }
 
-  .barra-inferior-item img {
-    display: block;
-    width: auto;
-    height: 62px;
-    max-width: 106px;
-    object-fit: contain;
-    object-position: center;
+  .barra-inferior-icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 51px;
+    height: 43px;
+    flex: 0 0 43px;
     pointer-events: none;
-    user-select: none;
+  }
+
+  .barra-inferior-icono svg {
+    display: block;
+    width: 51px;
+    height: 43px;
+    overflow: visible;
+  }
+
+  .barra-inferior-texto {
+    display: block;
+    max-width: 100%;
+    margin: -1px 0 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 15px;
+    letter-spacing: 0;
+    white-space: nowrap;
+    color: #252525;
+    pointer-events: none;
   }
 
   .barra-inferior-item.activo {
@@ -86,15 +109,27 @@
 
 @media (max-width: 380px) {
   :root {
-    --barra-inferior-alto: 66px;
+    --barra-inferior-alto: 65px;
   }
 
   .barra-inferior-item {
-    min-height: 62px;
+    min-height: 61px;
+    padding-top: 1px;
   }
 
-  .barra-inferior-item img {
-    height: 58px;
-    max-width: 98px;
+  .barra-inferior-icono {
+    width: 47px;
+    height: 40px;
+    flex-basis: 40px;
+  }
+
+  .barra-inferior-icono svg {
+    width: 47px;
+    height: 40px;
+  }
+
+  .barra-inferior-texto {
+    font-size: 12.5px;
+    line-height: 14px;
   }
 }
