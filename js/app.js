@@ -29,6 +29,7 @@ const tabExclusivo = document.querySelector("#tab-exclusivo");
 const vistaCupones = document.querySelector("#vista-cupones");
 const barraInferiorCupones = document.querySelector("#barra-inferior-cupones");
 const barraInferiorOfertazo = document.querySelector("#barra-inferior-ofertazo");
+const barraInferiorMas = document.querySelector("#barra-inferior-mas");
 const botonesMenuOfertas = document.querySelectorAll(".menu-ofertas [data-vista]");
 const botonComunidadAnirona = document.querySelector("#boton-anirona-hero[data-vista]");
 const menuOfertas = document.querySelector(".menu-ofertas");
@@ -4339,19 +4340,13 @@ const pasosTutorial = [
   {
     selector: "#menu-mas-avisos",
     titulo: "Activa los avisos",
-    texto: "Desde el botón Más puedes encontrar Notificaciones. Actívalas para recibir avisos cuando publiquemos nuevos cupones y oportunidades.",
+    texto: "En la nueva barra inferior toca Más y después Activar notificaciones para recibir avisos cuando publiquemos nuevos cupones y oportunidades.",
     icono: "🔔",
     preparar: async () => {
       limpiarCuponTutorial();
       window.scrollTo({ top: 0, behavior: "auto" });
       await esperarTutorial(80);
-      const panel = document.querySelector("#menu-mas-panel");
-      const boton = document.querySelector("#boton-mas-flotante");
-      if (panel && boton) {
-        panel.hidden = false;
-        boton.setAttribute("aria-expanded", "true");
-        document.querySelector("#menu-mas-flotante")?.classList.add("abierto");
-      }
+      abrirMenuMasInferior?.();
       await esperarTutorial(180);
     },
   },
@@ -4370,7 +4365,7 @@ const pasosTutorial = [
   },
   {
     titulo: "¡Listo para ahorrar!",
-    texto: "Ya conoces las funciones principales. Revisa los cupones, consulta sus condiciones y aprovéchalos a tiempo. Puedes repetir este tutorial cuando quieras desde el botón Más.",
+    texto: "Ya conoces las funciones principales. Revisa los cupones, consulta sus condiciones y aprovéchalos a tiempo. Puedes repetir este tutorial cuando quieras desde Más, en la nueva barra inferior.",
     icono: "🎉",
     finalizarEnTienda: true,
     preparar: async () => {
@@ -4579,7 +4574,7 @@ window.setTimeout(ajustarTamanoTituloHero, 0);
 
 
 /* ============================================================
-   V82.27 — Menú flotante "Más"
+   V82.31 — Menú “Más” integrado en la barra inferior
    Reutiliza Tutorial y Notificaciones existentes.
    ============================================================ */
 function actualizarTextoAvisosMenuMas() {
@@ -4590,37 +4585,44 @@ function actualizarTextoAvisosMenuMas() {
   const activos =
     typeof avisosNovedadesActivos === "function" && avisosNovedadesActivos();
 
-  texto.textContent = activos ? "Avisos activados" : "Notificaciones";
+  texto.textContent = activos ? "Avisos activados" : "Activar notificaciones";
   boton.classList.toggle("activo", Boolean(activos));
 }
 
 function cerrarMenuMasFlotante() {
   const panel = document.querySelector("#menu-mas-panel");
-  const boton = document.querySelector("#boton-mas-flotante");
+  const boton = document.querySelector("#barra-inferior-mas");
   if (!panel || !boton) return;
 
   panel.hidden = true;
   boton.setAttribute("aria-expanded", "false");
-  document.querySelector("#menu-mas-flotante")?.classList.remove("abierto");
+}
+
+function abrirMenuMasInferior() {
+  const panel = document.querySelector("#menu-mas-panel");
+  const boton = document.querySelector("#barra-inferior-mas");
+  if (!panel || !boton) return;
+
+  actualizarTextoAvisosMenuMas();
+  panel.hidden = false;
+  boton.setAttribute("aria-expanded", "true");
 }
 
 function inicializarMenuMasFlotante() {
-  const contenedor = document.querySelector("#menu-mas-flotante");
   const panel = document.querySelector("#menu-mas-panel");
-  const boton = document.querySelector("#boton-mas-flotante");
+  const boton = document.querySelector("#barra-inferior-mas");
   const tutorial = document.querySelector("#menu-mas-tutorial");
   const avisos = document.querySelector("#menu-mas-avisos");
 
-  if (!contenedor || !panel || !boton || !tutorial || !avisos) return;
+  if (!panel || !boton || !tutorial || !avisos) return;
 
   actualizarTextoAvisosMenuMas();
 
   boton.addEventListener("click", (event) => {
     event.stopPropagation();
     const abrir = panel.hidden;
-    panel.hidden = !abrir;
-    boton.setAttribute("aria-expanded", abrir ? "true" : "false");
-    contenedor.classList.toggle("abierto", abrir);
+    if (abrir) abrirMenuMasInferior();
+    else cerrarMenuMasFlotante();
   });
 
   tutorial.addEventListener("click", () => {
@@ -4638,7 +4640,9 @@ function inicializarMenuMasFlotante() {
   });
 
   document.addEventListener("click", (event) => {
-    if (!contenedor.contains(event.target)) cerrarMenuMasFlotante();
+    if (!panel.hidden && !panel.contains(event.target) && !boton.contains(event.target)) {
+      cerrarMenuMasFlotante();
+    }
   });
 
   document.addEventListener("keydown", (event) => {

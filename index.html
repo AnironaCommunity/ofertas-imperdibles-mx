@@ -667,6 +667,24 @@
       </span>
       <span class="barra-inferior-texto">Ofertazo</span>
     </button>
+
+
+    <button
+      id="barra-inferior-mas"
+      class="barra-inferior-item barra-inferior-item-mas"
+      type="button"
+      aria-expanded="false"
+      aria-controls="menu-mas-panel"
+      aria-label="Ver más opciones"
+    >
+      <span class="barra-inferior-icono barra-inferior-icono-mas" aria-hidden="true">
+        <svg viewBox="0 0 48 48" focusable="false">
+          <rect x="20" y="5" width="8" height="38" rx="3.2" fill="currentColor"/>
+          <rect x="5" y="20" width="38" height="8" rx="3.2" fill="currentColor"/>
+        </svg>
+      </span>
+      <span class="barra-inferior-texto">Más</span>
+    </button>
   </nav>
 
   <a
@@ -687,40 +705,33 @@
   </a>
 
 
-  <div id="menu-mas-flotante" class="menu-mas-flotante" aria-live="polite">
-    <div id="menu-mas-panel" class="menu-mas-panel" hidden>
-      <button id="menu-mas-tutorial" class="menu-mas-opcion" type="button">
-        <span class="menu-mas-icono menu-mas-icono-tutorial" aria-hidden="true">
-          <svg viewBox="0 0 32 32" focusable="false">
-            <circle cx="16" cy="16" r="13"></circle>
-            <path d="M13 10.5 22 16l-9 5.5z"></path>
-          </svg>
-        </span>
-        <span>Ver tutorial</span>
-      </button>
+  <div id="menu-mas-panel" class="menu-mas-panel-inferior" hidden aria-label="Más opciones">
+    <button id="menu-mas-tutorial" class="menu-mas-opcion-inferior" type="button">
+      <span class="menu-mas-icono-inferior menu-mas-icono-tutorial-inferior" aria-hidden="true">
+        <svg viewBox="0 0 48 48" focusable="false">
+          <path d="M5 18.5 24 9l19 9.5L24 28 5 18.5Z" fill="#ffd21a" stroke="#222" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M13 23v9.5c5.6 5.2 16.4 5.2 22 0V23" fill="#ffd21a" stroke="#222" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M41 20v12" stroke="#222" stroke-width="2.4" stroke-linecap="round"/>
+          <circle cx="41" cy="34.5" r="2.2" fill="#ffd21a"/>
+        </svg>
+      </span>
+      <span class="menu-mas-contenido-inferior">
+        <strong>Ver tutorial</strong>
+        <small>Aprende a usar los cupones paso a paso</small>
+      </span>
+    </button>
 
-      <button id="menu-mas-avisos" class="menu-mas-opcion" type="button">
-        <span class="menu-mas-icono menu-mas-icono-avisos" aria-hidden="true">
-          <svg viewBox="0 0 32 32" focusable="false">
-            <path d="M16 4.5c-4.2 0-7 3.3-7 7.5v4.2c0 1.9-.7 3.8-2 5.3l-1.1 1.2h20.2L25 21.5c-1.3-1.5-2-3.4-2-5.3V12c0-4.2-2.8-7.5-7-7.5Z"></path>
-            <path d="M12.4 24.4a3.8 3.8 0 0 0 7.2 0"></path>
-          </svg>
-        </span>
-        <span id="menu-mas-avisos-texto">Notificaciones</span>
-      </button>
-    </div>
-
-    <button
-      id="boton-mas-flotante"
-      class="boton-mas-flotante"
-      type="button"
-      aria-expanded="false"
-      aria-controls="menu-mas-panel"
-      aria-label="Más opciones"
-      title="Más opciones"
-    >
-      <span class="boton-mas-puntos" aria-hidden="true">•••</span>
-      <span class="boton-mas-texto">Más</span>
+    <button id="menu-mas-avisos" class="menu-mas-opcion-inferior" type="button">
+      <span class="menu-mas-icono-inferior menu-mas-icono-avisos-inferior" aria-hidden="true">
+        <svg viewBox="0 0 48 48" focusable="false">
+          <path d="M24 7c-7 0-11.5 5.5-11.5 12.5v7c0 3.1-1.2 6.1-3.3 8.6L7.5 37h33l-1.7-1.9c-2.1-2.5-3.3-5.5-3.3-8.6v-7C35.5 12.5 31 7 24 7Z" fill="#ffd21a" stroke="#222" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M18.5 39.5a6 6 0 0 0 11 0" fill="none" stroke="#222" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="menu-mas-contenido-inferior">
+        <strong id="menu-mas-avisos-texto">Activar notificaciones</strong>
+        <small>Recibe avisos cuando haya nuevos cupones</small>
+      </span>
     </button>
   </div>
 

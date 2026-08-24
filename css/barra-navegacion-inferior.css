@@ -1,19 +1,20 @@
 /* ============================================================
-   V82.30 — Barra inferior móvil: Cupones | Ofertazo
-   Iconos vectoriales recreados + texto HTML editable.
+   V82.31 — Barra inferior móvil compacta: Cupones | Ofertazo | Más
+   Iconos vectoriales + textos HTML editables.
    ============================================================ */
 
-.barra-navegacion-inferior {
+.barra-navegacion-inferior,
+.menu-mas-panel-inferior {
   display: none;
 }
 
 @media (max-width: 700px) {
   :root {
-    --barra-inferior-alto: 68px;
+    --barra-inferior-alto: 56px;
   }
 
   body {
-    padding-bottom: calc(var(--barra-inferior-alto) + env(safe-area-inset-bottom) + 8px) !important;
+    padding-bottom: calc(var(--barra-inferior-alto) + env(safe-area-inset-bottom) + 6px) !important;
   }
 
   .barra-navegacion-inferior {
@@ -23,14 +24,16 @@
     right: 0;
     bottom: 0;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     align-items: stretch;
     width: 100%;
     min-height: var(--barra-inferior-alto);
-    padding: 2px max(10px, env(safe-area-inset-right)) env(safe-area-inset-bottom) max(10px, env(safe-area-inset-left));
-    background: #fff;
-    border-top: 1px solid #e6e6e6;
-    box-shadow: 0 -3px 12px rgba(0, 0, 0, .07);
+    padding: 1px max(8px, env(safe-area-inset-right)) env(safe-area-inset-bottom) max(8px, env(safe-area-inset-left));
+    background: rgba(255, 255, 255, .98);
+    border-top: 1px solid #e7e7e7;
+    box-shadow: 0 -2px 9px rgba(0, 0, 0, .06);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 
   .barra-inferior-item {
@@ -40,15 +43,15 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1px;
+    gap: 0;
     min-width: 0;
-    min-height: 64px;
-    padding: 2px 8px 3px;
+    min-height: 52px;
+    padding: 1px 6px 2px;
     margin: 0;
     border: 0;
-    border-radius: 9px;
+    border-radius: 8px;
     background: transparent;
-    color: #222;
+    color: #313131;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
   }
@@ -57,17 +60,28 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 51px;
-    height: 43px;
-    flex: 0 0 43px;
+    width: 39px;
+    height: 34px;
+    flex: 0 0 34px;
     pointer-events: none;
   }
 
   .barra-inferior-icono svg {
     display: block;
-    width: 51px;
-    height: 43px;
+    width: 39px;
+    height: 34px;
     overflow: visible;
+  }
+
+  .barra-inferior-icono-mas {
+    width: 32px;
+    color: #454545;
+  }
+
+  .barra-inferior-icono-mas svg {
+    width: 30px;
+    height: 30px;
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,.18));
   }
 
   .barra-inferior-texto {
@@ -75,16 +89,17 @@
     max-width: 100%;
     margin: -1px 0 0;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 400;
-    line-height: 15px;
+    line-height: 12px;
     letter-spacing: 0;
     white-space: nowrap;
     color: #252525;
     pointer-events: none;
   }
 
-  .barra-inferior-item.activo {
+  .barra-inferior-item.activo,
+  .barra-inferior-item[aria-expanded="true"] {
     background: #fafafa;
   }
 
@@ -97,39 +112,177 @@
     outline-offset: -3px;
   }
 
-  /* Los accesos flotantes existentes permanecen disponibles sin tapar la barra. */
-  .whatsapp-flotante {
-    bottom: calc(var(--barra-inferior-alto) + 12px + env(safe-area-inset-bottom)) !important;
+  /* Menú contextual de la nueva opción Más. */
+  .menu-mas-panel-inferior {
+    position: fixed;
+    z-index: 24990;
+    right: 10px;
+    bottom: calc(var(--barra-inferior-alto) + env(safe-area-inset-bottom) + 8px);
+    display: grid;
+    width: min(315px, calc(100vw - 20px));
+    padding: 5px;
+    background: rgba(255, 255, 255, .985);
+    border: 1px solid #dedede;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .16);
+    overflow: visible;
   }
 
-  .menu-mas-flotante {
-    bottom: calc(var(--barra-inferior-alto) + 12px + env(safe-area-inset-bottom)) !important;
+  .menu-mas-panel-inferior[hidden] {
+    display: none !important;
+  }
+
+  .menu-mas-panel-inferior::after {
+    content: "";
+    position: absolute;
+    right: calc(16.666vw - 7px);
+    bottom: -7px;
+    width: 13px;
+    height: 13px;
+    background: #fff;
+    border-right: 1px solid #dedede;
+    border-bottom: 1px solid #dedede;
+    transform: rotate(45deg);
+  }
+
+  .menu-mas-opcion-inferior {
+    appearance: none;
+    -webkit-appearance: none;
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 58px;
+    padding: 8px 10px;
+    border: 0;
+    border-radius: 11px;
+    background: transparent;
+    color: #222;
+    text-align: left;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .menu-mas-opcion-inferior + .menu-mas-opcion-inferior {
+    border-top: 1px solid #ececec;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  .menu-mas-opcion-inferior:active {
+    background: #f6f6f6;
+  }
+
+  .menu-mas-opcion-inferior.activo {
+    background: #fffbea;
+  }
+
+  .menu-mas-icono-inferior {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+  }
+
+  .menu-mas-icono-inferior svg {
+    display: block;
+    width: 34px;
+    height: 34px;
+  }
+
+  .menu-mas-contenido-inferior {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .menu-mas-contenido-inferior strong {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 17px;
+    color: #181818;
+  }
+
+  .menu-mas-contenido-inferior small {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11.5px;
+    font-weight: 400;
+    line-height: 15px;
+    color: #666;
+  }
+
+  /* El acceso flotante WhatsApp permanece por encima de la nueva barra. */
+  .whatsapp-flotante {
+    bottom: calc(var(--barra-inferior-alto) + 10px + env(safe-area-inset-bottom)) !important;
+  }
+
+  /* El botón Más flotante anterior deja de existir visualmente aunque quede CSS legado. */
+  .menu-mas-flotante,
+  .boton-mas-flotante {
+    display: none !important;
   }
 }
 
 @media (max-width: 380px) {
   :root {
-    --barra-inferior-alto: 65px;
+    --barra-inferior-alto: 53px;
   }
 
   .barra-inferior-item {
-    min-height: 61px;
-    padding-top: 1px;
+    min-height: 49px;
+    padding-top: 0;
   }
 
   .barra-inferior-icono {
-    width: 47px;
-    height: 40px;
-    flex-basis: 40px;
+    width: 36px;
+    height: 31px;
+    flex-basis: 31px;
   }
 
   .barra-inferior-icono svg {
-    width: 47px;
-    height: 40px;
+    width: 36px;
+    height: 31px;
+  }
+
+  .barra-inferior-icono-mas svg {
+    width: 27px;
+    height: 27px;
   }
 
   .barra-inferior-texto {
-    font-size: 12.5px;
+    font-size: 10.5px;
+    line-height: 11px;
+  }
+
+  .menu-mas-panel-inferior {
+    right: 7px;
+    width: min(294px, calc(100vw - 14px));
+  }
+
+  .menu-mas-opcion-inferior {
+    min-height: 54px;
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 8px;
+    padding: 7px 8px;
+  }
+
+  .menu-mas-icono-inferior,
+  .menu-mas-icono-inferior svg {
+    width: 31px;
+    height: 31px;
+  }
+
+  .menu-mas-contenido-inferior strong {
+    font-size: 13px;
+    line-height: 16px;
+  }
+
+  .menu-mas-contenido-inferior small {
+    font-size: 11px;
     line-height: 14px;
   }
 }
