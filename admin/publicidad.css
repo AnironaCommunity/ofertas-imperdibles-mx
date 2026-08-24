@@ -360,3 +360,30 @@ button:disabled {
   .formulario-compacto .form-grid > * { grid-column: auto !important; }
   .formulario-compacto .acciones button { flex: 1 1 100%; }
 }
+
+
+/* V82.32 — Alta compacta de productos Ofertazo */
+.formulario-compacto select {
+  width: 100%; min-height: 35px; padding: 7px 9px; border: 1px solid #cbd8d3;
+  border-radius: 10px; background: #fff; font: inherit; font-size: 12px;
+}
+.formulario-compacto .campo-ad-seccion { grid-column: span 2; }
+.formulario-compacto .campo-ad-categoria-producto { grid-column: span 2; }
+.formulario-compacto .campo-ad-titulo { grid-column: span 3; }
+.formulario-compacto .campo-ad-descripcion { grid-column: span 2; }
+.formulario-compacto .campo-ad-precio-actual,
+.formulario-compacto .campo-ad-precio-anterior,
+.formulario-compacto .campo-ad-expiracion { grid-column: span 1; }
+.formulario-compacto .campo-ad-enlace { grid-column: span 2; }
+.campo-ofertazo[hidden] { display: none !important; }
+.publicidad-item .etiqueta-ofertazo-admin {
+  display: inline-flex; margin-bottom: 5px; padding: 3px 7px; border-radius: 999px;
+  color: #5c4a00; background: #fff2a8; font-size: 10px; font-weight: 800;
+}
+@media (max-width: 760px) {
+  .formulario-compacto .campo-ad-seccion,
+  .formulario-compacto .campo-ad-categoria-producto,
+  .formulario-compacto .campo-ad-titulo,
+  .formulario-compacto .campo-ad-descripcion,
+  .formulario-compacto .campo-ad-enlace { grid-column: span 2; }
+}

@@ -7,9 +7,14 @@ const logoutButton = document.querySelector("#cerrar-sesion");
 
 const form = document.querySelector("#publicidad-form");
 const idInput = document.querySelector("#publicidad-id");
+const sectionInput = document.querySelector("#seccion");
+const categoryProductInput = document.querySelector("#categoria-producto");
 const titleInput = document.querySelector("#titulo");
 const descriptionInput = document.querySelector("#descripcion");
 const linkInput = document.querySelector("#enlace");
+const currentPriceInput = document.querySelector("#precio-actual");
+const previousPriceInput = document.querySelector("#precio-anterior");
+const expiresInput = document.querySelector("#fecha-expiracion");
 const orderInput = document.querySelector("#orden");
 const activeInput = document.querySelector("#activo");
 const fileInput = document.querySelector("#imagen");
@@ -95,24 +100,49 @@ function logout() {
   passwordInput.value = "";
 }
 
+function toLocalDateTimeInput(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return "";
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function toggleOfertazoFields() {
+  const ofertazo = sectionInput.value === "ofertas_mercado_libre";
+  document.querySelectorAll(".campo-ofertazo").forEach((field) => { field.hidden = !ofertazo; });
+}
+
 function resetForm() {
   form.reset();
   idInput.value = "";
   imageUrlInput.value = "";
   activeInput.checked = true;
+  sectionInput.value = "ofertas_mercado_libre";
+  categoryProductInput.value = "";
+  currentPriceInput.value = "";
+  previousPriceInput.value = "";
+  expiresInput.value = "";
   orderInput.value = "0";
+  toggleOfertazoFields();
   previewWrapper.hidden = true;
   previewImage.src = "";
-  formTitle.textContent = "Agregar publicidad";
+  formTitle.textContent = "Agregar producto";
   cancelButton.hidden = true;
   message(formMessage);
 }
 
 function edit(publicidad) {
   idInput.value = publicidad.id;
+  sectionInput.value = Array.isArray(publicidad.secciones) && publicidad.secciones.includes("ofertas_mercado_libre") ? "ofertas_mercado_libre" : (publicidad.categoria === "ofertas_mercado_libre" ? "ofertas_mercado_libre" : "ofertas_dia");
+  categoryProductInput.value = publicidad.categoria_producto || "";
   titleInput.value = publicidad.titulo || "";
   descriptionInput.value = publicidad.descripcion || "";
-  linkInput.value = publicidad.enlace || "";
+  linkInput.value = publicidad.enlace_mercado_libre || publicidad.enlace || "";
+  currentPriceInput.value = publicidad.precio_publicado || "";
+  previousPriceInput.value = publicidad.precio_anterior || "";
+  expiresInput.value = toLocalDateTimeInput(publicidad.fecha_expiracion);
+  toggleOfertazoFields();
   orderInput.value = publicidad.orden || 0;
   activeInput.checked = Boolean(publicidad.activo);
   imageUrlInput.value = publicidad.imagen_url || "";
@@ -133,7 +163,7 @@ function render() {
   list.replaceChildren();
 
   if (!publicidades.length) {
-    list.innerHTML = "<p>No hay publicidades registradas.</p>";
+    list.innerHTML = "<p>No hay productos ni publicidades registradas.</p>";
     return;
   }
 
@@ -146,12 +176,13 @@ function render() {
       <img src="${escapeHtml(publicidad.imagen_url)}" alt="" />
 
       <div class="publicidad-info">
+        ${(Array.isArray(publicidad.secciones) && publicidad.secciones.includes("ofertas_mercado_libre")) || publicidad.categoria === "ofertas_mercado_libre" ? `<span class="etiqueta-ofertazo-admin">OFERTAZO</span>` : ""}
         <h3>${escapeHtml(publicidad.titulo)}</h3>
         <p>${escapeHtml(publicidad.descripcion || "")}</p>
         <small>
           Orden: ${Number(publicidad.orden || 0)} ·
-          Clics: ${Number(publicidad.clics || 0)} ·
-          ${publicidad.activo ? "Activa" : "Inactiva"}
+          Visitas: ${Number(publicidad.visitas || 0)} ·
+          ${publicidad.activo ? "Activo" : "Inactivo"}
         </small>
       </div>
 
@@ -190,7 +221,7 @@ async function cargarLista() {
   try {
     publicidades = await api("/api/admin-publicidad");
     render();
-    message(listMessage, `${publicidades.length} publicidades registradas.`);
+    message(listMessage, `${publicidades.length} registros.`);
   } catch (error) {
     message(listMessage, error.message, true);
   } finally {
@@ -249,7 +280,7 @@ async function save(event) {
   const submit = form.querySelector('button[type="submit"]');
 
   submit.disabled = true;
-  message(formMessage, "Guardando publicidad...");
+  message(formMessage, "Guardando producto...");
 
   try {
     const imageUrl = await subirImagen();
@@ -258,10 +289,19 @@ async function save(event) {
       throw new Error("Selecciona una foto del producto.");
     }
 
+    const section = sectionInput.value === "ofertas_mercado_libre" ? "ofertas_mercado_libre" : "ofertas_dia";
     const payload = {
       titulo: titleInput.value.trim(),
       descripcion: descriptionInput.value.trim(),
+      categoria_producto: section === "ofertas_mercado_libre" ? categoryProductInput.value.trim() : "",
+      precio_publicado: section === "ofertas_mercado_libre" ? currentPriceInput.value.trim() : "",
+      precio_anterior: section === "ofertas_mercado_libre" ? previousPriceInput.value.trim() : "",
+      fecha_expiracion: section === "ofertas_mercado_libre" && expiresInput.value ? new Date(expiresInput.value).toISOString() : null,
       enlace: linkInput.value.trim(),
+      enlace_mercado_libre: linkInput.value.trim(),
+      plataforma: "mercadolibre",
+      categoria: section,
+      secciones: [section],
       imagen_url: imageUrl,
       orden: Number(orderInput.value) || 0,
       activo: activeInput.checked,
@@ -278,14 +318,14 @@ async function save(event) {
         }),
       });
 
-      message(formMessage, "Publicidad actualizada.");
+      message(formMessage, "Producto actualizado.");
     } else {
       await api("/api/admin-publicidad", {
         method: "POST",
         body: JSON.stringify(payload),
       });
 
-      message(formMessage, "Publicidad agregada.");
+      message(formMessage, "Producto agregado.");
     }
 
     resetForm();
@@ -350,6 +390,9 @@ fileInput.addEventListener("change", async () => {
   previewImage.src = dataUrl;
   previewWrapper.hidden = false;
 });
+
+sectionInput.addEventListener("change", toggleOfertazoFields);
+toggleOfertazoFields();
 
 loginButton.addEventListener("click", login);
 passwordInput.addEventListener("keydown", (event) => {

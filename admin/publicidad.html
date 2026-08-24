@@ -5,17 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, nofollow" />
 
-  <title>Publicidad | Ofertas Imperdibles MX</title>
+  <title>Productos y publicidad | Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="../img/logo.png" />
-  <link rel="stylesheet" href="publicidad.css?v=20" />
+  <link rel="stylesheet" href="publicidad.css?v=82.32" />
 </head>
 
 <body>
   <header class="encabezado">
     <img src="../img/logo.png" alt="Ofertas Imperdibles MX" class="logo" />
-    <h1>📢 Publicidad rotativa</h1>
-    <p>Administra los anuncios que aparecen al final de la página.</p>
+    <h1>🛍️ Productos y publicidad</h1>
+    <p>Da de alta productos para Ofertazo y administra el contenido publicado.</p>
   </header>
 
   <main class="contenedor">
@@ -40,15 +40,15 @@
     <section id="admin-panel" hidden>
       <nav class="admin-nav">
         <a href="./">🎟️ Cupones</a>
-        <a class="activo" href="publicidad.html">📢 Publicidad</a>
+        <a class="activo" href="publicidad.html">🛍️ Ofertazo / Publicidad</a>
         <button id="cerrar-sesion" type="button">Cerrar sesión</button>
       </nav>
 
       <section class="panel panel-formulario-compacto">
         <div class="titulo-fila">
-          <h2 id="form-title">Agregar publicidad</h2>
+          <h2 id="form-title">Agregar producto</h2>
           <button id="nueva-publicidad" class="boton-secundario" type="button">
-            + Nueva
+            + Nuevo
           </button>
         </div>
 
@@ -57,56 +57,59 @@
           <input id="imagen-url" type="hidden" />
 
           <div class="form-grid form-grid-publicidad">
-            <div class="campo campo-ad-titulo">
-              <label for="titulo">Título</label>
-              <input
-                id="titulo"
-                type="text"
-                placeholder="Ej. Rotomartillo ANIRONA"
-                required
-              />
+            <div class="campo campo-ad-seccion">
+              <label for="seccion">Publicar en</label>
+              <select id="seccion">
+                <option value="ofertas_mercado_libre">Ofertazo · Mercado Libre</option>
+                <option value="ofertas_dia">Publicidad general</option>
+              </select>
             </div>
 
             <div class="campo campo-ad-orden">
               <label for="orden">Orden</label>
-              <input
-                id="orden"
-                type="number"
-                min="0"
-                value="0"
-              />
+              <input id="orden" type="number" min="0" value="0" />
+            </div>
+
+            <div class="campo campo-ad-categoria-producto campo-ofertazo">
+              <label for="categoria-producto">Categoría / texto corto</label>
+              <input id="categoria-producto" type="text" placeholder="Ej. Kit de taladro" />
+            </div>
+
+            <div class="campo campo-ad-titulo">
+              <label for="titulo">Nombre del producto</label>
+              <input id="titulo" type="text" placeholder="Ej. Kit de taladro inalámbrico..." required />
             </div>
 
             <div class="campo campo-ad-descripcion">
-              <label for="descripcion">Descripción</label>
-              <textarea
-                id="descripcion"
-                rows="3"
-                placeholder="Descripción breve del producto"
-              ></textarea>
+              <label for="descripcion">Descripción (opcional)</label>
+              <textarea id="descripcion" rows="2" placeholder="Información breve adicional"></textarea>
+            </div>
+
+            <div class="campo campo-ad-precio-actual campo-ofertazo">
+              <label for="precio-actual">Precio oferta</label>
+              <input id="precio-actual" type="text" inputmode="decimal" placeholder="Ej. 197" />
+            </div>
+
+            <div class="campo campo-ad-precio-anterior campo-ofertazo">
+              <label for="precio-anterior">Precio anterior</label>
+              <input id="precio-anterior" type="text" inputmode="decimal" placeholder="Ej. 849" />
+              <small>El % de descuento se calcula automáticamente.</small>
+            </div>
+
+            <div class="campo campo-ad-expiracion campo-ofertazo">
+              <label for="fecha-expiracion">Expira</label>
+              <input id="fecha-expiracion" type="datetime-local" />
             </div>
 
             <div class="campo campo-ad-enlace">
               <label for="enlace">Enlace de Mercado Libre</label>
-              <input
-                id="enlace"
-                type="url"
-                placeholder="https://meli.la/..."
-                required
-              />
+              <input id="enlace" type="url" placeholder="https://meli.la/..." required />
             </div>
 
             <div class="campo campo-ad-imagen">
               <label for="imagen">Foto del producto</label>
-              <input
-                id="imagen"
-                type="file"
-                accept="image/png,image/jpeg,image/webp"
-              />
-
-              <small>
-                La imagen se optimiza antes de subir. Máximo recomendado: 5 MB.
-              </small>
+              <input id="imagen" type="file" accept="image/png,image/jpeg,image/webp" />
+              <small>Se optimiza antes de subir. Máximo recomendado: 5 MB.</small>
             </div>
 
             <div id="preview-wrapper" class="preview-wrapper" hidden>
@@ -115,23 +118,13 @@
 
             <label class="switch-row campo-ad-activo">
               <input id="activo" type="checkbox" checked />
-              <span>Mostrar publicidad</span>
+              <span>Mostrar producto</span>
             </label>
           </div>
 
           <div class="acciones">
-            <button class="boton-principal" type="submit">
-              Guardar publicidad
-            </button>
-
-            <button
-              id="cancelar-edicion"
-              class="boton-secundario"
-              type="button"
-              hidden
-            >
-              Cancelar
-            </button>
+            <button class="boton-principal" type="submit">Guardar producto</button>
+            <button id="cancelar-edicion" class="boton-secundario" type="button" hidden>Cancelar</button>
           </div>
 
           <p id="form-message" class="mensaje" aria-live="polite"></p>
@@ -140,7 +133,7 @@
 
       <section class="panel">
         <div class="titulo-fila">
-          <h2>Publicidades registradas</h2>
+          <h2>Productos y publicidades registradas</h2>
 
           <button id="actualizar-lista" class="boton-secundario" type="button">
             ↻ Actualizar
@@ -154,6 +147,6 @@
     </section>
   </main>
 
-  <script type="module" src="publicidad.js?v=20"></script>
+  <script type="module" src="publicidad.js?v=82.32"></script>
 </body>
 </html>

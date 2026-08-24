@@ -10066,3 +10066,78 @@ body.hay-cupones-visibles #separador-fin-cupones {
 .tutorial-cupon-demo {
   box-shadow: 0 0 0 3px rgba(255, 230, 0, .28) !important;
 }
+
+
+/* V82.32 — Tarjetas Ofertazo Mercado Libre */
+#seccion-ofertas-mercado-libre .titulo-con-separador { margin-bottom: 10px; }
+#ofertas-mercado-libre.ofertas-grid-compacta { gap: 12px; }
+.tarjeta-oferta-ofertazo {
+  overflow: hidden; border: 2px dashed #9b9b9b; border-radius: 16px; background: #fff;
+  box-shadow: none; color: #151515;
+}
+.tarjeta-oferta-ofertazo .ofertazo-cabecera {
+  display: grid; grid-template-columns: 1fr auto; align-items: center; min-height: 58px;
+  padding: 8px 12px; border-bottom: 1px solid #e4e4e4;
+}
+.tarjeta-oferta-ofertazo .ofertazo-descuento { font-size: 25px; line-height: 1; font-weight: 900; letter-spacing: -1px; }
+.tarjeta-oferta-ofertazo .ofertazo-expira { text-align: right; }
+.tarjeta-oferta-ofertazo .ofertazo-expira > span { display: block; margin-bottom: 2px; color: #3d3d3d; font-size: 10px; letter-spacing: .7px; }
+.tarjeta-oferta-ofertazo .ofertazo-expira strong { display: block; font-size: 15px; line-height: 1; font-weight: 800; }
+.tarjeta-oferta-ofertazo .ofertazo-expira b { font: inherit; }
+.tarjeta-oferta-ofertazo .ofertazo-imagen-contenedor {
+  height: 176px; aspect-ratio: auto; padding: 12px 15px; border-radius: 0; background: #fff;
+}
+.tarjeta-oferta-ofertazo .oferta-imagen { border-radius: 0; }
+.tarjeta-oferta-ofertazo .ofertazo-contenido { padding: 11px 13px 10px; }
+.tarjeta-oferta-ofertazo .ofertazo-categoria { display: block; margin-bottom: 7px; font-size: 15px; line-height: 1.15; font-weight: 900; }
+.tarjeta-oferta-ofertazo .ofertazo-contenido h3 {
+  display: -webkit-box; min-height: 40px; margin: 0; overflow: hidden; color: #333; font-size: 14px;
+  line-height: 1.4; font-weight: 500; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+}
+.tarjeta-oferta-ofertazo .oferta-descripcion { margin-top: 5px; font-size: 10.5px; -webkit-line-clamp: 1; }
+.tarjeta-oferta-ofertazo .ofertazo-precios { display: flex; align-items: baseline; gap: 10px; margin-top: 10px; }
+.tarjeta-oferta-ofertazo .ofertazo-precios strong { font-size: 27px; line-height: 1; font-weight: 900; letter-spacing: -1px; }
+.tarjeta-oferta-ofertazo .ofertazo-precios del { color: #777; font-size: 14px; }
+.tarjeta-oferta-ofertazo .ofertazo-ver {
+  display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 42px;
+  margin-top: 12px; border: 0; border-radius: 11px; color: #171717; background: #ffc629; font-size: 15px; font-weight: 800;
+}
+.tarjeta-oferta-ofertazo .ofertazo-ver:hover { background: #ffbf0f; }
+.tarjeta-oferta-ofertazo .ofertazo-pie {
+  display: flex; align-items: center; justify-content: space-between; min-height: 38px; margin-top: 8px;
+  padding-top: 8px; border-top: 1px solid #eee;
+}
+.tarjeta-oferta-ofertazo .ofertazo-compartir {
+  display: inline-flex; align-items: center; justify-content: center; width: 34px; min-width: 34px; min-height: 30px;
+  padding: 0; border: 0; color: #111; background: transparent;
+}
+.tarjeta-oferta-ofertazo .ofertazo-compartir svg { width: 19px; height: 19px; }
+.tarjeta-oferta-ofertazo .oferta-visitas { color: #111; font-size: 12px; font-weight: 700; }
+@media (min-width: 621px) {
+  #ofertas-mercado-libre.ofertas-grid-compacta { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 620px) {
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo { display: block; }
+  #ofertas-mercado-libre.ofertas-grid-compacta { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .tarjeta-oferta-ofertazo { border-width: 1.5px; border-radius: 13px; }
+  .tarjeta-oferta-ofertazo .ofertazo-cabecera { min-height: 48px; padding: 6px 8px; }
+  .tarjeta-oferta-ofertazo .ofertazo-descuento { font-size: 19px; }
+  .tarjeta-oferta-ofertazo .ofertazo-expira > span { font-size: 8px; }
+  .tarjeta-oferta-ofertazo .ofertazo-expira strong { font-size: 11px; }
+  .tarjeta-oferta-ofertazo .ofertazo-imagen-contenedor { min-height: 0; height: 130px; padding: 8px; }
+  .tarjeta-oferta-ofertazo .ofertazo-contenido { padding: 8px; }
+  .tarjeta-oferta-ofertazo .ofertazo-categoria { margin-bottom: 5px; font-size: 12px; }
+  .tarjeta-oferta-ofertazo .ofertazo-contenido h3 { min-height: 34px; font-size: 11px; line-height: 1.45; }
+  .tarjeta-oferta-ofertazo .oferta-descripcion { display: none; }
+  .tarjeta-oferta-ofertazo .ofertazo-precios { gap: 6px; margin-top: 7px; }
+  .tarjeta-oferta-ofertazo .ofertazo-precios strong { font-size: 20px; }
+  .tarjeta-oferta-ofertazo .ofertazo-precios del { font-size: 10px; }
+  .tarjeta-oferta-ofertazo .ofertazo-ver { min-height: 36px; margin-top: 8px; border-radius: 9px; gap: 4px; font-size: 11px; }
+  .tarjeta-oferta-ofertazo .ofertazo-pie { min-height: 30px; margin-top: 6px; padding-top: 5px; }
+  .tarjeta-oferta-ofertazo .ofertazo-compartir { width: 28px; min-width: 28px; min-height: 26px; }
+  .tarjeta-oferta-ofertazo .ofertazo-compartir svg { width: 16px; height: 16px; }
+  .tarjeta-oferta-ofertazo .oferta-visitas { font-size: 9.5px; }
+}
+@media (max-width: 360px) {
+  #ofertas-mercado-libre.ofertas-grid-compacta { grid-template-columns: 1fr; }
+}

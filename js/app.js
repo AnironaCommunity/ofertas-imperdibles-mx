@@ -2801,6 +2801,55 @@ function esProductoNuevoVigente(publicidad) {
   return Number.isFinite(fecha) && Date.now() - fecha < DURACION_NUEVO_CATALOGO_MS;
 }
 
+function numeroPrecioOferta(valor) {
+  const limpio = String(valor ?? "").replace(/[^0-9.,-]/g, "").replace(/,/g, "");
+  const numero = Number(limpio);
+  return Number.isFinite(numero) ? numero : 0;
+}
+
+function monedaOferta(valor) {
+  const numero = numeroPrecioOferta(valor);
+  if (!numero) return String(valor || "");
+  return new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: numero % 1 ? 2 : 0 }).format(numero);
+}
+
+function descuentoOferta(publicidad) {
+  const actual = numeroPrecioOferta(publicidad?.precio_publicado);
+  const anterior = numeroPrecioOferta(publicidad?.precio_anterior);
+  if (!(actual > 0 && anterior > actual)) return 0;
+  return Math.max(1, Math.min(99, Math.round((1 - actual / anterior) * 100)));
+}
+
+function textoExpiracionOferta(fecha) {
+  const fin = new Date(fecha || "").getTime();
+  if (!Number.isFinite(fin)) return "";
+  const restante = fin - Date.now();
+  if (restante <= 0) return "Finalizada";
+  const minutos = Math.max(1, Math.floor(restante / 60000));
+  const dias = Math.floor(minutos / 1440);
+  const horas = Math.floor((minutos % 1440) / 60);
+  const mins = minutos % 60;
+  if (dias > 0) return `${dias}d ${horas}h`;
+  if (horas > 0) return `${horas}h ${mins}m`;
+  return `${mins}m`;
+}
+
+function ofertaExpirada(publicidad) {
+  if (!publicidad?.fecha_expiracion) return false;
+  const fin = new Date(publicidad.fecha_expiracion).getTime();
+  return Number.isFinite(fin) && fin <= Date.now();
+}
+
+function actualizarTemporizadoresOfertazo() {
+  document.querySelectorAll("[data-ofertazo-expira]").forEach((elemento) => {
+    const texto = textoExpiracionOferta(elemento.dataset.ofertazoExpira);
+    elemento.textContent = texto || "Sin límite";
+    const tarjeta = elemento.closest(".tarjeta-oferta-ofertazo");
+    tarjeta?.classList.toggle("oferta-expirada", texto === "Finalizada");
+    if (tarjeta && texto === "Finalizada") tarjeta.hidden = true;
+  });
+}
+
 function crearTarjetaOferta(publicidad, categoria) {
   const articulo = document.createElement("article");
   articulo.className = "tarjeta-oferta";
@@ -2823,6 +2872,53 @@ function crearTarjetaOferta(publicidad, categoria) {
   const disponibleAmazon = publicidad.disponible_amazon !== false;
   const productoNuevo = esProductoNuevoVigente(publicidad);
   const productoMasVendido = publicidad.es_mas_vendido === true;
+
+  if (categoria === "ofertas_mercado_libre") {
+    articulo.classList.add("tarjeta-oferta-ofertazo");
+    const porcentaje = descuentoOferta(publicidad);
+    const precioActual = monedaOferta(publicidad.precio_publicado);
+    const precioAnterior = monedaOferta(publicidad.precio_anterior);
+    const categoriaProducto = String(publicidad.categoria_producto || "Oferta destacada").trim();
+    const expira = publicidad.fecha_expiracion ? textoExpiracionOferta(publicidad.fecha_expiracion) : "";
+
+    articulo.innerHTML = `
+      <div class="ofertazo-cabecera">
+        <strong class="ofertazo-descuento">${porcentaje ? `-${porcentaje}%` : "OFERTA"}</strong>
+        <div class="ofertazo-expira">
+          <span>EXPIRA EN</span>
+          <strong>◷ <b data-ofertazo-expira="${escaparHtml(publicidad.fecha_expiracion || "")}">${escaparHtml(expira || "Sin límite")}</b></strong>
+        </div>
+      </div>
+      <button class="oferta-imagen-contenedor ofertazo-imagen-contenedor" type="button" aria-label="${escaparHtml(`Abrir ${publicidad.titulo || "oferta"}`)}">
+        <img class="oferta-imagen" src="${escaparHtml(publicidad.imagen_url || "")}" alt="${escaparHtml(publicidad.titulo || "Oferta")}" loading="lazy" />
+      </button>
+      <div class="oferta-contenido ofertazo-contenido">
+        <strong class="ofertazo-categoria">${escaparHtml(categoriaProducto)}</strong>
+        <h3>${escaparHtml(publicidad.titulo || "Oferta destacada")}</h3>
+        ${publicidad.descripcion ? `<p class="oferta-descripcion">${escaparHtml(publicidad.descripcion)}</p>` : ""}
+        <div class="ofertazo-precios">
+          ${precioActual ? `<strong>${escaparHtml(precioActual)}</strong>` : ""}
+          ${precioAnterior ? `<del>${escaparHtml(precioAnterior)}</del>` : ""}
+        </div>
+        <button class="oferta-ver ofertazo-ver" type="button"><span aria-hidden="true">↗</span> Ver Oferta <span aria-hidden="true">💰</span></button>
+        <div class="ofertazo-pie">
+          <button class="oferta-compartir ofertazo-compartir" type="button" aria-label="Compartir oferta" title="Compartir">${iconoCompartir()}</button>
+          <span class="oferta-visitas" data-visitas-id="${Number(publicidad.id) || 0}">${Number(publicidad.visitas) || 0} visitas</span>
+        </div>
+      </div>
+    `;
+
+    const abrirOferta = () => abrirPublicidad(publicidad, { copiarCuponAsignado: false });
+    articulo.querySelector(".ofertazo-ver")?.addEventListener("click", abrirOferta);
+    articulo.querySelector(".ofertazo-imagen-contenedor")?.addEventListener("click", abrirOferta);
+    articulo.querySelector(".ofertazo-compartir")?.addEventListener("click", () => compartirPublicidad(publicidad, {}));
+    const imagen = articulo.querySelector(".oferta-imagen");
+    imagen?.addEventListener("error", () => {
+      imagen.closest(".oferta-imagen-contenedor")?.classList.add("sin-imagen");
+      imagen.remove();
+    }, { once: true });
+    return articulo;
+  }
 
   if (esComunidadAnirona) articulo.classList.add("tarjeta-oferta-anirona");
 
@@ -3208,7 +3304,8 @@ function renderizarModuloOfertas(categoria, contenedor, seccion) {
   }
 
   const items = todasLasPublicidades.filter((item) =>
-    publicidadPerteneceASeccion(item, categoria)
+    publicidadPerteneceASeccion(item, categoria) &&
+    !(categoria === "ofertas_mercado_libre" && ofertaExpirada(item))
   );
 
   contenedor.replaceChildren();
@@ -3226,6 +3323,7 @@ function renderizarModuloOfertas(categoria, contenedor, seccion) {
     items.forEach((item) => {
       contenedor.appendChild(crearTarjetaOferta(item, categoria));
     });
+    if (categoria === "ofertas_mercado_libre") actualizarTemporizadoresOfertazo();
   }
 
 }
@@ -3257,7 +3355,8 @@ function visitaPublicidadVigente(id, plataforma) {
 function actualizarVisitasEnPantalla(id, visitas) {
   document.querySelectorAll(`[data-visitas-id="${id}"]`).forEach((elemento) => {
     const total = Number(visitas) || 0;
-    elemento.textContent = `👁️ ${total} ${total === 1 ? "visita" : "visitas"}`;
+    const esOfertazo = Boolean(elemento.closest(".tarjeta-oferta-ofertazo"));
+    elemento.textContent = `${esOfertazo ? "" : "👁️ "}${total} ${total === 1 ? "visita" : "visitas"}`;
   });
 }
 
@@ -3475,8 +3574,9 @@ function textoCompartirPublicidad(publicidad) {
   return lineas.join("\n");
 }
 
-async function compartirPublicidad(publicidad, control) {
+async function compartirPublicidad(publicidad, control = {}) {
   const texto = textoCompartirPublicidad(publicidad);
+  const mensaje = control?.mensaje || null;
   try {
     if (navigator.share) {
       let archivoImagen = null;
@@ -3496,18 +3596,18 @@ async function compartirPublicidad(publicidad, control) {
       } else {
         await navigator.share({ title: publicidad.titulo || "Oferta", text: texto });
       }
-      control.mensaje.textContent = "Oferta compartida.";
+      if (mensaje) mensaje.textContent = "Oferta compartida.";
     } else {
       await copiarTexto(texto);
-      control.mensaje.textContent = "Información de la oferta copiada.";
+      if (mensaje) mensaje.textContent = "Información de la oferta copiada.";
     }
   } catch (error) {
     if (error?.name !== "AbortError") {
       console.error(error);
-      control.mensaje.textContent = "No fue posible compartir la oferta.";
+      if (mensaje) mensaje.textContent = "No fue posible compartir la oferta.";
     }
   }
-  setTimeout(() => { control.mensaje.textContent = ""; }, 3500);
+  if (mensaje) setTimeout(() => { mensaje.textContent = ""; }, 3500);
 }
 
 async function abrirPublicidad(publicidad, { copiarCuponAsignado = true } = {}) {
@@ -4652,3 +4752,6 @@ function inicializarMenuMasFlotante() {
 
 document.addEventListener("DOMContentLoaded", inicializarMenuMasFlotante);
 document.addEventListener("visibilitychange", actualizarTextoAvisosMenuMas);
+
+
+window.setInterval(actualizarTemporizadoresOfertazo, 60 * 1000);
