@@ -286,3 +286,194 @@
     line-height: 14px;
   }
 }
+
+/* ============================================================
+   V82.33 — La barra inferior también está disponible en WEB.
+   En escritorio conserva un ancho compacto y centrado.
+   ============================================================ */
+@media (min-width: 701px) {
+  :root {
+    --barra-inferior-alto-web: 58px;
+    --barra-inferior-ancho-web: 420px;
+  }
+
+  body {
+    padding-bottom: 78px !important;
+  }
+
+  .barra-navegacion-inferior {
+    position: fixed;
+    z-index: 24980;
+    left: 50%;
+    right: auto;
+    bottom: 12px;
+    transform: translateX(-50%);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+    width: min(var(--barra-inferior-ancho-web), calc(100vw - 32px));
+    min-height: var(--barra-inferior-alto-web);
+    padding: 2px 10px;
+    background: rgba(255, 255, 255, .985);
+    border: 1px solid #e1e1e1;
+    border-radius: 17px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, .12);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .barra-inferior-item {
+    appearance: none;
+    -webkit-appearance: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    min-width: 0;
+    min-height: 52px;
+    padding: 1px 8px 2px;
+    margin: 0;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: #313131;
+    cursor: pointer;
+  }
+
+  .barra-inferior-icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 39px;
+    height: 34px;
+    flex: 0 0 34px;
+    pointer-events: none;
+  }
+
+  .barra-inferior-icono svg {
+    display: block;
+    width: 39px;
+    height: 34px;
+    overflow: visible;
+  }
+
+  .barra-inferior-icono-mas,
+  .barra-inferior-icono-mas svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .barra-inferior-texto {
+    display: block;
+    margin-top: -1px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 12px;
+    white-space: nowrap;
+    color: #252525;
+    pointer-events: none;
+  }
+
+  .barra-inferior-item:hover,
+  .barra-inferior-item.activo,
+  .barra-inferior-item[aria-expanded="true"] {
+    background: #f7f7f7;
+  }
+
+  .barra-inferior-item:focus-visible {
+    outline: 2px solid #3483fa;
+    outline-offset: -3px;
+  }
+
+  .menu-mas-panel-inferior {
+    position: fixed;
+    z-index: 24990;
+    right: calc(50% - (var(--barra-inferior-ancho-web) / 2));
+    bottom: 78px;
+    display: grid;
+    width: 315px;
+    padding: 5px;
+    background: rgba(255, 255, 255, .99);
+    border: 1px solid #dedede;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .16);
+  }
+
+  .menu-mas-panel-inferior[hidden] {
+    display: none !important;
+  }
+
+  .menu-mas-opcion-inferior {
+    appearance: none;
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 58px;
+    padding: 8px 10px;
+    border: 0;
+    border-radius: 11px;
+    background: transparent;
+    color: #222;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .menu-mas-opcion-inferior + .menu-mas-opcion-inferior {
+    border-top: 1px solid #ececec;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  .menu-mas-opcion-inferior:hover {
+    background: #f6f6f6;
+  }
+
+  .menu-mas-icono-inferior {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+  }
+
+  .menu-mas-icono-inferior svg {
+    display: block;
+    width: 34px;
+    height: 34px;
+  }
+
+  .menu-mas-contenido-inferior {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .menu-mas-contenido-inferior strong {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 17px;
+    color: #181818;
+  }
+
+  .menu-mas-contenido-inferior small {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11.5px;
+    line-height: 15px;
+    color: #666;
+  }
+
+  .whatsapp-flotante {
+    bottom: 18px !important;
+  }
+
+  .menu-mas-flotante,
+  .boton-mas-flotante {
+    display: none !important;
+  }
+}
