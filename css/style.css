@@ -10159,3 +10159,135 @@ body.hay-cupones-visibles #separador-fin-cupones {
     border-width: 2px !important;
   }
 }
+
+/* =========================================================
+   V82.36 — Ofertazo: cuadrícula compacta en WEB
+   - Escritorio medio: 3 tarjetas por fila.
+   - Escritorio amplio: 4 tarjetas por fila.
+   - Solo aplica a >= 769px; móvil permanece intacto.
+   ========================================================= */
+@media (min-width: 769px) and (max-width: 1199px) {
+  #ofertas-mercado-libre.ofertas-grid-compacta {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  #ofertas-mercado-libre.ofertas-grid-compacta {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+}
+
+@media (min-width: 769px) {
+  #seccion-ofertas-mercado-libre {
+    width: 100% !important;
+    max-width: 1180px !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border-width: 1.5px;
+    border-radius: 14px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-cabecera {
+    min-height: 46px;
+    padding: 6px 10px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-descuento {
+    font-size: 20px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-expira > span {
+    font-size: 8px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-expira strong {
+    font-size: 12px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-imagen-contenedor {
+    height: 150px;
+    min-height: 150px;
+    padding: 10px 12px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .oferta-imagen {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-contenido {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 9px 10px 8px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-categoria {
+    margin-bottom: 5px;
+    font-size: 12.5px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-contenido h3 {
+    min-height: 34px;
+    font-size: 11.5px;
+    line-height: 1.4;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .oferta-descripcion {
+    min-height: 15px;
+    margin-top: 3px;
+    font-size: 9.5px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-precios {
+    gap: 7px;
+    margin-top: 8px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-precios strong {
+    font-size: 22px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-precios del {
+    font-size: 11px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-ver {
+    min-height: 36px;
+    margin-top: 9px;
+    border-radius: 9px;
+    gap: 5px;
+    font-size: 12px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-pie {
+    min-height: 30px;
+    margin-top: 6px;
+    padding-top: 5px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-compartir {
+    width: 28px;
+    min-width: 28px;
+    min-height: 26px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-compartir svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .oferta-visitas {
+    font-size: 10px;
+  }
+}
