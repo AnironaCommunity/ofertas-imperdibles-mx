@@ -10340,3 +10340,9 @@ body.hay-cupones-visibles #separador-fin-cupones {
     font-size: 27px !important;
   }
 }
+
+
+/* V82.36 — Ofertazo: sección sin título y precio principal en verde */
+.tarjeta-oferta-ofertazo .ofertazo-precios strong {
+  color: #00a650;
+}
