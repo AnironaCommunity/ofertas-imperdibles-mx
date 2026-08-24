@@ -10143,13 +10143,14 @@ body.hay-cupones-visibles #separador-fin-cupones {
 }
 
 /* =========================================================
-   V82.33 — Orilla punteada Ofertazo aplicada a Cupones
-   - Solo cambia el aspecto del perímetro de las tarjetas.
-   - Conserva tamaños, contenido, colores, acciones y comportamiento.
+   V82.35 — Orilla punteada con el color del encabezado
+   - Tienda / Exclusivo: usa el color actual de la categoría.
+   - Bancarios: usa el color configurado para cada banco.
+   - No modifica tamaños, contenido, acciones ni comportamiento.
    ========================================================= */
 .cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
 .cupones-grid-compacta > .cupon-bancario-mini::after {
-  border: 2px dashed #9b9b9b !important;
+  border: 2px dashed var(--orilla-color) !important;
 }
 
 @media (max-width: 700px) {
