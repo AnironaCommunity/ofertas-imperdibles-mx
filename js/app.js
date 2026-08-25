@@ -3078,6 +3078,16 @@ function enlaceBannerCupones(publicidad) {
   ).trim();
 }
 
+let bannersCuponesIntervalo = null;
+let bannersCuponesIndice = 0;
+
+function detenerCarruselBannersCupones() {
+  if (bannersCuponesIntervalo) {
+    clearInterval(bannersCuponesIntervalo);
+    bannersCuponesIntervalo = null;
+  }
+}
+
 function renderizarBannersCupones() {
   if (!bannersCupones || !bannersCuponesLista) return;
 
@@ -3093,6 +3103,8 @@ function renderizarBannersCupones() {
       (Number(a?.id) || 0) - (Number(b?.id) || 0)
     );
 
+  detenerCarruselBannersCupones();
+  bannersCuponesIndice = 0;
   bannersCuponesLista.replaceChildren();
 
   if (!items.length) {
@@ -3100,35 +3112,87 @@ function renderizarBannersCupones() {
     return;
   }
 
-  const fragmento = document.createDocumentFragment();
+  const track = document.createElement("div");
+  track.className = "banners-cupones-track";
 
-  for (const item of items) {
+  const puntos = document.createElement("div");
+  puntos.className = "banners-cupones-puntos";
+  puntos.setAttribute("aria-label", "Seleccionar banner");
+
+  const botonesPunto = [];
+  const slides = [];
+
+  items.forEach((item, indice) => {
     const enlace = document.createElement("a");
     enlace.className = "banner-cupones-enlace";
     enlace.href = enlaceBannerCupones(item);
     enlace.target = "_blank";
     enlace.rel = "noopener noreferrer";
-    enlace.setAttribute(
-      "aria-label",
-      `Abrir ${item.titulo || "promoción"} en Mercado Libre`
-    );
+    enlace.setAttribute("aria-label", `Abrir ${item.titulo || "promoción"} en Mercado Libre`);
 
     const imagen = document.createElement("img");
     imagen.src = item.imagen_url;
     imagen.alt = item.titulo || "Promoción de Mercado Libre";
-    imagen.loading = "lazy";
+    imagen.loading = indice === 0 ? "eager" : "lazy";
     imagen.decoding = "async";
 
     enlace.appendChild(imagen);
-    enlace.addEventListener("click", () => {
-      registrarClicPublicidad(item.id);
-    });
+    enlace.addEventListener("click", () => registrarClicPublicidad(item.id));
+    track.appendChild(enlace);
+    slides.push(enlace);
 
-    fragmento.appendChild(enlace);
+    if (items.length > 1) {
+      const punto = document.createElement("button");
+      punto.type = "button";
+      punto.className = "banner-cupones-punto";
+      punto.setAttribute("aria-label", `Mostrar banner ${indice + 1} de ${items.length}`);
+      punto.addEventListener("click", () => {
+        mostrarBanner(indice);
+        reiniciarRotacion();
+      });
+      puntos.appendChild(punto);
+      botonesPunto.push(punto);
+    }
+  });
+
+  function mostrarBanner(indice) {
+    bannersCuponesIndice = (indice + items.length) % items.length;
+    track.style.transform = `translateX(-${bannersCuponesIndice * 100}%)`;
+    slides.forEach((slide, i) => {
+      slide.setAttribute("aria-hidden", i === bannersCuponesIndice ? "false" : "true");
+      slide.tabIndex = i === bannersCuponesIndice ? 0 : -1;
+    });
+    botonesPunto.forEach((punto, i) => {
+      const activo = i === bannersCuponesIndice;
+      punto.classList.toggle("activo", activo);
+      punto.setAttribute("aria-current", activo ? "true" : "false");
+    });
   }
 
-  bannersCuponesLista.appendChild(fragmento);
+  function iniciarRotacion() {
+    detenerCarruselBannersCupones();
+    if (items.length <= 1 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    bannersCuponesIntervalo = setInterval(() => {
+      mostrarBanner(bannersCuponesIndice + 1);
+    }, 5500);
+  }
+
+  function reiniciarRotacion() {
+    iniciarRotacion();
+  }
+
+  bannersCuponesLista.appendChild(track);
+  if (items.length > 1) bannersCuponesLista.appendChild(puntos);
   bannersCupones.hidden = false;
+  mostrarBanner(0);
+  iniciarRotacion();
+
+  bannersCuponesLista.onmouseenter = detenerCarruselBannersCupones;
+  bannersCuponesLista.onmouseleave = iniciarRotacion;
+  bannersCuponesLista.onfocusin = detenerCarruselBannersCupones;
+  bannersCuponesLista.onfocusout = iniciarRotacion;
+  bannersCuponesLista.ontouchstart = detenerCarruselBannersCupones;
+  bannersCuponesLista.ontouchend = iniciarRotacion;
 }
 
 function normalizarSeccionesPublicidad(valor, categoria = "ofertas_dia") {
