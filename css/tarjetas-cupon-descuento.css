@@ -33,20 +33,42 @@
 }
 
 #cupones .cupon:not(.cupon-bancario)::before {
-  opacity: .32;
-  transform: rotate(-5deg) scale(1.08);
+  /* Patrón entrecruzado inspirado en la referencia: líneas largas,
+     diagonales y de distinta intensidad, sin depender de una imagen. */
+  inset: -24%;
+  opacity: .42;
+  transform: rotate(-4deg) scale(1.12);
   background:
-    repeating-linear-gradient(18deg, rgba(255,255,255,.12) 0 1px, transparent 1px 17px),
-    repeating-linear-gradient(108deg, rgba(255,255,255,.075) 0 1px, transparent 1px 25px),
-    repeating-linear-gradient(151deg, rgba(0,0,0,.055) 0 1px, transparent 1px 31px);
+    repeating-linear-gradient(17deg,
+      rgba(255,255,255,.15) 0 2px,
+      transparent 2px 14px,
+      rgba(255,255,255,.075) 14px 16px,
+      transparent 16px 31px),
+    repeating-linear-gradient(73deg,
+      rgba(255,255,255,.105) 0 1px,
+      transparent 1px 11px,
+      rgba(0,0,0,.045) 11px 13px,
+      transparent 13px 28px),
+    repeating-linear-gradient(132deg,
+      rgba(255,255,255,.09) 0 2px,
+      transparent 2px 19px,
+      rgba(0,0,0,.055) 19px 21px,
+      transparent 21px 41px),
+    repeating-linear-gradient(158deg,
+      rgba(255,255,255,.07) 0 1px,
+      transparent 1px 8px,
+      rgba(255,255,255,.045) 8px 10px,
+      transparent 10px 36px);
 }
 
 #cupones .cupon:not(.cupon-bancario)::after {
   inset: 0;
-  opacity: .42;
+  opacity: .62;
   background:
-    radial-gradient(circle at 88% 18%, rgba(255,255,255,.15), transparent 26%),
-    linear-gradient(118deg, transparent 0 34%, rgba(255,255,255,.07) 34% 35%, transparent 35% 72%, rgba(255,255,255,.055) 72% 73%, transparent 73% 100%);
+    linear-gradient(102deg, transparent 0 12%, rgba(255,255,255,.07) 12% 13%, transparent 13% 39%, rgba(255,255,255,.055) 39% 40%, transparent 40% 67%, rgba(0,0,0,.035) 67% 68%, transparent 68% 100%),
+    linear-gradient(16deg, transparent 0 27%, rgba(255,255,255,.06) 27% 28%, transparent 28% 54%, rgba(255,255,255,.05) 54% 55%, transparent 55% 100%),
+    radial-gradient(circle at 82% 14%, rgba(255,255,255,.14), transparent 24%),
+    radial-gradient(circle at 18% 82%, rgba(0,0,0,.045), transparent 30%);
 }
 
 /* Encabezado integrado dentro de la misma tarjeta. */
