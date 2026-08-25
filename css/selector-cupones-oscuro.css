@@ -327,3 +327,70 @@ body.hay-cupones-visibles #separador-fin-cupones { display: block !important; }
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
+
+/* V82.35 — Iconografía moderna del selector, sin alterar la altura de la cápsula */
+.selector-cupones-menu .tab-icono {
+  width: 31px !important;
+  height: 31px !important;
+  min-width: 31px !important;
+  flex: 0 0 31px !important;
+  border-radius: 50% !important;
+  transition: transform .16s ease, box-shadow .16s ease !important;
+}
+.selector-cupones-menu .tab-icono svg {
+  width: 22px !important;
+  height: 22px !important;
+  overflow: visible !important;
+}
+.selector-cupones-menu > .tab-inferior:hover .tab-icono,
+.selector-cupones-menu > .tab-inferior:focus-visible .tab-icono {
+  transform: translateY(-1px) scale(1.035) !important;
+}
+.selector-cupones-menu > .tab-inferior.activo .tab-icono,
+.selector-cupones-menu > .tab-inferior[aria-pressed="true"] .tab-icono {
+  box-shadow: 0 2px 8px rgba(24, 49, 38, .10) !important;
+}
+
+/* Fondos suaves + trazos definidos para contrastar con la barra inferior. */
+.selector-cupones-menu .tab-icono-todos { background: #e8f8ed !important; }
+.selector-cupones-menu .tab-icono-tienda { background: #fff5df !important; }
+.selector-cupones-menu .tab-icono-tarjeta { background: #e8f2ff !important; }
+.selector-cupones-menu .tab-icono-exclusivo { background: #f3eaff !important; }
+
+.selector-cupones-menu .tab-icono .icon-outline,
+.selector-cupones-menu .tab-icono .icon-line,
+.selector-cupones-menu .tab-icono .card-band {
+  fill: none !important;
+  stroke-width: 4 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+.selector-cupones-menu .tab-icono .icon-dot { stroke: none !important; }
+
+.selector-cupones-menu .tab-icono-todos .icon-outline,
+.selector-cupones-menu .tab-icono-todos .icon-line { stroke: #0aa84f !important; }
+.selector-cupones-menu .tab-icono-todos .icon-dot { fill: #0aa84f !important; }
+
+.selector-cupones-menu .tab-icono-tienda .icon-outline,
+.selector-cupones-menu .tab-icono-tienda .icon-line { stroke: #f2a900 !important; }
+
+.selector-cupones-menu .tab-icono-tarjeta .icon-outline,
+.selector-cupones-menu .tab-icono-tarjeta .icon-line,
+.selector-cupones-menu .tab-icono-tarjeta .card-band { stroke: #1675e8 !important; }
+
+.selector-cupones-menu .tab-icono-exclusivo .icon-outline,
+.selector-cupones-menu .tab-icono-exclusivo .icon-line { stroke: #7b35dc !important; }
+.selector-cupones-menu .tab-icono-exclusivo .icon-dot { fill: #7b35dc !important; }
+
+@media (max-width: 600px) {
+  .selector-cupones-menu .tab-icono {
+    width: 29px !important;
+    height: 29px !important;
+    min-width: 29px !important;
+    flex-basis: 29px !important;
+  }
+  .selector-cupones-menu .tab-icono svg {
+    width: 21px !important;
+    height: 21px !important;
+  }
+}
