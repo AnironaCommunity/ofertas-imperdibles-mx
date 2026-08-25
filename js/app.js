@@ -4634,75 +4634,64 @@ actualizarEstadoWhatsappFlotante();
 
 
 /* ============================================================
-   V82.36 — Ajuste automático robusto del título del encabezado
-   Mide el ancho REAL del texto y adapta la fuente al contenido.
+   V82.39 — Ajuste robusto del título dinámico en móvil
+   Mide el ancho RENDERIZADO real (scrollWidth/clientWidth), no canvas.
+   Esto contempla Inter, zoom y escalado de texto de Android/Chrome.
+   Si el navegador impone un tamaño mínimo y una línea no cabe, usa
+   automáticamente dos líneas para jamás cortar el contenido.
    ============================================================ */
 function ajustarTamanoTituloHero() {
   const titulo = document.querySelector("#nombre-sitio");
   if (!titulo) return;
 
-  const contenedor = titulo.parentElement;
-  if (!contenedor) return;
-
   const movil = window.matchMedia("(max-width: 600px)").matches;
-  const anchoDisponible = Math.max(0, contenedor.clientWidth);
-  if (!anchoDisponible) return;
+  titulo.classList.remove("titulo-hero-dos-lineas");
 
-  // Restamos un pequeño margen de seguridad para evitar que el último
-  // carácter toque o rebase el borde por redondeos/subpíxeles.
-  const limite = Math.max(0, anchoDisponible - (movil ? 6 : 2));
-  const base = movil ? (window.innerWidth <= 380 ? 13 : 14) : 16;
-  const minimo = movil ? 7.5 : 10;
+  if (!movil) {
+    titulo.style.removeProperty("font-size");
+    titulo.style.removeProperty("letter-spacing");
+    titulo.style.removeProperty("white-space");
+    return;
+  }
 
-  titulo.style.setProperty("display", "block", "important");
-  titulo.style.setProperty("width", "100%", "important");
-  titulo.style.setProperty("max-width", "100%", "important");
-  titulo.style.setProperty("min-width", "0", "important");
+  const contenido = titulo.closest(".hero-redes-contenido");
+  if (!contenido) return;
+
+  const anchoDisponible = Math.max(0, Math.floor(titulo.clientWidth || contenido.clientWidth) - 4);
+  if (anchoDisponible <= 0) return;
+
   titulo.style.setProperty("white-space", "nowrap", "important");
-  titulo.style.setProperty("overflow", "hidden", "important");
-  titulo.style.setProperty("text-overflow", "clip", "important");
-  titulo.style.setProperty("transform-origin", "left center", "important");
-  titulo.style.setProperty("font-size", `${base}px`, "important");
+  titulo.style.setProperty("letter-spacing", "-0.12px", "important");
 
-  // Range mide el texto renderizado completo aunque el elemento tenga
-  // overflow:hidden; es más fiable aquí que scrollWidth.
-  const rango = document.createRange();
-  rango.selectNodeContents(titulo);
+  let minimo = 8;
+  let maximo = window.innerWidth <= 360 ? 12.5 : 13.5;
+  let mejor = minimo;
 
-  const medir = () => rango.getBoundingClientRect().width;
-  let actual = medir();
-
-  if (actual > limite && actual > 0) {
-    // Primera aproximación proporcional y luego afinado fino.
-    let size = Math.max(minimo, Math.min(base, base * (limite / actual)));
-    titulo.style.setProperty("font-size", `${size.toFixed(2)}px`, "important");
-    actual = medir();
-
-    let seguridad = 0;
-    while (actual > limite && size > minimo && seguridad < 60) {
-      size = Math.max(minimo, size - 0.15);
-      titulo.style.setProperty("font-size", `${size.toFixed(2)}px`, "important");
-      actual = medir();
-      seguridad += 1;
-    }
-
-    // Si un texto excepcionalmente largo todavía no cabe al llegar al
-    // mínimo, se comprime SOLO horizontalmente en vez de cortarlo.
-    if (actual > limite && actual > 0) {
-      const escala = Math.max(0.82, Math.min(1, limite / actual));
-      titulo.style.setProperty("transform", `translateY(${movil ? -7 : -8}px) scaleX(${escala.toFixed(4)})`, "important");
+  for (let i = 0; i < 14; i += 1) {
+    const prueba = (minimo + maximo) / 2;
+    titulo.style.setProperty("font-size", `${prueba.toFixed(3)}px`, "important");
+    const cabe = titulo.scrollWidth <= anchoDisponible + 1;
+    if (cabe) {
+      mejor = prueba;
+      minimo = prueba;
     } else {
-      titulo.style.setProperty("transform", `translateY(${movil ? -7 : -8}px)`, "important");
+      maximo = prueba;
     }
-  } else {
-    titulo.style.setProperty("transform", `translateY(${movil ? -7 : -8}px)`, "important");
+  }
+
+  titulo.style.setProperty("font-size", `${mejor.toFixed(2)}px`, "important");
+
+  if (titulo.scrollWidth > anchoDisponible + 1) {
+    titulo.classList.add("titulo-hero-dos-lineas");
+    titulo.style.removeProperty("font-size");
+    titulo.style.removeProperty("white-space");
   }
 }
 
 function programarAjusteTituloHero() {
-  window.requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
     ajustarTamanoTituloHero();
-    window.requestAnimationFrame(ajustarTamanoTituloHero);
+    requestAnimationFrame(ajustarTamanoTituloHero);
   });
 }
 
@@ -4715,8 +4704,7 @@ document.addEventListener("ofertas:etiquetas-cargadas", programarAjusteTituloHer
 
 const tituloHeroObservable = document.querySelector("#nombre-sitio");
 if (tituloHeroObservable) {
-  const observadorTituloHero = new MutationObserver(programarAjusteTituloHero);
-  observadorTituloHero.observe(tituloHeroObservable, {
+  new MutationObserver(programarAjusteTituloHero).observe(tituloHeroObservable, {
     childList: true,
     characterData: true,
     subtree: true
@@ -4728,8 +4716,8 @@ if (document.fonts?.ready) {
 }
 
 window.setTimeout(programarAjusteTituloHero, 0);
-window.setTimeout(programarAjusteTituloHero, 120);
-window.setTimeout(programarAjusteTituloHero, 400);
+window.setTimeout(programarAjusteTituloHero, 180);
+window.setTimeout(programarAjusteTituloHero, 650);
 
 
 /* ============================================================
