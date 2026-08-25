@@ -1,56 +1,70 @@
 /* =========================================================
-   V82.38 — Tarjetas de cupones estilo tarjeta de descuento
-   Solo visual. Conserva datos, acciones y lógica existentes.
+   V82.39 — Tarjetas de cupones tipo "discount card"
+   Replica la propuesta visual aprobada sin cambiar la lógica.
+   Aplica a Tienda y Exclusivos. Bancarios conservan su diseño.
    ========================================================= */
 
-/* Tarjeta base: usa el color configurado de cada cupón */
 #cupones .cupon:not(.cupon-bancario) {
-  --card-accent: var(--categoria-cupon-color, #22c55e);
-  --card-accent-dark: color-mix(in srgb, var(--card-accent) 84%, #000 16%);
-  --card-accent-light: color-mix(in srgb, var(--card-accent) 88%, #fff 12%);
+  --card-accent: var(--categoria-cupon-color, #22b867);
+  --card-accent-deep: color-mix(in srgb, var(--card-accent) 78%, #0b1b12 22%);
+  --card-accent-bright: color-mix(in srgb, var(--card-accent) 86%, #ffffff 14%);
 
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--card-accent) 76%, #000 24%) !important;
-  border-radius: 16px !important;
-  color: #fff;
+  border: 1px solid color-mix(in srgb, var(--card-accent) 76%, #ffffff 24%) !important;
+  border-radius: 18px !important;
+  color: #fff !important;
   background:
-    repeating-linear-gradient(24deg, rgba(255,255,255,.045) 0 2px, transparent 2px 20px),
-    repeating-linear-gradient(112deg, rgba(0,0,0,.035) 0 1px, transparent 1px 17px),
-    linear-gradient(135deg, var(--card-accent-light) 0%, var(--card-accent) 56%, var(--card-accent-dark) 100%) !important;
-  box-shadow: 0 7px 18px color-mix(in srgb, var(--card-accent) 20%, transparent) !important;
+    linear-gradient(135deg, var(--card-accent-bright) 0%, var(--card-accent) 54%, var(--card-accent-deep) 100%) !important;
+  box-shadow:
+    0 8px 18px color-mix(in srgb, var(--card-accent) 18%, transparent),
+    inset 0 1px 0 rgba(255,255,255,.22) !important;
 }
 
-/* Textura geométrica muy tenue, creada con CSS: no usa imágenes. */
+/* Textura geométrica tipo tarjeta de descuento, 100% CSS. */
+#cupones .cupon:not(.cupon-bancario)::before,
 #cupones .cupon:not(.cupon-bancario)::after {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -16%;
   z-index: -1;
   pointer-events: none;
-  opacity: .34;
-  background:
-    linear-gradient(25deg, transparent 0 45%, rgba(255,255,255,.09) 45% 46%, transparent 46% 100%),
-    linear-gradient(155deg, transparent 0 52%, rgba(255,255,255,.065) 52% 53%, transparent 53% 100%);
-  background-size: 72px 56px, 92px 68px;
 }
 
+#cupones .cupon:not(.cupon-bancario)::before {
+  opacity: .32;
+  transform: rotate(-5deg) scale(1.08);
+  background:
+    repeating-linear-gradient(18deg, rgba(255,255,255,.12) 0 1px, transparent 1px 17px),
+    repeating-linear-gradient(108deg, rgba(255,255,255,.075) 0 1px, transparent 1px 25px),
+    repeating-linear-gradient(151deg, rgba(0,0,0,.055) 0 1px, transparent 1px 31px);
+}
+
+#cupones .cupon:not(.cupon-bancario)::after {
+  inset: 0;
+  opacity: .42;
+  background:
+    radial-gradient(circle at 88% 18%, rgba(255,255,255,.15), transparent 26%),
+    linear-gradient(118deg, transparent 0 34%, rgba(255,255,255,.07) 34% 35%, transparent 35% 72%, rgba(255,255,255,.055) 72% 73%, transparent 73% 100%);
+}
+
+/* Encabezado integrado dentro de la misma tarjeta. */
 #cupones .cupon:not(.cupon-bancario) .franja-categoria-cupon {
   position: relative;
   z-index: 2;
-  min-height: 23px;
-  padding: 5px 8px 4px;
+  min-height: 24px;
+  padding: 6px 8px 3px;
   border: 0 !important;
-  color: #fff !important;
-  background: rgba(0, 0, 0, .08) !important;
+  color: rgba(255,255,255,.98) !important;
+  background: transparent !important;
   font-size: 10px;
   font-weight: 850;
-  line-height: 1.1;
-  letter-spacing: .015em;
+  line-height: 1.05;
+  letter-spacing: .035em;
   text-align: center;
   text-transform: uppercase;
-  text-shadow: 0 1px 2px rgba(0,0,0,.18);
+  text-shadow: 0 1px 3px rgba(0,0,0,.20);
 }
 
 #cupones .cupon:not(.cupon-bancario) .cupon-encabezado {
@@ -59,8 +73,9 @@
   display: flex !important;
   align-items: center;
   justify-content: center;
-  min-height: 62px !important;
-  padding: 8px 9px 5px !important;
+  gap: 7px;
+  min-height: 70px !important;
+  padding: 6px 10px 5px !important;
   border: 0 !important;
   color: #fff !important;
   background: transparent !important;
@@ -71,37 +86,49 @@
 }
 
 #cupones .cupon:not(.cupon-bancario) .cupon-logo {
-  width: 34px;
-  height: 34px;
-  flex: 0 0 34px;
+  width: auto !important;
+  max-width: 76px !important;
+  height: 35px !important;
+  flex: 0 0 auto !important;
+  object-fit: contain;
   border: 0 !important;
-  background: rgba(255,255,255,.94) !important;
-  box-shadow: 0 2px 7px rgba(0,0,0,.12);
+  border-radius: 9px !important;
+  padding: 2px 5px;
+  background: rgba(255,255,255,.96) !important;
+  box-shadow: 0 3px 8px rgba(0,0,0,.13);
 }
 
 #cupones .cupon:not(.cupon-bancario) .descuento {
+  margin: 0 !important;
   color: #fff !important;
+  font-size: clamp(28px, 2.6vw, 38px) !important;
   font-weight: 900 !important;
-  letter-spacing: -.025em;
+  line-height: .98 !important;
+  letter-spacing: -.035em;
   text-align: center;
-  text-shadow: 0 2px 4px rgba(0,0,0,.20);
+  text-shadow: 0 2px 5px rgba(0,0,0,.22);
 }
 
+/* Cuerpo transparente: todo forma una sola tarjeta de color. */
 #cupones .cupon:not(.cupon-bancario) .cupon-contenido {
   position: relative;
   z-index: 2;
-  padding: 6px 10px 9px !important;
+  padding: 4px 12px 10px !important;
   color: #fff !important;
   background: transparent !important;
 }
 
 #cupones .cupon:not(.cupon-bancario) .cupon-etiquetas {
   justify-content: center;
+  gap: 5px !important;
+  min-height: 0;
+  margin: 0 0 5px !important;
 }
 
 #cupones .cupon:not(.cupon-bancario) .etiqueta-cupon,
 #cupones .cupon:not(.cupon-bancario) .etiqueta-popular-integrada {
-  box-shadow: 0 2px 5px rgba(0,0,0,.14);
+  border: 0 !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,.17) !important;
 }
 
 #cupones .cupon:not(.cupon-bancario) .detalle-beneficio-exclusivo,
@@ -113,141 +140,196 @@
 }
 
 #cupones .cupon:not(.cupon-bancario) .detalle-beneficio-exclusivo {
-  margin: 1px 0 3px !important;
-  opacity: .94;
+  margin: 0 0 5px !important;
+  font-weight: 600;
+  opacity: .96;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0,0,0,.16);
 }
 
 #cupones .cupon:not(.cupon-bancario) .condiciones-cupon {
   gap: 2px !important;
-  margin: 1px 0 3px !important;
+  margin: 2px 0 7px !important;
   text-align: center;
 }
 
 #cupones .cupon:not(.cupon-bancario) .condicion-cupon {
   margin: 0 !important;
+  font-weight: 500;
   line-height: 1.25 !important;
-  text-shadow: 0 1px 2px rgba(0,0,0,.14);
+  text-shadow: 0 1px 3px rgba(0,0,0,.16);
 }
 
 #cupones .cupon:not(.cupon-bancario) .condicion-cupon strong {
   font-weight: 900 !important;
 }
 
+/* CTA amarillo como en la propuesta. */
 #cupones .cupon:not(.cupon-bancario) .acciones-bloque {
-  padding-top: 5px !important;
+  padding-top: 3px !important;
+}
+
+#cupones .cupon:not(.cupon-bancario) .acciones-cupon {
+  margin: 0 !important;
 }
 
 #cupones .cupon:not(.cupon-bancario) .boton-canjear {
-  border: 1px solid rgba(155, 117, 0, .30) !important;
+  width: min(100%, 225px) !important;
+  min-height: 39px;
+  margin-inline: auto;
+  border: 1px solid rgba(129, 96, 0, .30) !important;
+  border-radius: 11px !important;
   color: #161616 !important;
-  background: linear-gradient(180deg, #ffe400 0%, #ffd500 100%) !important;
-  box-shadow: 0 4px 9px rgba(0,0,0,.16) !important;
+  background: linear-gradient(180deg, #ffe600 0%, #ffd400 100%) !important;
+  box-shadow: 0 4px 10px rgba(0,0,0,.16) !important;
+  font-weight: 800 !important;
 }
 
 #cupones .cupon:not(.cupon-bancario) .boton-canjear:hover,
 #cupones .cupon:not(.cupon-bancario) .boton-canjear:focus-visible {
-  filter: brightness(1.025);
+  filter: brightness(1.035);
+  transform: translateY(-1px);
+}
+
+#cupones .cupon:not(.cupon-bancario) .cupon-copiado-mini {
+  color: #fff !important;
+  background: rgba(0,0,0,.16) !important;
+}
+
+/* Interacciones redondas integradas. */
+#cupones .cupon:not(.cupon-bancario) .acciones-secundarias {
+  justify-content: center !important;
+  gap: 8px !important;
+  margin-top: 7px !important;
+}
+
+#cupones .cupon:not(.cupon-bancario) .boton-like,
+#cupones .cupon:not(.cupon-bancario) .boton-compartir {
+  border: 1px solid rgba(255,255,255,.18) !important;
+  box-shadow: 0 2px 7px rgba(0,0,0,.12) !important;
 }
 
 #cupones .cupon:not(.cupon-bancario) .boton-like {
-  color: #58635f !important;
-  background: rgba(255,255,255,.90) !important;
-  box-shadow: 0 2px 6px rgba(0,0,0,.10);
+  color: #56625d !important;
+  background: rgba(255,255,255,.92) !important;
 }
 
 #cupones .cupon:not(.cupon-bancario) .boton-like.activo {
   color: #fff !important;
-  background: #20b777 !important;
+  background: #1fb877 !important;
 }
 
 #cupones .cupon:not(.cupon-bancario) .boton-compartir {
   color: #fff !important;
-  background: #20c77a !important;
-  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+  background: #20c57a !important;
 }
 
 #cupones .cupon:not(.cupon-bancario) .estadisticas-cupon,
 #cupones .cupon:not(.cupon-bancario) .estadistica-item,
 #cupones .cupon:not(.cupon-bancario) .estadistica-likes,
 #cupones .cupon:not(.cupon-bancario) .estadistica-usos {
-  color: rgba(255,255,255,.96) !important;
-  text-shadow: 0 1px 2px rgba(0,0,0,.15);
+  color: rgba(255,255,255,.98) !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,.18);
 }
 
+/* Temporizador dentro de la tarjeta, sin caja adicional. */
 #cupones .cupon:not(.cupon-bancario) .estado-programacion {
-  border-top: 1px dashed rgba(255,255,255,.36) !important;
+  margin-top: 8px !important;
+  padding: 7px 2px 0 !important;
+  border-top: 1px solid rgba(255,255,255,.28) !important;
   border-radius: 0 !important;
-  color: #fff !important;
+  color: rgba(255,255,255,.98) !important;
   background: transparent !important;
-  text-shadow: 0 1px 2px rgba(0,0,0,.14);
+  text-shadow: 0 1px 3px rgba(0,0,0,.16);
 }
 
-#cupones .cupon:not(.cupon-bancario) .estado-programacion .estado-tiempo {
+#cupones .cupon:not(.cupon-bancario) .estado-programacion .estado-tiempo,
+#cupones .cupon:not(.cupon-bancario) .estado-programacion .estado-linea {
   color: #fff !important;
-  font-weight: 900;
+  font-weight: 800 !important;
 }
 
-#cupones .cupon:not(.cupon-bancario) .cupon-copiado-mini {
-  color: #fff !important;
-  background: rgba(0,0,0,.14) !important;
+#cupones .cupon:not(.cupon-bancario) .estado-programacion .estado-progreso,
+#cupones .cupon:not(.cupon-bancario) .estado-programacion .estado-progreso-barra {
+  display: none !important;
 }
 
-/* Agotados: mantiene el lenguaje visual, pero deja claro el estado. */
+/* Agotados: conserva el lenguaje de la tarjeta pero baja intensidad. */
 #cupones .cupon:not(.cupon-bancario).cupon-agotado {
-  filter: saturate(.48);
+  filter: saturate(.42) grayscale(.08);
   opacity: .72;
 }
 
 #cupones .cupon:not(.cupon-bancario).cupon-agotado .boton-canjear,
 #cupones .cupon:not(.cupon-bancario) .boton-canjear:disabled {
-  border-color: rgba(255,255,255,.22) !important;
-  color: rgba(255,255,255,.85) !important;
-  background: rgba(255,255,255,.18) !important;
+  border-color: rgba(255,255,255,.20) !important;
+  color: rgba(255,255,255,.88) !important;
+  background: rgba(255,255,255,.17) !important;
   box-shadow: none !important;
 }
 
-/* Móvil: conserva dos columnas y la compacidad actual. */
+/* MÓVIL: 2 columnas, proporción compacta como la propuesta. */
 @media (max-width: 680px) {
   #cupones .cupon:not(.cupon-bancario) {
-    border-radius: 14px !important;
+    border-radius: 16px !important;
+    box-shadow: 0 6px 14px color-mix(in srgb, var(--card-accent) 16%, transparent) !important;
   }
 
   #cupones .cupon:not(.cupon-bancario) .franja-categoria-cupon {
     min-height: 20px;
-    padding: 4px 5px 3px;
+    padding: 5px 4px 2px;
     font-size: 8.5px;
   }
 
   #cupones .cupon:not(.cupon-bancario) .cupon-encabezado {
-    min-height: 48px !important;
-    padding: 6px 6px 3px !important;
+    gap: 4px;
+    min-height: 54px !important;
+    padding: 4px 6px 4px !important;
   }
 
   #cupones .cupon:not(.cupon-bancario) .cupon-logo {
-    width: 26px !important;
-    height: 26px !important;
-    flex-basis: 26px !important;
+    max-width: 58px !important;
+    height: 27px !important;
+    padding: 1px 4px;
+    border-radius: 7px !important;
   }
 
   #cupones .cupon:not(.cupon-bancario) .descuento {
-    font-size: 24px !important;
-    line-height: .98 !important;
+    font-size: clamp(24px, 7.2vw, 31px) !important;
+    line-height: .96 !important;
   }
 
   #cupones .cupon:not(.cupon-bancario) .cupon-contenido {
-    padding: 5px 7px 7px !important;
+    padding: 3px 7px 7px !important;
+  }
+
+  #cupones .cupon:not(.cupon-bancario) .cupon-etiquetas {
+    gap: 3px !important;
+    margin-bottom: 5px !important;
+  }
+
+  #cupones .cupon:not(.cupon-bancario) .etiqueta-cupon,
+  #cupones .cupon:not(.cupon-bancario) .etiqueta-popular-integrada {
+    font-size: 7.8px !important;
+    padding: 4px 6px !important;
+  }
+
+  #cupones .cupon:not(.cupon-bancario) .condiciones-cupon {
+    margin-bottom: 6px !important;
   }
 
   #cupones .cupon:not(.cupon-bancario) .condicion-cupon {
     font-size: 10px !important;
+    line-height: 1.22 !important;
   }
 
   #cupones .cupon:not(.cupon-bancario) .detalle-beneficio-exclusivo {
     font-size: 9px !important;
-    line-height: 1.2 !important;
+    line-height: 1.18 !important;
   }
 
   #cupones .cupon:not(.cupon-bancario) .boton-canjear {
+    width: min(100%, 150px) !important;
     min-height: 34px;
     padding: 7px 5px !important;
     border-radius: 9px !important;
@@ -255,29 +337,42 @@
   }
 
   #cupones .cupon:not(.cupon-bancario) .acciones-secundarias {
-    margin-top: 5px !important;
+    gap: 5px !important;
+    margin-top: 6px !important;
+  }
+
+  #cupones .cupon:not(.cupon-bancario) .boton-like,
+  #cupones .cupon:not(.cupon-bancario) .boton-compartir {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+  }
+
+  #cupones .cupon:not(.cupon-bancario) .estadisticas-cupon {
+    gap: 4px !important;
+    font-size: 8.5px !important;
   }
 
   #cupones .cupon:not(.cupon-bancario) .estado-programacion {
-    margin-top: 5px !important;
-    padding: 5px 2px 0 !important;
-    font-size: 9px !important;
+    margin-top: 6px !important;
+    padding: 5px 1px 0 !important;
+    font-size: 8.7px !important;
   }
 }
 
-/* WEB: conserva 3/4 columnas y aprovecha mejor la tarjeta horizontalmente. */
+/* WEB: conserva la grilla 3/4 columnas ya aprobada. */
 @media (min-width: 769px) {
   #cupones .cupon:not(.cupon-bancario) .franja-categoria-cupon {
     min-height: 25px;
     padding-top: 6px;
-    font-size: 10.5px;
+    font-size: 10px;
   }
 
   #cupones .cupon:not(.cupon-bancario) .cupon-encabezado {
-    min-height: 64px !important;
+    min-height: 68px !important;
   }
 
   #cupones .cupon:not(.cupon-bancario) .descuento {
-    font-size: clamp(25px, 2.3vw, 31px) !important;
+    font-size: clamp(27px, 2.25vw, 36px) !important;
   }
 }
