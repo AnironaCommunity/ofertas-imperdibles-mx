@@ -479,21 +479,22 @@
 }
 
 
+
 /* ============================================================
-   V82.42 — Opción activa más visible sin cambiar el tamaño
+   V82.43 — Estado activo inferior igual al selector superior
    ============================================================ */
 .barra-navegacion-inferior .barra-inferior-item.activo,
 .barra-navegacion-inferior .barra-inferior-item[aria-expanded="true"] {
-  background: #eeeeee !important;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .055) !important;
+  background: #fafafa !important;
+  box-shadow: none !important;
 }
 .barra-navegacion-inferior .barra-inferior-item.activo .barra-inferior-texto,
 .barra-navegacion-inferior .barra-inferior-item[aria-expanded="true"] .barra-inferior-texto {
-  color: #111 !important;
-  font-weight: 600 !important;
+  color: inherit !important;
+  font-weight: inherit !important;
 }
 .barra-navegacion-inferior .barra-inferior-item.activo .barra-inferior-icono,
 .barra-navegacion-inferior .barra-inferior-item[aria-expanded="true"] .barra-inferior-icono {
-  transform: translateY(-1px) scale(1.035);
-  filter: saturate(1.06) contrast(1.02);
+  transform: none !important;
+  filter: none !important;
 }
