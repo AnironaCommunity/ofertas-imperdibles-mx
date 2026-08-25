@@ -460,3 +460,59 @@
   border: 0 !important;
   outline: 0 !important;
 }
+
+/* =========================================================
+   PAQUETE 1.4 — Correcciones de tarjeta tipo ticket
+   1) Muescas como recorte real: muestran el fondo exacto de la sección.
+   2) Se elimina la línea punteada horizontal.
+   3) Vigencia/contador con peso normal, sin negritas.
+   No se mueve ni reorganiza el contenido de la tarjeta.
+   ========================================================= */
+#cupones .cupon:not(.cupon-bancario) {
+  /* El recorte se aplica sobre la tarjeta completa para que la muesca
+     no tenga relleno propio y deje ver el fondo real que está detrás. */
+  -webkit-mask-image:
+    radial-gradient(circle 10px at 0 51%, transparent 0 9.5px, #000 10px),
+    radial-gradient(circle 10px at 100% 51%, transparent 0 9.5px, #000 10px);
+  -webkit-mask-composite: source-in;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-image:
+    radial-gradient(circle 10px at 0 51%, transparent 0 9.5px, #000 10px),
+    radial-gradient(circle 10px at 100% 51%, transparent 0 9.5px, #000 10px);
+  mask-composite: intersect;
+  mask-repeat: no-repeat;
+  mask-size: 100% 100%;
+}
+
+/* Anula los círculos blancos de la versión anterior. */
+#cupones .cupon:not(.cupon-bancario)::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+}
+
+/* Elimina únicamente la línea punteada añadida para el estilo ticket. */
+#cupones .cupon:not(.cupon-bancario) .cupon-contenido::after {
+  content: none !important;
+  display: none !important;
+  border: 0 !important;
+}
+
+/* Vigencia con tipografía normal. */
+#cupones .cupon:not(.cupon-bancario) .estado-programacion,
+#cupones .cupon:not(.cupon-bancario) .estado-programacion .estado-tiempo,
+#cupones .cupon:not(.cupon-bancario) .estado-programacion .estado-linea {
+  font-weight: 400 !important;
+}
+
+@media (max-width: 680px) {
+  #cupones .cupon:not(.cupon-bancario) {
+    -webkit-mask-image:
+      radial-gradient(circle 8px at 0 51%, transparent 0 7.5px, #000 8px),
+      radial-gradient(circle 8px at 100% 51%, transparent 0 7.5px, #000 8px);
+    mask-image:
+      radial-gradient(circle 8px at 0 51%, transparent 0 7.5px, #000 8px),
+      radial-gradient(circle 8px at 100% 51%, transparent 0 7.5px, #000 8px);
+  }
+}
