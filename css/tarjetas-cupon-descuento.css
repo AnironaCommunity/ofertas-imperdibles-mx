@@ -12,7 +12,8 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--card-accent) 76%, #ffffff 24%) !important;
+  border: 0 !important;
+  outline: 0 !important;
   border-radius: 18px !important;
   color: #fff !important;
   background:
@@ -447,4 +448,15 @@
       radial-gradient(circle 8px at 0 51%, #fff 0 7.5px, transparent 8px),
       radial-gradient(circle 8px at 100% 51%, #fff 0 7.5px, transparent 8px);
   }
+}
+
+
+/* =========================================================
+   PAQUETE 1.2 — Muescas limpias, sin línea exterior
+   Elimina únicamente el contorno exterior de Tienda/Exclusivos.
+   No cambia dimensiones, posiciones, contenido ni lógica.
+   ========================================================= */
+#cupones .cupon:not(.cupon-bancario) {
+  border: 0 !important;
+  outline: 0 !important;
 }
