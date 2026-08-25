@@ -4634,11 +4634,10 @@ actualizarEstadoWhatsappFlotante();
 
 
 /* ============================================================
-   V82.39 — Ajuste robusto del título dinámico en móvil
-   Mide el ancho RENDERIZADO real (scrollWidth/clientWidth), no canvas.
-   Esto contempla Inter, zoom y escalado de texto de Android/Chrome.
-   Si el navegador impone un tamaño mínimo y una línea no cabe, usa
-   automáticamente dos líneas para jamás cortar el contenido.
+   V82.40 — Ajuste legible del título dinámico en móvil
+   Busca el mayor tamaño posible. Para evitar títulos demasiado
+   pequeños, si no cabe a 11.5px en una línea, usa dos líneas
+   a 13px. Así siempre permanece dentro de su tarjeta.
    ============================================================ */
 function ajustarTamanoTituloHero() {
   const titulo = document.querySelector("#nombre-sitio");
@@ -4657,21 +4656,25 @@ function ajustarTamanoTituloHero() {
   const contenido = titulo.closest(".hero-redes-contenido");
   if (!contenido) return;
 
-  const anchoDisponible = Math.max(0, Math.floor(titulo.clientWidth || contenido.clientWidth) - 4);
+  const anchoDisponible = Math.max(0, Math.floor(contenido.getBoundingClientRect().width) - 4);
   if (anchoDisponible <= 0) return;
 
   titulo.style.setProperty("white-space", "nowrap", "important");
-  titulo.style.setProperty("letter-spacing", "-0.12px", "important");
+  titulo.style.setProperty("letter-spacing", "-0.10px", "important");
+  titulo.style.setProperty("font-size", "14px", "important");
 
-  let minimo = 8;
-  let maximo = window.innerWidth <= 360 ? 12.5 : 13.5;
-  let mejor = minimo;
+  // Si cabe a 14px, conservamos el tamaño máximo.
+  if (titulo.scrollWidth <= anchoDisponible + 1) return;
+
+  const minimoUnaLinea = 11.5;
+  let minimo = minimoUnaLinea;
+  let maximo = 14;
+  let mejor = 0;
 
   for (let i = 0; i < 14; i += 1) {
     const prueba = (minimo + maximo) / 2;
     titulo.style.setProperty("font-size", `${prueba.toFixed(3)}px`, "important");
-    const cabe = titulo.scrollWidth <= anchoDisponible + 1;
-    if (cabe) {
+    if (titulo.scrollWidth <= anchoDisponible + 1) {
       mejor = prueba;
       minimo = prueba;
     } else {
@@ -4679,13 +4682,15 @@ function ajustarTamanoTituloHero() {
     }
   }
 
-  titulo.style.setProperty("font-size", `${mejor.toFixed(2)}px`, "important");
-
-  if (titulo.scrollWidth > anchoDisponible + 1) {
-    titulo.classList.add("titulo-hero-dos-lineas");
-    titulo.style.removeProperty("font-size");
-    titulo.style.removeProperty("white-space");
+  if (mejor >= minimoUnaLinea) {
+    titulo.style.setProperty("font-size", `${mejor.toFixed(2)}px`, "important");
+    return;
   }
+
+  // Antes de volverlo diminuto, permitimos dos líneas legibles.
+  titulo.classList.add("titulo-hero-dos-lineas");
+  titulo.style.removeProperty("font-size");
+  titulo.style.removeProperty("white-space");
 }
 
 function programarAjusteTituloHero() {
