@@ -1267,7 +1267,7 @@ async function saveCoupon(event) {
       codigo: couponCode.value.trim(),
       compra_minima: couponMinimum.value.trim(),
       ahorro_maximo: couponSaving.value.trim(),
-      detalle_bancario: ["bancarios", "exclusivo"].includes(couponCategory.value)
+      detalle_bancario: ["tienda", "bancarios", "exclusivo"].includes(couponCategory.value)
         ? (couponBankDetail?.value || "").trim()
         : "",
       considerar_compartir: couponCategory.value === "exclusivo"
@@ -3597,7 +3597,8 @@ function actualizarSelectorBanco() {
   const categoria = couponCategory?.value || "tienda";
   const esBancario = categoria === "bancarios";
   const esExclusivo = categoria === "exclusivo";
-  const usaDetalle = esBancario || esExclusivo;
+  const esTienda = categoria === "tienda";
+  const usaDetalle = esTienda || esBancario || esExclusivo;
 
   if (couponBankWrapper) couponBankWrapper.hidden = !esBancario;
   if (couponBankDetailWrapper) couponBankDetailWrapper.hidden = !usaDetalle;
@@ -3606,13 +3607,17 @@ function actualizarSelectorBanco() {
   if (couponBankDetailLabel) {
     couponBankDetailLabel.textContent = esBancario
       ? "Detalle del beneficio bancario"
-      : "Detalle del beneficio exclusivo";
+      : esTienda
+        ? "Detalle del cupón"
+        : "Detalle del beneficio exclusivo";
   }
 
   if (couponBankDetailHelp) {
     couponBankDetailHelp.textContent = esBancario
       ? "Este texto aparecerá debajo del porcentaje en la tarjeta bancaria."
-      : "Este texto aparecerá dentro de la tarjeta del cupón Exclusivo.";
+      : esTienda
+        ? "Este texto aparecerá dentro de la tarjeta del cupón de Tienda."
+        : "Este texto aparecerá dentro de la tarjeta del cupón Exclusivo.";
   }
 
   if (!esExclusivo && couponShareEligible) {
