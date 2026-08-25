@@ -515,6 +515,13 @@ let swipeActivo = false;
 vistaCupones?.addEventListener(
   "touchstart",
   (event) => {
+    // El carrusel de banners tiene su propio gesto horizontal. Si el toque
+    // comienza dentro de él, no activar la navegación entre categorías.
+    if (event.target?.closest?.("#banners-cupones, .banners-cupones")) {
+      swipeActivo = false;
+      return;
+    }
+
     if (event.touches.length !== 1) {
       swipeActivo = false;
       return;
@@ -532,6 +539,12 @@ vistaCupones?.addEventListener(
 vistaCupones?.addEventListener(
   "touchend",
   (event) => {
+    // Protección adicional: un swipe terminado dentro del banner nunca debe
+    // propagarse como cambio de categoría de cupones.
+    if (event.target?.closest?.("#banners-cupones, .banners-cupones")) {
+      swipeActivo = false;
+      return;
+    }
     if (!swipeActivo || event.changedTouches.length !== 1) return;
     swipeActivo = false;
 
