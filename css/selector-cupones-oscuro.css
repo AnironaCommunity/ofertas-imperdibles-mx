@@ -7,8 +7,8 @@
   align-items: stretch !important;
   width: min(100%, 860px) !important;
   max-width: 860px !important;
-  margin: 0 auto 16px !important;
-  padding: 2px 7px 0 !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
   gap: 0 !important;
   position: relative !important;
   left: auto !important;
@@ -17,6 +17,7 @@
   bottom: auto !important;
   transform: none !important;
   border: 0 !important;
+  border-bottom: 1px solid #e7e9eb !important;
   border-radius: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
@@ -62,8 +63,8 @@
   min-height: 44px !important;
   height: 44px !important;
   margin: 0 !important;
-  padding: 0 0 6px !important;
-  gap: 2px !important;
+  padding: 0 0 3px !important;
+  gap: 0 !important;
   border: 0 !important;
   outline: 0 !important;
   border-radius: 0 !important;
@@ -92,9 +93,9 @@
 .selector-cupones-menu > .tab-inferior::before {
   content: "" !important;
   position: absolute !important;
-  left: 31% !important;
-  right: 31% !important;
-  bottom: 0 !important;
+  left: 28% !important;
+  right: 28% !important;
+  bottom: -1px !important;
   height: 3px !important;
   border-radius: 999px !important;
   background: #0aa84f !important;
@@ -156,7 +157,7 @@
 .selector-cupones-menu .tab-etiqueta-principal,
 .selector-cupones-menu > .tab-inferior.activo .tab-etiqueta-principal,
 .selector-cupones-menu > .tab-inferior[aria-pressed="true"] .tab-etiqueta-principal {
-  font-family: 'Inter', Arial, Helvetica, sans-serif !important;
+  font-family: Arial, Helvetica, sans-serif !important;
   font-size: 10px !important;
   font-weight: 400 !important;
   line-height: 1 !important;
@@ -184,7 +185,7 @@ body.hay-cupones-visibles #separador-fin-cupones { display: block !important; }
   .selector-cupones-menu > .tab-inferior[aria-pressed="true"] {
     min-height: 42px !important;
     height: 42px !important;
-    padding-bottom: 5px !important;
+    padding-bottom: 2px !important;
   }
   .selector-cupones-menu .tab-icono {
     width: 24px !important;
@@ -197,199 +198,88 @@ body.hay-cupones-visibles #separador-fin-cupones { display: block !important; }
     height: 22px !important;
   }
   .selector-cupones-menu .tab-etiqueta-principal { font-size: 9.5px !important; }
-  .selector-cupones-menu > .tab-inferior::before { left: 29% !important; right: 29% !important; }
+  .selector-cupones-menu > .tab-inferior::before { left: 25% !important; right: 25% !important; }
 }
 
+/* V81.60 — Único ajuste: separación entre el selector y el contenido de cupones. */
+#vista-cupones > #todos-wrapper:not([hidden]),
+#vista-cupones > #sin-cupones:not([hidden]) {
+  margin-top: 14px !important;
+}
 
-/* V81.66 — regreso visible y aislado en la vista Anirona */
-#seccion-comunidad-anirona > .selector-regreso-cupones {
-  position: static !important;
-  inset: auto !important;
-  transform: none !important;
-  width: 100% !important;
-  max-width: none !important;
-  display: flex !important;
-  justify-content: flex-start !important;
-  align-items: center !important;
-  margin: 0 0 14px !important;
-  padding: 0 !important;
-  border: 0 !important;
-  border-radius: 0 !important;
+/* V82.37 — Selector superior alineado visualmente con la barra inferior. */
+.selector-cupones-menu > .tab-inferior,
+.selector-cupones-menu > .tab-inferior:hover,
+.selector-cupones-menu > .tab-inferior:focus,
+.selector-cupones-menu > .tab-inferior:focus-visible,
+.selector-cupones-menu > .tab-inferior:active {
+  border-radius: 8px !important;
   background: transparent !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
+  transition: background-color .16s ease !important;
 }
-
-#seccion-comunidad-anirona > .selector-regreso-cupones > #boton-regresar-cupones-anirona {
-  position: relative !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 7px !important;
-  width: auto !important;
-  min-width: 0 !important;
-  min-height: 38px !important;
-  padding: 7px 12px !important;
-  margin: 0 !important;
-  border: 1px solid #e1e7e3 !important;
-  border-radius: 12px !important;
-  color: #26342d !important;
-  background: #fff !important;
-  box-shadow: 0 2px 8px rgba(31,54,40,.06) !important;
-  font: inherit !important;
-  cursor: pointer !important;
+.selector-cupones-menu > .tab-inferior.activo,
+.selector-cupones-menu > .tab-inferior[aria-pressed="true"] {
+  background: #fafafa !important;
 }
-
-#seccion-comunidad-anirona > .selector-regreso-cupones > #boton-regresar-cupones-anirona:hover,
-#seccion-comunidad-anirona > .selector-regreso-cupones > #boton-regresar-cupones-anirona:focus-visible {
-  border-color: #0aa968 !important;
-  background: #f7fbf9 !important;
-  outline: none !important;
-}
-
-#boton-regresar-cupones-anirona .tab-icono {
-  display: inline-flex !important;
-  width: 18px !important;
-  height: 18px !important;
-  color: #0aa968 !important;
-  flex: 0 0 18px !important;
-}
-
-#boton-regresar-cupones-anirona .tab-icono svg {
-  display: block !important;
-  width: 18px !important;
-  height: 18px !important;
-}
-
-#boton-regresar-cupones-anirona .tab-textos,
-#boton-regresar-cupones-anirona .tab-etiqueta-principal {
-  display: inline !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  color: inherit !important;
-  font-size: 13px !important;
-  font-weight: 400 !important;
-  line-height: 1.15 !important;
-}
-
-#boton-regresar-cupones-anirona::before,
-#boton-regresar-cupones-anirona::after {
+/* El estado activo usa la misma placa suave de la barra inferior; se elimina el subrayado verde. */
+.selector-cupones-menu > .tab-inferior::before,
+.selector-cupones-menu > .tab-inferior.activo::before,
+.selector-cupones-menu > .tab-inferior[aria-pressed="true"]::before {
   content: none !important;
   display: none !important;
 }
-
-/* V81.74 — Menos espacio entre encabezado y categorías. */
-@media (max-width: 700px) {
-  .selector-cupones-menu.selector-cupones-oscuro {
-    margin: 0 auto 5px !important;
-  }
-}
-
-
-/* V81.85 — Contenedor translúcido de categorías, inspirado en el panel de referencia.
-   Los botones siguen siendo planos; solo el bloque completo recibe superficie visual. */
-@media (max-width: 600px) {
-  .selector-cupones-menu.selector-cupones-oscuro {
-    padding: 3px 4px 0 !important;
-    border-radius: 12px !important;
-    box-shadow: 0 3px 10px rgba(34, 58, 73, 0.06) !important;
-  }
-}
-
-/* V81.87 — Iconos de Todos / Tienda / Bancarios / Exclusivo +20% */
-.tabs-inferiores .tab-icono {
-  width: 21.6px !important;
-  height: 21.6px !important;
-  flex: 0 0 21.6px !important;
-}
-.tabs-inferiores .tab-icono svg {
-  width: 21.6px !important;
-  height: 21.6px !important;
-}
-
-/* =========================================================
-   V82.34 — WEB: selector alineado al ancho del contenido
-   Solo escritorio. Móvil conserva exactamente sus medidas.
-   ========================================================= */
-@media (min-width: 701px) {
-  .selector-cupones-menu.selector-cupones-oscuro {
-    width: 100% !important;
-    max-width: 1120px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-}
-
-/* V82.36 — Cápsula del selector con fondo blanco */
-.selector-cupones-menu.selector-cupones-oscuro {
-  background: #ffffff !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-/* V82.35 — Iconografía moderna del selector, sin alterar la altura de la cápsula */
 .selector-cupones-menu .tab-icono {
-  width: 31px !important;
-  height: 31px !important;
-  min-width: 31px !important;
-  flex: 0 0 31px !important;
-  border-radius: 50% !important;
-  transition: transform .16s ease, box-shadow .16s ease !important;
+  width: 30px !important;
+  height: 29px !important;
+  min-width: 30px !important;
+  flex: 0 0 29px !important;
 }
 .selector-cupones-menu .tab-icono svg {
-  width: 22px !important;
-  height: 22px !important;
-  overflow: visible !important;
+  width: 28px !important;
+  height: 28px !important;
 }
-.selector-cupones-menu > .tab-inferior:hover .tab-icono,
-.selector-cupones-menu > .tab-inferior:focus-visible .tab-icono {
-  transform: translateY(-1px) scale(1.035) !important;
-}
-.selector-cupones-menu > .tab-inferior.activo .tab-icono,
-.selector-cupones-menu > .tab-inferior[aria-pressed="true"] .tab-icono {
-  box-shadow: 0 2px 8px rgba(24, 49, 38, .10) !important;
-}
-
-/* Fondos suaves + trazos definidos para contrastar con la barra inferior. */
-.selector-cupones-menu .tab-icono-todos { background: #e8f8ed !important; }
-.selector-cupones-menu .tab-icono-tienda { background: #fff5df !important; }
-.selector-cupones-menu .tab-icono-tarjeta { background: #e8f2ff !important; }
-.selector-cupones-menu .tab-icono-exclusivo { background: #f3eaff !important; }
-
-.selector-cupones-menu .tab-icono .icon-outline,
-.selector-cupones-menu .tab-icono .icon-line,
-.selector-cupones-menu .tab-icono .card-band {
+/* Iconos planos y definidos, sin fondos circulares, para hacer juego con Cupones | Ofertazo | Más. */
+.tab-icono-todos .icon-outline,
+.tab-icono-tienda .icon-outline,
+.tab-icono-tarjeta .icon-outline,
+.tab-icono-exclusivo .icon-outline {
   fill: none !important;
   stroke-width: 4 !important;
-  stroke-linecap: round !important;
   stroke-linejoin: round !important;
 }
-.selector-cupones-menu .tab-icono .icon-dot { stroke: none !important; }
-
-.selector-cupones-menu .tab-icono-todos .icon-outline,
-.selector-cupones-menu .tab-icono-todos .icon-line { stroke: #0aa84f !important; }
-.selector-cupones-menu .tab-icono-todos .icon-dot { fill: #0aa84f !important; }
-
-.selector-cupones-menu .tab-icono-tienda .icon-outline,
-.selector-cupones-menu .tab-icono-tienda .icon-line { stroke: #f2a900 !important; }
-
-.selector-cupones-menu .tab-icono-tarjeta .icon-outline,
-.selector-cupones-menu .tab-icono-tarjeta .icon-line,
-.selector-cupones-menu .tab-icono-tarjeta .card-band { stroke: #1675e8 !important; }
-
-.selector-cupones-menu .tab-icono-exclusivo .icon-outline,
-.selector-cupones-menu .tab-icono-exclusivo .icon-line { stroke: #7b35dc !important; }
-.selector-cupones-menu .tab-icono-exclusivo .icon-dot { fill: #7b35dc !important; }
-
+.tab-icono-todos .icon-outline { stroke: #16a34a !important; }
+.tab-icono-todos .icon-dot { fill: #16a34a !important; }
+.tab-icono-todos .icon-line { stroke: #16a34a !important; stroke-width: 4 !important; }
+.tab-icono-tienda .icon-outline { stroke: #f2a900 !important; }
+.tab-icono-tienda .icon-line { stroke: #f2a900 !important; stroke-width: 4 !important; }
+.tab-icono-tarjeta .icon-outline { fill: none !important; stroke: #147be6 !important; stroke-width: 4 !important; }
+.tab-icono-tarjeta .card-band { stroke: #147be6 !important; stroke-width: 5 !important; }
+.tab-icono-tarjeta .icon-line { stroke: #147be6 !important; stroke-width: 4 !important; }
+.tab-icono-exclusivo .icon-outline { fill: none !important; stroke: #8a43e6 !important; stroke-width: 4 !important; }
+.tab-icono-exclusivo .icon-dot { fill: #8a43e6 !important; }
+.tab-icono-exclusivo .icon-line { stroke: #8a43e6 !important; stroke-width: 4 !important; }
+.selector-cupones-menu .tab-etiqueta-principal,
+.selector-cupones-menu > .tab-inferior.activo .tab-etiqueta-principal,
+.selector-cupones-menu > .tab-inferior[aria-pressed="true"] .tab-etiqueta-principal {
+  font-family: 'Inter', Arial, Helvetica, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  line-height: 12px !important;
+  color: #252525 !important;
+}
 @media (max-width: 600px) {
   .selector-cupones-menu .tab-icono {
     width: 29px !important;
-    height: 29px !important;
+    height: 28px !important;
     min-width: 29px !important;
-    flex-basis: 29px !important;
+    flex-basis: 28px !important;
   }
   .selector-cupones-menu .tab-icono svg {
-    width: 21px !important;
-    height: 21px !important;
+    width: 27px !important;
+    height: 27px !important;
+  }
+  .selector-cupones-menu .tab-etiqueta-principal {
+    font-size: 10.5px !important;
+    line-height: 11px !important;
   }
 }
