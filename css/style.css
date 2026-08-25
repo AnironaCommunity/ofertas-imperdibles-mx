@@ -8958,7 +8958,7 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
    ========================================================= */
 .banners-cupones {
   width: 100%;
-  max-width: 900px;
+  max-width: none;
   margin: 18px auto 4px;
 }
 .banners-cupones[hidden] { display: none !important; }

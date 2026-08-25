@@ -3171,10 +3171,10 @@ function renderizarBannersCupones() {
 
   function iniciarRotacion() {
     detenerCarruselBannersCupones();
-    if (items.length <= 1 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (items.length <= 1) return;
     bannersCuponesIntervalo = setInterval(() => {
       mostrarBanner(bannersCuponesIndice + 1);
-    }, 5500);
+    }, 5000);
   }
 
   function reiniciarRotacion() {
@@ -3187,12 +3187,9 @@ function renderizarBannersCupones() {
   mostrarBanner(0);
   iniciarRotacion();
 
-  bannersCuponesLista.onmouseenter = detenerCarruselBannersCupones;
-  bannersCuponesLista.onmouseleave = iniciarRotacion;
-  bannersCuponesLista.onfocusin = detenerCarruselBannersCupones;
-  bannersCuponesLista.onfocusout = iniciarRotacion;
-  bannersCuponesLista.ontouchstart = detenerCarruselBannersCupones;
-  bannersCuponesLista.ontouchend = iniciarRotacion;
+  // V82.43: el carrusel de banners continúa avanzando automáticamente
+  // aunque el puntero esté encima o el usuario toque el banner.
+  // Los puntos permiten cambiar manualmente y reinician el conteo de 5 s.
 }
 
 function normalizarSeccionesPublicidad(valor, categoria = "ofertas_dia") {
