@@ -35,7 +35,7 @@ html {
 body {
   margin: 0;
   padding-bottom: 82px;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
   color: var(--texto);
   background:
     radial-gradient(circle at top left, rgba(52, 135, 233, 0.05), transparent 27%),
@@ -3806,7 +3806,7 @@ footer {
   font-weight: 600 !important;
   letter-spacing: 0.7px !important;
   text-transform: uppercase !important;
-  font-family: Arial, Helvetica, sans-serif !important;
+  font-family: 'Inter', Arial, Helvetica, sans-serif !important;
 }
 
 /* 5. Solo tachar el publicado cuando exista precio con cupón */
@@ -7956,7 +7956,7 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, .22),
     0 3px 8px rgba(26, 172, 23, .22) !important;
-  font-family: Arial, Helvetica, sans-serif !important;
+  font-family: 'Inter', Arial, Helvetica, sans-serif !important;
   font-weight: 700 !important;
   letter-spacing: .15px !important;
 }
@@ -7977,7 +7977,7 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, .18),
     0 3px 9px color-mix(in srgb, var(--banco-color) 22%, transparent) !important;
-  font-family: Arial, Helvetica, sans-serif !important;
+  font-family: 'Inter', Arial, Helvetica, sans-serif !important;
   font-weight: 700 !important;
   letter-spacing: .15px !important;
 }
@@ -8967,108 +8967,12 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
 }
 
 /* =========================================================
-   V81.53.3 — Orilla #13: segmentos al 50%
-   - Conserva el grosor de la versión anterior.
-   - Segmentos al 50% del largo anterior y separación reducida al 50%.
-   - Tienda / Exclusivo: color de categoría.
-   - Bancarios: color automático de cada banco.
+   V82.40.2 — Orilla punteada de cupones retirada de raíz
+   - Se eliminaron las reglas históricas V81.53.x que dibujaban
+     una orilla mediante ::after sobre las tarjetas.
+   - ::after queda libre para la textura visual de las tarjetas
+     modernas definida en tarjetas-cupon-descuento.css.
    ========================================================= */
-.cupones-grid-compacta > .cupon:not(.cupon-bancario),
-.cupones-grid-compacta > .cupon-bancario-mini {
-  --orilla-color: var(--categoria-cupon-color, #009c76);
-  position: relative !important;
-  border: 0 !important;
-  box-shadow: 0 4px 14px rgba(27, 44, 38, .055) !important;
-  isolation: isolate;
-}
-
-.cupones-grid-compacta > .cupon-bancario-mini {
-  --orilla-color: var(--banco-color, #17139d);
-}
-
-.cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
-.cupones-grid-compacta > .cupon-bancario-mini::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1.5px;
-  pointer-events: none;
-  z-index: 10;
-  background:
-    repeating-linear-gradient(90deg,
-      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 10px,
-      transparent 10px 14px) top / 100% 1.5px no-repeat,
-    repeating-linear-gradient(90deg,
-      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 10px,
-      transparent 10px 14px) bottom / 100% 1.5px no-repeat,
-    repeating-linear-gradient(0deg,
-      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 10px,
-      transparent 10px 14px) left / 1.5px 100% no-repeat,
-    repeating-linear-gradient(0deg,
-      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 10px,
-      transparent 10px 14px) right / 1.5px 100% no-repeat;
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-}
-
-@media (max-width: 700px) {
-  .cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
-  .cupones-grid-compacta > .cupon-bancario-mini::after {
-    padding: 1.25px;
-    background:
-      repeating-linear-gradient(90deg,
-        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 9px,
-        transparent 9px 12.5px) top / 100% 1.25px no-repeat,
-      repeating-linear-gradient(90deg,
-        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 9px,
-        transparent 9px 12.5px) bottom / 100% 1.25px no-repeat,
-      repeating-linear-gradient(0deg,
-        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 9px,
-        transparent 9px 12.5px) left / 1.25px 100% no-repeat,
-      repeating-linear-gradient(0deg,
-        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 9px,
-        transparent 9px 12.5px) right / 1.25px 100% no-repeat;
-  }
-}
-
-/* =========================================================
-   V81.53.7 — Orilla #13: esquinas curvas REALES
-   SOLO modifica la orilla.
-   Corrección: las tarjetas reales son .cupon y .cupon-bancario-mini.
-   Se elimina el dibujo por 4 gradientes independientes y se usa
-   un único borde discontinuo redondeado que sigue las 4 curvas.
-   ========================================================= */
-.cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
-.cupones-grid-compacta > .cupon-bancario-mini::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  box-sizing: border-box;
-  border-radius: inherit;
-  padding: 0 !important;
-  pointer-events: none;
-  z-index: 10;
-
-  /* Anula las 4 líneas rectas anteriores. */
-  background: none !important;
-  -webkit-mask: none !important;
-  mask: none !important;
-
-  /* Un solo borde: las rayas recorren también las esquinas. */
-  border: 1.5px dashed color-mix(in srgb, var(--orilla-color) 82%, transparent) !important;
-}
-
-@media (max-width: 700px) {
-  .cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
-  .cupones-grid-compacta > .cupon-bancario-mini::after {
-    border-width: 1.25px !important;
-  }
-}
-
 
 /* =========================================================
    V81.72 — Pulido final móvil solicitado
@@ -9335,4 +9239,1000 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
 .cupon-bancario-mini.cupon-agotado button {
   cursor: default !important;
   box-shadow: none !important;
+}
+
+
+/* =========================================================
+   V81.94 — Regresa el nivel de inhibición anterior de agotados
+   (previo al ajuste fuerte de V81.88)
+   ========================================================= */
+.cupon.cupon-agotado,
+.cupon-bancario-mini.cupon-agotado {
+  opacity: 0.58 !important;
+  filter: grayscale(0.35) saturate(0.70) !important;
+}
+
+/* Mantener sin animación/realce al pasar el cursor. */
+.cupon.cupon-agotado:hover,
+.cupon-bancario-mini.cupon-agotado:hover {
+  transform: none !important;
+}
+
+
+/* =========================================================
+   Ajuste: separación entre los cupones y el separador final
+   ========================================================= */
+body.hay-cupones-visibles #separador-fin-cupones {
+  margin-top: 20px !important;
+}
+
+@media (max-width: 600px) {
+  body.hay-cupones-visibles #separador-fin-cupones {
+    margin-top: 18px !important;
+  }
+}
+
+
+/* =========================================================
+   V82.04 — Estabilidad visual de tarjetas
+   Evita destellos al actualizar o navegar entre categorías.
+   ========================================================= */
+.cupon,
+.cupon-bancario-mini,
+.cupon-bancario-grid {
+  animation: none !important;
+}
+
+
+
+
+/* ============================================================
+   V82.18 — WhatsApp flotante definitivo
+   Cápsula arriba / círculo al desplazarse
+   ============================================================ */
+.whatsapp-flotante {
+  position: fixed !important;
+  right: 14px !important;
+  bottom: calc(14px + env(safe-area-inset-bottom)) !important;
+  z-index: 25000 !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 52px !important;
+  min-width: 52px !important;
+  height: 52px !important;
+  padding: 0 !important;
+  gap: 0 !important;
+
+  background: #25D366 !important;
+  border: 0 !important;
+  outline: 0 !important;
+  border-radius: 50% !important;
+  box-shadow: 0 7px 20px rgba(0,0,0,.18) !important;
+
+  text-decoration: none !important;
+  overflow: hidden !important;
+
+  transition:
+    width .26s cubic-bezier(.2,.8,.2,1),
+    min-width .26s cubic-bezier(.2,.8,.2,1),
+    padding .26s cubic-bezier(.2,.8,.2,1),
+    gap .26s cubic-bezier(.2,.8,.2,1),
+    border-radius .26s cubic-bezier(.2,.8,.2,1),
+    transform .18s ease,
+    box-shadow .18s ease !important;
+}
+
+.whatsapp-flotante.whatsapp-flotante-expandido {
+  width: 142px !important;
+  min-width: 142px !important;
+  height: 52px !important;
+  padding: 0 16px 0 12px !important;
+  gap: 9px !important;
+  border-radius: 999px !important;
+  justify-content: flex-start !important;
+}
+
+.whatsapp-flotante-logo {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 30px !important;
+  min-width: 30px !important;
+  height: 30px !important;
+  flex: 0 0 30px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.whatsapp-flotante-logo svg {
+  display: block !important;
+  width: 30px !important;
+  height: 30px !important;
+  max-width: 30px !important;
+  max-height: 30px !important;
+  fill: #ffffff !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.whatsapp-flotante-texto {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: #ffffff !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  white-space: nowrap !important;
+}
+
+.whatsapp-flotante.whatsapp-flotante-expandido .whatsapp-flotante-texto {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 30px !important;
+}
+
+.whatsapp-flotante:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 9px 24px rgba(0,0,0,.22) !important;
+}
+
+.whatsapp-flotante:active {
+  transform: scale(.97) !important;
+}
+
+@media (max-width: 600px) {
+  .whatsapp-flotante {
+    right: 12px !important;
+    bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+    width: 50px !important;
+    min-width: 50px !important;
+    height: 50px !important;
+  }
+
+  .whatsapp-flotante.whatsapp-flotante-expandido {
+    width: 134px !important;
+    min-width: 134px !important;
+    height: 50px !important;
+    padding: 0 14px 0 11px !important;
+    gap: 8px !important;
+  }
+
+  .whatsapp-flotante-logo,
+  .whatsapp-flotante-logo svg {
+    width: 28px !important;
+    min-width: 28px !important;
+    height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
+    flex-basis: 28px !important;
+  }
+
+  .whatsapp-flotante-texto {
+    font-size: 13px !important;
+  }
+}
+
+
+/* ============================================================
+   V82.19 — Logo original de WhatsApp, sin deformación
+   ============================================================ */
+.whatsapp-flotante-logo {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 30px !important;
+  min-width: 30px !important;
+  height: 30px !important;
+  flex: 0 0 30px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.whatsapp-flotante-logo img {
+  display: block !important;
+  width: 30px !important;
+  height: 30px !important;
+  max-width: 30px !important;
+  max-height: 30px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Centrado vertical exacto entre logo y texto. */
+.whatsapp-flotante.whatsapp-flotante-expandido {
+  align-items: center !important;
+}
+
+.whatsapp-flotante.whatsapp-flotante-expandido .whatsapp-flotante-texto {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  height: 30px !important;
+  line-height: 30px !important;
+}
+
+@media (max-width: 600px) {
+  .whatsapp-flotante-logo,
+  .whatsapp-flotante-logo img {
+    width: 28px !important;
+    min-width: 28px !important;
+    height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
+    flex-basis: 28px !important;
+  }
+
+  .whatsapp-flotante.whatsapp-flotante-expandido .whatsapp-flotante-texto {
+    height: 28px !important;
+    line-height: 28px !important;
+  }
+}
+
+
+/* ============================================================
+   V82.20 — Ajuste fino del logo WhatsApp
+   Conserva el tamaño de cápsula de V82.19.
+   ============================================================ */
+
+/* La cápsula mantiene exactamente las dimensiones definidas en V82.18. */
+.whatsapp-flotante.whatsapp-flotante-expandido {
+  width: 142px !important;
+  min-width: 142px !important;
+  height: 52px !important;
+  padding: 0 14px 0 9px !important;
+  gap: 7px !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+}
+
+/* Logo más grande, pero siempre contenido dentro de la cápsula. */
+.whatsapp-flotante-logo {
+  width: 36px !important;
+  min-width: 36px !important;
+  height: 36px !important;
+  flex: 0 0 36px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.whatsapp-flotante-logo img {
+  display: block !important;
+  width: 36px !important;
+  height: 36px !important;
+  max-width: 36px !important;
+  max-height: 36px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Texto centrado con el logo y sin posibilidad de salirse. */
+.whatsapp-flotante-texto,
+.whatsapp-flotante.whatsapp-flotante-expandido .whatsapp-flotante-texto {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  height: 36px !important;
+  max-width: 76px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  color: #fff !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 36px !important;
+  white-space: nowrap !important;
+  transform: none !important;
+}
+
+/* Al bajar: mismo círculo, logo grande y centrado. */
+.whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-logo,
+.whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-logo img {
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  max-width: 34px !important;
+  max-height: 34px !important;
+  flex-basis: 34px !important;
+}
+
+.whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-texto {
+  display: none !important;
+}
+
+@media (max-width: 600px) {
+  .whatsapp-flotante.whatsapp-flotante-expandido {
+    width: 134px !important;
+    min-width: 134px !important;
+    height: 50px !important;
+    padding: 0 12px 0 8px !important;
+    gap: 6px !important;
+  }
+
+  .whatsapp-flotante-logo,
+  .whatsapp-flotante-logo img {
+    width: 34px !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    max-width: 34px !important;
+    max-height: 34px !important;
+    flex-basis: 34px !important;
+  }
+
+  .whatsapp-flotante-texto,
+  .whatsapp-flotante.whatsapp-flotante-expandido .whatsapp-flotante-texto {
+    height: 34px !important;
+    max-width: 72px !important;
+    font-size: 12.5px !important;
+    line-height: 34px !important;
+  }
+
+  .whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-logo,
+  .whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-logo img {
+    width: 33px !important;
+    min-width: 33px !important;
+    height: 33px !important;
+    max-width: 33px !important;
+    max-height: 33px !important;
+    flex-basis: 33px !important;
+  }
+}
+
+
+/* ============================================================
+   V82.21 — Logo WhatsApp +20%, cápsula intacta
+   ============================================================ */
+.whatsapp-flotante-logo {
+  width: 43px !important;
+  min-width: 43px !important;
+  height: 43px !important;
+  flex: 0 0 43px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.whatsapp-flotante-logo img {
+  display: block !important;
+  width: 43px !important;
+  height: 43px !important;
+  max-width: 43px !important;
+  max-height: 43px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.whatsapp-flotante.whatsapp-flotante-expandido .whatsapp-flotante-texto {
+  align-items: center !important;
+}
+
+.whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-logo,
+.whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-logo img {
+  width: 41px !important;
+  min-width: 41px !important;
+  height: 41px !important;
+  max-width: 41px !important;
+  max-height: 41px !important;
+  flex-basis: 41px !important;
+}
+
+@media (max-width: 600px) {
+  .whatsapp-flotante-logo,
+  .whatsapp-flotante-logo img {
+    width: 41px !important;
+    min-width: 41px !important;
+    height: 41px !important;
+    max-width: 41px !important;
+    max-height: 41px !important;
+    flex-basis: 41px !important;
+  }
+
+  .whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-logo,
+  .whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-logo img {
+    width: 40px !important;
+    min-width: 40px !important;
+    height: 40px !important;
+    max-width: 40px !important;
+    max-height: 40px !important;
+    flex-basis: 40px !important;
+  }
+}
+
+
+/* ============================================================
+   V82.22 — Logo WhatsApp vectorial definitivo
+   Sin PNG, sin fondo blanco, cápsula intacta.
+   ============================================================ */
+.whatsapp-flotante-logo {
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.whatsapp-flotante-svg {
+  display: block !important;
+  width: 43px !important;
+  height: 43px !important;
+  max-width: 43px !important;
+  max-height: 43px !important;
+  flex: 0 0 43px !important;
+  fill: #ffffff !important;
+  background: transparent !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+.whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-svg {
+  width: 41px !important;
+  height: 41px !important;
+  max-width: 41px !important;
+  max-height: 41px !important;
+}
+
+@media (max-width: 600px) {
+  .whatsapp-flotante-svg {
+    width: 41px !important;
+    height: 41px !important;
+    max-width: 41px !important;
+    max-height: 41px !important;
+  }
+
+  .whatsapp-flotante:not(.whatsapp-flotante-expandido) .whatsapp-flotante-svg {
+    width: 40px !important;
+    height: 40px !important;
+    max-width: 40px !important;
+    max-height: 40px !important;
+  }
+}
+
+
+/* ============================================================
+   V82.27 — Menú flotante "Más" (abajo izquierda)
+   ============================================================ */
+.menu-mas-flotante {
+  position: fixed !important;
+  left: max(12px, env(safe-area-inset-left)) !important;
+  bottom: max(14px, calc(env(safe-area-inset-bottom) + 12px)) !important;
+  z-index: 24990 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+}
+
+.boton-mas-flotante {
+  display: inline-flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 54px !important;
+  height: 54px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background: #5b35d5 !important;
+  color: #fff !important;
+  box-shadow: 0 7px 20px rgba(30, 20, 80, .20) !important;
+  cursor: pointer !important;
+  font-family: inherit !important;
+}
+
+.boton-mas-puntos {
+  display: block !important;
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  line-height: .65 !important;
+  letter-spacing: 1px !important;
+}
+
+.boton-mas-texto {
+  display: block !important;
+  margin-top: 4px !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+
+.menu-mas-panel {
+  display: grid;
+  gap: 2px;
+  min-width: 156px;
+  padding: 6px;
+  border: 1px solid rgba(17, 24, 39, .08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .98);
+  box-shadow: 0 10px 28px rgba(17, 24, 39, .16);
+  transform-origin: bottom left;
+  animation: menuMasAparecer .16s ease-out;
+}
+
+.menu-mas-panel[hidden] {
+  display: none !important;
+}
+
+.menu-mas-opcion {
+  display: flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+  width: 100% !important;
+  min-height: 44px !important;
+  padding: 7px 9px !important;
+  border: 0 !important;
+  border-radius: 10px !important;
+  background: transparent !important;
+  color: #222 !important;
+  font-family: inherit !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+  cursor: pointer !important;
+}
+
+.menu-mas-opcion:hover {
+  background: #f5f7fb !important;
+}
+
+.menu-mas-opcion.activo {
+  background: #eefaf2 !important;
+  color: #087a35 !important;
+}
+
+.menu-mas-icono {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  flex: 0 0 28px !important;
+  border-radius: 50% !important;
+}
+
+.menu-mas-icono svg {
+  display: block !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.menu-mas-icono-tutorial {
+  background: #e8f7ef !important;
+}
+
+.menu-mas-icono-tutorial svg circle {
+  fill: #18a05e !important;
+  stroke: none !important;
+}
+
+.menu-mas-icono-tutorial svg path {
+  fill: #fff !important;
+}
+
+.menu-mas-icono-avisos {
+  background: #f0ecff !important;
+}
+
+.menu-mas-icono-avisos svg path {
+  fill: none !important;
+  stroke: #5b35d5 !important;
+  stroke-width: 2 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
+.menu-mas-opcion.activo .menu-mas-icono-avisos {
+  background: #e7f8ed !important;
+}
+
+.menu-mas-opcion.activo .menu-mas-icono-avisos svg path {
+  stroke: #087a35 !important;
+}
+
+@keyframes menuMasAparecer {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* En móvil no interfiere con WhatsApp, que está del lado derecho. */
+@media (max-width: 600px) {
+  .menu-mas-flotante {
+    left: 10px !important;
+    bottom: max(12px, calc(env(safe-area-inset-bottom) + 10px)) !important;
+  }
+
+  .boton-mas-flotante {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+  .menu-mas-panel {
+    min-width: 148px !important;
+  }
+}
+
+
+/* ============================================================
+   V82.28 — Tutorial Mercado Libre: identidad amarilla
+   ============================================================ */
+.tutorial-foco {
+  border-color: #FFE600 !important;
+  box-shadow:
+    0 0 0 9999px rgba(20, 20, 20, .68),
+    0 0 0 5px rgba(255, 230, 0, .32) !important;
+}
+
+.tutorial-tarjeta {
+  border-color: rgba(216, 182, 0, .38) !important;
+  background:
+    linear-gradient(180deg, rgba(255, 230, 0, .12), rgba(255,255,255,1) 38%) !important;
+  color: #242424 !important;
+  box-shadow: 0 18px 50px rgba(35, 31, 0, .28) !important;
+}
+
+.tutorial-contador {
+  color: #8a7200 !important;
+}
+
+.tutorial-cerrar {
+  background: #fff7bf !important;
+  color: #332d00 !important;
+}
+
+.tutorial-tarjeta h2 {
+  color: #292400 !important;
+}
+
+.tutorial-icono {
+  filter: none !important;
+}
+
+.tutorial-anterior {
+  background: #f4f4f4 !important;
+  color: #333 !important;
+  border: 1px solid #e3e3e3 !important;
+}
+
+.tutorial-siguiente {
+  background: #FFE600 !important;
+  color: #242424 !important;
+  box-shadow: 0 3px 8px rgba(181, 152, 0, .20) !important;
+}
+
+.tutorial-siguiente:hover {
+  background: #f5dc00 !important;
+}
+
+.tutorial-siguiente:active {
+  transform: translateY(1px) !important;
+}
+
+/* El cupón de ejemplo también recibe un pequeño acento amarillo
+   mientras está siendo utilizado por el tutorial. */
+.tutorial-cupon-objetivo,
+.tutorial-cupon-demo {
+  box-shadow: 0 0 0 3px rgba(255, 230, 0, .28) !important;
+}
+
+
+/* V82.32 — Tarjetas Ofertazo Mercado Libre */
+#seccion-ofertas-mercado-libre .titulo-con-separador { margin-bottom: 10px; }
+#ofertas-mercado-libre.ofertas-grid-compacta { gap: 12px; }
+.tarjeta-oferta-ofertazo {
+  overflow: hidden; border: 2px dashed #9b9b9b; border-radius: 16px; background: #fff;
+  box-shadow: none; color: #151515;
+}
+.tarjeta-oferta-ofertazo .ofertazo-cabecera {
+  display: grid; grid-template-columns: 1fr auto; align-items: center; min-height: 58px;
+  padding: 8px 12px; border-bottom: 1px solid #e4e4e4;
+}
+.tarjeta-oferta-ofertazo .ofertazo-descuento { font-size: 25px; line-height: 1; font-weight: 900; letter-spacing: -1px; }
+.tarjeta-oferta-ofertazo .ofertazo-expira { text-align: right; }
+.tarjeta-oferta-ofertazo .ofertazo-expira > span { display: block; margin-bottom: 2px; color: #3d3d3d; font-size: 10px; letter-spacing: .7px; }
+.tarjeta-oferta-ofertazo .ofertazo-expira strong { display: block; font-size: 15px; line-height: 1; font-weight: 800; }
+.tarjeta-oferta-ofertazo .ofertazo-expira b { font: inherit; }
+.tarjeta-oferta-ofertazo .ofertazo-imagen-contenedor {
+  height: 176px; aspect-ratio: auto; padding: 12px 15px; border-radius: 0; background: #fff;
+}
+.tarjeta-oferta-ofertazo .oferta-imagen { border-radius: 0; }
+.tarjeta-oferta-ofertazo .ofertazo-contenido { padding: 11px 13px 10px; }
+.tarjeta-oferta-ofertazo .ofertazo-categoria { display: block; margin-bottom: 7px; font-size: 15px; line-height: 1.15; font-weight: 900; }
+.tarjeta-oferta-ofertazo .ofertazo-contenido h3 {
+  display: -webkit-box; min-height: 40px; margin: 0; overflow: hidden; color: #333; font-size: 14px;
+  line-height: 1.4; font-weight: 500; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+}
+.tarjeta-oferta-ofertazo .oferta-descripcion { margin-top: 5px; font-size: 10.5px; -webkit-line-clamp: 1; }
+.tarjeta-oferta-ofertazo .ofertazo-precios { display: flex; align-items: baseline; gap: 10px; margin-top: 10px; }
+.tarjeta-oferta-ofertazo .ofertazo-precios strong { font-size: 27px; line-height: 1; font-weight: 900; letter-spacing: -1px; }
+.tarjeta-oferta-ofertazo .ofertazo-precios del { color: #777; font-size: 14px; }
+.tarjeta-oferta-ofertazo .ofertazo-ver {
+  display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 42px;
+  margin-top: 12px; border: 0; border-radius: 11px; color: #171717; background: #ffc629; font-size: 15px; font-weight: 800;
+}
+.tarjeta-oferta-ofertazo .ofertazo-ver:hover { background: #ffbf0f; }
+.tarjeta-oferta-ofertazo .ofertazo-pie {
+  display: flex; align-items: center; justify-content: space-between; min-height: 38px; margin-top: 8px;
+  padding-top: 8px; border-top: 1px solid #eee;
+}
+.tarjeta-oferta-ofertazo .ofertazo-compartir {
+  display: inline-flex; align-items: center; justify-content: center; width: 34px; min-width: 34px; min-height: 30px;
+  padding: 0; border: 0; color: #111; background: transparent;
+}
+.tarjeta-oferta-ofertazo .ofertazo-compartir svg { width: 19px; height: 19px; }
+.tarjeta-oferta-ofertazo .oferta-visitas { color: #111; font-size: 12px; font-weight: 700; }
+@media (min-width: 621px) {
+  #ofertas-mercado-libre.ofertas-grid-compacta { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 620px) {
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo { display: block; }
+  #ofertas-mercado-libre.ofertas-grid-compacta { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .tarjeta-oferta-ofertazo { border-width: 1.5px; border-radius: 13px; }
+  .tarjeta-oferta-ofertazo .ofertazo-cabecera { min-height: 48px; padding: 6px 8px; }
+  .tarjeta-oferta-ofertazo .ofertazo-descuento { font-size: 19px; }
+  .tarjeta-oferta-ofertazo .ofertazo-expira > span { font-size: 8px; }
+  .tarjeta-oferta-ofertazo .ofertazo-expira strong { font-size: 11px; }
+  .tarjeta-oferta-ofertazo .ofertazo-imagen-contenedor { min-height: 0; height: 130px; padding: 8px; }
+  .tarjeta-oferta-ofertazo .ofertazo-contenido { padding: 8px; }
+  .tarjeta-oferta-ofertazo .ofertazo-categoria { margin-bottom: 5px; font-size: 12px; }
+  .tarjeta-oferta-ofertazo .ofertazo-contenido h3 { min-height: 34px; font-size: 11px; line-height: 1.45; }
+  .tarjeta-oferta-ofertazo .oferta-descripcion { display: none; }
+  .tarjeta-oferta-ofertazo .ofertazo-precios { gap: 6px; margin-top: 7px; }
+  .tarjeta-oferta-ofertazo .ofertazo-precios strong { font-size: 20px; }
+  .tarjeta-oferta-ofertazo .ofertazo-precios del { font-size: 10px; }
+  .tarjeta-oferta-ofertazo .ofertazo-ver { min-height: 36px; margin-top: 8px; border-radius: 9px; gap: 4px; font-size: 11px; }
+  .tarjeta-oferta-ofertazo .ofertazo-pie { min-height: 30px; margin-top: 6px; padding-top: 5px; }
+  .tarjeta-oferta-ofertazo .ofertazo-compartir { width: 28px; min-width: 28px; min-height: 26px; }
+  .tarjeta-oferta-ofertazo .ofertazo-compartir svg { width: 16px; height: 16px; }
+  .tarjeta-oferta-ofertazo .oferta-visitas { font-size: 9.5px; }
+}
+@media (max-width: 360px) {
+  #ofertas-mercado-libre.ofertas-grid-compacta { grid-template-columns: 1fr; }
+}
+
+/* =========================================================
+   V82.40.2 — Borde punteado V82.35 retirado de raíz.
+   ========================================================= */
+
+/* =========================================================
+   V82.36 — Ofertazo: cuadrícula compacta en WEB
+   - Escritorio medio: 3 tarjetas por fila.
+   - Escritorio amplio: 4 tarjetas por fila.
+   - Solo aplica a >= 769px; móvil permanece intacto.
+   ========================================================= */
+@media (min-width: 769px) and (max-width: 1199px) {
+  #ofertas-mercado-libre.ofertas-grid-compacta {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  #ofertas-mercado-libre.ofertas-grid-compacta {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+}
+
+@media (min-width: 769px) {
+  #seccion-ofertas-mercado-libre {
+    width: 100% !important;
+    max-width: 1180px !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border-width: 1.5px;
+    border-radius: 14px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-cabecera {
+    min-height: 46px;
+    padding: 6px 10px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-descuento {
+    font-size: 20px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-expira > span {
+    font-size: 8px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-expira strong {
+    font-size: 12px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-imagen-contenedor {
+    height: 150px;
+    min-height: 150px;
+    padding: 10px 12px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .oferta-imagen {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-contenido {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 9px 10px 8px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-categoria {
+    margin-bottom: 5px;
+    font-size: 12.5px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-contenido h3 {
+    min-height: 34px;
+    font-size: 11.5px;
+    line-height: 1.4;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .oferta-descripcion {
+    min-height: 15px;
+    margin-top: 3px;
+    font-size: 9.5px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-precios {
+    gap: 7px;
+    margin-top: 8px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-precios strong {
+    font-size: 22px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-precios del {
+    font-size: 11px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-ver {
+    min-height: 36px;
+    margin-top: 9px;
+    border-radius: 9px;
+    gap: 5px;
+    font-size: 12px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-pie {
+    min-height: 30px;
+    margin-top: 6px;
+    padding-top: 5px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-compartir {
+    width: 28px;
+    min-width: 28px;
+    min-height: 26px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-compartir svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  #ofertas-mercado-libre .tarjeta-oferta-ofertazo .oferta-visitas {
+    font-size: 10px;
+  }
+}
+
+/* =========================================================
+   V82.36 — Cupones tipo catálogo en WEB
+   3 columnas en escritorio medio y 4 en escritorio amplio.
+   Exclusivo de WEB: no modifica la distribución móvil.
+   ========================================================= */
+@media (min-width: 769px) {
+  #cupones.cupones-grid-compacta {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  #cupones.cupones-grid-compacta > .cupon {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    border-radius: 14px !important;
+  }
+
+  #cupones .cupon-encabezado {
+    min-height: 66px !important;
+    padding: 10px 10px !important;
+  }
+
+  #cupones .descuento {
+    font-size: clamp(24px, 2.4vw, 31px) !important;
+    line-height: 1.02 !important;
+  }
+
+  #cupones .subtitulo {
+    font-size: 12px !important;
+  }
+
+  #cupones .cupon-cuerpo {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  #cupones.cupones-grid-compacta {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  #cupones .descuento {
+    font-size: 27px !important;
+  }
+}
+
+
+/* V82.36 — Ofertazo: sección sin título y precio principal en verde */
+.tarjeta-oferta-ofertazo .ofertazo-precios strong {
+  color: #00a650;
 }
