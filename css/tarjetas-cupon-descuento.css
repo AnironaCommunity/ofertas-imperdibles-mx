@@ -376,3 +376,14 @@
     font-size: clamp(27px, 2.25vw, 36px) !important;
   }
 }
+
+/* V82.40 — Bordes de tarjetas de cupones sin estilo punteado */
+#cupones .cupon,
+#cupones .cupon.cupon-bancario {
+  border-style: solid !important;
+}
+
+#cupones .cupon:not(.cupon-bancario) {
+  border-width: 1px !important;
+  border-color: color-mix(in srgb, var(--card-accent) 76%, #ffffff 24%) !important;
+}
