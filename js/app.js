@@ -3080,6 +3080,8 @@ function enlaceBannerCupones(publicidad) {
 
 let bannersCuponesIntervalo = null;
 let bannersCuponesIndice = 0;
+let bannersCuponesFirma = "";
+let bannersCuponesResizeHandler = null;
 
 function detenerCarruselBannersCupones() {
   if (bannersCuponesIntervalo) {
@@ -3103,11 +3105,35 @@ function renderizarBannersCupones() {
       (Number(a?.id) || 0) - (Number(b?.id) || 0)
     );
 
+  const firmaActual = items
+    .map((item) => [
+      item?.id ?? "",
+      item?.imagen_url ?? "",
+      enlaceBannerCupones(item),
+      Number(item?.orden) || 0,
+    ].join("|"))
+    .join("||");
+
+  // Si el sondeo automático devuelve exactamente los mismos banners, no
+  // reconstruimos el carrusel. Así evitamos que vuelva al primer banner
+  // cada vez que /api/publicidad se refresca.
+  if (firmaActual && firmaActual === bannersCuponesFirma && bannersCuponesLista.children.length) {
+    bannersCupones.hidden = false;
+    return;
+  }
+
   detenerCarruselBannersCupones();
+  if (bannersCuponesResizeHandler) {
+    window.removeEventListener("resize", bannersCuponesResizeHandler);
+    bannersCuponesResizeHandler = null;
+  }
+
+  bannersCuponesFirma = firmaActual;
   bannersCuponesIndice = 0;
   bannersCuponesLista.replaceChildren();
 
   if (!items.length) {
+    bannersCuponesFirma = "";
     bannersCupones.hidden = true;
     return;
   }
@@ -3133,11 +3159,19 @@ function renderizarBannersCupones() {
     const imagen = document.createElement("img");
     imagen.src = item.imagen_url;
     imagen.alt = item.titulo || "Promoción de Mercado Libre";
-    imagen.loading = indice === 0 ? "eager" : "lazy";
+    imagen.loading = "eager";
     imagen.decoding = "async";
 
     enlace.appendChild(imagen);
     enlace.addEventListener("click", () => registrarClicPublicidad(item.id));
+
+    // Cada slide ocupa exactamente una fracción del track. El track mide
+    // N × 100% del viewport, por lo que cada desplazamiento corresponde
+    // de forma inequívoca a un banner completo.
+    enlace.style.flexBasis = `${100 / items.length}%`;
+    enlace.style.width = `${100 / items.length}%`;
+    enlace.style.minWidth = `${100 / items.length}%`;
+
     track.appendChild(enlace);
     slides.push(enlace);
 
@@ -3155,9 +3189,12 @@ function renderizarBannersCupones() {
     }
   });
 
+  track.style.width = `${items.length * 100}%`;
+
   function mostrarBanner(indice) {
     bannersCuponesIndice = (indice + items.length) % items.length;
-    track.style.transform = `translateX(-${bannersCuponesIndice * 100}%)`;
+    const paso = 100 / items.length;
+    track.style.transform = `translate3d(-${bannersCuponesIndice * paso}%, 0, 0)`;
     slides.forEach((slide, i) => {
       slide.setAttribute("aria-hidden", i === bannersCuponesIndice ? "false" : "true");
       slide.tabIndex = i === bannersCuponesIndice ? 0 : -1;
@@ -3187,9 +3224,13 @@ function renderizarBannersCupones() {
   mostrarBanner(0);
   iniciarRotacion();
 
-  // V82.43: el carrusel de banners continúa avanzando automáticamente
-  // aunque el puntero esté encima o el usuario toque el banner.
-  // Los puntos permiten cambiar manualmente y reinician el conteo de 5 s.
+  // Recalcular la posición si cambia el viewport evita desalineaciones al
+  // rotar el teléfono o redimensionar la ventana.
+  bannersCuponesResizeHandler = () => mostrarBanner(bannersCuponesIndice);
+  window.addEventListener("resize", bannersCuponesResizeHandler, { passive: true });
+
+  // V82.44: carrusel robusto. El track tiene ancho real N×100%, cada slide
+  // ocupa 1/N y el sondeo de publicidad ya no reinicia banners sin cambios.
 }
 
 function normalizarSeccionesPublicidad(valor, categoria = "ofertas_dia") {
