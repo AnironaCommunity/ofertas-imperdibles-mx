@@ -3229,6 +3229,92 @@ function renderizarBannersCupones() {
   bannersCuponesResizeHandler = () => mostrarBanner(bannersCuponesIndice);
   window.addEventListener("resize", bannersCuponesResizeHandler, { passive: true });
 
+  // V82.45 — Deslizamiento táctil izquierda/derecha.
+  // Pointer Events permite que funcione con dedo y también con lápiz sin
+  // interferir con el desplazamiento vertical normal de la página.
+  if (items.length > 1) {
+    let inicioX = 0;
+    let inicioY = 0;
+    let deltaX = 0;
+    let arrastrando = false;
+    let gestoHorizontal = false;
+    let bloquearClick = false;
+
+    const limpiarGesto = () => {
+      arrastrando = false;
+      gestoHorizontal = false;
+      deltaX = 0;
+      track.classList.remove("arrastrando");
+    };
+
+    track.addEventListener("pointerdown", (evento) => {
+      if (evento.pointerType === "mouse" && evento.button !== 0) return;
+      inicioX = evento.clientX;
+      inicioY = evento.clientY;
+      deltaX = 0;
+      arrastrando = true;
+      gestoHorizontal = false;
+      bloquearClick = false;
+      detenerCarruselBannersCupones();
+    });
+
+    track.addEventListener("pointermove", (evento) => {
+      if (!arrastrando) return;
+      const dx = evento.clientX - inicioX;
+      const dy = evento.clientY - inicioY;
+
+      if (!gestoHorizontal) {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+        if (Math.abs(dy) > Math.abs(dx)) {
+          limpiarGesto();
+          iniciarRotacion();
+          return;
+        }
+        gestoHorizontal = true;
+        track.classList.add("arrastrando");
+        try { track.setPointerCapture(evento.pointerId); } catch {}
+      }
+
+      deltaX = dx;
+      const anchoViewport = bannersCuponesLista.clientWidth || 1;
+      const paso = 100 / items.length;
+      const desplazamientoBase = -(bannersCuponesIndice * paso);
+      const desplazamientoArrastre = (deltaX / anchoViewport) * paso;
+      track.style.transform = `translate3d(${desplazamientoBase + desplazamientoArrastre}%, 0, 0)`;
+      bloquearClick = Math.abs(deltaX) > 10;
+    });
+
+    const terminarGesto = (evento) => {
+      if (!arrastrando) return;
+      const anchoViewport = bannersCuponesLista.clientWidth || 1;
+      const umbral = Math.min(70, Math.max(36, anchoViewport * 0.12));
+      const mover = gestoHorizontal && Math.abs(deltaX) >= umbral;
+
+      if (mover) {
+        mostrarBanner(bannersCuponesIndice + (deltaX < 0 ? 1 : -1));
+      } else {
+        mostrarBanner(bannersCuponesIndice);
+      }
+
+      if (gestoHorizontal) {
+        try { track.releasePointerCapture(evento.pointerId); } catch {}
+      }
+      limpiarGesto();
+      iniciarRotacion();
+    };
+
+    track.addEventListener("pointerup", terminarGesto);
+    track.addEventListener("pointercancel", terminarGesto);
+
+    // Si el dedo realmente arrastró el banner, no abrir el enlace al soltar.
+    track.addEventListener("click", (evento) => {
+      if (!bloquearClick) return;
+      evento.preventDefault();
+      evento.stopPropagation();
+      bloquearClick = false;
+    }, true);
+  }
+
   // V82.44: carrusel robusto. El track tiene ancho real N×100%, cada slide
   // ocupa 1/N y el sondeo de publicidad ya no reinicia banners sin cambios.
 }

@@ -8972,6 +8972,17 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
   transition: transform .55s cubic-bezier(.22,.61,.36,1);
   will-change: transform;
   transform: translate3d(0,0,0);
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.banners-cupones-track.arrastrando {
+  transition: none;
+  cursor: grabbing;
+}
+.banners-cupones-track img {
+  -webkit-user-drag: none;
+  user-drag: none;
 }
 .banner-cupones-enlace {
   display: block;
