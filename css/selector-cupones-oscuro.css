@@ -393,25 +393,3 @@ body.hay-cupones-visibles #separador-fin-cupones { display: block !important; }
     height: 21px !important;
   }
 }
-
-
-/* =========================================================
-   V82.42 — Estado seleccionado con mayor contraste
-   Mantiene dimensiones; refuerza solo fondo, texto e icono.
-   ========================================================= */
-.selector-cupones-menu > .tab-inferior.activo,
-.selector-cupones-menu > .tab-inferior[aria-pressed="true"] {
-  background: #f1f5f3 !important;
-  border-radius: 9px !important;
-  box-shadow: inset 0 0 0 1px rgba(10, 168, 79, .14) !important;
-}
-.selector-cupones-menu > .tab-inferior.activo .tab-etiqueta-principal,
-.selector-cupones-menu > .tab-inferior[aria-pressed="true"] .tab-etiqueta-principal {
-  font-weight: 600 !important;
-  color: #111 !important;
-}
-.selector-cupones-menu > .tab-inferior.activo .tab-icono,
-.selector-cupones-menu > .tab-inferior[aria-pressed="true"] .tab-icono {
-  transform: translateY(-1px) scale(1.04) !important;
-  filter: saturate(1.08) contrast(1.03) !important;
-}
