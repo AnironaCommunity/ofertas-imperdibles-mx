@@ -4634,95 +4634,43 @@ actualizarEstadoWhatsappFlotante();
 
 
 /* ============================================================
-   V82.40 — Ajuste legible del título dinámico en móvil
-   Busca el mayor tamaño posible. Para evitar títulos demasiado
-   pequeños, si no cabe a 11.5px en una línea, usa dos líneas
-   a 13px. Así siempre permanece dentro de su tarjeta.
+   V82.23 — Ajuste automático del tamaño del título
    ============================================================ */
 function ajustarTamanoTituloHero() {
   const titulo = document.querySelector("#nombre-sitio");
   if (!titulo) return;
 
-  const movil = window.matchMedia("(max-width: 600px)").matches;
-  titulo.classList.remove("titulo-hero-dos-lineas");
+  const contenedor = titulo.parentElement;
+  if (!contenedor) return;
 
-  if (!movil) {
-    titulo.style.removeProperty("font-size");
-    titulo.style.removeProperty("letter-spacing");
-    titulo.style.removeProperty("white-space");
-    return;
+  // Tamaños base aprobados.
+  const esMovil = window.matchMedia("(max-width: 600px)").matches;
+  const esMuyAngosto = window.matchMedia("(max-width: 380px)").matches;
+  const base = esMuyAngosto ? 13 : (esMovil ? 14 : 16);
+  const minimo = esMuyAngosto ? 10.5 : (esMovil ? 11 : 12);
+
+  titulo.style.fontSize = `${base}px`;
+
+  const anchoDisponible = titulo.getBoundingClientRect().width;
+  if (!anchoDisponible) return;
+
+  let size = base;
+
+  // scrollWidth refleja el ancho real del texto en una sola línea.
+  while (titulo.scrollWidth > titulo.clientWidth && size > minimo) {
+    size -= 0.25;
+    titulo.style.fontSize = `${size}px`;
   }
-
-  const contenido = titulo.closest(".hero-redes-contenido");
-  if (!contenido) return;
-
-  const anchoDisponible = Math.max(0, Math.floor(contenido.getBoundingClientRect().width) - 4);
-  if (anchoDisponible <= 0) return;
-
-  titulo.style.setProperty("white-space", "nowrap", "important");
-  titulo.style.setProperty("letter-spacing", "-0.10px", "important");
-  titulo.style.setProperty("font-size", "14px", "important");
-
-  // Si cabe a 14px, conservamos el tamaño máximo.
-  if (titulo.scrollWidth <= anchoDisponible + 1) return;
-
-  const minimoUnaLinea = 11.5;
-  let minimo = minimoUnaLinea;
-  let maximo = 14;
-  let mejor = 0;
-
-  for (let i = 0; i < 14; i += 1) {
-    const prueba = (minimo + maximo) / 2;
-    titulo.style.setProperty("font-size", `${prueba.toFixed(3)}px`, "important");
-    if (titulo.scrollWidth <= anchoDisponible + 1) {
-      mejor = prueba;
-      minimo = prueba;
-    } else {
-      maximo = prueba;
-    }
-  }
-
-  if (mejor >= minimoUnaLinea) {
-    titulo.style.setProperty("font-size", `${mejor.toFixed(2)}px`, "important");
-    return;
-  }
-
-  // Antes de volverlo diminuto, permitimos dos líneas legibles.
-  titulo.classList.add("titulo-hero-dos-lineas");
-  titulo.style.removeProperty("font-size");
-  titulo.style.removeProperty("white-space");
 }
 
-function programarAjusteTituloHero() {
-  requestAnimationFrame(() => {
-    ajustarTamanoTituloHero();
-    requestAnimationFrame(ajustarTamanoTituloHero);
-  });
-}
+window.addEventListener("resize", ajustarTamanoTituloHero);
+window.addEventListener("pageshow", ajustarTamanoTituloHero);
+document.addEventListener("DOMContentLoaded", ajustarTamanoTituloHero);
 
-window.addEventListener("resize", programarAjusteTituloHero, { passive: true });
-window.addEventListener("orientationchange", programarAjusteTituloHero, { passive: true });
-window.addEventListener("pageshow", programarAjusteTituloHero);
-document.addEventListener("DOMContentLoaded", programarAjusteTituloHero);
-document.addEventListener("ofertas:configuracion-cargada", programarAjusteTituloHero);
-document.addEventListener("ofertas:etiquetas-cargadas", programarAjusteTituloHero);
+// También reajusta tras cargar configuración dinámica del encabezado.
+document.addEventListener("ofertas:configuracion-cargada", ajustarTamanoTituloHero);
 
-const tituloHeroObservable = document.querySelector("#nombre-sitio");
-if (tituloHeroObservable) {
-  new MutationObserver(programarAjusteTituloHero).observe(tituloHeroObservable, {
-    childList: true,
-    characterData: true,
-    subtree: true
-  });
-}
-
-if (document.fonts?.ready) {
-  document.fonts.ready.then(programarAjusteTituloHero).catch(() => {});
-}
-
-window.setTimeout(programarAjusteTituloHero, 0);
-window.setTimeout(programarAjusteTituloHero, 180);
-window.setTimeout(programarAjusteTituloHero, 650);
+window.setTimeout(ajustarTamanoTituloHero, 0);
 
 
 /* ============================================================
