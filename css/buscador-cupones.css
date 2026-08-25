@@ -685,3 +685,9 @@
     margin-right: auto;
   }
 }
+
+/* V82.35 — Buscador de cupones oculto temporalmente.
+   Se conserva el HTML/JS para poder reactivarlo más adelante sin perder funcionalidad. */
+.buscador-cupones {
+  display: none !important;
+}
