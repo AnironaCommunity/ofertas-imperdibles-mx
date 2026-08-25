@@ -8967,108 +8967,12 @@ body.vista-bancarios .cupon .acciones-bloque{order:3!important;}
 }
 
 /* =========================================================
-   V81.53.3 — Orilla #13: segmentos al 50%
-   - Conserva el grosor de la versión anterior.
-   - Segmentos al 50% del largo anterior y separación reducida al 50%.
-   - Tienda / Exclusivo: color de categoría.
-   - Bancarios: color automático de cada banco.
+   V82.40.2 — Orilla punteada de cupones retirada de raíz
+   - Se eliminaron las reglas históricas V81.53.x que dibujaban
+     una orilla mediante ::after sobre las tarjetas.
+   - ::after queda libre para la textura visual de las tarjetas
+     modernas definida en tarjetas-cupon-descuento.css.
    ========================================================= */
-.cupones-grid-compacta > .cupon:not(.cupon-bancario),
-.cupones-grid-compacta > .cupon-bancario-mini {
-  --orilla-color: var(--categoria-cupon-color, #009c76);
-  position: relative !important;
-  border: 0 !important;
-  box-shadow: 0 4px 14px rgba(27, 44, 38, .055) !important;
-  isolation: isolate;
-}
-
-.cupones-grid-compacta > .cupon-bancario-mini {
-  --orilla-color: var(--banco-color, #17139d);
-}
-
-.cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
-.cupones-grid-compacta > .cupon-bancario-mini::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1.5px;
-  pointer-events: none;
-  z-index: 10;
-  background:
-    repeating-linear-gradient(90deg,
-      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 10px,
-      transparent 10px 14px) top / 100% 1.5px no-repeat,
-    repeating-linear-gradient(90deg,
-      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 10px,
-      transparent 10px 14px) bottom / 100% 1.5px no-repeat,
-    repeating-linear-gradient(0deg,
-      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 10px,
-      transparent 10px 14px) left / 1.5px 100% no-repeat,
-    repeating-linear-gradient(0deg,
-      color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 10px,
-      transparent 10px 14px) right / 1.5px 100% no-repeat;
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-}
-
-@media (max-width: 700px) {
-  .cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
-  .cupones-grid-compacta > .cupon-bancario-mini::after {
-    padding: 1.25px;
-    background:
-      repeating-linear-gradient(90deg,
-        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 9px,
-        transparent 9px 12.5px) top / 100% 1.25px no-repeat,
-      repeating-linear-gradient(90deg,
-        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 9px,
-        transparent 9px 12.5px) bottom / 100% 1.25px no-repeat,
-      repeating-linear-gradient(0deg,
-        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 9px,
-        transparent 9px 12.5px) left / 1.25px 100% no-repeat,
-      repeating-linear-gradient(0deg,
-        color-mix(in srgb, var(--orilla-color) 82%, transparent) 0 9px,
-        transparent 9px 12.5px) right / 1.25px 100% no-repeat;
-  }
-}
-
-/* =========================================================
-   V81.53.7 — Orilla #13: esquinas curvas REALES
-   SOLO modifica la orilla.
-   Corrección: las tarjetas reales son .cupon y .cupon-bancario-mini.
-   Se elimina el dibujo por 4 gradientes independientes y se usa
-   un único borde discontinuo redondeado que sigue las 4 curvas.
-   ========================================================= */
-.cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
-.cupones-grid-compacta > .cupon-bancario-mini::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  box-sizing: border-box;
-  border-radius: inherit;
-  padding: 0 !important;
-  pointer-events: none;
-  z-index: 10;
-
-  /* Anula las 4 líneas rectas anteriores. */
-  background: none !important;
-  -webkit-mask: none !important;
-  mask: none !important;
-
-  /* Un solo borde: las rayas recorren también las esquinas. */
-  border: 1.5px dashed color-mix(in srgb, var(--orilla-color) 82%, transparent) !important;
-}
-
-@media (max-width: 700px) {
-  .cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
-  .cupones-grid-compacta > .cupon-bancario-mini::after {
-    border-width: 1.25px !important;
-  }
-}
-
 
 /* =========================================================
    V81.72 — Pulido final móvil solicitado
@@ -10143,22 +10047,8 @@ body.hay-cupones-visibles #separador-fin-cupones {
 }
 
 /* =========================================================
-   V82.35 — Orilla punteada con el color del encabezado
-   - Tienda / Exclusivo: usa el color actual de la categoría.
-   - Bancarios: usa el color configurado para cada banco.
-   - No modifica tamaños, contenido, acciones ni comportamiento.
+   V82.40.2 — Borde punteado V82.35 retirado de raíz.
    ========================================================= */
-.cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
-.cupones-grid-compacta > .cupon-bancario-mini::after {
-  border: 2px dashed var(--orilla-color) !important;
-}
-
-@media (max-width: 700px) {
-  .cupones-grid-compacta > .cupon:not(.cupon-bancario)::after,
-  .cupones-grid-compacta > .cupon-bancario-mini::after {
-    border-width: 2px !important;
-  }
-}
 
 /* =========================================================
    V82.36 — Ofertazo: cuadrícula compacta en WEB
