@@ -1270,87 +1270,47 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
 
   const estados = Array.isArray(estadosDestacados) ? estadosDestacados.filter(Boolean) : [estadosDestacados].filter(Boolean);
   const clasesEstado = estados.map((estado) => ` cupon-${estado}`).join("");
-  articulo.className = `cupon${clasesEstado}${esBancario ? " cupon-bancario" : ""}${esExclusivo ? " cupon-exclusivo" : ""}`;
+  articulo.className = `cupon cupon-horizontal${clasesEstado}${esBancario ? " cupon-bancario" : ""}${esExclusivo ? " cupon-exclusivo" : ""}`;
   articulo.dataset.id = String(cupon.id);
   articulo.dataset.color = COLORES[indice % COLORES.length];
   articulo.style.setProperty("--categoria-cupon-color", visualCategoria.color);
   articulo.style.setProperty("--categoria-cupon-texto", colorTextoContraste(visualCategoria.color));
 
   articulo.innerHTML = `
-    <div class="franja-categoria-cupon">${escaparHtml(visualCategoria.nombre)}</div>
-    <div class="cupon-encabezado">
-      ${
-        cupon.imagen_url
-          ? `<img
-              class="cupon-logo"
-              src="${escaparHtml(cupon.imagen_url)}"
-              alt=""
-              loading="lazy"
-            />`
-          : ""
-      }
-
+    <div class="cupon-horizontal-valor">
+      ${cupon.imagen_url ? `<img class="cupon-logo" src="${escaparHtml(cupon.imagen_url)}" alt="" loading="lazy" />` : ""}
       <h2 class="descuento">${escaparHtml(cupon.titulo)}</h2>
     </div>
 
-    <div class="cupon-contenido">
-      
-      <div class="cupon-etiquetas">
-        ${esExclusivo ? '<span class="etiqueta-cupon etiqueta-exclusivo">💎 Exclusivo</span>' : ""}
-        ${htmlEtiquetasCupon(esExclusivo ? estados.slice(0, 1) : estados)}
-      </div>
-
+    <div class="cupon-horizontal-info">
+      <div class="franja-categoria-cupon">${escaparHtml(visualCategoria.nombre)}</div>
       ${(esExclusivo || categoria === "tienda") && cupon.detalle_bancario
         ? `<p class="detalle-beneficio-exclusivo">${escaparHtml(cupon.detalle_bancario)}</p>`
         : ""}
       ${esBancario ? `<p class="beneficio-bancario">${escaparHtml(cupon.titulo)}</p>` : ""}
-
       ${htmlCondicionesCupon(cupon)}
-
-      <div class="estado-programacion" hidden></div>
-
-      <div class="acciones-bloque">
-        <div class="acciones-cupon">
-          <span class="cupon-copiado-mini" ${yaUsado ? "" : "hidden"}>✓ Ya copiado</span>
-          <button class="boton-canjear" type="button" ${cupon.agotado === true ? "disabled aria-disabled=\"true\"" : ""}>
-            ${contenidoBotonCopiar()}
-          </button>
-        </div>
-
-        <p class="mensaje" aria-live="polite"></p>
-
-        <div class="acciones-secundarias">
-          <button
-            class="boton-like ${yaLeGusta ? "activo" : ""}"
-            type="button"
-            aria-label="Me gusta"
-            title="Me gusta"
-          >
-            ${iconoMeGusta()}
-          </button>
-
-          <button
-            class="boton-compartir"
-            type="button"
-            aria-label="Compartir página"
-            title="Compartir página"
-          >
-            ${iconoCompartir()}
-          </button>
-
-          <div class="estadisticas-cupon">
-            <span class="estadistica-item estadistica-likes">
-              ${iconoMeGusta()}
-              <span class="numero-likes">${Number(cupon.likes || 0)}</span>
-            </span>
-
-            <span class="estadistica-item estadistica-usos">
-              ${iconoCopias()}
-              <span class="numero-clics">${Number(cupon.clics || 0)}</span>
-            </span>
-          </div>
-        </div>
+      <div class="cupon-etiquetas">
+        ${esExclusivo ? '<span class="etiqueta-cupon etiqueta-exclusivo">💎 Exclusivo</span>' : ""}
+        ${htmlEtiquetasCupon(esExclusivo ? estados.slice(0, 1) : estados)}
       </div>
+    </div>
+
+    <div class="cupon-horizontal-acciones">
+      <div class="acciones-cupon">
+        <span class="cupon-copiado-mini" ${yaUsado ? "" : "hidden"}>✓ Ya copiado</span>
+        <button class="boton-canjear" type="button" ${cupon.agotado === true ? 'disabled aria-disabled="true"' : ""}>
+          ${contenidoBotonCopiar()}
+        </button>
+      </div>
+      <p class="mensaje" aria-live="polite"></p>
+      <div class="acciones-secundarias">
+        <button class="boton-like ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
+        <span class="numero-likes">${Number(cupon.likes || 0)}</span>
+        <span class="separador-estadistica" aria-hidden="true"></span>
+        <button class="boton-compartir" type="button" aria-label="Compartir página" title="Compartir página">${iconoCompartir()}</button>
+        <span class="estadistica-item estadistica-usos">${iconoCopias()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
+      </div>
+      <div class="estado-programacion" hidden></div>
     </div>
   `;
 
@@ -1370,19 +1330,10 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   }
 
   redeemButton.addEventListener("click", () => {
-    if (couponTimeState(cupon).enabled) {
-      copiarYCanjear(cupon, articulo);
-    }
+    if (couponTimeState(cupon).enabled) copiarYCanjear(cupon, articulo);
   });
-
-  articulo
-    .querySelector(".boton-compartir")
-    .addEventListener("click", () => compartirPagina(articulo));
-
-  articulo
-    .querySelector(".boton-like")
-    .addEventListener("click", () => darMeGusta(cupon, articulo));
-
+  articulo.querySelector(".boton-compartir").addEventListener("click", () => compartirPagina(articulo));
+  articulo.querySelector(".boton-like").addEventListener("click", () => darMeGusta(cupon, articulo));
   return articulo;
 }
 
