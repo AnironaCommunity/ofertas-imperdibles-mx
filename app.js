@@ -515,6 +515,13 @@ let swipeActivo = false;
 vistaCupones?.addEventListener(
   "touchstart",
   (event) => {
+    // El carrusel de banners tiene su propio gesto horizontal. Si el toque
+    // comienza dentro de él, no activar la navegación entre categorías.
+    if (event.target?.closest?.("#banners-cupones, .banners-cupones")) {
+      swipeActivo = false;
+      return;
+    }
+
     if (event.touches.length !== 1) {
       swipeActivo = false;
       return;
@@ -532,6 +539,12 @@ vistaCupones?.addEventListener(
 vistaCupones?.addEventListener(
   "touchend",
   (event) => {
+    // Protección adicional: un swipe terminado dentro del banner nunca debe
+    // propagarse como cambio de categoría de cupones.
+    if (event.target?.closest?.("#banners-cupones, .banners-cupones")) {
+      swipeActivo = false;
+      return;
+    }
     if (!swipeActivo || event.changedTouches.length !== 1) return;
     swipeActivo = false;
 
@@ -718,6 +731,14 @@ function iconoCopias() {
   return `
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M8 7V5a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3h-2v3a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-8a3 3 0 0 1 3-3h2Zm3 1h3a3 3 0 0 1 3 3v2h2V5h-8v3Zm3 3H6v8h8v-8Z"/>
+    </svg>
+  `;
+}
+
+function iconoVista() {
+  return `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 5c5.4 0 9.2 4.8 10.4 6.6a.75.75 0 0 1 0 .8C21.2 14.2 17.4 19 12 19S2.8 14.2 1.6 12.4a.75.75 0 0 1 0-.8C2.8 9.8 6.6 5 12 5Zm0 2C8.1 7 5 10.2 3.7 12 5 13.8 8.1 17 12 17s7-3.2 8.3-5C19 10.2 15.9 7 12 7Zm0 1.5A3.5 3.5 0 1 1 12 15a3.5 3.5 0 0 1 0-7Zm0 2A1.5 1.5 0 1 0 12 13.5a1.5 1.5 0 0 0 0-3Z"/>
     </svg>
   `;
 }
@@ -1183,20 +1204,29 @@ function configuracionVisualCategoria(categoria) {
 }
 
 /* =========================================================
-   V81.60 — Colores automáticos para cupones de Tienda
-   - Cada cupón de Tienda recibe un color de una paleta controlada.
+   V82.53 — Paleta automática de 16 colores
+   - Tienda, Exclusivos y Bancarios reciben un color de una paleta controlada.
    - El color se calcula de forma estable a partir del cupón: no cambia
      al recargar ni al cambiar de sección.
-   - Exclusivos y Bancarios conservan su comportamiento actual.
+   - En Bancarios se conserva el área blanca y el logo original del banco.
    ========================================================= */
 const PALETA_CUPONES_TIENDA = [
-  "#ff4b35", // coral / rojo oferta
-  "#ffb000", // naranja dorado
-  "#20bfa9", // turquesa
-  "#16a6e8", // azul cielo
-  "#6f67e8", // violeta
-  "#e45b9a", // rosa
-  "#39ad69", // verde
+  "#0FAF72", // 1. Verde esmeralda
+  "#F28C18", // 2. Naranja
+  "#7A43C6", // 3. Morado
+  "#1E73D8", // 4. Azul
+  "#12AEB3", // 5. Turquesa
+  "#E85C9E", // 6. Rosa
+  "#EF5A4C", // 7. Rojo coral
+  "#1AA57A", // 8. Verde jade
+  "#087EA4", // 9. Azul océano
+  "#8B4DD1", // 10. Violeta
+  "#F07A20", // 11. Mandarina
+  "#D93C78", // 12. Rosa frambuesa
+  "#4B78A8", // 13. Azul acero
+  "#4F46B8", // 14. Índigo
+  "#C9369E", // 15. Magenta
+  "#26734D", // 16. Verde bosque
 ];
 
 function colorAutomaticoCuponTienda(cupon) {
@@ -1218,7 +1248,7 @@ function configuracionVisualCupon(cupon) {
   const categoria = normalizarCategoria(cupon);
   const visual = configuracionVisualCategoria(categoria);
 
-  if (categoria !== "tienda") return visual;
+  if (categoria !== "tienda" && categoria !== "exclusivo") return visual;
 
   return {
     ...visual,
@@ -1251,93 +1281,54 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   const categoria = normalizarCategoria(cupon);
   const esBancario = categoria === "bancarios";
   const esExclusivo = categoria === "exclusivo";
-  const yaUsado = localStorage.getItem(claveUsado(cupon.id)) === "1";
   const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
   const visualCategoria = configuracionVisualCupon(cupon);
 
   const estados = Array.isArray(estadosDestacados) ? estadosDestacados.filter(Boolean) : [estadosDestacados].filter(Boolean);
   const clasesEstado = estados.map((estado) => ` cupon-${estado}`).join("");
-  articulo.className = `cupon${clasesEstado}${esBancario ? " cupon-bancario" : ""}${esExclusivo ? " cupon-exclusivo" : ""}`;
+  articulo.className = `cupon cupon-horizontal-v16${clasesEstado}${esBancario ? " cupon-bancario" : ""}${esExclusivo ? " cupon-exclusivo" : ""}`;
   articulo.dataset.id = String(cupon.id);
   articulo.dataset.color = COLORES[indice % COLORES.length];
   articulo.style.setProperty("--categoria-cupon-color", visualCategoria.color);
   articulo.style.setProperty("--categoria-cupon-texto", colorTextoContraste(visualCategoria.color));
 
   articulo.innerHTML = `
-    <div class="franja-categoria-cupon">${escaparHtml(visualCategoria.nombre)}</div>
-    <div class="cupon-encabezado">
-      ${
-        cupon.imagen_url
-          ? `<img
-              class="cupon-logo"
-              src="${escaparHtml(cupon.imagen_url)}"
-              alt=""
-              loading="lazy"
-            />`
-          : ""
-      }
-
-      <h2 class="descuento">${escaparHtml(cupon.titulo)}</h2>
+    <div class="hc16-valor">
+      ${cupon.imagen_url ? `<img class="hc16-logo cupon-logo" src="${escaparHtml(cupon.imagen_url)}" alt="" loading="lazy" />` : ""}
+      <h2 class="hc16-descuento descuento">${escaparHtml(cupon.titulo)}${/\boff\b/i.test(String(cupon.titulo || "")) ? "" : '<span class="hc19-off">OFF</span>'}</h2>
+      <span class="hc19-porcentaje" aria-hidden="true">%</span>
     </div>
 
-    <div class="cupon-contenido">
-      
-      <div class="cupon-etiquetas">
-        ${esExclusivo ? '<span class="etiqueta-cupon etiqueta-exclusivo">💎 Exclusivo</span>' : ""}
-        ${htmlEtiquetasCupon(esExclusivo ? estados.slice(0, 1) : estados)}
+    <div class="hc16-info">
+      <div class="hc16-categoria">${escaparHtml(visualCategoria.nombre)}</div>
+      <div class="hc16-condiciones">
+        <p class="hc16-condicion">En compras desde <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
       </div>
-
       ${(esExclusivo || categoria === "tienda") && cupon.detalle_bancario
-        ? `<p class="detalle-beneficio-exclusivo">${escaparHtml(cupon.detalle_bancario)}</p>`
+        ? `<p class="hc16-detalle">${escaparHtml(cupon.detalle_bancario)}</p>`
         : ""}
-      ${esBancario ? `<p class="beneficio-bancario">${escaparHtml(cupon.titulo)}</p>` : ""}
-
-      ${htmlCondicionesCupon(cupon)}
-
-      <div class="estado-programacion" hidden></div>
-
-      <div class="acciones-bloque">
-        <div class="acciones-cupon">
-          <span class="cupon-copiado-mini" ${yaUsado ? "" : "hidden"}>✓ Ya copiado</span>
-          <button class="boton-canjear" type="button" ${cupon.agotado === true ? "disabled aria-disabled=\"true\"" : ""}>
-            ${contenidoBotonCopiar()}
-          </button>
-        </div>
-
-        <p class="mensaje" aria-live="polite"></p>
-
-        <div class="acciones-secundarias">
-          <button
-            class="boton-like ${yaLeGusta ? "activo" : ""}"
-            type="button"
-            aria-label="Me gusta"
-            title="Me gusta"
-          >
-            ${iconoMeGusta()}
-          </button>
-
-          <button
-            class="boton-compartir"
-            type="button"
-            aria-label="Compartir página"
-            title="Compartir página"
-          >
-            ${iconoCompartir()}
-          </button>
-
-          <div class="estadisticas-cupon">
-            <span class="estadistica-item estadistica-likes">
-              ${iconoMeGusta()}
-              <span class="numero-likes">${Number(cupon.likes || 0)}</span>
-            </span>
-
-            <span class="estadistica-item estadistica-usos">
-              ${iconoCopias()}
-              <span class="numero-clics">${Number(cupon.clics || 0)}</span>
-            </span>
-          </div>
-        </div>
+      ${esCuponPorcentaje(cupon) ? `<p class="hc16-ahorro-extra">Ahorra hasta <strong>${escaparHtml(cupon.ahorro_maximo || "Consultar")}</strong></p>` : ""}
+      <div class="hc16-etiquetas">
+        ${htmlEtiquetasCupon(esExclusivo ? estados.slice(0, 2) : estados)}
       </div>
+    </div>
+
+    <div class="hc16-acciones">
+      <div class="hc16-cta acciones-cupon">
+        <button class="boton-canjear hc16-copiar" type="button" ${cupon.agotado === true ? 'disabled aria-disabled="true"' : ""}>
+          ${contenidoBotonCopiar()}
+        </button>
+      </div>
+      <p class="mensaje hc16-mensaje" aria-live="polite"></p>
+      <div class="hc16-social acciones-secundarias" aria-label="Actividad del cupón">
+        <button class="boton-compartir hc16-icono hc20-compartir" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
+        <span class="hc16-separador" aria-hidden="true"></span>
+        <button class="boton-like hc16-icono ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
+        <span class="numero-likes hc16-numero">${Number(cupon.likes || 0)}</span>
+        <span class="hc16-separador" aria-hidden="true"></span>
+        <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas" aria-label="Vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
+      </div>
+      <div class="estado-programacion hc16-tiempo" hidden></div>
     </div>
   `;
 
@@ -1357,22 +1348,12 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   }
 
   redeemButton.addEventListener("click", () => {
-    if (couponTimeState(cupon).enabled) {
-      copiarYCanjear(cupon, articulo);
-    }
+    if (couponTimeState(cupon).enabled) copiarYCanjear(cupon, articulo);
   });
-
-  articulo
-    .querySelector(".boton-compartir")
-    .addEventListener("click", () => compartirPagina(articulo));
-
-  articulo
-    .querySelector(".boton-like")
-    .addEventListener("click", () => darMeGusta(cupon, articulo));
-
+  articulo.querySelector(".boton-like")?.addEventListener("click", () => darMeGusta(cupon, articulo));
+  articulo.querySelector(".hc20-compartir")?.addEventListener("click", () => compartirPagina(articulo));
   return articulo;
 }
-
 
 function obtenerBancoVisual(cupon) {
   const imagenOriginal = String(cupon.imagen_url || "");
@@ -1420,83 +1401,46 @@ function obtenerLogoBanco(cupon) {
 function crearTarjetaBancaria(cupon, estadosDestacados = []) {
   const articulo = document.createElement("article");
   const estados = Array.isArray(estadosDestacados) ? estadosDestacados.filter(Boolean) : [estadosDestacados].filter(Boolean);
-  articulo.className = `cupon-bancario-mini${estados.map((estado) => ` cupon-${estado}`).join("")}`;
-  articulo.dataset.id = String(cupon.id);
-
   const bancoVisual = obtenerBancoVisual(cupon);
   const logoBanco = bancoVisual.logo;
-  const yaUsado = localStorage.getItem(claveUsado(cupon.id)) === "1";
   const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
+  articulo.className = `cupon-bancario-mini cupon-bancario-ticket${estados.map((estado) => ` cupon-${estado}`).join("")}`;
+  articulo.dataset.id = String(cupon.id);
   articulo.dataset.banco = bancoVisual.banco;
   articulo.style.setProperty("--banco-color", bancoVisual.color);
   articulo.style.setProperty("--banco-texto", bancoVisual.texto);
-  articulo.style.setProperty("--banco-franja-texto", colorTextoContraste(bancoVisual.color));
   articulo.innerHTML = `
-    <div class="banco-logo-area">
-      ${logoBanco ? `<img class="banco-logo" src="${escaparHtml(logoBanco)}" alt="" loading="lazy" />` : `<span class="banco-logo-fallback">BANCO</span>`}
-    </div>
-    <div class="banco-franja">CUPÓN BANCARIO</div>
-    <div class="cupon-etiquetas banco-etiquetas">${htmlEtiquetasCupon(estados)}</div>
-    <div class="banco-cuerpo">
-      <div class="banco-info">
+    <div class="bt20-main">
+      <div class="bt20-logo-wrap">${logoBanco ? `<img class="banco-logo bt20-logo" src="${escaparHtml(logoBanco)}" alt="" loading="lazy" />` : `<span class="banco-logo-fallback">BANCO</span>`}</div>
+      <div class="bt20-beneficio">
+        <span class="bt20-tipo">CUPÓN BANCARIO</span>
         <h3>${escaparHtml(cupon.titulo || "Beneficio bancario")}</h3>
-        ${cupon.detalle_bancario ? `<p class="banco-detalle">${escaparHtml(cupon.detalle_bancario)}</p>` : ""}
-        ${htmlCondicionesCupon(cupon)}
-      </div>
-      <div class="banco-pie">
-        <div class="estado-programacion" hidden></div>
-        <span class="cupon-copiado-mini banco-copiado-mini" ${yaUsado ? "" : "hidden"}>✓ Ya copiado</span>
-        <button class="banco-canjear" type="button" ${cupon.agotado === true ? "disabled aria-disabled=\"true\"" : ""}>${contenidoBotonCopiar()}</button>
-        <div class="acciones-secundarias banco-acciones-extra" aria-label="Interacciones del cupón">
-          <button
-            class="boton-like banco-like ${yaLeGusta ? "activo" : ""}"
-            type="button"
-            aria-label="Me gusta"
-            title="Me gusta"
-          >
-            ${iconoMeGusta()}
-          </button>
-
-          <button
-            class="boton-compartir banco-compartir"
-            type="button"
-            aria-label="Compartir cupón"
-            title="Compartir cupón"
-          >
-            ${iconoCompartir()}
-          </button>
-
-          <div class="estadisticas-cupon banco-estadisticas">
-            <span class="estadistica-item estadistica-likes">
-              ${iconoMeGusta()}
-              <span class="numero-likes">${Number(cupon.likes || 0)}</span>
-            </span>
-            <span class="estadistica-item estadistica-usos">
-              ${iconoCopias()}
-              <span class="numero-clics">${Number(cupon.clics || 0)}</span>
-            </span>
-          </div>
-        </div>
-        <p class="mensaje" aria-live="polite"></p>
+        <p>Compra mínima <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
+        ${cupon.ahorro_maximo ? `<p>Tope de descuento <strong>${escaparHtml(cupon.ahorro_maximo)}</strong></p>` : ""}
+        ${cupon.detalle_bancario ? `<p class="bt20-detalle">${escaparHtml(cupon.detalle_bancario)}</p>` : ""}
+        <div class="bt20-etiquetas">${htmlEtiquetasCupon(estados)}</div>
       </div>
     </div>
-  `;
-
+    <div class="bt20-actions">
+      <button class="banco-canjear bt20-copiar" type="button" ${cupon.agotado === true ? 'disabled aria-disabled="true"' : ""}>${contenidoBotonCopiar()}</button>
+      <div class="bt20-social">
+        <button class="banco-compartir bt20-icon" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
+        <span class="bt20-sep"></span>
+        <button class="banco-like bt20-icon ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button><span class="numero-likes">${Number(cupon.likes || 0)}</span>
+        <span class="bt20-sep"></span>
+        <span class="bt20-vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
+      </div>
+      <div class="estado-programacion bt20-tiempo" hidden></div>
+      <p class="mensaje" aria-live="polite"></p>
+    </div>`;
   const boton = articulo.querySelector(".banco-canjear");
   const estadoInicial = couponTimeState(cupon);
   if (!estadoInicial.enabled) {
     boton.disabled = true;
-    if (estadoInicial.state === "agotado") {
-      articulo.classList.add("cupon-agotado");
-      boton.classList.add("boton-agotado");
-      boton.textContent = "Cupón agotado";
-    } else {
-      boton.textContent = "⏳ Disponible pronto";
-    }
+    if (estadoInicial.state === "agotado") { articulo.classList.add("cupon-agotado"); boton.classList.add("boton-agotado"); boton.textContent = "Cupón agotado"; }
+    else boton.textContent = "⏳ Disponible pronto";
   }
-  boton.addEventListener("click", () => {
-    if (couponTimeState(cupon).enabled) copiarYCanjear(cupon, articulo);
-  });
+  boton.addEventListener("click", () => { if (couponTimeState(cupon).enabled) copiarYCanjear(cupon, articulo); });
   articulo.querySelector(".banco-compartir")?.addEventListener("click", () => compartirPagina(articulo));
   articulo.querySelector(".banco-like")?.addEventListener("click", () => darMeGusta(cupon, articulo));
   return articulo;
@@ -3078,6 +3022,18 @@ function enlaceBannerCupones(publicidad) {
   ).trim();
 }
 
+let bannersCuponesIntervalo = null;
+let bannersCuponesIndice = 0;
+let bannersCuponesFirma = "";
+let bannersCuponesResizeHandler = null;
+
+function detenerCarruselBannersCupones() {
+  if (bannersCuponesIntervalo) {
+    clearInterval(bannersCuponesIntervalo);
+    bannersCuponesIntervalo = null;
+  }
+}
+
 function renderizarBannersCupones() {
   if (!bannersCupones || !bannersCuponesLista) return;
 
@@ -3093,42 +3049,218 @@ function renderizarBannersCupones() {
       (Number(a?.id) || 0) - (Number(b?.id) || 0)
     );
 
+  const firmaActual = items
+    .map((item) => [
+      item?.id ?? "",
+      item?.imagen_url ?? "",
+      enlaceBannerCupones(item),
+      Number(item?.orden) || 0,
+    ].join("|"))
+    .join("||");
+
+  // Si el sondeo automático devuelve exactamente los mismos banners, no
+  // reconstruimos el carrusel. Así evitamos que vuelva al primer banner
+  // cada vez que /api/publicidad se refresca.
+  if (firmaActual && firmaActual === bannersCuponesFirma && bannersCuponesLista.children.length) {
+    bannersCupones.hidden = false;
+    return;
+  }
+
+  detenerCarruselBannersCupones();
+  if (bannersCuponesResizeHandler) {
+    window.removeEventListener("resize", bannersCuponesResizeHandler);
+    bannersCuponesResizeHandler = null;
+  }
+
+  bannersCuponesFirma = firmaActual;
+  bannersCuponesIndice = 0;
   bannersCuponesLista.replaceChildren();
 
   if (!items.length) {
+    bannersCuponesFirma = "";
     bannersCupones.hidden = true;
     return;
   }
 
-  const fragmento = document.createDocumentFragment();
+  const track = document.createElement("div");
+  track.className = "banners-cupones-track";
 
-  for (const item of items) {
+  const puntos = document.createElement("div");
+  puntos.className = "banners-cupones-puntos";
+  puntos.setAttribute("aria-label", "Seleccionar banner");
+
+  const botonesPunto = [];
+  const slides = [];
+
+  items.forEach((item, indice) => {
     const enlace = document.createElement("a");
     enlace.className = "banner-cupones-enlace";
     enlace.href = enlaceBannerCupones(item);
     enlace.target = "_blank";
     enlace.rel = "noopener noreferrer";
-    enlace.setAttribute(
-      "aria-label",
-      `Abrir ${item.titulo || "promoción"} en Mercado Libre`
-    );
+    enlace.setAttribute("aria-label", `Abrir ${item.titulo || "promoción"} en Mercado Libre`);
 
     const imagen = document.createElement("img");
     imagen.src = item.imagen_url;
     imagen.alt = item.titulo || "Promoción de Mercado Libre";
-    imagen.loading = "lazy";
+    imagen.loading = "eager";
     imagen.decoding = "async";
 
     enlace.appendChild(imagen);
-    enlace.addEventListener("click", () => {
-      registrarClicPublicidad(item.id);
-    });
+    enlace.addEventListener("click", () => registrarClicPublicidad(item.id));
 
-    fragmento.appendChild(enlace);
+    // Cada slide ocupa exactamente una fracción del track. El track mide
+    // N × 100% del viewport, por lo que cada desplazamiento corresponde
+    // de forma inequívoca a un banner completo.
+    enlace.style.flexBasis = `${100 / items.length}%`;
+    enlace.style.width = `${100 / items.length}%`;
+    enlace.style.minWidth = `${100 / items.length}%`;
+
+    track.appendChild(enlace);
+    slides.push(enlace);
+
+    if (items.length > 1) {
+      const punto = document.createElement("button");
+      punto.type = "button";
+      punto.className = "banner-cupones-punto";
+      punto.setAttribute("aria-label", `Mostrar banner ${indice + 1} de ${items.length}`);
+      punto.addEventListener("click", () => {
+        mostrarBanner(indice);
+        reiniciarRotacion();
+      });
+      puntos.appendChild(punto);
+      botonesPunto.push(punto);
+    }
+  });
+
+  track.style.width = `${items.length * 100}%`;
+
+  function mostrarBanner(indice) {
+    bannersCuponesIndice = (indice + items.length) % items.length;
+    const paso = 100 / items.length;
+    track.style.transform = `translate3d(-${bannersCuponesIndice * paso}%, 0, 0)`;
+    slides.forEach((slide, i) => {
+      slide.setAttribute("aria-hidden", i === bannersCuponesIndice ? "false" : "true");
+      slide.tabIndex = i === bannersCuponesIndice ? 0 : -1;
+    });
+    botonesPunto.forEach((punto, i) => {
+      const activo = i === bannersCuponesIndice;
+      punto.classList.toggle("activo", activo);
+      punto.setAttribute("aria-current", activo ? "true" : "false");
+    });
   }
 
-  bannersCuponesLista.appendChild(fragmento);
+  function iniciarRotacion() {
+    detenerCarruselBannersCupones();
+    if (items.length <= 1) return;
+    bannersCuponesIntervalo = setInterval(() => {
+      mostrarBanner(bannersCuponesIndice + 1);
+    }, 5000);
+  }
+
+  function reiniciarRotacion() {
+    iniciarRotacion();
+  }
+
+  bannersCuponesLista.appendChild(track);
+  if (items.length > 1) bannersCuponesLista.appendChild(puntos);
   bannersCupones.hidden = false;
+  mostrarBanner(0);
+  iniciarRotacion();
+
+  // Recalcular la posición si cambia el viewport evita desalineaciones al
+  // rotar el teléfono o redimensionar la ventana.
+  bannersCuponesResizeHandler = () => mostrarBanner(bannersCuponesIndice);
+  window.addEventListener("resize", bannersCuponesResizeHandler, { passive: true });
+
+  // V82.45 — Deslizamiento táctil izquierda/derecha.
+  // Pointer Events permite que funcione con dedo y también con lápiz sin
+  // interferir con el desplazamiento vertical normal de la página.
+  if (items.length > 1) {
+    let inicioX = 0;
+    let inicioY = 0;
+    let deltaX = 0;
+    let arrastrando = false;
+    let gestoHorizontal = false;
+    let bloquearClick = false;
+
+    const limpiarGesto = () => {
+      arrastrando = false;
+      gestoHorizontal = false;
+      deltaX = 0;
+      track.classList.remove("arrastrando");
+    };
+
+    track.addEventListener("pointerdown", (evento) => {
+      if (evento.pointerType === "mouse" && evento.button !== 0) return;
+      inicioX = evento.clientX;
+      inicioY = evento.clientY;
+      deltaX = 0;
+      arrastrando = true;
+      gestoHorizontal = false;
+      bloquearClick = false;
+      detenerCarruselBannersCupones();
+    });
+
+    track.addEventListener("pointermove", (evento) => {
+      if (!arrastrando) return;
+      const dx = evento.clientX - inicioX;
+      const dy = evento.clientY - inicioY;
+
+      if (!gestoHorizontal) {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+        if (Math.abs(dy) > Math.abs(dx)) {
+          limpiarGesto();
+          iniciarRotacion();
+          return;
+        }
+        gestoHorizontal = true;
+        track.classList.add("arrastrando");
+        try { track.setPointerCapture(evento.pointerId); } catch {}
+      }
+
+      deltaX = dx;
+      const anchoViewport = bannersCuponesLista.clientWidth || 1;
+      const paso = 100 / items.length;
+      const desplazamientoBase = -(bannersCuponesIndice * paso);
+      const desplazamientoArrastre = (deltaX / anchoViewport) * paso;
+      track.style.transform = `translate3d(${desplazamientoBase + desplazamientoArrastre}%, 0, 0)`;
+      bloquearClick = Math.abs(deltaX) > 10;
+    });
+
+    const terminarGesto = (evento) => {
+      if (!arrastrando) return;
+      const anchoViewport = bannersCuponesLista.clientWidth || 1;
+      const umbral = Math.min(70, Math.max(36, anchoViewport * 0.12));
+      const mover = gestoHorizontal && Math.abs(deltaX) >= umbral;
+
+      if (mover) {
+        mostrarBanner(bannersCuponesIndice + (deltaX < 0 ? 1 : -1));
+      } else {
+        mostrarBanner(bannersCuponesIndice);
+      }
+
+      if (gestoHorizontal) {
+        try { track.releasePointerCapture(evento.pointerId); } catch {}
+      }
+      limpiarGesto();
+      iniciarRotacion();
+    };
+
+    track.addEventListener("pointerup", terminarGesto);
+    track.addEventListener("pointercancel", terminarGesto);
+
+    // Si el dedo realmente arrastró el banner, no abrir el enlace al soltar.
+    track.addEventListener("click", (evento) => {
+      if (!bloquearClick) return;
+      evento.preventDefault();
+      evento.stopPropagation();
+      bloquearClick = false;
+    }, true);
+  }
+
+  // V82.44: carrusel robusto. El track tiene ancho real N×100%, cada slide
+  // ocupa 1/N y el sondeo de publicidad ya no reinicia banners sin cambios.
 }
 
 function normalizarSeccionesPublicidad(valor, categoria = "ofertas_dia") {
@@ -4164,7 +4296,7 @@ document.addEventListener("ofertas:etiquetas-cargadas", () => {
     const visual = configuracionVisualCupon(cupon);
     tarjeta.style.setProperty("--categoria-cupon-color", visual.color);
     tarjeta.style.setProperty("--categoria-cupon-texto", colorTextoContraste(visual.color));
-    const franja = tarjeta.querySelector(".franja-categoria-cupon");
+    const franja = tarjeta.querySelector(".hc16-categoria, .franja-categoria-cupon");
     if (franja) franja.textContent = visual.nombre;
   });
   actualizarContadoresSecciones();
@@ -4634,118 +4766,43 @@ actualizarEstadoWhatsappFlotante();
 
 
 /* ============================================================
-   V82.38 — Ajuste real del título dinámico del encabezado móvil
-   Usa el ancho físico del propio bloque de texto (no parentElement,
-   que antes era display:contents y devolvía 0). Ajusta el tamaño al
-   contenido real y vuelve a medir cuando cambia fecha/fuente/viewport.
+   V82.23 — Ajuste automático del tamaño del título
    ============================================================ */
 function ajustarTamanoTituloHero() {
   const titulo = document.querySelector("#nombre-sitio");
   if (!titulo) return;
 
-  const movil = window.matchMedia("(max-width: 600px)").matches;
+  const contenedor = titulo.parentElement;
+  if (!contenedor) return;
 
-  // En escritorio dejamos que la hoja de estilos gobierne el título.
-  if (!movil) {
-    titulo.style.removeProperty("font-size");
-    titulo.style.removeProperty("letter-spacing");
-    titulo.style.removeProperty("transform");
-    return;
-  }
+  // Tamaños base aprobados.
+  const esMovil = window.matchMedia("(max-width: 600px)").matches;
+  const esMuyAngosto = window.matchMedia("(max-width: 380px)").matches;
+  const base = esMuyAngosto ? 13 : (esMovil ? 14 : 16);
+  const minimo = esMuyAngosto ? 10.5 : (esMovil ? 11 : 12);
 
-  const contenido = titulo.closest(".hero-redes-contenido");
-  if (!contenido) return;
+  titulo.style.fontSize = `${base}px`;
 
-  // El contenedor ahora tiene un ancho físico real. Dejamos un margen
-  // de seguridad para subpíxeles y para que la última letra nunca toque
-  // el borde derecho de la tarjeta.
-  const anchoDisponible = Math.floor(contenido.getBoundingClientRect().width) - 5;
-  if (anchoDisponible <= 0) return;
+  const anchoDisponible = titulo.getBoundingClientRect().width;
+  if (!anchoDisponible) return;
 
-  const base = window.innerWidth <= 380 ? 14 : 15;
-  const minimo = 8.2;
+  let size = base;
 
-  titulo.style.setProperty("font-size", `${base}px`, "important");
-  titulo.style.setProperty("letter-spacing", "-0.08px", "important");
-  titulo.style.setProperty("transform", "none", "important");
-
-  // Medimos con un canvas usando exactamente la fuente calculada.
-  const canvas = ajustarTamanoTituloHero.canvas ||
-    (ajustarTamanoTituloHero.canvas = document.createElement("canvas"));
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
-
-  const medir = () => {
-    const estilo = getComputedStyle(titulo);
-    ctx.font = `${estilo.fontStyle} ${estilo.fontWeight} ${estilo.fontSize} ${estilo.fontFamily}`;
-    const texto = titulo.textContent || "";
-    const anchoTexto = ctx.measureText(texto).width;
-    const espaciado = parseFloat(estilo.letterSpacing) || 0;
-    return anchoTexto + Math.max(0, texto.length - 1) * espaciado;
-  };
-
-  let anchoTexto = medir();
-  if (anchoTexto <= anchoDisponible) return;
-
-  // Aproximación proporcional inicial.
-  let size = Math.max(minimo, Math.min(base, base * (anchoDisponible / anchoTexto)));
-  titulo.style.setProperty("font-size", `${size.toFixed(2)}px`, "important");
-  anchoTexto = medir();
-
-  // Afinado de seguridad para diferencias de rasterizado entre navegadores.
-  let intentos = 0;
-  while (anchoTexto > anchoDisponible && size > minimo && intentos < 80) {
-    size = Math.max(minimo, size - 0.1);
-    titulo.style.setProperty("font-size", `${size.toFixed(2)}px`, "important");
-    anchoTexto = medir();
-    intentos += 1;
-  }
-
-  // Caso extremo: si el texto sigue siendo demasiado largo al llegar al
-  // mínimo, reducimos el tracking antes de considerar cualquier recorte.
-  if (anchoTexto > anchoDisponible) {
-    titulo.style.setProperty("letter-spacing", "-0.35px", "important");
-    anchoTexto = medir();
-  }
-
-  // Último seguro para textos excepcionalmente largos: escala horizontal
-  // solo el texto, manteniéndolo completo y dentro del contenedor.
-  if (anchoTexto > anchoDisponible && anchoTexto > 0) {
-    const escala = Math.max(0.72, Math.min(1, anchoDisponible / anchoTexto));
-    titulo.style.setProperty("transform", `scaleX(${escala.toFixed(4)})`, "important");
+  // scrollWidth refleja el ancho real del texto en una sola línea.
+  while (titulo.scrollWidth > titulo.clientWidth && size > minimo) {
+    size -= 0.25;
+    titulo.style.fontSize = `${size}px`;
   }
 }
 
-function programarAjusteTituloHero() {
-  requestAnimationFrame(() => {
-    ajustarTamanoTituloHero();
-    requestAnimationFrame(ajustarTamanoTituloHero);
-  });
-}
+window.addEventListener("resize", ajustarTamanoTituloHero);
+window.addEventListener("pageshow", ajustarTamanoTituloHero);
+document.addEventListener("DOMContentLoaded", ajustarTamanoTituloHero);
 
-window.addEventListener("resize", programarAjusteTituloHero, { passive: true });
-window.addEventListener("orientationchange", programarAjusteTituloHero, { passive: true });
-window.addEventListener("pageshow", programarAjusteTituloHero);
-document.addEventListener("DOMContentLoaded", programarAjusteTituloHero);
-document.addEventListener("ofertas:configuracion-cargada", programarAjusteTituloHero);
-document.addEventListener("ofertas:etiquetas-cargadas", programarAjusteTituloHero);
+// También reajusta tras cargar configuración dinámica del encabezado.
+document.addEventListener("ofertas:configuracion-cargada", ajustarTamanoTituloHero);
 
-const tituloHeroObservable = document.querySelector("#nombre-sitio");
-if (tituloHeroObservable) {
-  new MutationObserver(programarAjusteTituloHero).observe(tituloHeroObservable, {
-    childList: true,
-    characterData: true,
-    subtree: true
-  });
-}
-
-if (document.fonts?.ready) {
-  document.fonts.ready.then(programarAjusteTituloHero).catch(() => {});
-}
-
-window.setTimeout(programarAjusteTituloHero, 0);
-window.setTimeout(programarAjusteTituloHero, 150);
-window.setTimeout(programarAjusteTituloHero, 500);
+window.setTimeout(ajustarTamanoTituloHero, 0);
 
 
 /* ============================================================
