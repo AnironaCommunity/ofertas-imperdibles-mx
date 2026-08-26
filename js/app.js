@@ -1211,13 +1211,22 @@ function configuracionVisualCategoria(categoria) {
    - Exclusivos y Bancarios conservan su comportamiento actual.
    ========================================================= */
 const PALETA_CUPONES_TIENDA = [
-  "#ff4b35", // coral / rojo oferta
-  "#ffb000", // naranja dorado
-  "#20bfa9", // turquesa
-  "#16a6e8", // azul cielo
-  "#6f67e8", // violeta
-  "#e45b9a", // rosa
-  "#39ad69", // verde
+  "#0FAF72", // 1. Verde esmeralda
+  "#F28C18", // 2. Naranja
+  "#7A43C6", // 3. Morado
+  "#1E73D8", // 4. Azul
+  "#12AEB3", // 5. Turquesa
+  "#E85C9E", // 6. Rosa
+  "#EF5A4C", // 7. Rojo coral
+  "#1AA57A", // 8. Verde jade
+  "#087EA4", // 9. Azul océano
+  "#8B4DD1", // 10. Violeta
+  "#F07A20", // 11. Mandarina
+  "#D93C78", // 12. Rosa frambuesa
+  "#4B78A8", // 13. Azul acero
+  "#4F46B8", // 14. Índigo
+  "#C9369E", // 15. Magenta
+  "#26734D", // 16. Verde bosque
 ];
 
 function colorAutomaticoCuponTienda(cupon) {
@@ -1239,7 +1248,7 @@ function configuracionVisualCupon(cupon) {
   const categoria = normalizarCategoria(cupon);
   const visual = configuracionVisualCategoria(categoria);
 
-  if (categoria !== "tienda") return visual;
+  if (categoria !== "tienda" && categoria !== "exclusivo") return visual;
 
   return {
     ...visual,
@@ -1272,7 +1281,6 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   const categoria = normalizarCategoria(cupon);
   const esBancario = categoria === "bancarios";
   const esExclusivo = categoria === "exclusivo";
-  const yaUsado = localStorage.getItem(claveUsado(cupon.id)) === "1";
   const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
   const visualCategoria = configuracionVisualCupon(cupon);
 
@@ -1307,7 +1315,6 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
 
     <div class="hc16-acciones">
       <div class="hc16-cta acciones-cupon">
-        <span class="cupon-copiado-mini" ${yaUsado ? "" : "hidden"}>✓ Ya copiado</span>
         <button class="boton-canjear hc16-copiar" type="button" ${cupon.agotado === true ? 'disabled aria-disabled="true"' : ""}>
           ${contenidoBotonCopiar()}
         </button>
@@ -1396,13 +1403,13 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
   const estados = Array.isArray(estadosDestacados) ? estadosDestacados.filter(Boolean) : [estadosDestacados].filter(Boolean);
   const bancoVisual = obtenerBancoVisual(cupon);
   const logoBanco = bancoVisual.logo;
-  const yaUsado = localStorage.getItem(claveUsado(cupon.id)) === "1";
   const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
   articulo.className = `cupon-bancario-mini cupon-bancario-ticket${estados.map((estado) => ` cupon-${estado}`).join("")}`;
   articulo.dataset.id = String(cupon.id);
   articulo.dataset.banco = bancoVisual.banco;
-  articulo.style.setProperty("--banco-color", bancoVisual.color);
-  articulo.style.setProperty("--banco-texto", bancoVisual.texto);
+  const colorTarjetaBanco = colorAutomaticoCuponTienda(cupon);
+  articulo.style.setProperty("--banco-color", colorTarjetaBanco);
+  articulo.style.setProperty("--banco-texto", colorTextoContraste(colorTarjetaBanco));
   articulo.innerHTML = `
     <div class="bt20-main">
       <div class="bt20-logo-wrap">${logoBanco ? `<img class="banco-logo bt20-logo" src="${escaparHtml(logoBanco)}" alt="" loading="lazy" />` : `<span class="banco-logo-fallback">BANCO</span>`}</div>
@@ -1416,7 +1423,6 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
       </div>
     </div>
     <div class="bt20-actions">
-      <span class="cupon-copiado-mini" ${yaUsado ? "" : "hidden"}>✓ Ya copiado</span>
       <button class="banco-canjear bt20-copiar" type="button" ${cupon.agotado === true ? 'disabled aria-disabled="true"' : ""}>${contenidoBotonCopiar()}</button>
       <div class="bt20-social">
         <button class="banco-compartir bt20-icon" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>

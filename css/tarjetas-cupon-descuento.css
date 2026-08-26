@@ -1632,3 +1632,52 @@
  #cupones .bt20-main{grid-template-columns:34% 1fr!important;gap:7px!important;padding:8px!important}.bt20-logo-wrap{min-height:58px!important;padding:5px!important}.bt20-logo{max-height:50px!important}
  #cupones .bt20-beneficio h3{font-size:22px!important}.bt20-beneficio p{font-size:7.5px!important}.bt20-tipo{font-size:7.5px!important}.bt20-actions{padding:8px 6px!important}.bt20-copiar{min-height:31px!important;font-size:8px!important}.bt20-social{gap:3px!important;font-size:7.5px!important}.bt20-icon svg,.bt20-vistas svg{width:11px!important;height:11px!important}.bt20-tiempo{font-size:7.5px!important;margin-top:5px!important;padding-top:5px!important}
 }
+
+/* ================================================================
+   PAQUETE 2.1 — ALTURAS UNIFORMES + PALETA 16 COLORES
+   Sin cambios de estructura ni distribución.
+   ================================================================ */
+/* Todas las tarjetas conservan exactamente la misma altura visual. */
+#cupones > .cupon-horizontal-v16:not(.cupon-bancario),
+#cupones > .cupon-bancario-ticket {
+  height: 132px !important;
+  min-height: 132px !important;
+  max-height: 132px !important;
+  box-sizing: border-box !important;
+}
+
+/* Compartir queda como icono limpio, igual que Me gusta y Vistas. */
+#cupones .cupon-horizontal-v16 .hc20-compartir,
+#cupones .cupon-horizontal-v16 .hc16-social .boton-compartir,
+#cupones .cupon-bancario-ticket .banco-compartir {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  padding: 0 !important;
+}
+#cupones .cupon-horizontal-v16 .hc20-compartir:hover,
+#cupones .cupon-horizontal-v16 .hc20-compartir:active,
+#cupones .cupon-horizontal-v16 .hc20-compartir:focus,
+#cupones .cupon-bancario-ticket .banco-compartir:hover,
+#cupones .cupon-bancario-ticket .banco-compartir:active,
+#cupones .cupon-bancario-ticket .banco-compartir:focus {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Ya copiado deja de formar parte de la interfaz, incluso ante caché viejo. */
+#cupones .cupon-copiado-mini { display: none !important; }
+
+@media (max-width: 680px) {
+  #cupones > .cupon-horizontal-v16:not(.cupon-bancario),
+  #cupones > .cupon-bancario-ticket {
+    height: 112px !important;
+    min-height: 112px !important;
+    max-height: 112px !important;
+  }
+}
