@@ -1286,23 +1286,22 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
 
   articulo.innerHTML = `
     <div class="hc16-valor">
-      <div class="hc16-valor-borde" aria-hidden="true"></div>
       ${cupon.imagen_url ? `<img class="hc16-logo cupon-logo" src="${escaparHtml(cupon.imagen_url)}" alt="" loading="lazy" />` : ""}
-      <h2 class="hc16-descuento descuento">${escaparHtml(cupon.titulo)}</h2>
+      <h2 class="hc16-descuento descuento">${escaparHtml(cupon.titulo)}${/\boff\b/i.test(String(cupon.titulo || "")) ? "" : '<span class="hc19-off">OFF</span>'}</h2>
+      <span class="hc19-porcentaje" aria-hidden="true">%</span>
     </div>
 
     <div class="hc16-info">
       <div class="hc16-categoria">${escaparHtml(visualCategoria.nombre)}</div>
+      <div class="hc16-condiciones">
+        <p class="hc16-condicion">En compras desde <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
+      </div>
       ${(esExclusivo || categoria === "tienda") && cupon.detalle_bancario
         ? `<p class="hc16-detalle">${escaparHtml(cupon.detalle_bancario)}</p>`
         : ""}
-      <div class="hc16-condiciones">
-        <p class="hc16-condicion">En compras desde <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
-        ${esCuponPorcentaje(cupon) ? `<p class="hc16-condicion hc16-ahorro">Ahorra hasta <strong>${escaparHtml(cupon.ahorro_maximo || "Consultar")}</strong></p>` : ""}
-      </div>
+      ${esCuponPorcentaje(cupon) ? `<p class="hc16-ahorro-extra">Ahorra hasta <strong>${escaparHtml(cupon.ahorro_maximo || "Consultar")}</strong></p>` : ""}
       <div class="hc16-etiquetas">
-        ${esExclusivo ? '<span class="etiqueta-cupon etiqueta-exclusivo">💎 Exclusivo</span>' : ""}
-        ${htmlEtiquetasCupon(esExclusivo ? estados.slice(0, 1) : estados)}
+        ${htmlEtiquetasCupon(esExclusivo ? estados.slice(0, 2) : estados)}
       </div>
     </div>
 
