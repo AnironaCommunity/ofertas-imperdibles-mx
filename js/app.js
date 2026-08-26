@@ -1314,6 +1314,8 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
       </div>
       <p class="mensaje hc16-mensaje" aria-live="polite"></p>
       <div class="hc16-social acciones-secundarias" aria-label="Actividad del cupón">
+        <button class="boton-compartir hc16-icono hc20-compartir" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
+        <span class="hc16-separador" aria-hidden="true"></span>
         <button class="boton-like hc16-icono ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
         <span class="numero-likes hc16-numero">${Number(cupon.likes || 0)}</span>
         <span class="hc16-separador" aria-hidden="true"></span>
@@ -1342,6 +1344,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
     if (couponTimeState(cupon).enabled) copiarYCanjear(cupon, articulo);
   });
   articulo.querySelector(".boton-like")?.addEventListener("click", () => darMeGusta(cupon, articulo));
+  articulo.querySelector(".hc20-compartir")?.addEventListener("click", () => compartirPagina(articulo));
   return articulo;
 }
 
@@ -1391,83 +1394,48 @@ function obtenerLogoBanco(cupon) {
 function crearTarjetaBancaria(cupon, estadosDestacados = []) {
   const articulo = document.createElement("article");
   const estados = Array.isArray(estadosDestacados) ? estadosDestacados.filter(Boolean) : [estadosDestacados].filter(Boolean);
-  articulo.className = `cupon-bancario-mini${estados.map((estado) => ` cupon-${estado}`).join("")}`;
-  articulo.dataset.id = String(cupon.id);
-
   const bancoVisual = obtenerBancoVisual(cupon);
   const logoBanco = bancoVisual.logo;
   const yaUsado = localStorage.getItem(claveUsado(cupon.id)) === "1";
   const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
+  articulo.className = `cupon-bancario-mini cupon-bancario-ticket${estados.map((estado) => ` cupon-${estado}`).join("")}`;
+  articulo.dataset.id = String(cupon.id);
   articulo.dataset.banco = bancoVisual.banco;
   articulo.style.setProperty("--banco-color", bancoVisual.color);
   articulo.style.setProperty("--banco-texto", bancoVisual.texto);
-  articulo.style.setProperty("--banco-franja-texto", colorTextoContraste(bancoVisual.color));
   articulo.innerHTML = `
-    <div class="banco-logo-area">
-      ${logoBanco ? `<img class="banco-logo" src="${escaparHtml(logoBanco)}" alt="" loading="lazy" />` : `<span class="banco-logo-fallback">BANCO</span>`}
-    </div>
-    <div class="banco-franja">CUPÓN BANCARIO</div>
-    <div class="cupon-etiquetas banco-etiquetas">${htmlEtiquetasCupon(estados)}</div>
-    <div class="banco-cuerpo">
-      <div class="banco-info">
+    <div class="bt20-main">
+      <div class="bt20-logo-wrap">${logoBanco ? `<img class="banco-logo bt20-logo" src="${escaparHtml(logoBanco)}" alt="" loading="lazy" />` : `<span class="banco-logo-fallback">BANCO</span>`}</div>
+      <div class="bt20-beneficio">
+        <span class="bt20-tipo">CUPÓN BANCARIO</span>
         <h3>${escaparHtml(cupon.titulo || "Beneficio bancario")}</h3>
-        ${cupon.detalle_bancario ? `<p class="banco-detalle">${escaparHtml(cupon.detalle_bancario)}</p>` : ""}
-        ${htmlCondicionesCupon(cupon)}
-      </div>
-      <div class="banco-pie">
-        <div class="estado-programacion" hidden></div>
-        <span class="cupon-copiado-mini banco-copiado-mini" ${yaUsado ? "" : "hidden"}>✓ Ya copiado</span>
-        <button class="banco-canjear" type="button" ${cupon.agotado === true ? "disabled aria-disabled=\"true\"" : ""}>${contenidoBotonCopiar()}</button>
-        <div class="acciones-secundarias banco-acciones-extra" aria-label="Interacciones del cupón">
-          <button
-            class="boton-like banco-like ${yaLeGusta ? "activo" : ""}"
-            type="button"
-            aria-label="Me gusta"
-            title="Me gusta"
-          >
-            ${iconoMeGusta()}
-          </button>
-
-          <button
-            class="boton-compartir banco-compartir"
-            type="button"
-            aria-label="Compartir cupón"
-            title="Compartir cupón"
-          >
-            ${iconoCompartir()}
-          </button>
-
-          <div class="estadisticas-cupon banco-estadisticas">
-            <span class="estadistica-item estadistica-likes">
-              ${iconoMeGusta()}
-              <span class="numero-likes">${Number(cupon.likes || 0)}</span>
-            </span>
-            <span class="estadistica-item estadistica-usos">
-              ${iconoCopias()}
-              <span class="numero-clics">${Number(cupon.clics || 0)}</span>
-            </span>
-          </div>
-        </div>
-        <p class="mensaje" aria-live="polite"></p>
+        <p>Compra mínima <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
+        ${cupon.ahorro_maximo ? `<p>Tope de descuento <strong>${escaparHtml(cupon.ahorro_maximo)}</strong></p>` : ""}
+        ${cupon.detalle_bancario ? `<p class="bt20-detalle">${escaparHtml(cupon.detalle_bancario)}</p>` : ""}
+        <div class="bt20-etiquetas">${htmlEtiquetasCupon(estados)}</div>
       </div>
     </div>
-  `;
-
+    <div class="bt20-actions">
+      <span class="cupon-copiado-mini" ${yaUsado ? "" : "hidden"}>✓ Ya copiado</span>
+      <button class="banco-canjear bt20-copiar" type="button" ${cupon.agotado === true ? 'disabled aria-disabled="true"' : ""}>${contenidoBotonCopiar()}</button>
+      <div class="bt20-social">
+        <button class="banco-compartir bt20-icon" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
+        <span class="bt20-sep"></span>
+        <button class="banco-like bt20-icon ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button><span class="numero-likes">${Number(cupon.likes || 0)}</span>
+        <span class="bt20-sep"></span>
+        <span class="bt20-vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
+      </div>
+      <div class="estado-programacion bt20-tiempo" hidden></div>
+      <p class="mensaje" aria-live="polite"></p>
+    </div>`;
   const boton = articulo.querySelector(".banco-canjear");
   const estadoInicial = couponTimeState(cupon);
   if (!estadoInicial.enabled) {
     boton.disabled = true;
-    if (estadoInicial.state === "agotado") {
-      articulo.classList.add("cupon-agotado");
-      boton.classList.add("boton-agotado");
-      boton.textContent = "Cupón agotado";
-    } else {
-      boton.textContent = "⏳ Disponible pronto";
-    }
+    if (estadoInicial.state === "agotado") { articulo.classList.add("cupon-agotado"); boton.classList.add("boton-agotado"); boton.textContent = "Cupón agotado"; }
+    else boton.textContent = "⏳ Disponible pronto";
   }
-  boton.addEventListener("click", () => {
-    if (couponTimeState(cupon).enabled) copiarYCanjear(cupon, articulo);
-  });
+  boton.addEventListener("click", () => { if (couponTimeState(cupon).enabled) copiarYCanjear(cupon, articulo); });
   articulo.querySelector(".banco-compartir")?.addEventListener("click", () => compartirPagina(articulo));
   articulo.querySelector(".banco-like")?.addEventListener("click", () => darMeGusta(cupon, articulo));
   return articulo;
