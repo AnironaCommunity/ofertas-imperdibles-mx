@@ -1285,3 +1285,51 @@
   #cupones .cupon-horizontal-v16 .hc16-tiempo,
   #cupones .cupon-horizontal-v16 .hc16-tiempo * { font-size: 8.2px !important; }
 }
+
+/* =========================================================
+   Paquete 1.8 — Me gusta minimalista
+   - Solo se muestra la manita como control visual.
+   - Sin borde, fondo, sombra ni contenedor cuadrado/circular.
+   - Conserva el contador de likes y toda la funcionalidad existente.
+   ========================================================= */
+#cupones .cupon-horizontal-v16 .hc16-social .boton-like.hc16-icono {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  display: inline-flex !important;
+  flex: 0 0 auto !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+  color: var(--hc16-accent) !important;
+  line-height: 1 !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social .boton-like.hc16-icono:hover,
+#cupones .cupon-horizontal-v16 .hc16-social .boton-like.hc16-icono:focus,
+#cupones .cupon-horizontal-v16 .hc16-social .boton-like.hc16-icono:active,
+#cupones .cupon-horizontal-v16 .hc16-social .boton-like.hc16-icono.activo {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social .boton-like.hc16-icono svg {
+  display: block !important;
+  width: 14px !important;
+  height: 14px !important;
+  margin: 0 !important;
+}
+@media (max-width: 680px) {
+  #cupones .cupon-horizontal-v16 .hc16-social .boton-like.hc16-icono svg {
+    width: 12px !important;
+    height: 12px !important;
+  }
+}
