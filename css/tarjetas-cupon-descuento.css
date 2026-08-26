@@ -1242,3 +1242,46 @@
   #cupones .cupon-horizontal-v16 .hc16-categoria { font-size: 9.4px !important; }
   #cupones .cupon-horizontal-v16 .hc16-copiar { font-size: 8px !important; }
 }
+
+/* =========================================================
+   PAQUETE 1.7 — ACTIVIDAD Y VIGENCIA COMO REFERENCIA
+   - Me gusta + contador | vistas + contador.
+   - Sin botón compartir dentro de la tarjeta horizontal.
+   - Temporizador siempre oscuro y legible sobre fondo blanco.
+   ========================================================= */
+#cupones .cupon-horizontal-v16 .hc16-social {
+  gap: 5px !important;
+  color: #1f1f1f !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social .boton-like,
+#cupones .cupon-horizontal-v16 .hc16-social .hc16-vistas {
+  color: var(--hc16-accent) !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social .hc16-numero,
+#cupones .cupon-horizontal-v16 .hc16-social .hc16-vistas .numero-clics {
+  color: #202020 !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social .hc16-vistas {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social .hc16-vistas svg { fill: currentColor !important; }
+#cupones .cupon-horizontal-v16 .hc16-tiempo,
+#cupones .cupon-horizontal-v16 .hc16-tiempo *,
+#cupones .cupon-horizontal-v16 .estado-programacion,
+#cupones .cupon-horizontal-v16 .estado-programacion * {
+  color: #202020 !important;
+  -webkit-text-fill-color: #202020 !important;
+  text-shadow: none !important;
+  font-weight: 400 !important;
+}
+@media (max-width: 680px) {
+  #cupones .cupon-horizontal-v16 .hc16-social {
+    gap: 4px !important;
+    font-size: 8px !important;
+  }
+  #cupones .cupon-horizontal-v16 .hc16-social .hc16-vistas { gap: 2px !important; }
+  #cupones .cupon-horizontal-v16 .hc16-tiempo,
+  #cupones .cupon-horizontal-v16 .hc16-tiempo * { font-size: 8.2px !important; }
+}

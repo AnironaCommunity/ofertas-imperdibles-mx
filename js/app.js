@@ -735,6 +735,14 @@ function iconoCopias() {
   `;
 }
 
+function iconoVista() {
+  return `
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 5c5.4 0 9.2 4.8 10.4 6.6a.75.75 0 0 1 0 .8C21.2 14.2 17.4 19 12 19S2.8 14.2 1.6 12.4a.75.75 0 0 1 0-.8C2.8 9.8 6.6 5 12 5Zm0 2C8.1 7 5 10.2 3.7 12 5 13.8 8.1 17 12 17s7-3.2 8.3-5C19 10.2 15.9 7 12 7Zm0 1.5A3.5 3.5 0 1 1 12 15a3.5 3.5 0 0 1 0-7Zm0 2A1.5 1.5 0 1 0 12 13.5a1.5 1.5 0 0 0 0-3Z"/>
+    </svg>
+  `;
+}
+
 function contenidoBotonCopiar() {
   return `${iconoCopias()}<span>Copiar código</span>`;
 }
@@ -1306,12 +1314,11 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
         </button>
       </div>
       <p class="mensaje hc16-mensaje" aria-live="polite"></p>
-      <div class="hc16-social acciones-secundarias">
+      <div class="hc16-social acciones-secundarias" aria-label="Actividad del cupón">
         <button class="boton-like hc16-icono ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
         <span class="numero-likes hc16-numero">${Number(cupon.likes || 0)}</span>
         <span class="hc16-separador" aria-hidden="true"></span>
-        <button class="boton-compartir hc16-icono" type="button" aria-label="Compartir página" title="Compartir página">${iconoCompartir()}</button>
-        <span class="estadistica-item estadistica-usos hc16-usos">${iconoCopias()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
+        <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas" aria-label="Vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
       </div>
       <div class="estado-programacion hc16-tiempo" hidden></div>
     </div>
@@ -1335,8 +1342,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   redeemButton.addEventListener("click", () => {
     if (couponTimeState(cupon).enabled) copiarYCanjear(cupon, articulo);
   });
-  articulo.querySelector(".boton-compartir").addEventListener("click", () => compartirPagina(articulo));
-  articulo.querySelector(".boton-like").addEventListener("click", () => darMeGusta(cupon, articulo));
+  articulo.querySelector(".boton-like")?.addEventListener("click", () => darMeGusta(cupon, articulo));
   return articulo;
 }
 
