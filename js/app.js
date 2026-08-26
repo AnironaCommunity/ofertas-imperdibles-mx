@@ -1270,47 +1270,50 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
 
   const estados = Array.isArray(estadosDestacados) ? estadosDestacados.filter(Boolean) : [estadosDestacados].filter(Boolean);
   const clasesEstado = estados.map((estado) => ` cupon-${estado}`).join("");
-  articulo.className = `cupon cupon-horizontal${clasesEstado}${esBancario ? " cupon-bancario" : ""}${esExclusivo ? " cupon-exclusivo" : ""}`;
+  articulo.className = `cupon cupon-horizontal-v16${clasesEstado}${esBancario ? " cupon-bancario" : ""}${esExclusivo ? " cupon-exclusivo" : ""}`;
   articulo.dataset.id = String(cupon.id);
   articulo.dataset.color = COLORES[indice % COLORES.length];
   articulo.style.setProperty("--categoria-cupon-color", visualCategoria.color);
   articulo.style.setProperty("--categoria-cupon-texto", colorTextoContraste(visualCategoria.color));
 
   articulo.innerHTML = `
-    <div class="cupon-horizontal-valor">
-      ${cupon.imagen_url ? `<img class="cupon-logo" src="${escaparHtml(cupon.imagen_url)}" alt="" loading="lazy" />` : ""}
-      <h2 class="descuento">${escaparHtml(cupon.titulo)}</h2>
+    <div class="hc16-valor">
+      <div class="hc16-valor-borde" aria-hidden="true"></div>
+      ${cupon.imagen_url ? `<img class="hc16-logo cupon-logo" src="${escaparHtml(cupon.imagen_url)}" alt="" loading="lazy" />` : ""}
+      <h2 class="hc16-descuento descuento">${escaparHtml(cupon.titulo)}</h2>
     </div>
 
-    <div class="cupon-horizontal-info">
-      <div class="franja-categoria-cupon">${escaparHtml(visualCategoria.nombre)}</div>
+    <div class="hc16-info">
+      <div class="hc16-categoria">${escaparHtml(visualCategoria.nombre)}</div>
       ${(esExclusivo || categoria === "tienda") && cupon.detalle_bancario
-        ? `<p class="detalle-beneficio-exclusivo">${escaparHtml(cupon.detalle_bancario)}</p>`
+        ? `<p class="hc16-detalle">${escaparHtml(cupon.detalle_bancario)}</p>`
         : ""}
-      ${esBancario ? `<p class="beneficio-bancario">${escaparHtml(cupon.titulo)}</p>` : ""}
-      ${htmlCondicionesCupon(cupon)}
-      <div class="cupon-etiquetas">
+      <div class="hc16-condiciones">
+        <p class="hc16-condicion">En compras desde <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
+        ${esCuponPorcentaje(cupon) ? `<p class="hc16-condicion hc16-ahorro">Ahorra hasta <strong>${escaparHtml(cupon.ahorro_maximo || "Consultar")}</strong></p>` : ""}
+      </div>
+      <div class="hc16-etiquetas">
         ${esExclusivo ? '<span class="etiqueta-cupon etiqueta-exclusivo">💎 Exclusivo</span>' : ""}
         ${htmlEtiquetasCupon(esExclusivo ? estados.slice(0, 1) : estados)}
       </div>
     </div>
 
-    <div class="cupon-horizontal-acciones">
-      <div class="acciones-cupon">
+    <div class="hc16-acciones">
+      <div class="hc16-cta acciones-cupon">
         <span class="cupon-copiado-mini" ${yaUsado ? "" : "hidden"}>✓ Ya copiado</span>
-        <button class="boton-canjear" type="button" ${cupon.agotado === true ? 'disabled aria-disabled="true"' : ""}>
+        <button class="boton-canjear hc16-copiar" type="button" ${cupon.agotado === true ? 'disabled aria-disabled="true"' : ""}>
           ${contenidoBotonCopiar()}
         </button>
       </div>
-      <p class="mensaje" aria-live="polite"></p>
-      <div class="acciones-secundarias">
-        <button class="boton-like ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
-        <span class="numero-likes">${Number(cupon.likes || 0)}</span>
-        <span class="separador-estadistica" aria-hidden="true"></span>
-        <button class="boton-compartir" type="button" aria-label="Compartir página" title="Compartir página">${iconoCompartir()}</button>
-        <span class="estadistica-item estadistica-usos">${iconoCopias()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
+      <p class="mensaje hc16-mensaje" aria-live="polite"></p>
+      <div class="hc16-social acciones-secundarias">
+        <button class="boton-like hc16-icono ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
+        <span class="numero-likes hc16-numero">${Number(cupon.likes || 0)}</span>
+        <span class="hc16-separador" aria-hidden="true"></span>
+        <button class="boton-compartir hc16-icono" type="button" aria-label="Compartir página" title="Compartir página">${iconoCompartir()}</button>
+        <span class="estadistica-item estadistica-usos hc16-usos">${iconoCopias()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
       </div>
-      <div class="estado-programacion" hidden></div>
+      <div class="estado-programacion hc16-tiempo" hidden></div>
     </div>
   `;
 
@@ -1336,7 +1339,6 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   articulo.querySelector(".boton-like").addEventListener("click", () => darMeGusta(cupon, articulo));
   return articulo;
 }
-
 
 function obtenerBancoVisual(cupon) {
   const imagenOriginal = String(cupon.imagen_url || "");
@@ -4316,7 +4318,7 @@ document.addEventListener("ofertas:etiquetas-cargadas", () => {
     const visual = configuracionVisualCupon(cupon);
     tarjeta.style.setProperty("--categoria-cupon-color", visual.color);
     tarjeta.style.setProperty("--categoria-cupon-texto", colorTextoContraste(visual.color));
-    const franja = tarjeta.querySelector(".franja-categoria-cupon");
+    const franja = tarjeta.querySelector(".hc16-categoria, .franja-categoria-cupon");
     if (franja) franja.textContent = visual.nombre;
   });
   actualizarContadoresSecciones();
