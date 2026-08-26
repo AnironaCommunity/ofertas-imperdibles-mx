@@ -1204,11 +1204,11 @@ function configuracionVisualCategoria(categoria) {
 }
 
 /* =========================================================
-   V81.60 — Colores automáticos para cupones de Tienda
-   - Cada cupón de Tienda recibe un color de una paleta controlada.
+   V82.53 — Paleta automática de 16 colores
+   - Tienda, Exclusivos y Bancarios reciben un color de una paleta controlada.
    - El color se calcula de forma estable a partir del cupón: no cambia
      al recargar ni al cambiar de sección.
-   - Exclusivos y Bancarios conservan su comportamiento actual.
+   - En Bancarios se conserva el área blanca y el logo original del banco.
    ========================================================= */
 const PALETA_CUPONES_TIENDA = [
   "#0FAF72", // 1. Verde esmeralda
@@ -1407,9 +1407,8 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
   articulo.className = `cupon-bancario-mini cupon-bancario-ticket${estados.map((estado) => ` cupon-${estado}`).join("")}`;
   articulo.dataset.id = String(cupon.id);
   articulo.dataset.banco = bancoVisual.banco;
-  const colorTarjetaBanco = colorAutomaticoCuponTienda(cupon);
-  articulo.style.setProperty("--banco-color", colorTarjetaBanco);
-  articulo.style.setProperty("--banco-texto", colorTextoContraste(colorTarjetaBanco));
+  articulo.style.setProperty("--banco-color", bancoVisual.color);
+  articulo.style.setProperty("--banco-texto", bancoVisual.texto);
   articulo.innerHTML = `
     <div class="bt20-main">
       <div class="bt20-logo-wrap">${logoBanco ? `<img class="banco-logo bt20-logo" src="${escaparHtml(logoBanco)}" alt="" loading="lazy" />` : `<span class="banco-logo-fallback">BANCO</span>`}</div>
