@@ -315,21 +315,11 @@ function actualizarContadoresSecciones() {
     "cupón"
   );
 
-  const hayExclusivos = cantidadExclusivos > 0;
-  if (tabExclusivo) tabExclusivo.hidden = !hayExclusivos;
+  // El botón Exclusivos permanece visible aunque no haya cupones activos.
+  // Así el selector conserva siempre las cuatro categorías disponibles.
+  if (tabExclusivo) tabExclusivo.hidden = false;
   if (selectorCupones) {
-    selectorCupones.style.setProperty(
-      "--selector-columnas",
-      hayExclusivos ? "4" : "3"
-    );
-  }
-
-  // Si el usuario conserva una URL de Exclusivos cuando ya no hay cupones,
-  // volvemos a Todos para evitar una vista vacía con el botón oculto.
-  if (!hayExclusivos && categoriaActiva === "exclusivo") {
-    categoriaActiva = "todos";
-    actualizarUrlSeccion("todos", "replace");
-    renderizarCategoria();
+    selectorCupones.style.setProperty("--selector-columnas", "4");
   }
 }
 
