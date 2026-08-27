@@ -2673,3 +2673,49 @@
     justify-content: center !important;
   }
 }
+
+/* =========================================================
+   V82.79 — Cupones agotados: CTA útil hacia Ofertazo
+   Mantiene la tarjeta identificada como agotada, pero deja
+   el botón principal activo y visible como “Ver ofertas”.
+   ========================================================= */
+#cupones > .cupon-horizontal-v16.cupon-agotado {
+  opacity: 1 !important;
+  filter: none !important;
+}
+#cupones > .cupon-horizontal-v16.cupon-agotado > .hc16-valor,
+#cupones > .cupon-horizontal-v16.cupon-agotado > .hc16-info,
+#cupones > .cupon-horizontal-v16.cupon-agotado .hc16-social,
+#cupones > .cupon-horizontal-v16.cupon-agotado .hc16-tiempo {
+  opacity: .58 !important;
+  filter: grayscale(.35) saturate(.70) !important;
+}
+#cupones > .cupon-horizontal-v16.cupon-agotado .hc16-cta {
+  opacity: 1 !important;
+  filter: none !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-copiar.boton-ofertazo-agotado,
+#cupones .cupon-horizontal-v16 .hc16-copiar.boton-agotado.boton-ofertazo-agotado,
+#cupones .cupon-horizontal-v16.cupon-agotado .hc16-copiar.boton-ofertazo-agotado {
+  opacity: 1 !important;
+  filter: none !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  background: #ffe600 !important;
+  color: #161616 !important;
+  border-color: #d7bf00 !important;
+  box-shadow: 0 5px 12px rgba(0,0,0,.14) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-copiar.boton-ofertazo-agotado:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 7px 15px rgba(0,0,0,.17) !important;
+}
+#cupones .boton-ofertazo-icono {
+  font-size: 15px;
+  line-height: 1;
+  font-weight: 900;
+}

@@ -1275,6 +1275,140 @@ function printCouponCardHtml(coupon, activeList) {
   return `<article class="cupon cupon-horizontal-v16${exclusive ? " cupon-exclusivo" : ""}" style="--categoria-cupon-color:${color};--categoria-cupon-texto:#fff;--ticket-cutout-bg:#fff"><span class="ticket-notch ticket-notch-top"></span><span class="ticket-notch ticket-notch-bottom"></span><div class="hc16-valor">${image}<h2 class="hc16-descuento descuento">${title}<span class="hc19-off">OFF</span></h2><span class="hc19-porcentaje">%</span></div><div class="hc16-info"><div class="hc16-categoria">${categoryText}</div><div class="hc16-condiciones"><p class="hc16-condicion">En compras desde <strong>${printEscape(coupon?.compra_minima || "Consultar")}</strong></p></div>${(exclusive || category === "tienda") && coupon?.detalle_bancario ? `<p class="hc16-detalle">${printEscape(coupon.detalle_bancario)}</p>` : ""}${percent ? `<p class="hc16-ahorro-extra">Ahorra hasta <strong>${printEscape(coupon?.ahorro_maximo || "Consultar")}</strong></p>` : ""}<div class="hc16-etiquetas">${tags}</div></div><div class="hc16-acciones"><div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar" type="button">${copyButton}</button></div><p class="mensaje hc16-mensaje"></p>${social}<div class="estado-programacion hc16-tiempo">${printEscape(remaining)}</div></div></article>`;
 }
 
+
+/* =========================================================
+   V82.79 — Imagen del resumen como LISTA de tarjetas reales
+   Usa el mismo HTML y CSS público de las tarjetas. La imagen
+   compartible ya no redibuja los cupones con un diseño distinto.
+   ========================================================= */
+async function shareFetchText(url) {
+  const response = await fetch(url, { cache: "no-store" });
+  if (!response.ok) throw new Error(`No fue posible cargar ${url}.`);
+  return response.text();
+}
+
+async function shareUrlToDataUrl(url) {
+  try {
+    const response = await fetch(url, { cache: "force-cache" });
+    if (!response.ok) return url;
+    const blob = await response.blob();
+    return await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || url));
+      reader.onerror = () => resolve(url);
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    return url;
+  }
+}
+
+async function shareEmbedCardImages(html) {
+  const template = document.createElement("template");
+  template.innerHTML = html;
+  const images = [...template.content.querySelectorAll("img[src]")];
+  await Promise.all(images.map(async (image) => {
+    const absolute = new URL(image.getAttribute("src"), location.href).href;
+    image.setAttribute("src", await shareUrlToDataUrl(absolute));
+    image.removeAttribute("loading");
+  }));
+  return template.innerHTML;
+}
+
+function shareWaitForFrame(frame) {
+  return new Promise((resolve, reject) => {
+    const timer = window.setTimeout(() => reject(new Error("La vista previa tardó demasiado en cargar.")), 8000);
+    frame.addEventListener("load", () => {
+      window.clearTimeout(timer);
+      resolve();
+    }, { once: true });
+  });
+}
+
+async function renderShareCardListImage(selectedCoupons) {
+  if (!selectedCoupons.length) throw new Error("No hay tarjetas para generar la imagen.");
+
+  const publicStyleUrl = new URL("../css/style.css?v=82.45", location.href).href;
+  const couponStyleUrl = new URL("../css/tarjetas-cupon-descuento.css?v=82.79.0", location.href).href;
+  const [publicCss, couponCss] = await Promise.all([
+    shareFetchText(publicStyleUrl),
+    shareFetchText(couponStyleUrl),
+  ]);
+
+  let cardsHtml = selectedCoupons.map((coupon) => printCouponCardHtml(coupon, selectedCoupons)).join("");
+  cardsHtml = await shareEmbedCardImages(cardsHtml);
+
+  const imageWidth = 920;
+  const horizontalPadding = 24;
+  const cardAreaWidth = imageWidth - horizontalPadding * 2;
+  const listCss = `
+    *{box-sizing:border-box}
+    html,body{margin:0!important;padding:0!important;background:#f7faf8!important;color:#111!important;font-family:Inter,Segoe UI,Arial,sans-serif!important}
+    body{width:${imageWidth}px!important;padding:20px ${horizontalPadding}px 22px!important;overflow:hidden!important}
+    #cupones{display:grid!important;grid-template-columns:1fr!important;gap:12px!important;width:${cardAreaWidth}px!important;max-width:none!important;margin:0!important;padding:0!important}
+    #cupones>.cupon-horizontal-v16{width:100%!important;max-width:none!important;margin:0!important;break-inside:avoid!important;page-break-inside:avoid!important}
+    #cupones button{pointer-events:none!important}
+  `;
+
+  const frame = document.createElement("iframe");
+  frame.setAttribute("aria-hidden", "true");
+  frame.tabIndex = -1;
+  Object.assign(frame.style, {
+    position: "fixed",
+    left: "-20000px",
+    top: "0",
+    width: `${imageWidth}px`,
+    height: "1200px",
+    border: "0",
+    visibility: "hidden",
+    pointerEvents: "none",
+  });
+  document.body.appendChild(frame);
+
+  try {
+    const loaded = shareWaitForFrame(frame);
+    frame.srcdoc = `<!doctype html><html><head><meta charset="utf-8"><style>${publicCss}\n${couponCss}\n${listCss}</style></head><body><section id="cupones" class="cupones-grid-compacta">${cardsHtml}</section></body></html>`;
+    await loaded;
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+    const doc = frame.contentDocument;
+    if (!doc) throw new Error("No fue posible preparar la lista de tarjetas.");
+    const images = [...doc.images];
+    await Promise.all(images.map((img) => img.complete ? Promise.resolve() : new Promise((resolve) => {
+      img.addEventListener("load", resolve, { once: true });
+      img.addEventListener("error", resolve, { once: true });
+    })));
+
+    const height = Math.max(1, Math.ceil(doc.documentElement.scrollHeight || doc.body.scrollHeight));
+    const bodyHtml = doc.body.innerHTML;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${imageWidth}" height="${height}" viewBox="0 0 ${imageWidth} ${height}"><foreignObject x="0" y="0" width="100%" height="100%"><div xmlns="http://www.w3.org/1999/xhtml"><style>${publicCss}\n${couponCss}\n${listCss}</style>${bodyHtml}</div></foreignObject></svg>`;
+    const svgBlob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+    const svgUrl = URL.createObjectURL(svgBlob);
+
+    try {
+      const image = new Image();
+      image.decoding = "async";
+      image.src = svgUrl;
+      await image.decode();
+      const scale = 2;
+      const canvas = shareSummaryCanvas;
+      canvas.width = imageWidth * scale;
+      canvas.height = height * scale;
+      const context = canvas.getContext("2d");
+      context.setTransform(scale, 0, 0, scale, 0, 0);
+      context.drawImage(image, 0, 0, imageWidth, height);
+      context.setTransform(1, 0, 0, 1, 0, 0);
+      return await new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error("No fue posible crear la imagen de las tarjetas.")), "image/png", 0.96);
+      });
+    } finally {
+      URL.revokeObjectURL(svgUrl);
+    }
+  } finally {
+    frame.remove();
+  }
+}
+
 function printExactCouponCards() {
   const active = activeCouponsForSharing();
   const category = shareSummaryCategory?.value || "todos";
@@ -1287,7 +1421,7 @@ function printExactCouponCards() {
     return;
   }
 
-  const cssUrl = new URL("../css/tarjetas-cupon-descuento.css?v=5.4", location.href).href;
+  const cssUrl = new URL("../css/tarjetas-cupon-descuento.css?v=82.79.0", location.href).href;
   const rootCssUrl = new URL("../style.css?v=81.69.4", location.href).href;
   const cards = selected.map(c => printCouponCardHtml(c, selected)).join("");
   const win = window.open("", "_blank");
@@ -1339,7 +1473,7 @@ async function createShareSummary() {
     const selected = filtered.slice(0, limit);
     shareSummarySelectedCoupons = [...selected];
     shareSummaryText.value = buildShareSummaryText(selected, link, filtered.length);
-    shareSummaryBlob = await drawShareSummaryImage(selected, link, filtered.length);
+    shareSummaryBlob = await renderShareCardListImage(selected);
     if (shareSummaryPreview.src) URL.revokeObjectURL(shareSummaryPreview.src);
     shareSummaryPreview.src = URL.createObjectURL(shareSummaryBlob);
     shareSummaryResult.hidden = false;
@@ -1347,7 +1481,7 @@ async function createShareSummary() {
     downloadShareSummaryImage.disabled = false;
     shareShareSummaryImage.disabled = false;
     if (printShareSummaryCards) printShareSummaryCards.disabled = false;
-    setMessage(shareSummaryMessage, `✅ Resumen generado con ${selected.length} de ${filtered.length} cupones activos de la categoría seleccionada. Los códigos no se incluyen.`);
+    setMessage(shareSummaryMessage, `✅ Resumen generado con ${selected.length} de ${filtered.length} cupones activos. La imagen usa las tarjetas actuales en formato de lista y no incluye los códigos.`);
   } catch (error) {
     setMessage(shareSummaryMessage, readableError(error), true);
   } finally {

@@ -474,12 +474,14 @@ barraInferiorCupones?.addEventListener("click", () => {
   });
 });
 
-barraInferiorOfertazo?.addEventListener("click", () => {
+function abrirOfertazoDesdeCupon() {
   cambiarVista("ofertas_mercado_libre", {
     actualizarHistorial: true,
     desplazamiento: "smooth",
   });
-});
+}
+
+barraInferiorOfertazo?.addEventListener("click", abrirOfertazoDesdeCupon);
 
 
 /* Navegación táctil entre categorías de cupones.
@@ -919,9 +921,11 @@ function updateCouponTimes() {
       status.className = "estado-programacion agotado";
       status.innerHTML = `<div class="estado-linea"><span class="estado-agotado-mensaje"><span class="estado-agotado-icono" aria-hidden="true">!</span><span>El cupón se agotó.</span></span></div>`;
       card.classList.add("cupon-agotado");
-      redeemButton.disabled = true;
-      redeemButton.classList.add("boton-agotado");
-      redeemButton.textContent = "Cupón agotado";
+      redeemButton.disabled = false;
+      redeemButton.removeAttribute("aria-disabled");
+      redeemButton.classList.remove("boton-programado");
+      redeemButton.classList.add("boton-agotado", "boton-ofertazo-agotado");
+      redeemButton.innerHTML = '<span class="boton-ofertazo-icono" aria-hidden="true">↗</span><span>Ver ofertas</span>';
       return;
     }
 
@@ -938,7 +942,7 @@ function updateCouponTimes() {
 
     card.classList.remove("cupon-agotado");
     redeemButton.disabled = false;
-    redeemButton.classList.remove("boton-programado", "boton-agotado");
+    redeemButton.classList.remove("boton-programado", "boton-agotado", "boton-ofertazo-agotado");
 
     if (!redireccionEnProceso) {
       redeemButton.innerHTML = contenidoBotonCopiar();
@@ -1347,8 +1351,8 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
 
     <div class="hc16-acciones">
       <div class="hc16-cta acciones-cupon">
-        <button class="boton-canjear hc16-copiar" type="button" ${cupon.agotado === true ? 'disabled aria-disabled="true"' : ""}>
-          ${contenidoBotonCopiar()}
+        <button class="boton-canjear hc16-copiar${cupon.agotado === true ? " boton-agotado boton-ofertazo-agotado" : ""}" type="button">
+          ${cupon.agotado === true ? '<span class="boton-ofertazo-icono" aria-hidden="true">↗</span><span>Ver ofertas</span>' : contenidoBotonCopiar()}
         </button>
       </div>
       <p class="mensaje hc16-mensaje" aria-live="polite"></p>
@@ -1368,19 +1372,25 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   const redeemButton = articulo.querySelector(".boton-canjear");
 
   if (!initialTimeState.enabled) {
-    redeemButton.disabled = true;
     if (initialTimeState.state === "agotado") {
       articulo.classList.add("cupon-agotado");
-      redeemButton.classList.add("boton-agotado");
-      redeemButton.textContent = "Cupón agotado";
+      redeemButton.disabled = false;
+      redeemButton.classList.add("boton-agotado", "boton-ofertazo-agotado");
+      redeemButton.innerHTML = '<span class="boton-ofertazo-icono" aria-hidden="true">↗</span><span>Ver ofertas</span>';
     } else {
+      redeemButton.disabled = true;
       redeemButton.classList.add("boton-programado");
       redeemButton.textContent = "⏳ Disponible pronto";
     }
   }
 
   redeemButton.addEventListener("click", () => {
-    if (couponTimeState(cupon).enabled) copiarYCanjear(cupon, articulo);
+    const estado = couponTimeState(cupon);
+    if (estado.state === "agotado") {
+      abrirOfertazoDesdeCupon();
+      return;
+    }
+    if (estado.enabled) copiarYCanjear(cupon, articulo);
   });
   articulo.querySelector(".boton-like")?.addEventListener("click", () => darMeGusta(cupon, articulo));
   articulo.querySelector(".hc20-compartir")?.addEventListener("click", () => compartirPagina(articulo));
@@ -1458,7 +1468,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
       <div class="hc16-etiquetas">${htmlEtiquetasCupon(estados)}</div>
     </div>
     <div class="hc16-acciones">
-      <div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar" type="button" ${cupon.agotado === true ? 'disabled aria-disabled="true"' : ""}>${contenidoBotonCopiar()}</button></div>
+      <div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar${cupon.agotado === true ? " boton-agotado boton-ofertazo-agotado" : ""}" type="button">${cupon.agotado === true ? '<span class="boton-ofertazo-icono" aria-hidden="true">↗</span><span>Ver ofertas</span>' : contenidoBotonCopiar()}</button></div>
       <p class="mensaje hc16-mensaje" aria-live="polite"></p>
       <div class="hc16-social acciones-secundarias" aria-label="Actividad del cupón">
         <button class="boton-compartir hc16-icono hc20-compartir" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
@@ -1474,11 +1484,22 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
   const boton = articulo.querySelector(".boton-canjear");
   const estadoInicial = couponTimeState(cupon);
   if (!estadoInicial.enabled) {
-    boton.disabled = true;
-    if (estadoInicial.state === "agotado") { articulo.classList.add("cupon-agotado"); boton.classList.add("boton-agotado"); boton.textContent = "Cupón agotado"; }
-    else { boton.classList.add("boton-programado"); boton.textContent = "⏳ Disponible pronto"; }
+    if (estadoInicial.state === "agotado") {
+      articulo.classList.add("cupon-agotado");
+      boton.disabled = false;
+      boton.classList.add("boton-agotado", "boton-ofertazo-agotado");
+      boton.innerHTML = '<span class="boton-ofertazo-icono" aria-hidden="true">↗</span><span>Ver ofertas</span>';
+    } else {
+      boton.disabled = true;
+      boton.classList.add("boton-programado");
+      boton.textContent = "⏳ Disponible pronto";
+    }
   }
-  boton.addEventListener("click", () => { if (couponTimeState(cupon).enabled) copiarYCanjear(cupon, articulo); });
+  boton.addEventListener("click", () => {
+    const estado = couponTimeState(cupon);
+    if (estado.state === "agotado") { abrirOfertazoDesdeCupon(); return; }
+    if (estado.enabled) copiarYCanjear(cupon, articulo);
+  });
   articulo.querySelector(".boton-compartir")?.addEventListener("click", () => compartirPagina(articulo));
   articulo.querySelector(".boton-like")?.addEventListener("click", () => darMeGusta(cupon, articulo));
   return articulo;
