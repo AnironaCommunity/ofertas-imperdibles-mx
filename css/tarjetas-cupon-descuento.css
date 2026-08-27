@@ -2302,3 +2302,118 @@
   #cupones .cupon-horizontal-v16 .hc16-etiquetas .etiqueta-cupon,
   #cupones .cupon-horizontal-v16 .hc16-etiquetas .etiqueta-popular-integrada { padding:3px 5px !important; font-size:6.7px !important; }
 }
+
+/* ================================================================
+   PAQUETE 2.8 — SIMETRÍA DEL TALÓN DERECHO BANCARIO
+   Alcance: SOLO .hc25-banco-acciones. No modifica valor, logo ni
+   información de la zona izquierda/central del cupón bancario.
+   ================================================================ */
+#cupones > .cupon-bancario-unificado .hc25-banco-acciones {
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  justify-content:center!important;
+  padding:12px 14px 10px!important;
+  background:#fff!important;
+  color:#252525!important;
+  overflow:visible!important;
+}
+#cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-cta {
+  width:100%!important;
+  margin:0!important;
+  padding:0!important;
+}
+#cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-copiar {
+  width:100%!important;
+  max-width:none!important;
+  min-height:38px!important;
+  padding:7px 13px!important;
+  font-size:11.5px!important;
+  line-height:1.15!important;
+}
+#cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-social {
+  width:100%!important;
+  min-height:24px!important;
+  margin:7px 0 0!important;
+  gap:6px!important;
+  justify-content:center!important;
+  align-items:center!important;
+  font-size:inherit!important;
+}
+#cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-icono {
+  width:22px!important;
+  height:22px!important;
+  min-width:22px!important;
+  min-height:22px!important;
+  padding:0!important;
+  margin:0!important;
+}
+#cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-separador {
+  width:1px!important;
+  height:18px!important;
+  margin:0 2px!important;
+  background:#b8bec6!important;
+}
+#cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-numero,
+#cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-usos,
+#cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-usos .numero-clics {
+  font-size:10px!important;
+  line-height:1!important;
+}
+#cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-tiempo {
+  width:100%!important;
+  margin:7px 0 0!important;
+  padding:8px 0 0!important;
+  border-top:0!important;
+  font-size:10px!important;
+  font-weight:400!important;
+  line-height:1.15!important;
+  text-align:center!important;
+}
+#cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-tiempo .estado-linea,
+#cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-tiempo .estado-tiempo {
+  font-size:10px!important;
+  font-weight:400!important;
+}
+
+@media (max-width:680px){
+  #cupones > .cupon-bancario-unificado .hc25-banco-acciones {
+    padding:9px 7px 7px!important;
+  }
+  #cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-copiar {
+    width:100%!important;
+    min-height:31px!important;
+    padding:5px 3px!important;
+    font-size:8px!important;
+  }
+  #cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-social {
+    min-height:18px!important;
+    margin-top:4px!important;
+    gap:3px!important;
+  }
+  #cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-icono {
+    width:18px!important;
+    height:18px!important;
+    min-width:18px!important;
+    min-height:18px!important;
+  }
+  #cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-separador {
+    height:16px!important;
+    margin:0 1px!important;
+  }
+  #cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-numero,
+  #cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-usos,
+  #cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-usos .numero-clics {
+    font-size:8px!important;
+  }
+  #cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-tiempo {
+    margin-top:4px!important;
+    padding-top:5px!important;
+    border-top:0!important;
+    font-size:7.6px!important;
+  }
+  #cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-tiempo .estado-linea,
+  #cupones > .cupon-bancario-unificado .hc25-banco-acciones .hc16-tiempo .estado-tiempo {
+    font-size:7.6px!important;
+  }
+}
