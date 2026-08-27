@@ -2302,90 +2302,70 @@
 }
 
 /* ================================================================
-   PAQUETE 3.9 — CONTORNO TICKET CON MUESCAS ESTABLES
-   Objetivo único: recuperar el contorno completo de la tarjeta y las
-   muescas superior/inferior en la división 65/35, sin alterar layout,
-   contenido, tamaños ni funcionalidades.
-
-   Nota técnica:
-   - Se retiran las máscaras que recortaban también el borde/sombra.
-   - La tarjeta conserva su borde y sombra normales.
-   - Las muescas se dibujan como medias lunas sobre el borde usando
-     exactamente el color base de la sección (--fondo), con su propio
-     arco de contorno. Así no desaparece el perímetro de la tarjeta.
+   PAQUETE 4.0 — MUESCAS VISIBLES + CONTORNO CONSERVADO
+   Único objetivo visual: mantener el contorno/sombra actual y recuperar
+   las dos muescas semicirculares en la unión 65/35.
    ================================================================ */
 #cupones .cupon-horizontal-v16 {
   --ticket-border: color-mix(in srgb, var(--hc16-accent, var(--categoria-cupon-color, #16ad77)) 20%, #d9e1de 80%);
-  --ticket-cutout-bg: var(--fondo, #f5f7f8);
-
+  --ticket-cutout-bg: var(--fondo-seccion-cupones, #ffffff);
+  position: relative !important;
+  overflow: hidden !important;
   -webkit-mask: none !important;
   mask: none !important;
   -webkit-mask-image: none !important;
   mask-image: none !important;
-  filter: none !important;
-
+  clip-path: none !important;
   border: 1px solid var(--ticket-border) !important;
   border-radius: 16px !important;
-  overflow: hidden !important;
   box-shadow: 0 4px 12px rgba(20, 30, 45, .10) !important;
 }
-
-/* Muesca superior: sólo ocupa la mitad interior de la circunferencia. */
 #cupones .cupon-horizontal-v16::before {
   content: "" !important;
   display: block !important;
   position: absolute !important;
-  z-index: 50 !important;
-  top: -1px !important;
+  z-index: 100 !important;
+  top: -8px !important;
   left: 65% !important;
   width: 16px !important;
-  height: 8px !important;
+  height: 16px !important;
   transform: translateX(-50%) !important;
-  background: var(--ticket-cutout-bg) !important;
   border: 1px solid var(--ticket-border) !important;
-  border-top: 0 !important;
-  border-radius: 0 0 9px 9px !important;
+  border-radius: 50% !important;
+  background: var(--ticket-cutout-bg) !important;
   box-shadow: none !important;
   pointer-events: none !important;
   opacity: 1 !important;
   -webkit-mask: none !important;
   mask: none !important;
 }
-
-/* Muesca inferior. */
 #cupones .cupon-horizontal-v16::after {
   content: "" !important;
   display: block !important;
   position: absolute !important;
-  z-index: 50 !important;
-  right: auto !important;
+  z-index: 100 !important;
   top: auto !important;
-  bottom: -1px !important;
+  right: auto !important;
+  bottom: -8px !important;
   left: 65% !important;
-  inset: auto auto -1px 65% !important;
+  inset: auto auto -8px 65% !important;
   width: 16px !important;
-  height: 8px !important;
+  height: 16px !important;
   transform: translateX(-50%) !important;
-  background: var(--ticket-cutout-bg) !important;
   border: 1px solid var(--ticket-border) !important;
-  border-bottom: 0 !important;
-  border-radius: 9px 9px 0 0 !important;
+  border-radius: 50% !important;
+  background: var(--ticket-cutout-bg) !important;
   box-shadow: none !important;
   pointer-events: none !important;
   opacity: 1 !important;
   -webkit-mask: none !important;
   mask: none !important;
 }
-
-/* Se desactivan las muescas históricas del panel derecho para evitar
-   dobles círculos. La muesca final vive únicamente en la tarjeta. */
 #cupones .cupon-horizontal-v16 > .hc16-acciones::before,
 #cupones .cupon-horizontal-v16 > .hc16-acciones::after {
   content: none !important;
   display: none !important;
 }
-
-/* Mantener exactamente las correcciones ya validadas del bancario. */
 #cupones .cupon-bancario-unificado .hc16-descuento {
   font-size: clamp(23px, 3.4vw, 34px) !important;
   line-height: .94 !important;
@@ -2405,8 +2385,6 @@
   font-size: 10.5px !important;
   line-height: 1.15 !important;
 }
-
-/* Like: gris en reposo; al activarse toma el acento de su tarjeta. */
 #cupones .cupon-horizontal-v16 .boton-like:not(.activo),
 #cupones .cupon-horizontal-v16 .boton-like:not(.activo) svg {
   color: #7b8491 !important;
@@ -2417,19 +2395,19 @@
   color: var(--hc16-accent) !important;
   fill: currentColor !important;
 }
-
 @media (max-width: 680px) {
-  #cupones .cupon-horizontal-v16 {
-    border-radius: 13px !important;
-  }
-  #cupones .cupon-horizontal-v16::before,
-  #cupones .cupon-horizontal-v16::after {
+  #cupones .cupon-horizontal-v16 { border-radius: 13px !important; }
+  #cupones .cupon-horizontal-v16::before {
+    top: -7px !important;
     width: 14px !important;
-    height: 7px !important;
+    height: 14px !important;
   }
-  #cupones .cupon-horizontal-v16::before { border-radius: 0 0 8px 8px !important; }
-  #cupones .cupon-horizontal-v16::after { border-radius: 8px 8px 0 0 !important; }
-
+  #cupones .cupon-horizontal-v16::after {
+    bottom: -7px !important;
+    inset: auto auto -7px 65% !important;
+    width: 14px !important;
+    height: 14px !important;
+  }
   #cupones .cupon-bancario-unificado .hc16-descuento {
     font-size: clamp(18px, 5vw, 26px) !important;
   }
