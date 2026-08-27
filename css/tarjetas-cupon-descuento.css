@@ -2525,38 +2525,49 @@
 }
 
 /* ================================================================
-   PAQUETE 4.4 — MUESCA REAL SIN LÍNEA EXTERIOR
-   La muesca se construye con un círculo completo centrado exactamente
-   sobre el borde de la tarjeta. Como la tarjeta conserva overflow:hidden,
-   sólo se ve la mitad interior del círculo: desaparecen las líneas rectas
-   laterales/exteriores de la versión 4.3 y queda un recorte tipo ticket.
+   PAQUETE 4.6 — MUESCA REAL LIMPIA, SIN ARCO DE BORDE
+   Referencia aprobada: el fondo de la sección entra en la tarjeta
+   formando una media luna. No se dibuja borde alrededor del recorte.
    ================================================================ */
 #cupones .cupon-horizontal-v16 > .ticket-notch {
-  width: 18px !important;
-  height: 18px !important;
-  border: 1px solid var(--ticket-border, #dbe3df) !important;
-  border-radius: 50% !important;
-  background: var(--ticket-cutout-bg, #f4f8f6) !important;
   z-index: 9999 !important;
+  display: block !important;
+  left: 65% !important;
+  width: 18px !important;
+  height: 9px !important;
+  box-sizing: border-box !important;
+  transform: translateX(-50%) !important;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: var(--ticket-cutout-bg, #ffffff) !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
 }
-#cupones .cupon-horizontal-v16 > .ticket-notch-top {
-  top: -9px !important;
-  bottom: auto !important;
-}
-#cupones .cupon-horizontal-v16 > .ticket-notch-bottom {
-  top: auto !important;
-  bottom: -9px !important;
-}
-/* La limpieza 4.3 ya no es necesaria y podía generar un segundo contorno. */
+#cupones .cupon-horizontal-v16 > .ticket-notch::before,
 #cupones .cupon-horizontal-v16 > .ticket-notch::after {
   content: none !important;
   display: none !important;
 }
-@media (max-width:680px) {
+#cupones .cupon-horizontal-v16 > .ticket-notch-top {
+  top: -1px !important;
+  bottom: auto !important;
+  border-radius: 0 0 9px 9px !important;
+}
+#cupones .cupon-horizontal-v16 > .ticket-notch-bottom {
+  top: auto !important;
+  bottom: -1px !important;
+  border-radius: 9px 9px 0 0 !important;
+}
+@media (max-width: 680px) {
   #cupones .cupon-horizontal-v16 > .ticket-notch {
     width: 16px !important;
-    height: 16px !important;
+    height: 8px !important;
   }
-  #cupones .cupon-horizontal-v16 > .ticket-notch-top { top: -8px !important; }
-  #cupones .cupon-horizontal-v16 > .ticket-notch-bottom { bottom: -8px !important; }
+  #cupones .cupon-horizontal-v16 > .ticket-notch-top {
+    border-radius: 0 0 8px 8px !important;
+  }
+  #cupones .cupon-horizontal-v16 > .ticket-notch-bottom {
+    border-radius: 8px 8px 0 0 !important;
+  }
 }
