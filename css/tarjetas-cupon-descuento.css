@@ -1950,3 +1950,86 @@
   #cupones .cupon-bancario-ticket .bt20-vistas svg { width: 10px !important; height: 10px !important; }
   #cupones .cupon-bancario-ticket .bt20-tiempo { margin-top: 5px !important; padding-top: 5px !important; font-size: 6.7px !important; }
 }
+
+/* ================================================================
+   PAQUETE 2.4 — AJUSTE FINO DE CUPONES BANCARIOS
+   - Logo bancario plano: sin cápsula, margen, padding ni sombra.
+   - Menos espacio desperdiciado para el logo.
+   - Información bancaria centrada verticalmente.
+   - Misma altura visual de las tarjetas horizontales.
+   - Temporizador con contraste alto sobre el color del banco.
+   - Muescas con el fondo real de la sección de cupones.
+   ================================================================ */
+#cupones .cupon-bancario-ticket .bt20-main {
+  grid-template-columns: minmax(58px, 26%) minmax(0, 1fr) !important;
+  gap: 8px !important;
+  align-items: center !important;
+}
+#cupones .cupon-bancario-ticket .bt20-logo-wrap {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  overflow: visible !important;
+}
+#cupones .cupon-bancario-ticket .bt20-logo {
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: 54px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  object-fit: contain !important;
+  mix-blend-mode: multiply !important;
+}
+#cupones .cupon-bancario-ticket .bt20-beneficio {
+  align-self: center !important;
+  justify-self: stretch !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+#cupones .cupon-bancario-ticket .bt20-actions::before,
+#cupones .cupon-bancario-ticket .bt20-actions::after {
+  background: var(--fondo-seccion-cupones, #f3f3f3) !important;
+  box-shadow: none !important;
+  border: 0 !important;
+}
+#cupones .cupon-bancario-ticket .bt20-tiempo,
+#cupones .cupon-bancario-ticket .bt20-tiempo *,
+#cupones .cupon-bancario-ticket .bt20-tiempo .contador-tiempo,
+#cupones .cupon-bancario-ticket .bt20-tiempo .texto-tiempo {
+  color: var(--banco-texto) !important;
+  -webkit-text-fill-color: var(--banco-texto) !important;
+  opacity: 1 !important;
+}
+@media (max-width:680px) {
+  #cupones .cupon-bancario-ticket .bt20-main {
+    grid-template-columns: minmax(52px, 27%) minmax(0, 1fr) !important;
+    gap: 6px !important;
+  }
+  #cupones .cupon-bancario-ticket .bt20-logo-wrap {
+    min-width: 0 !important;
+    max-width: none !important;
+    padding: 0 !important;
+  }
+  #cupones .cupon-bancario-ticket .bt20-logo {
+    max-width: 100% !important;
+    max-height: 44px !important;
+  }
+}
