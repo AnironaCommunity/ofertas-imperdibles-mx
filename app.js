@@ -713,16 +713,16 @@ function escaparHtml(valor = "") {
 
 function iconoCompartir() {
   return `
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M18 16a3 3 0 0 0-2.39 1.19L8.91 13.7a3.1 3.1 0 0 0 0-3.4l6.7-3.49A3 3 0 1 0 15 5c0 .23.03.45.08.66l-6.7 3.49a3 3 0 1 0 0 5.7l6.7 3.49A3 3 0 1 0 18 16Z"/>
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <path d="M20 5.5 13.8 11V7.8C8.2 8.2 4.6 11.4 3.4 17.7c2.5-3.1 5.8-4.7 10.4-4.7v3.2L20 10.7V5.5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   `;
 }
 
 function iconoMeGusta() {
   return `
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M9 21H5a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h4v12Zm2 0V9.38l3.21-5.35A2 2 0 0 1 17.93 5v3h2.38a2.69 2.69 0 0 1 2.62 3.29l-1.38 6A4.69 4.69 0 0 1 16.98 21H11Z"/>
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <path d="M20.8 5.9a5.1 5.1 0 0 0-7.2 0L12 7.5l-1.6-1.6a5.1 5.1 0 0 0-7.2 7.2L12 21l8.8-7.9a5.1 5.1 0 0 0 0-7.2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   `;
 }
@@ -737,8 +737,9 @@ function iconoCopias() {
 
 function iconoVista() {
   return `
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 5c5.4 0 9.2 4.8 10.4 6.6a.75.75 0 0 1 0 .8C21.2 14.2 17.4 19 12 19S2.8 14.2 1.6 12.4a.75.75 0 0 1 0-.8C2.8 9.8 6.6 5 12 5Zm0 2C8.1 7 5 10.2 3.7 12 5 13.8 8.1 17 12 17s7-3.2 8.3-5C19 10.2 15.9 7 12 7Zm0 1.5A3.5 3.5 0 1 1 12 15a3.5 3.5 0 0 1 0-7Zm0 2A1.5 1.5 0 1 0 12 13.5a1.5 1.5 0 0 0 0-3Z"/>
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <path d="M2.2 12s3.5-6 9.8-6 9.8 6 9.8 6-3.5 6-9.8 6-9.8-6-9.8-6Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="12" cy="12" r="2.6" stroke="currentColor" stroke-width="1.8"/>
     </svg>
   `;
 }
@@ -1323,8 +1324,10 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
       <div class="hc16-social acciones-secundarias" aria-label="Actividad del cupón">
         <button class="boton-compartir hc16-icono hc20-compartir" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
         <span class="hc16-separador" aria-hidden="true"></span>
-        <button class="boton-like hc16-icono ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
-        <span class="numero-likes hc16-numero">${Number(cupon.likes || 0)}</span>
+        <span class="hc16-like-grupo">
+          <button class="boton-like hc16-icono ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
+          <span class="numero-likes hc16-numero">${Number(cupon.likes || 0)}</span>
+        </span>
         <span class="hc16-separador" aria-hidden="true"></span>
         <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas" aria-label="Vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
       </div>
@@ -1426,7 +1429,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
       <div class="bt20-social">
         <button class="banco-compartir bt20-icon" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
         <span class="bt20-sep"></span>
-        <button class="banco-like bt20-icon ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button><span class="numero-likes">${Number(cupon.likes || 0)}</span>
+        <span class="bt20-like-grupo"><button class="banco-like bt20-icon ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button><span class="numero-likes">${Number(cupon.likes || 0)}</span></span>
         <span class="bt20-sep"></span>
         <span class="bt20-vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
       </div>

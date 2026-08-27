@@ -1798,41 +1798,107 @@
 }
 
 /* ================================================================
-   PAQUETE 4.5 — MUESCAS REALES SIN ARCO EXTERIOR
-   - El recorte se hace sobre la tarjeta completa (incluido su borde).
-   - Se eliminan los círculos superpuestos que dejaban visible el arco.
-   - Aplica a Tienda, Exclusivo y Bancario sin alterar contenido/lógica.
+   VERSIÓN 6.4 — AJUSTE EXCLUSIVO DE ICONOS SOCIALES
+   Mantiene posición, separadores, dimensiones y resto de la tarjeta.
+   Solo mejora la apariencia de Compartir / Me gusta / Vistas.
    ================================================================ */
-#cupones > .cupon-horizontal-v16,
-#cupones > .cupon-bancario-ticket {
-  -webkit-mask-image:
-    radial-gradient(circle 10px at 65% 0, transparent 0 9.5px, #000 10px),
-    radial-gradient(circle 10px at 65% 100%, transparent 0 9.5px, #000 10px);
-  -webkit-mask-composite: source-in;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%;
-  mask-image:
-    radial-gradient(circle 10px at 65% 0, transparent 0 9.5px, #000 10px),
-    radial-gradient(circle 10px at 65% 100%, transparent 0 9.5px, #000 10px);
-  mask-composite: intersect;
-  mask-repeat: no-repeat;
-  mask-size: 100% 100%;
+#cupones .cupon-horizontal-v16 .hc16-social .hc20-compartir,
+#cupones .cupon-bancario-ticket .bt20-social .banco-compartir {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 26px !important;
+  height: 26px !important;
+  flex: 0 0 26px !important;
+  border-radius: 999px !important;
+  background: #e9f8ef !important;
+  color: #12a85a !important;
 }
-#cupones .cupon-horizontal-v16 .hc16-acciones::before,
-#cupones .cupon-horizontal-v16 .hc16-acciones::after,
-#cupones .cupon-bancario-ticket .bt20-actions::before,
-#cupones .cupon-bancario-ticket .bt20-actions::after {
-  content: none !important;
-  display: none !important;
+#cupones .cupon-horizontal-v16 .hc16-social .hc20-compartir svg,
+#cupones .cupon-bancario-ticket .bt20-social .banco-compartir svg {
+  width: 15px !important;
+  height: 15px !important;
+  fill: none !important;
+  color: inherit !important;
 }
+#cupones .cupon-horizontal-v16 .hc16-social .hc16-like-grupo,
+#cupones .cupon-bancario-ticket .bt20-social .bt20-like-grupo {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  min-height: 26px !important;
+  padding: 0 7px !important;
+  border-radius: 999px !important;
+  background: #fff0f6 !important;
+  color: #ef4f91 !important;
+  white-space: nowrap !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social .hc16-like-grupo .hc16-numero,
+#cupones .cupon-bancario-ticket .bt20-social .bt20-like-grupo .numero-likes {
+  color: #344054 !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social .hc16-like-grupo .boton-like,
+#cupones .cupon-bancario-ticket .bt20-social .bt20-like-grupo .banco-like {
+  color: #ef4f91 !important;
+  background: transparent !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social .hc16-like-grupo .boton-like.activo,
+#cupones .cupon-bancario-ticket .bt20-social .bt20-like-grupo .banco-like.activo {
+  color: #e62476 !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social .hc16-like-grupo svg,
+#cupones .cupon-bancario-ticket .bt20-social .bt20-like-grupo svg {
+  width: 14px !important;
+  height: 14px !important;
+  fill: none !important;
+  color: inherit !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social .hc16-vistas,
+#cupones .cupon-bancario-ticket .bt20-social .bt20-vistas {
+  min-height: 26px !important;
+  padding: 0 7px !important;
+  border-radius: 999px !important;
+  background: #edf5ff !important;
+  color: #1677ee !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social .hc16-vistas .numero-clics,
+#cupones .cupon-bancario-ticket .bt20-social .bt20-vistas .numero-clics {
+  color: #344054 !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social .hc16-vistas svg,
+#cupones .cupon-bancario-ticket .bt20-social .bt20-vistas svg {
+  width: 15px !important;
+  height: 15px !important;
+  fill: none !important;
+  color: inherit !important;
+}
+
 @media (max-width: 680px) {
-  #cupones > .cupon-horizontal-v16,
-  #cupones > .cupon-bancario-ticket {
-    -webkit-mask-image:
-      radial-gradient(circle 8px at 65% 0, transparent 0 7.5px, #000 8px),
-      radial-gradient(circle 8px at 65% 100%, transparent 0 7.5px, #000 8px);
-    mask-image:
-      radial-gradient(circle 8px at 65% 0, transparent 0 7.5px, #000 8px),
-      radial-gradient(circle 8px at 65% 100%, transparent 0 7.5px, #000 8px);
+  #cupones .cupon-horizontal-v16 .hc16-social .hc20-compartir,
+  #cupones .cupon-bancario-ticket .bt20-social .banco-compartir {
+    width: 22px !important;
+    height: 22px !important;
+    flex-basis: 22px !important;
+  }
+  #cupones .cupon-horizontal-v16 .hc16-social .hc20-compartir svg,
+  #cupones .cupon-bancario-ticket .bt20-social .banco-compartir svg {
+    width: 13px !important;
+    height: 13px !important;
+  }
+  #cupones .cupon-horizontal-v16 .hc16-social .hc16-like-grupo,
+  #cupones .cupon-bancario-ticket .bt20-social .bt20-like-grupo,
+  #cupones .cupon-horizontal-v16 .hc16-social .hc16-vistas,
+  #cupones .cupon-bancario-ticket .bt20-social .bt20-vistas {
+    min-height: 22px !important;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+  }
+  #cupones .cupon-horizontal-v16 .hc16-social .hc16-like-grupo svg,
+  #cupones .cupon-bancario-ticket .bt20-social .bt20-like-grupo svg,
+  #cupones .cupon-horizontal-v16 .hc16-social .hc16-vistas svg,
+  #cupones .cupon-bancario-ticket .bt20-social .bt20-vistas svg {
+    width: 12px !important;
+    height: 12px !important;
   }
 }
