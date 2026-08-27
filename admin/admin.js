@@ -1364,86 +1364,292 @@ function shareWaitForFrame(frame) {
 async function renderShareCardListImage(selectedCoupons) {
   if (!selectedCoupons.length) throw new Error("No hay tarjetas para generar la imagen.");
 
-  const publicStyleUrl = new URL("../css/style.css?v=82.45", location.href).href;
-  const couponStyleUrl = new URL("../css/tarjetas-cupon-descuento.css?v=82.80.0", location.href).href;
-  const [publicCssRaw, couponCssRaw] = await Promise.all([
-    shareFetchText(publicStyleUrl),
-    shareFetchText(couponStyleUrl),
-  ]);
-  const publicCss = shareSanitizeCssForSvg(publicCssRaw);
-  const couponCss = shareSanitizeCssForSvg(couponCssRaw);
+  // V82.81 — Resumen compartible dibujado DIRECTAMENTE en Canvas.
+  // No usa SVG/foreignObject/HTMLImageElement para convertir el DOM, por lo que
+  // evita de raíz los errores de decodificación observados en Chrome/Safari.
+  const canvas = shareSummaryCanvas;
+  const context = canvas.getContext("2d");
+  const width = 1080;
+  const side = 34;
+  const top = 34;
+  const gap = 18;
+  const cardWidth = width - side * 2;
+  const cardHeight = 224;
+  const footerHeight = 122;
+  const height = top + selectedCoupons.length * cardHeight + Math.max(0, selectedCoupons.length - 1) * gap + footerHeight + 34;
+  const scale = 2;
+  canvas.width = width * scale;
+  canvas.height = height * scale;
+  context.setTransform(scale, 0, 0, scale, 0, 0);
+  context.clearRect(0, 0, width, height);
+  context.fillStyle = "#f7faf8";
+  context.fillRect(0, 0, width, height);
+  context.textBaseline = "alphabetic";
 
-  let cardsHtml = selectedCoupons.map((coupon) => printCouponCardHtml(coupon, selectedCoupons)).join("");
-  cardsHtml = await shareEmbedCardImages(cardsHtml);
+  const palette = {
+    green: "#0faf72",
+    orange: "#f28c18",
+    purple: "#7a43c6",
+    blue: "#1e73d8",
+    teal: "#12aeb3",
+    pink: "#e85c9e",
+    red: "#ef5a4c",
+    dark: "#111827",
+    muted: "#64748b",
+    line: "#dce4e8",
+    yellow: "#ffe600",
+  };
 
-  const imageWidth = 920;
-  const horizontalPadding = 24;
-  const cardAreaWidth = imageWidth - horizontalPadding * 2;
-  const listCss = `
-    *{box-sizing:border-box}
-    html,body{margin:0!important;padding:0!important;background:#f7faf8!important;color:#111!important;font-family:Inter,Segoe UI,Arial,sans-serif!important}
-    body{width:${imageWidth}px!important;padding:20px ${horizontalPadding}px 22px!important;overflow:hidden!important}
-    #cupones{display:grid!important;grid-template-columns:1fr!important;gap:12px!important;width:${cardAreaWidth}px!important;max-width:none!important;margin:0!important;padding:0!important}
-    #cupones>.cupon-horizontal-v16{width:100%!important;max-width:none!important;margin:0!important;break-inside:avoid!important;page-break-inside:avoid!important}
-    #cupones button{pointer-events:none!important}
-  `;
-
-  const frame = document.createElement("iframe");
-  frame.setAttribute("aria-hidden", "true");
-  frame.tabIndex = -1;
-  Object.assign(frame.style, {
-    position: "fixed",
-    left: "-20000px",
-    top: "0",
-    width: `${imageWidth}px`,
-    height: "1200px",
-    border: "0",
-    visibility: "hidden",
-    pointerEvents: "none",
-  });
-  document.body.appendChild(frame);
-
-  try {
-    const loaded = shareWaitForFrame(frame);
-    frame.srcdoc = `<!doctype html><html><head><meta charset="utf-8"><style>${publicCss}\n${couponCss}\n${listCss}</style></head><body><section id="cupones" class="cupones-grid-compacta">${cardsHtml}</section></body></html>`;
-    await loaded;
-    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-
-    const doc = frame.contentDocument;
-    if (!doc) throw new Error("No fue posible preparar la lista de tarjetas.");
-    const images = [...doc.images];
-    await Promise.all(images.map((img) => img.complete ? Promise.resolve() : new Promise((resolve) => {
-      img.addEventListener("load", resolve, { once: true });
-      img.addEventListener("error", resolve, { once: true });
-    })));
-
-    const height = Math.max(1, Math.ceil(doc.documentElement.scrollHeight || doc.body.scrollHeight));
-    const bodyHtml = doc.body.innerHTML;
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${imageWidth}" height="${height}" viewBox="0 0 ${imageWidth} ${height}"><foreignObject x="0" y="0" width="100%" height="100%"><div xmlns="http://www.w3.org/1999/xhtml"><style>${publicCss}\n${couponCss}\n${listCss}</style>${bodyHtml}</div></foreignObject></svg>`;
-    const svgBlob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
-    const svgUrl = URL.createObjectURL(svgBlob);
-
-    try {
-      // Evitamos HTMLImageElement.decode(): en algunos navegadores rechaza SVG con
-      // foreignObject aunque el recurso sí pueda cargarse y dibujarse en canvas.
-      const image = await shareLoadSvgImage(svgUrl);
-      const scale = 2;
-      const canvas = shareSummaryCanvas;
-      canvas.width = imageWidth * scale;
-      canvas.height = height * scale;
-      const context = canvas.getContext("2d");
-      context.setTransform(scale, 0, 0, scale, 0, 0);
-      context.drawImage(image, 0, 0, imageWidth, height);
-      context.setTransform(1, 0, 0, 1, 0, 0);
-      return await new Promise((resolve, reject) => {
-        canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error("No fue posible crear la imagen de las tarjetas.")), "image/png", 0.96);
-      });
-    } finally {
-      URL.revokeObjectURL(svgUrl);
-    }
-  } finally {
-    frame.remove();
+  function text(value) { return String(value ?? "").replace(/\s+/g, " ").trim(); }
+  function titleDiscount(coupon) {
+    const raw = text(coupon?.titulo || "Cupón");
+    return raw.replace(/\s*OFF\s*$/i, "").trim() || raw;
   }
+  function colorForCoupon(coupon) {
+    if (printCouponCategory(coupon) === "bancarios") return printBankVisual(coupon).color || palette.blue;
+    return printCouponColor(coupon);
+  }
+  function font(weight, size) { context.font = `${weight} ${size}px "Segoe UI", Arial, sans-serif`; }
+  function fit(value, maxWidth, startSize, minSize, weight = 700) {
+    const str = text(value);
+    let size = startSize;
+    while (size > minSize) {
+      font(weight, size);
+      if (context.measureText(str).width <= maxWidth) break;
+      size -= 1;
+    }
+    return size;
+  }
+  function roundRectFill(x, y, w, h, r, fill, stroke = null, lineWidth = 1) {
+    roundedRect(context, x, y, w, h, r);
+    context.fillStyle = fill;
+    context.fill();
+    if (stroke) {
+      context.strokeStyle = stroke;
+      context.lineWidth = lineWidth;
+      context.stroke();
+    }
+  }
+  function ticketPath(x, y, w, h, r, notchX, notchR) {
+    const nx = Math.max(x + r + notchR + 2, Math.min(x + w - r - notchR - 2, notchX));
+    context.beginPath();
+    context.moveTo(x + r, y);
+    context.lineTo(nx - notchR, y);
+    context.arc(nx, y, notchR, Math.PI, 0, true); // corte superior hacia adentro
+    context.lineTo(x + w - r, y);
+    context.quadraticCurveTo(x + w, y, x + w, y + r);
+    context.lineTo(x + w, y + h - r);
+    context.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    context.lineTo(nx + notchR, y + h);
+    context.arc(nx, y + h, notchR, 0, Math.PI, true); // corte inferior hacia adentro
+    context.lineTo(x + r, y + h);
+    context.quadraticCurveTo(x, y + h, x, y + h - r);
+    context.lineTo(x, y + r);
+    context.quadraticCurveTo(x, y, x + r, y);
+    context.closePath();
+  }
+  function drawCopyIcon(cx, cy) {
+    context.save();
+    context.strokeStyle = "#171717";
+    context.lineWidth = 3;
+    context.strokeRect(cx - 8, cy - 8, 10, 11);
+    context.strokeRect(cx - 3, cy - 12, 10, 11);
+    context.restore();
+  }
+  function drawEye(cx, cy) {
+    context.save();
+    context.strokeStyle = "#718096";
+    context.lineWidth = 1.8;
+    context.beginPath();
+    context.ellipse(cx, cy, 8, 5, 0, 0, Math.PI * 2);
+    context.stroke();
+    context.beginPath(); context.arc(cx, cy, 2, 0, Math.PI * 2); context.fillStyle = "#718096"; context.fill();
+    context.restore();
+  }
+  function drawShare(cx, cy) {
+    context.save(); context.strokeStyle = "#718096"; context.fillStyle = "#718096"; context.lineWidth = 1.8;
+    const pts = [[cx-7,cy],[cx+5,cy-7],[cx+5,cy+7]];
+    context.beginPath(); context.moveTo(pts[0][0],pts[0][1]); context.lineTo(pts[1][0],pts[1][1]); context.moveTo(pts[0][0],pts[0][1]); context.lineTo(pts[2][0],pts[2][1]); context.stroke();
+    pts.forEach(([px,py])=>{context.beginPath();context.arc(px,py,3,0,Math.PI*2);context.fill();});
+    context.restore();
+  }
+  function drawLike(cx, cy) {
+    context.save(); context.fillStyle = "#718096"; font(700, 16); context.textAlign = "center"; context.fillText("♥", cx, cy + 5); context.restore();
+  }
+  function tagData(coupon, list) {
+    const tags = [];
+    const remaining = coupon?.fecha_fin ? new Date(coupon.fecha_fin).getTime() - Date.now() : Infinity;
+    if (remaining > 0 && remaining <= 2*60*60*1000) tags.push(["Última oportunidad", "#ffe3e8", "#df334f"]);
+    else if (remaining > 2*60*60*1000 && remaining <= 24*60*60*1000) tags.push(["Últimas horas", "#fff0e6", "#ef5a2a"]);
+    const idsUsed = printTopIds(list, c => c.clics);
+    const idsPopular = printTopIds(list, c => c.likes);
+    const idsSaving = printTopIds(list, c => printMoneyValue(c.ahorro_maximo));
+    const topCoupon = [...list].filter(c => Number(c.clics||0)>0 || Number(c.likes||0)>0).sort((a,b)=>(Number(b.clics||0)+Number(b.likes||0)*2)-(Number(a.clics||0)+Number(a.likes||0)*2))[0];
+    if (idsUsed.has(Number(coupon.id))) tags.push(["Más usado", "#e7f1ff", "#2676d9"]);
+    if (idsPopular.has(Number(coupon.id))) tags.push(["Popular", "#ffe7eb", "#e83b58"]);
+    if (idsSaving.has(Number(coupon.id))) tags.push(["Mayor ahorro", "#e5f8ec", "#148a4c"]);
+    if (topCoupon && Number(topCoupon.id) === Number(coupon.id)) tags.push(["Top", "#fff3d5", "#a26800"]);
+    const d = printCouponDate(coupon);
+    if (d && Date.now()-d.getTime() >= 0 && Date.now()-d.getTime() < 60*60*1000) tags.push(["Nuevo", "#e7f1ff", "#2676d9"]);
+    return tags.slice(0, 2);
+  }
+
+  // Carga logos bancarios locales únicamente. Si un logo falla, se dibuja el nombre
+  // del banco y la imagen completa sigue generándose correctamente.
+  const bankLocalAssets = {
+    bbva:["bbva.png","bbva.jpg"],banamex:["banamex.png","banamex.jpg"],santander:["santander.jpg"],hsbc:["hsbc.png","hsbc.jpg"],
+    "american-express":["american-express.png","american-express.jpg"],afirme:["afirme.png","afirme.jpg"],inbursa:["inbursa.png","inbursa.jpg"],
+    banorte:["banorte.jpg"],scotiabank:["scotiabank.png","scotiabank.jpg"],openbank:["openbank.png","openbank.jpg"],invex:["invex.png","invex.jpg"],
+    mifel:["mifel.png","mifel.jpg"],"mercado-pago":["mercado-pago.png","mercado-pago.jpg"],"mercado-pago-visa":["mercado-pago-visa.png","mercado-pago-visa.jpg"],
+    "didi-card":["didi-card.png","didi-card.jpg"],falabella:["falabella.png","falabella.jpg"]
+  };
+  async function safeBankLogo(coupon) {
+    if (printCouponCategory(coupon) !== "bancarios") return null;
+    const key = shareBankKey(coupon);
+    for (const filename of (bankLocalAssets[key] || [])) {
+      const src = new URL(`../img/bancos/${filename}`, location.href).href;
+      const img = await loadShareImage(src);
+      if (img) return img;
+    }
+    return null;
+  }
+  const logos = await Promise.all(selectedCoupons.map(safeBankLogo));
+
+  selectedCoupons.forEach((coupon, index) => {
+    const x = side;
+    const y = top + index * (cardHeight + gap);
+    const category = printCouponCategory(coupon);
+    const isBank = category === "bancarios";
+    const exclusive = category === "exclusivo";
+    const accent = colorForCoupon(coupon);
+    const splitX = x + Math.round(cardWidth * 0.65);
+    const leftW = 250;
+    const infoX = x + leftW + 22;
+    const infoW = splitX - infoX - 18;
+    const actionsX = splitX + 24;
+    const actionsW = x + cardWidth - actionsX - 20;
+    const notchR = 12;
+
+    // Sombra + silueta tipo boleto con muescas reales.
+    context.save();
+    context.shadowColor = "rgba(15,23,42,.10)";
+    context.shadowBlur = 14;
+    context.shadowOffsetY = 5;
+    ticketPath(x, y, cardWidth, cardHeight, 19, splitX, notchR);
+    context.fillStyle = "#ffffff";
+    context.fill();
+    context.restore();
+    ticketPath(x, y, cardWidth, cardHeight, 19, splitX, notchR);
+    context.strokeStyle = accent;
+    context.globalAlpha = .42;
+    context.lineWidth = 1.25;
+    context.stroke();
+    context.globalAlpha = 1;
+
+    // Separador punteado, igual al de las tarjetas públicas.
+    context.save();
+    context.strokeStyle = "#cbd5e1";
+    context.lineWidth = 1.5;
+    context.setLineDash([6, 6]);
+    context.beginPath(); context.moveTo(splitX, y + 18); context.lineTo(splitX, y + cardHeight - 18); context.stroke();
+    context.restore();
+
+    // Marca de agua % muy sutil en zona izquierda.
+    context.save(); context.globalAlpha = .07; context.fillStyle = accent; font(800, 86); context.textAlign = "left"; context.fillText("%", x + 32, y + cardHeight - 18); context.restore();
+
+    // Valor / logo.
+    if (isBank && logos[index]) {
+      drawImageContain(context, logos[index], x + 34, y + 49, 155, 42);
+    } else if (isBank) {
+      context.fillStyle = accent; font(800, 16); context.textAlign = "center";
+      context.fillText((printBankVisual(coupon).banco || "BANCO").replace(/-/g," ").toUpperCase(), x + leftW/2, y + 75);
+    }
+    const discount = titleDiscount(coupon);
+    const discountY = isBank ? y + 150 : y + 118;
+    context.textAlign = "left";
+    context.fillStyle = accent;
+    const discountSize = fit(discount, leftW - 70, isBank ? 43 : 46, 30, 800);
+    font(800, discountSize);
+    const discountWidth = context.measureText(discount).width;
+    context.fillText(discount, x + 34, discountY);
+    font(800, 17);
+    context.fillText("OFF", x + 40 + discountWidth, discountY);
+
+    // Información central.
+    const categoryText = isBank ? "CUPÓN BANCARIO" : exclusive ? "EXCLUSIVO" : "CUPÓN TIENDA";
+    font(800, 18); context.textAlign = "left";
+    const badgeW = Math.min(infoW, context.measureText(categoryText).width + 34);
+    context.fillStyle = `${accent}16`;
+    // Canvas no siempre acepta #RRGGBBAA en todos los navegadores viejos; fallback suave.
+    context.save(); context.globalAlpha = .09; roundRectFill(infoX, y + 31, badgeW, 34, 0, accent); context.restore();
+    context.fillStyle = accent; context.fillText(categoryText, infoX + 12, y + 54);
+
+    context.fillStyle = "#1f2937"; font(700, 18);
+    const minLabel = isBank ? "Compra mínima" : "En compras desde";
+    context.fillText(minLabel, infoX, y + 93);
+    const labelW = context.measureText(minLabel).width;
+    context.fillStyle = "#111827"; font(800, 18); context.fillText(text(coupon.compra_minima || "Consultar"), infoX + labelW + 7, y + 93);
+
+    let detailY = y + 124;
+    if (isBank && coupon?.ahorro_maximo) {
+      context.fillStyle = "#374151"; font(500, 15); context.fillText("Tope de descuento", infoX, detailY);
+      font(700, 15); context.fillStyle = "#111827"; context.fillText(text(coupon.ahorro_maximo), infoX + 126, detailY); detailY += 24;
+    }
+    if (coupon?.detalle_bancario) {
+      context.fillStyle = "#374151"; font(500, 14);
+      const lines = wrapCanvasText(context, text(coupon.detalle_bancario), infoW).slice(0, 2);
+      lines.forEach((line, i) => context.fillText(line, infoX, detailY + i*20));
+      detailY += lines.length*20 + 2;
+    } else if (!isBank && /%|por\s*ciento/i.test(text(coupon?.titulo))) {
+      context.fillStyle = "#374151"; font(500, 14); context.fillText("Ahorra hasta", infoX, detailY);
+      context.fillStyle = "#111827"; font(700, 14); context.fillText(text(coupon.ahorro_maximo || "Consultar"), infoX + 86, detailY); detailY += 24;
+    }
+
+    // Etiquetas.
+    let tx = infoX;
+    tagData(coupon, selectedCoupons).forEach(([label,bg,fg]) => {
+      font(700, 11); const tw = context.measureText(label).width + 24;
+      roundRectFill(tx, y + cardHeight - 48, tw, 25, 12, bg);
+      context.fillStyle = fg; context.textAlign = "center"; context.fillText(label, tx + tw/2, y + cardHeight - 31);
+      tx += tw + 8;
+    });
+
+    // Botón amarillo de Copiar código.
+    const buttonW = Math.min(272, actionsW - 12);
+    const buttonX = actionsX + (actionsW - buttonW) / 2;
+    context.save(); context.shadowColor = "rgba(15,23,42,.16)"; context.shadowBlur = 10; context.shadowOffsetY = 4;
+    roundRectFill(buttonX, y + 27, buttonW, 58, 15, palette.yellow, "#d7bd00", 1.3); context.restore();
+    drawCopyIcon(buttonX + 39, y + 58);
+    context.fillStyle = "#111"; font(800, 17); context.textAlign = "center"; context.fillText("Copiar código", buttonX + buttonW/2 + 14, y + 64);
+
+    // Compartir | Me gusta | vistas centrados.
+    const socialY = y + 121;
+    const groupCenter = actionsX + actionsW/2;
+    drawShare(groupCenter - 82, socialY);
+    context.strokeStyle = "#cbd5e1"; context.lineWidth = 1; context.beginPath(); context.moveTo(groupCenter - 50, socialY - 12); context.lineTo(groupCenter - 50, socialY + 12); context.stroke();
+    drawLike(groupCenter - 20, socialY);
+    context.fillStyle = "#64748b"; font(500, 14); context.textAlign = "left"; context.fillText(String(Number(coupon?.likes || 0)), groupCenter - 8, socialY + 5);
+    context.beginPath(); context.moveTo(groupCenter + 23, socialY - 12); context.lineTo(groupCenter + 23, socialY + 12); context.stroke();
+    drawEye(groupCenter + 51, socialY);
+    context.fillStyle = "#64748b"; context.fillText(String(Number(coupon?.clics || 0)), groupCenter + 64, socialY + 5);
+
+    context.fillStyle = "#1f2937"; font(500, 16); context.textAlign = "center";
+    context.fillText(printCouponRemaining(coupon), groupCenter, y + cardHeight - 33);
+  });
+
+  // Pie simple para compartir: enlace y fecha, sin alterar las tarjetas.
+  const footerY = top + selectedCoupons.length * cardHeight + Math.max(0, selectedCoupons.length - 1) * gap + 28;
+  roundRectFill(side, footerY, cardWidth, 78, 16, "#ffffff");
+  context.fillStyle = "#111827"; font(800, 18); context.textAlign = "left"; context.fillText("Consulta y canjea los cupones aquí:", side + 22, footerY + 31);
+  const link = validShareLink(shareSummaryLink?.value || "https://ofertasimperdiblesmx.vercel.app/");
+  const cleanLink = link.replace(/^https?:\/\//i, "").replace(/\/$/, "");
+  context.fillStyle = "#0f9f6e"; font(700, 17); context.fillText(cleanLink, side + 22, footerY + 57);
+  context.fillStyle = "#64748b"; font(600, 15); context.textAlign = "right"; context.fillText(shareSummaryDate(), side + cardWidth - 22, footerY + 57);
+
+  context.setTransform(1, 0, 0, 1, 0, 0);
+  return await new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error("No fue posible crear la imagen del resumen.")), "image/png", 0.96);
+  });
 }
 
 function printExactCouponCards() {
