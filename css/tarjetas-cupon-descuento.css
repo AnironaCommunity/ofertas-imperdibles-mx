@@ -3059,3 +3059,47 @@
     font-size: 8px !important;
   }
 }
+
+/* ================================================================
+   PAQUETE 6.6 — CORRECCIÓN EXCLUSIVA DE APARIENCIA DE ICONOS
+   No modifica posiciones, espacios, márgenes, muescas ni estructura.
+   ================================================================ */
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social .boton-compartir.hc61-share,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social .boton-compartir.hc61-share:hover,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social .boton-compartir.hc61-share:focus,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social .boton-compartir.hc61-share:active {
+  color: #14b86a !important;
+  background-color: #eaf9f2 !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social .hc61-like-chip,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social .hc61-like-chip .boton-like.hc16-icono,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social .hc61-like-chip .boton-like.hc16-icono:not(.activo),
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social .hc61-like-chip .boton-like.hc16-icono.activo {
+  color: #f04f91 !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social .hc61-view-chip.hc16-vistas {
+  color: #1976e9 !important;
+  background-color: #edf5ff !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social .hc61-share svg,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social .hc61-like-chip .boton-like.hc16-icono svg,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social .hc61-view-chip.hc16-vistas svg {
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.9 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social .hc61-share svg path,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social .hc61-like-chip .boton-like.hc16-icono svg path,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social .hc61-view-chip.hc16-vistas svg path,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social .hc61-view-chip.hc16-vistas svg circle {
+  fill: none !important;
+  stroke: currentColor !important;
+}
+/* Incluso cuando ya tiene like, conservar el corazón de contorno solicitado. */
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social .hc61-like-chip .boton-like.hc16-icono.activo svg,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social .hc61-like-chip .boton-like.hc16-icono.activo svg path {
+  fill: none !important;
+  stroke: #f04f91 !important;
+}
