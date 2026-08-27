@@ -1796,3 +1796,157 @@
   #cupones .cupon-bancario-ticket .bt20-vistas svg { width: 10px !important; height: 10px !important; }
   #cupones .cupon-bancario-ticket .bt20-tiempo { margin-top: 4px !important; padding-top: 4px !important; font-size: 6.6px !important; }
 }
+
+/* ================================================================
+   PAQUETE 2.3 — CORRECCIÓN BANCARIOS + MUESCAS
+   - Mantiene colores originales de cada banco.
+   - Igual altura/proporción que Tienda/Exclusivos.
+   - Logo compacto y adaptable sobre blanco.
+   - Información bancaria completa y centrada, sin desbordarse.
+   - Acciones con la misma jerarquía visual que el resto de cupones.
+   - Muescas muestran el fondo real de la sección, no blanco.
+   ================================================================ */
+#cupones { --fondo-seccion-cupones: #f3f3f3; }
+
+#cupones .cupon-bancario-ticket {
+  grid-template-columns: minmax(0, 68%) minmax(0, 32%) !important;
+  min-height: 128px !important;
+  height: 128px !important;
+  overflow: visible !important;
+  background: transparent !important;
+}
+#cupones .cupon-bancario-ticket .bt20-main {
+  grid-template-columns: auto minmax(0, 1fr) !important;
+  gap: 10px !important;
+  height: 128px !important;
+  padding: 10px 12px !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border-radius: 16px 0 0 16px !important;
+}
+#cupones .cupon-bancario-ticket .bt20-logo-wrap {
+  width: auto !important;
+  min-width: 72px !important;
+  max-width: 128px !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: 76px !important;
+  padding: 6px 9px !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 9px rgba(15,23,42,.08) !important;
+  flex: 0 0 auto !important;
+}
+#cupones .cupon-bancario-ticket .bt20-logo {
+  width: auto !important;
+  height: auto !important;
+  max-width: 110px !important;
+  max-height: 54px !important;
+  object-fit: contain !important;
+  mix-blend-mode: multiply !important;
+}
+#cupones .cupon-bancario-ticket .bt20-beneficio {
+  align-self: center !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+}
+#cupones .cupon-bancario-ticket .bt20-tipo {
+  font-size: 8px !important;
+  line-height: 1 !important;
+  margin: 0 0 2px !important;
+}
+#cupones .cupon-bancario-ticket .bt20-beneficio h3 {
+  font-size: clamp(19px,2.2vw,29px) !important;
+  line-height: .95 !important;
+  margin: 0 0 3px !important;
+  white-space: normal !important;
+}
+#cupones .cupon-bancario-ticket .bt20-beneficio p {
+  font-size: 8.2px !important;
+  line-height: 1.08 !important;
+  margin: 1px 0 !important;
+  white-space: normal !important;
+}
+#cupones .cupon-bancario-ticket .bt20-detalle {
+  font-size: 7.4px !important;
+  line-height: 1.06 !important;
+  margin: 1px 0 0 !important;
+  max-height: 2.2em !important;
+  overflow: hidden !important;
+}
+#cupones .cupon-bancario-ticket .bt20-etiquetas { margin-top: 3px !important; }
+
+#cupones .cupon-bancario-ticket .bt20-actions {
+  height: 128px !important;
+  min-height: 128px !important;
+  padding: 10px 10px !important;
+  justify-content: center !important;
+  overflow: visible !important;
+  border-radius: 0 16px 16px 0 !important;
+  border-left: 2px dotted rgba(255,255,255,.88) !important;
+}
+#cupones .cupon-bancario-ticket .bt20-actions::before,
+#cupones .cupon-bancario-ticket .bt20-actions::after {
+  background: var(--fondo-seccion-cupones) !important;
+  width: 20px !important;
+  height: 20px !important;
+  left: -11px !important;
+}
+#cupones .cupon-bancario-ticket .bt20-copiar {
+  width: 100% !important;
+  min-height: 34px !important;
+  padding: 5px 6px !important;
+  font-size: 9.5px !important;
+  line-height: 1 !important;
+}
+#cupones .cupon-bancario-ticket .bt20-copiar svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+#cupones .cupon-bancario-ticket .bt20-social {
+  margin-top: 7px !important;
+  gap: 5px !important;
+  font-size: 8px !important;
+}
+#cupones .cupon-bancario-ticket .bt20-icon svg,
+#cupones .cupon-bancario-ticket .bt20-vistas svg {
+  width: 13px !important;
+  height: 13px !important;
+}
+#cupones .cupon-bancario-ticket .bt20-tiempo {
+  margin-top: 7px !important;
+  padding-top: 6px !important;
+  font-size: 8px !important;
+  line-height: 1.1 !important;
+}
+
+@media (max-width:680px) {
+  #cupones .cupon-bancario-ticket {
+    grid-template-columns: minmax(0,68%) minmax(0,32%) !important;
+    height: 128px !important;
+    min-height: 128px !important;
+  }
+  #cupones .cupon-bancario-ticket .bt20-main {
+    grid-template-columns: auto minmax(0,1fr) !important;
+    height: 128px !important;
+    gap: 6px !important;
+    padding: 7px 7px !important;
+  }
+  #cupones .cupon-bancario-ticket .bt20-logo-wrap {
+    min-width: 58px !important;
+    max-width: 92px !important;
+    max-height: 62px !important;
+    padding: 4px 6px !important;
+  }
+  #cupones .cupon-bancario-ticket .bt20-logo { max-width: 80px !important; max-height: 45px !important; }
+  #cupones .cupon-bancario-ticket .bt20-tipo { font-size: 6.5px !important; }
+  #cupones .cupon-bancario-ticket .bt20-beneficio h3 { font-size: 17px !important; }
+  #cupones .cupon-bancario-ticket .bt20-beneficio p { font-size: 6.5px !important; line-height: 1.06 !important; }
+  #cupones .cupon-bancario-ticket .bt20-detalle { font-size: 5.9px !important; }
+  #cupones .cupon-bancario-ticket .bt20-actions { height: 128px !important; min-height:128px !important; padding: 7px 6px !important; }
+  #cupones .cupon-bancario-ticket .bt20-copiar { min-height: 30px !important; font-size: 7.6px !important; }
+  #cupones .cupon-bancario-ticket .bt20-social { margin-top: 5px !important; gap: 3px !important; font-size: 6.8px !important; }
+  #cupones .cupon-bancario-ticket .bt20-icon svg,
+  #cupones .cupon-bancario-ticket .bt20-vistas svg { width: 10px !important; height: 10px !important; }
+  #cupones .cupon-bancario-ticket .bt20-tiempo { margin-top: 5px !important; padding-top: 5px !important; font-size: 6.7px !important; }
+}
