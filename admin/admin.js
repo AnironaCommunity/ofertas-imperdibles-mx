@@ -757,34 +757,45 @@ function shareMoneyText(value, bankStyle = false) {
 }
 
 function buildShareSummaryText(selectedCoupons, link, totalActive) {
-  const date = shareSummaryDate();
+  const date = shareSummaryDate().toUpperCase();
   const lines = [
-    `🔥 CUPONES DISPONIBLES HOY EN MERCADO LIBRE · ${date}`,
+    `🔥 *CUPONES DISPONIBLES HOY | ${date}*`,
     "",
-    "Consulta los cupones y canjéalos aquí 👇",
+    "💰 *Ahorra en tus compras de Mercado Libre con los cupones disponibles de hoy.*",
+    "",
+    "Consulta, copia y canjea tu cupón aquí 👇",
     link,
-    "",
-    "Ingresa desde nuestra página para copiar y canjear el cupón en Mercado Libre.",
     "",
   ];
 
-  selectedCoupons.forEach((coupon, index) => {
+  selectedCoupons.forEach((coupon) => {
     const category = String(coupon?.categoria || "tienda").toLowerCase();
     const isBank = category === "bancarios";
     const discount = shareDiscountText(coupon);
+    const minimum = shareMoneyText(coupon.compra_minima, isBank);
+    const searchable = [
+      coupon?.titulo,
+      coupon?.detalle,
+      coupon?.descripcion,
+      coupon?.condiciones,
+      coupon?.etiqueta,
+      coupon?.tipo,
+    ].filter(Boolean).join(" ").toLowerCase();
+    const isMeliPlus = /meli\s*\+|meli\s*plus|mercado\s*puntos|nivel\s*6/.test(searchable);
 
     if (isBank) {
-      lines.push(`💳  ${shareBankName(coupon)} → ${discount} | Mín. ${shareMoneyText(coupon.compra_minima, true)} | Tope ${shareMoneyText(coupon.ahorro_maximo, true)}`);
+      const cap = shareMoneyText(coupon.ahorro_maximo, true);
+      lines.push(`💳 *${shareBankName(coupon)} · ${discount}* · Desde ${minimum}${cap && cap !== "Consultar" ? ` · Tope ${cap}` : ""}`);
     } else {
-      lines.push(`🎟️ ${discount} | Compra mínima: ${shareMoneyText(coupon.compra_minima)} | Ahorra hasta: ${shareMoneyText(coupon.ahorro_maximo)}`);
+      lines.push(`🎟️ *${discount}* · Desde ${minimum}${isMeliPlus ? " · _Meli+_" : ""}`);
     }
-
   });
 
   if (selectedCoupons.length < totalActive) {
-    lines.push("", `Y ${totalActive - selectedCoupons.length} cupones activos más disponibles en la página.`);
+    lines.push("", `➕ Hay ${totalActive - selectedCoupons.length} cupones activos más disponibles en la página.`);
   }
 
+  lines.push("", "💛 *Elige el cupón que más te convenga y ahorra en tu compra.*");
   return lines.join("\n");
 }
 
