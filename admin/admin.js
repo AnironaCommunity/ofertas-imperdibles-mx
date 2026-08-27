@@ -1287,19 +1287,22 @@ async function shareFetchText(url) {
   return response.text();
 }
 
+const SHARE_TRANSPARENT_PIXEL = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
+
 async function shareUrlToDataUrl(url) {
   try {
-    const response = await fetch(url, { cache: "force-cache" });
-    if (!response.ok) return url;
+    const response = await fetch(url, { cache: "force-cache", mode: "cors" });
+    if (!response.ok) return null;
     const blob = await response.blob();
+    if (!blob.type || !blob.type.toLowerCase().startsWith("image/")) return null;
     return await new Promise((resolve) => {
       const reader = new FileReader();
-      reader.onload = () => resolve(String(reader.result || url));
-      reader.onerror = () => resolve(url);
+      reader.onload = () => resolve(String(reader.result || "") || null);
+      reader.onerror = () => resolve(null);
       reader.readAsDataURL(blob);
     });
   } catch {
-    return url;
+    return null;
   }
 }
 
@@ -1309,10 +1312,43 @@ async function shareEmbedCardImages(html) {
   const images = [...template.content.querySelectorAll("img[src]")];
   await Promise.all(images.map(async (image) => {
     const absolute = new URL(image.getAttribute("src"), location.href).href;
-    image.setAttribute("src", await shareUrlToDataUrl(absolute));
+    const embedded = await shareUrlToDataUrl(absolute);
+    image.setAttribute("src", embedded || SHARE_TRANSPARENT_PIXEL);
+    if (!embedded) image.style.visibility = "hidden";
     image.removeAttribute("loading");
+    image.removeAttribute("decoding");
   }));
   return template.innerHTML;
+}
+
+function shareSanitizeCssForSvg(css = "") {
+  return String(css)
+    // Un SVG usado como imagen no puede resolver de forma fiable recursos externos.
+    // Las tarjetas no dependen de estos fondos, así que se neutralizan para la exportación.
+    .replace(/url\(([^)]+)\)/gi, (match, raw) => {
+      const value = String(raw || "").trim().replace(/^(["'])(.*)\1$/, "$2");
+      return /^data:/i.test(value) ? match : "none";
+    })
+    .replace(/@font-face\s*\{[^}]*\}/gi, "");
+}
+
+function shareLoadSvgImage(url) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    const timer = window.setTimeout(() => {
+      image.src = "";
+      reject(new Error("La imagen del resumen tardó demasiado en prepararse."));
+    }, 10000);
+    image.onload = () => {
+      window.clearTimeout(timer);
+      resolve(image);
+    };
+    image.onerror = () => {
+      window.clearTimeout(timer);
+      reject(new Error("No fue posible convertir la lista de tarjetas en imagen."));
+    };
+    image.src = url;
+  });
 }
 
 function shareWaitForFrame(frame) {
@@ -1329,11 +1365,13 @@ async function renderShareCardListImage(selectedCoupons) {
   if (!selectedCoupons.length) throw new Error("No hay tarjetas para generar la imagen.");
 
   const publicStyleUrl = new URL("../css/style.css?v=82.45", location.href).href;
-  const couponStyleUrl = new URL("../css/tarjetas-cupon-descuento.css?v=82.79.0", location.href).href;
-  const [publicCss, couponCss] = await Promise.all([
+  const couponStyleUrl = new URL("../css/tarjetas-cupon-descuento.css?v=82.80.0", location.href).href;
+  const [publicCssRaw, couponCssRaw] = await Promise.all([
     shareFetchText(publicStyleUrl),
     shareFetchText(couponStyleUrl),
   ]);
+  const publicCss = shareSanitizeCssForSvg(publicCssRaw);
+  const couponCss = shareSanitizeCssForSvg(couponCssRaw);
 
   let cardsHtml = selectedCoupons.map((coupon) => printCouponCardHtml(coupon, selectedCoupons)).join("");
   cardsHtml = await shareEmbedCardImages(cardsHtml);
@@ -1386,10 +1424,9 @@ async function renderShareCardListImage(selectedCoupons) {
     const svgUrl = URL.createObjectURL(svgBlob);
 
     try {
-      const image = new Image();
-      image.decoding = "async";
-      image.src = svgUrl;
-      await image.decode();
+      // Evitamos HTMLImageElement.decode(): en algunos navegadores rechaza SVG con
+      // foreignObject aunque el recurso sí pueda cargarse y dibujarse en canvas.
+      const image = await shareLoadSvgImage(svgUrl);
       const scale = 2;
       const canvas = shareSummaryCanvas;
       canvas.width = imageWidth * scale;
@@ -1421,7 +1458,7 @@ function printExactCouponCards() {
     return;
   }
 
-  const cssUrl = new URL("../css/tarjetas-cupon-descuento.css?v=82.79.0", location.href).href;
+  const cssUrl = new URL("../css/tarjetas-cupon-descuento.css?v=82.80.0", location.href).href;
   const rootCssUrl = new URL("../style.css?v=81.69.4", location.href).href;
   const cards = selected.map(c => printCouponCardHtml(c, selected)).join("");
   const win = window.open("", "_blank");

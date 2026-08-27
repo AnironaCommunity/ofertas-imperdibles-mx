@@ -2719,3 +2719,44 @@
   line-height: 1;
   font-weight: 900;
 }
+
+/* ================================================================
+   PAQUETE 5.7 — AGOTADO BLANCO + ICONO OFERTAZO
+   - Conserva la muesca 4.8 y la geometría actual.
+   - Cupón agotado mantiene fondo blanco en las tres zonas.
+   - El CTA usa el isotipo de Ofertazo en lugar de la flecha.
+   ================================================================ */
+#cupones > .cupon-horizontal-v16.cupon-agotado,
+#cupones > .cupon-horizontal-v16.cupon-agotado > .hc16-valor,
+#cupones > .cupon-horizontal-v16.cupon-agotado > .hc16-info,
+#cupones > .cupon-horizontal-v16.cupon-agotado > .hc16-acciones {
+  background: #fff !important;
+}
+#cupones .boton-ofertazo-icono {
+  display: inline-flex !important;
+  flex: 0 0 22px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 22px !important;
+  height: 20px !important;
+  margin: 0 1px 0 0 !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+}
+#cupones .boton-ofertazo-icono svg {
+  display: block !important;
+  width: 22px !important;
+  height: 19px !important;
+  overflow: visible !important;
+}
+@media (max-width: 680px) {
+  #cupones .boton-ofertazo-icono {
+    flex-basis: 18px !important;
+    width: 18px !important;
+    height: 17px !important;
+  }
+  #cupones .boton-ofertazo-icono svg {
+    width: 18px !important;
+    height: 16px !important;
+  }
+}

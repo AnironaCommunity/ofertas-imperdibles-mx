@@ -752,6 +752,14 @@ function contenidoBotonCopiar() {
   return `${iconoCopias()}<span>Copiar código</span>`;
 }
 
+function iconoOfertazoBoton() {
+  return `<span class="boton-ofertazo-icono" aria-hidden="true"><svg viewBox="0 0 64 54" focusable="false"><path d="M32 3.6c2.3 0 4.3 2.7 6.4 3.3 2.2.7 5.4-.5 7.1.8 1.8 1.3 1.7 4.7 3 6.5 1.3 1.8 4.5 2.7 5.2 4.9.7 2.1-1.4 4.8-1.4 7.1s2.1 5 1.4 7.1c-.7 2.2-3.9 3.1-5.2 4.9-1.3 1.8-1.2 5.2-3 6.5-1.7 1.3-4.9.1-7.1.8-2.1.6-4.1 3.3-6.4 3.3s-4.3-2.7-6.4-3.3c-2.2-.7-5.4.5-7.1-.8-1.8-1.3-1.7-4.7-3-6.5-1.3-1.8-4.5-2.7-5.2-4.9-.7-2.1 1.4-4.8 1.4-7.1s-2.1-5-1.4-7.1c.7-2.2 3.9-3.1 5.2-4.9 1.3-1.8 1.2-5.2 3-6.5 1.7-1.3 4.9-.1 7.1-.8C27.7 6.3 29.7 3.6 32 3.6Z" fill="#f4c900"/><path d="M25.1 16.3c4 0 6.7 2.7 6.7 6.5s-2.7 6.5-6.7 6.5-6.7-2.7-6.7-6.5 2.7-6.5 6.7-6.5Zm0 4.2c-1.3 0-2.1.8-2.1 2.3s.8 2.3 2.1 2.3 2.1-.8 2.1-2.3-.8-2.3-2.1-2.3Zm14-4.4h5.4L26.1 38.6h-5.4L39.1 16.1Zm1 9.4c4 0 6.7 2.7 6.7 6.5s-2.7 6.5-6.7 6.5-6.7-2.7-6.7-6.5 2.7-6.5 6.7-6.5Zm0 4.2c-1.3 0-2.1.8-2.1 2.3s.8 2.3 2.1 2.3 2.1-.8 2.1-2.3-.8-2.3-2.1-2.3Z" fill="#252525"/></svg></span>`;
+}
+
+function contenidoBotonOfertazo() {
+  return `${iconoOfertazoBoton()}<span>Ver ofertas</span>`;
+}
+
 function claveUsado(id) {
   return `cupon-usado-${id}`;
 }
@@ -925,7 +933,7 @@ function updateCouponTimes() {
       redeemButton.removeAttribute("aria-disabled");
       redeemButton.classList.remove("boton-programado");
       redeemButton.classList.add("boton-agotado", "boton-ofertazo-agotado");
-      redeemButton.innerHTML = '<span class="boton-ofertazo-icono" aria-hidden="true">↗</span><span>Ver ofertas</span>';
+      redeemButton.innerHTML = contenidoBotonOfertazo();
       return;
     }
 
@@ -1352,7 +1360,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
     <div class="hc16-acciones">
       <div class="hc16-cta acciones-cupon">
         <button class="boton-canjear hc16-copiar${cupon.agotado === true ? " boton-agotado boton-ofertazo-agotado" : ""}" type="button">
-          ${cupon.agotado === true ? '<span class="boton-ofertazo-icono" aria-hidden="true">↗</span><span>Ver ofertas</span>' : contenidoBotonCopiar()}
+          ${cupon.agotado === true ? contenidoBotonOfertazo() : contenidoBotonCopiar()}
         </button>
       </div>
       <p class="mensaje hc16-mensaje" aria-live="polite"></p>
@@ -1376,7 +1384,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
       articulo.classList.add("cupon-agotado");
       redeemButton.disabled = false;
       redeemButton.classList.add("boton-agotado", "boton-ofertazo-agotado");
-      redeemButton.innerHTML = '<span class="boton-ofertazo-icono" aria-hidden="true">↗</span><span>Ver ofertas</span>';
+      redeemButton.innerHTML = contenidoBotonOfertazo();
     } else {
       redeemButton.disabled = true;
       redeemButton.classList.add("boton-programado");
@@ -1468,7 +1476,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
       <div class="hc16-etiquetas">${htmlEtiquetasCupon(estados)}</div>
     </div>
     <div class="hc16-acciones">
-      <div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar${cupon.agotado === true ? " boton-agotado boton-ofertazo-agotado" : ""}" type="button">${cupon.agotado === true ? '<span class="boton-ofertazo-icono" aria-hidden="true">↗</span><span>Ver ofertas</span>' : contenidoBotonCopiar()}</button></div>
+      <div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar${cupon.agotado === true ? " boton-agotado boton-ofertazo-agotado" : ""}" type="button">${cupon.agotado === true ? contenidoBotonOfertazo() : contenidoBotonCopiar()}</button></div>
       <p class="mensaje hc16-mensaje" aria-live="polite"></p>
       <div class="hc16-social acciones-secundarias" aria-label="Actividad del cupón">
         <button class="boton-compartir hc16-icono hc20-compartir" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
@@ -1488,7 +1496,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
       articulo.classList.add("cupon-agotado");
       boton.disabled = false;
       boton.classList.add("boton-agotado", "boton-ofertazo-agotado");
-      boton.innerHTML = '<span class="boton-ofertazo-icono" aria-hidden="true">↗</span><span>Ver ofertas</span>';
+      boton.innerHTML = contenidoBotonOfertazo();
     } else {
       boton.disabled = true;
       boton.classList.add("boton-programado");
