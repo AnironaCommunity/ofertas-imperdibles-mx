@@ -810,8 +810,6 @@
   color: #151515 !important;
   box-shadow: 0 5px 14px rgba(23, 63, 39, .11) !important;
   isolation: isolate !important;
-  -webkit-mask: none !important;
-  mask: none !important;
 }
 #cupones > .cupon-horizontal-v16:not(.cupon-bancario)::before { content: none !important; }
 #cupones > .cupon-horizontal-v16:not(.cupon-bancario)::after {
@@ -1060,7 +1058,7 @@
 #cupones .cupon-horizontal-v16 .hc16-cta > .cupon-copiado-mini {
   position: absolute !important;
   z-index: 9 !important;
-  top: -8px !important;
+  top: -9px !important;
   right: 1px !important;
   min-height: 14px !important;
   margin: 0 !important;
@@ -1553,7 +1551,7 @@
   #cupones .cupon-horizontal-v16 .hc16-valor { padding: 9px 5px 8px 9px !important; }
   #cupones .cupon-horizontal-v16 .hc16-logo { max-width: 58px !important; height: 22px !important; max-height: 22px !important; margin-bottom: 3px !important; }
   #cupones .cupon-horizontal-v16 .hc16-descuento { font-size: clamp(27px, 8vw, 38px) !important; }
-  #cupones .cupon-horizontal-v16 .hc19-porcentaje { left: 5px !important; bottom: -8px !important; font-size: 48px !important; }
+  #cupones .cupon-horizontal-v16 .hc19-porcentaje { left: 5px !important; bottom: -9px !important; font-size: 48px !important; }
   #cupones .cupon-horizontal-v16 .hc16-info { padding: 9px 7px 8px !important; }
   #cupones .cupon-horizontal-v16 .hc16-categoria { margin-bottom: 6px !important; padding: 4px 17px 4px 7px !important; font-size: 9.5px !important; }
   #cupones .cupon-horizontal-v16 .hc16-condicion { font-size: 9.2px !important; }
@@ -1795,4 +1793,770 @@
   #cupones .cupon-bancario-ticket .bt20-icon svg,
   #cupones .cupon-bancario-ticket .bt20-vistas svg { width: 10px !important; height: 10px !important; }
   #cupones .cupon-bancario-ticket .bt20-tiempo { margin-top: 4px !important; padding-top: 4px !important; font-size: 6.6px !important; }
+}
+
+/* ================================================================
+   PAQUETE 2.3 — CORRECCIÓN BANCARIOS + MUESCAS
+   - Mantiene colores originales de cada banco.
+   - Igual altura/proporción que Tienda/Exclusivos.
+   - Logo compacto y adaptable sobre blanco.
+   - Información bancaria completa y centrada, sin desbordarse.
+   - Acciones con la misma jerarquía visual que el resto de cupones.
+   - Muescas muestran el fondo real de la sección, no blanco.
+   ================================================================ */
+#cupones { --fondo-seccion-cupones: #ffffff; }
+
+#cupones .cupon-bancario-ticket {
+  grid-template-columns: minmax(0, 68%) minmax(0, 32%) !important;
+  min-height: 128px !important;
+  height: 128px !important;
+  overflow: visible !important;
+  background: transparent !important;
+}
+#cupones .cupon-bancario-ticket .bt20-main {
+  grid-template-columns: auto minmax(0, 1fr) !important;
+  gap: 10px !important;
+  height: 128px !important;
+  padding: 10px 12px !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  border-radius: 16px 0 0 16px !important;
+}
+#cupones .cupon-bancario-ticket .bt20-logo-wrap {
+  width: auto !important;
+  min-width: 72px !important;
+  max-width: 128px !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: 76px !important;
+  padding: 6px 9px !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 9px rgba(15,23,42,.08) !important;
+  flex: 0 0 auto !important;
+}
+#cupones .cupon-bancario-ticket .bt20-logo {
+  width: auto !important;
+  height: auto !important;
+  max-width: 110px !important;
+  max-height: 54px !important;
+  object-fit: contain !important;
+  mix-blend-mode: multiply !important;
+}
+#cupones .cupon-bancario-ticket .bt20-beneficio {
+  align-self: center !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+}
+#cupones .cupon-bancario-ticket .bt20-tipo {
+  font-size: 8px !important;
+  line-height: 1 !important;
+  margin: 0 0 2px !important;
+}
+#cupones .cupon-bancario-ticket .bt20-beneficio h3 {
+  font-size: clamp(19px,2.2vw,29px) !important;
+  line-height: .95 !important;
+  margin: 0 0 3px !important;
+  white-space: normal !important;
+}
+#cupones .cupon-bancario-ticket .bt20-beneficio p {
+  font-size: 8.2px !important;
+  line-height: 1.08 !important;
+  margin: 1px 0 !important;
+  white-space: normal !important;
+}
+#cupones .cupon-bancario-ticket .bt20-detalle {
+  font-size: 7.4px !important;
+  line-height: 1.06 !important;
+  margin: 1px 0 0 !important;
+  max-height: 2.2em !important;
+  overflow: hidden !important;
+}
+#cupones .cupon-bancario-ticket .bt20-etiquetas { margin-top: 3px !important; }
+
+#cupones .cupon-bancario-ticket .bt20-actions {
+  height: 128px !important;
+  min-height: 128px !important;
+  padding: 10px 10px !important;
+  justify-content: center !important;
+  overflow: visible !important;
+  border-radius: 0 16px 16px 0 !important;
+  border-left: 2px dotted rgba(255,255,255,.88) !important;
+}
+#cupones .cupon-bancario-ticket .bt20-actions::before,
+#cupones .cupon-bancario-ticket .bt20-actions::after {
+  background: var(--fondo-seccion-cupones) !important;
+  width: 20px !important;
+  height: 20px !important;
+  left: -11px !important;
+}
+#cupones .cupon-bancario-ticket .bt20-copiar {
+  width: 100% !important;
+  min-height: 34px !important;
+  padding: 5px 6px !important;
+  font-size: 9.5px !important;
+  line-height: 1 !important;
+}
+#cupones .cupon-bancario-ticket .bt20-copiar svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+#cupones .cupon-bancario-ticket .bt20-social {
+  margin-top: 7px !important;
+  gap: 5px !important;
+  font-size: 8px !important;
+}
+#cupones .cupon-bancario-ticket .bt20-icon svg,
+#cupones .cupon-bancario-ticket .bt20-vistas svg {
+  width: 13px !important;
+  height: 13px !important;
+}
+#cupones .cupon-bancario-ticket .bt20-tiempo {
+  margin-top: 7px !important;
+  padding-top: 6px !important;
+  font-size: 8px !important;
+  line-height: 1.1 !important;
+}
+
+@media (max-width:680px) {
+  #cupones .cupon-bancario-ticket {
+    grid-template-columns: minmax(0,68%) minmax(0,32%) !important;
+    height: 128px !important;
+    min-height: 128px !important;
+  }
+  #cupones .cupon-bancario-ticket .bt20-main {
+    grid-template-columns: auto minmax(0,1fr) !important;
+    height: 128px !important;
+    gap: 6px !important;
+    padding: 7px 7px !important;
+  }
+  #cupones .cupon-bancario-ticket .bt20-logo-wrap {
+    min-width: 58px !important;
+    max-width: 92px !important;
+    max-height: 62px !important;
+    padding: 4px 6px !important;
+  }
+  #cupones .cupon-bancario-ticket .bt20-logo { max-width: 80px !important; max-height: 45px !important; }
+  #cupones .cupon-bancario-ticket .bt20-tipo { font-size: 6.5px !important; }
+  #cupones .cupon-bancario-ticket .bt20-beneficio h3 { font-size: 17px !important; }
+  #cupones .cupon-bancario-ticket .bt20-beneficio p { font-size: 6.5px !important; line-height: 1.06 !important; }
+  #cupones .cupon-bancario-ticket .bt20-detalle { font-size: 5.9px !important; }
+  #cupones .cupon-bancario-ticket .bt20-actions { height: 128px !important; min-height:128px !important; padding: 7px 6px !important; }
+  #cupones .cupon-bancario-ticket .bt20-copiar { min-height: 30px !important; font-size: 7.6px !important; }
+  #cupones .cupon-bancario-ticket .bt20-social { margin-top: 5px !important; gap: 3px !important; font-size: 6.8px !important; }
+  #cupones .cupon-bancario-ticket .bt20-icon svg,
+  #cupones .cupon-bancario-ticket .bt20-vistas svg { width: 10px !important; height: 10px !important; }
+  #cupones .cupon-bancario-ticket .bt20-tiempo { margin-top: 5px !important; padding-top: 5px !important; font-size: 6.7px !important; }
+}
+
+/* ================================================================
+   PAQUETE 2.4 — AJUSTE FINO DE CUPONES BANCARIOS
+   - Logo bancario plano: sin cápsula, margen, padding ni sombra.
+   - Menos espacio desperdiciado para el logo.
+   - Información bancaria centrada verticalmente.
+   - Misma altura visual de las tarjetas horizontales.
+   - Temporizador con contraste alto sobre el color del banco.
+   - Muescas con el fondo real de la sección de cupones.
+   ================================================================ */
+#cupones .cupon-bancario-ticket .bt20-main {
+  grid-template-columns: minmax(58px, 26%) minmax(0, 1fr) !important;
+  gap: 8px !important;
+  align-items: center !important;
+}
+#cupones .cupon-bancario-ticket .bt20-logo-wrap {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  overflow: visible !important;
+}
+#cupones .cupon-bancario-ticket .bt20-logo {
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: 54px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  object-fit: contain !important;
+  mix-blend-mode: multiply !important;
+}
+#cupones .cupon-bancario-ticket .bt20-beneficio {
+  align-self: center !important;
+  justify-self: stretch !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+#cupones .cupon-bancario-ticket .bt20-actions::before,
+#cupones .cupon-bancario-ticket .bt20-actions::after {
+  background: var(--fondo-seccion-cupones, #f3f3f3) !important;
+  box-shadow: none !important;
+  border: 0 !important;
+}
+#cupones .cupon-bancario-ticket .bt20-tiempo,
+#cupones .cupon-bancario-ticket .bt20-tiempo *,
+#cupones .cupon-bancario-ticket .bt20-tiempo .contador-tiempo,
+#cupones .cupon-bancario-ticket .bt20-tiempo .texto-tiempo {
+  color: var(--banco-texto) !important;
+  -webkit-text-fill-color: var(--banco-texto) !important;
+  opacity: 1 !important;
+}
+@media (max-width:680px) {
+  #cupones .cupon-bancario-ticket .bt20-main {
+    grid-template-columns: minmax(52px, 27%) minmax(0, 1fr) !important;
+    gap: 6px !important;
+  }
+  #cupones .cupon-bancario-ticket .bt20-logo-wrap {
+    min-width: 0 !important;
+    max-width: none !important;
+    padding: 0 !important;
+  }
+  #cupones .cupon-bancario-ticket .bt20-logo {
+    max-width: 100% !important;
+    max-height: 44px !important;
+  }
+}
+
+/* ================================================================
+   PAQUETE 2.5 — CUPONES BLANCOS + BANCARIO UNIFICADO
+   Fondo blanco para todos. El color vive en descuento, tipo y like activo.
+   ================================================================ */
+#cupones > .cupon-horizontal-v16 {
+  --hc16-accent: var(--categoria-cupon-color, #f57c00);
+  --hc19-green: var(--hc16-accent);
+  --hc19-green-dark: var(--hc16-accent);
+  grid-template-columns: 25% minmax(0,1fr) 35% !important;
+  height:132px!important; min-height:132px!important; max-height:132px!important;
+  background:#fff!important; color:#252525!important;
+  border:1px solid #ececec!important; box-shadow:0 4px 14px rgba(20,30,45,.10)!important;
+}
+#cupones .cupon-horizontal-v16 .hc16-valor,
+#cupones .cupon-horizontal-v16 .hc16-info,
+#cupones .cupon-horizontal-v16 .hc16-acciones { background:#fff!important; color:#252525!important; }
+#cupones .cupon-horizontal-v16 .hc16-descuento,
+#cupones .cupon-horizontal-v16 .hc16-categoria { color:var(--hc16-accent)!important; }
+#cupones .cupon-horizontal-v16 .hc16-categoria { background:color-mix(in srgb,var(--hc16-accent) 8%,#fff 92%)!important; }
+#cupones .cupon-horizontal-v16 .hc16-condicion,
+#cupones .cupon-horizontal-v16 .hc16-condicion strong,
+#cupones .cupon-horizontal-v16 .hc16-detalle,
+#cupones .cupon-horizontal-v16 .hc16-detalle strong,
+#cupones .cupon-horizontal-v16 .hc16-ahorro-extra { color:#3b3f46!important; }
+#cupones .cupon-horizontal-v16 .hc19-porcentaje { color:color-mix(in srgb,var(--hc16-accent) 8%,transparent 92%)!important; }
+#cupones .cupon-horizontal-v16 .hc16-copiar { color:#222!important; background:#ffe600!important; border-color:#ffe600!important; text-transform:none!important; box-shadow:0 3px 8px rgba(60,50,0,.12)!important; }
+#cupones .cupon-horizontal-v16 .hc16-copiar:hover,
+#cupones .cupon-horizontal-v16 .hc16-copiar:focus-visible { color:#222!important; background:#ffed45!important; }
+#cupones .cupon-horizontal-v16 .hc16-social .hc16-icono,
+#cupones .cupon-horizontal-v16 .hc16-social .hc16-numero,
+#cupones .cupon-horizontal-v16 .hc16-social .hc16-usos,
+#cupones .cupon-horizontal-v16 .hc16-social .hc16-usos .numero-clics { color:#657080!important; }
+#cupones .cupon-horizontal-v16 .hc16-social .boton-like.activo { color:var(--hc16-accent)!important; }
+#cupones .cupon-horizontal-v16 .hc16-separador { background:#b7bec7!important; }
+#cupones .cupon-horizontal-v16 .hc16-tiempo,
+#cupones .cupon-horizontal-v16 .hc16-tiempo .estado-linea,
+#cupones .cupon-horizontal-v16 .hc16-tiempo .estado-tiempo,
+#cupones .cupon-horizontal-v16 .hc16-tiempo .estado-tiempo::before { color:#657080!important; }
+#cupones .cupon-horizontal-v16 .hc16-tiempo { border-top:1px solid #e8eaed!important; font-weight:400!important; }
+#cupones .cupon-horizontal-v16 .hc16-acciones::before,
+#cupones .cupon-horizontal-v16 .hc16-acciones::after { background:var(--fondo-seccion-cupones,#f5f7f8)!important; }
+#cupones .cupon-horizontal-v16 .hc16-cta::before { background:repeating-linear-gradient(to bottom,#dfe3e8 0 4px,transparent 4px 9px)!important; }
+
+/* Bancario: exactamente la misma rejilla y lado derecho; logo vertical sobre el beneficio. */
+#cupones > .cupon-bancario-unificado { overflow:hidden!important; }
+#cupones .cupon-bancario-unificado .hc25-banco-valor { align-items:center!important; gap:5px!important; padding:9px 7px!important; }
+#cupones .cupon-bancario-unificado .hc25-banco-logo {
+  display:block!important; width:auto!important; height:auto!important; max-width:88%!important; max-height:42px!important;
+  margin:0!important; padding:0!important; object-fit:contain!important; border:0!important; border-radius:0!important;
+  background:transparent!important; box-shadow:none!important;
+}
+#cupones .cupon-bancario-unificado .hc16-descuento { justify-content:center!important; text-align:center!important; font-size:clamp(26px,4.5vw,42px)!important; }
+#cupones .cupon-bancario-unificado .hc25-banco-info { justify-content:center!important; }
+#cupones .cupon-bancario-unificado .hc25-banco-detalle { margin-bottom:5px!important; }
+#cupones .cupon-bancario-unificado .hc25-banco-acciones { background:#fff!important; }
+
+@media (max-width:680px){
+  #cupones > .cupon-horizontal-v16 { grid-template-columns:25% minmax(0,1fr) 35%!important; height:112px!important; min-height:112px!important; max-height:112px!important; }
+  #cupones .cupon-bancario-unificado .hc25-banco-logo { max-height:30px!important; max-width:86%!important; }
+  #cupones .cupon-bancario-unificado .hc16-descuento { font-size:clamp(20px,6.5vw,31px)!important; }
+  #cupones .cupon-bancario-unificado .hc16-detalle { font-size:7px!important; line-height:1.08!important; margin-bottom:3px!important; }
+}
+
+/* ================================================================
+   PAQUETE 2.6 — CORRECCIÓN DE REJILLA Y SIMETRÍA
+   - Fuerza la misma plantilla de 3 zonas para Tienda/Exclusivo/Bancario.
+   - Recupera el descuento visible del bloque izquierdo.
+   - Bancario no puede apilarse ni crecer fuera de la altura estándar.
+   - Logo bancario sobre el beneficio, dentro de la columna izquierda.
+   - Talón derecho idéntico en las tres categorías.
+   ================================================================ */
+#cupones > .cupon-horizontal-v16,
+#cupones > .cupon-horizontal-v16.cupon-bancario,
+#cupones > .cupon-horizontal-v16.cupon-bancario-unificado {
+  display:grid!important;
+  grid-template-columns:25% minmax(0,1fr) 35%!important;
+  grid-template-rows:1fr!important;
+  width:100%!important;
+  height:132px!important;
+  min-height:132px!important;
+  max-height:132px!important;
+  overflow:hidden!important;
+  align-items:stretch!important;
+}
+#cupones > .cupon-horizontal-v16 > .hc16-valor,
+#cupones > .cupon-horizontal-v16 > .hc16-info,
+#cupones > .cupon-horizontal-v16 > .hc16-acciones {
+  position:relative!important;
+  min-width:0!important;
+  width:auto!important;
+  height:132px!important;
+  min-height:132px!important;
+  max-height:132px!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+#cupones > .cupon-horizontal-v16 > .hc16-acciones { overflow:visible!important; }
+
+/* El valor debe ser siempre visible por encima del porcentaje decorativo. */
+#cupones .cupon-horizontal-v16 .hc16-descuento {
+  display:flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+  position:relative!important;
+  z-index:3!important;
+  color:var(--hc16-accent,var(--categoria-cupon-color,#f57c00))!important;
+  -webkit-text-fill-color:var(--hc16-accent,var(--categoria-cupon-color,#f57c00))!important;
+}
+#cupones .cupon-horizontal-v16 .hc19-porcentaje { z-index:1!important; }
+
+/* Bancario: misma geometría; logo + beneficio en la primera zona. */
+#cupones > .cupon-bancario-unificado .hc25-banco-valor {
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:4px!important;
+  padding:8px 6px!important;
+}
+#cupones > .cupon-bancario-unificado .hc25-banco-logo {
+  flex:0 0 auto!important;
+  display:block!important;
+  width:auto!important;
+  height:auto!important;
+  max-width:88%!important;
+  max-height:34px!important;
+  margin:0!important;
+  padding:0!important;
+  object-fit:contain!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#cupones > .cupon-bancario-unificado .hc16-descuento {
+  flex:0 0 auto!important;
+  width:100%!important;
+  margin:0!important;
+  justify-content:center!important;
+  text-align:center!important;
+  font-size:clamp(25px,4vw,40px)!important;
+  line-height:.9!important;
+}
+#cupones > .cupon-bancario-unificado .hc25-banco-info {
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  padding:10px 10px!important;
+  overflow:hidden!important;
+}
+#cupones > .cupon-bancario-unificado .hc16-categoria { margin-bottom:6px!important; }
+#cupones > .cupon-bancario-unificado .hc16-condicion { font-size:13px!important; line-height:1.12!important; }
+#cupones > .cupon-bancario-unificado .hc16-detalle {
+  font-size:10px!important;
+  line-height:1.1!important;
+  margin:1px 0 3px!important;
+  white-space:normal!important;
+  overflow:hidden!important;
+}
+#cupones > .cupon-bancario-unificado .hc16-etiquetas { margin-top:2px!important; }
+#cupones > .cupon-bancario-unificado .hc25-banco-acciones {
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  padding:12px 14px 10px!important;
+  background:#fff!important;
+}
+
+@media (max-width:680px){
+  #cupones > .cupon-horizontal-v16,
+  #cupones > .cupon-horizontal-v16.cupon-bancario,
+  #cupones > .cupon-horizontal-v16.cupon-bancario-unificado {
+    display:grid!important;
+    grid-template-columns:25% minmax(0,1fr) 35%!important;
+    height:112px!important;
+    min-height:112px!important;
+    max-height:112px!important;
+  }
+  #cupones > .cupon-horizontal-v16 > .hc16-valor,
+  #cupones > .cupon-horizontal-v16 > .hc16-info,
+  #cupones > .cupon-horizontal-v16 > .hc16-acciones {
+    height:112px!important;
+    min-height:112px!important;
+    max-height:112px!important;
+  }
+  #cupones > .cupon-bancario-unificado .hc25-banco-logo { max-height:25px!important; max-width:88%!important; }
+  #cupones > .cupon-bancario-unificado .hc16-descuento { font-size:clamp(19px,5.6vw,29px)!important; }
+  #cupones > .cupon-bancario-unificado .hc25-banco-info { padding:7px 6px!important; }
+  #cupones > .cupon-bancario-unificado .hc16-categoria { margin-bottom:4px!important; }
+  #cupones > .cupon-bancario-unificado .hc16-condicion { font-size:8px!important; }
+  #cupones > .cupon-bancario-unificado .hc16-detalle { font-size:7px!important; line-height:1.05!important; margin:1px 0 2px!important; }
+  #cupones > .cupon-bancario-unificado .hc25-banco-acciones { padding:9px 7px 7px!important; }
+}
+
+/* ================================================================
+   PAQUETE 2.7 — BOTÓN TICKET + ETIQUETAS CÁPSULA SUAVE
+   Referencias visuales aprobadas por el usuario.
+   No modifica estructura, distribución ni funcionalidades.
+   ================================================================ */
+#cupones .cupon-horizontal-v16 .hc16-copiar {
+  position: relative !important;
+  overflow: hidden !important;
+  min-height: 38px !important;
+  padding: 7px 13px !important;
+  border: 1px solid #d8b900 !important;
+  border-radius: 6px !important;
+  background: #ffe600 !important;
+  color: #171717 !important;
+  font-size: 11.5px !important;
+  font-weight: 850 !important;
+  text-transform: none !important;
+  box-shadow: 0 3px 7px rgba(80,65,0,.16) !important;
+  outline: 1px dashed rgba(75,62,0,.38) !important;
+  outline-offset: -5px !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-copiar::after {
+  content: "" !important;
+  position: absolute !important;
+  top: -1px !important;
+  right: -1px !important;
+  width: 15px !important;
+  height: 15px !important;
+  background: linear-gradient(225deg, #c9a900 0 48%, #f6d800 50% 100%) !important;
+  clip-path: polygon(0 0,100% 100%,100% 0) !important;
+  pointer-events: none !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-copiar:hover,
+#cupones .cupon-horizontal-v16 .hc16-copiar:focus-visible {
+  background: #ffea22 !important;
+  color: #171717 !important;
+  border-color: #c7aa00 !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-copiar svg {
+  color: #171717 !important;
+  stroke: currentColor !important;
+}
+
+/* Cápsulas: suaves, sin sombra marcada, como la referencia Mayor ahorro. */
+#cupones .cupon-horizontal-v16 .hc16-etiquetas .etiqueta-cupon,
+#cupones .cupon-horizontal-v16 .hc16-etiquetas .etiqueta-popular-integrada {
+  border: 0 !important;
+  border-radius: 999px !important;
+  padding: 4px 8px !important;
+  font-size: 8.2px !important;
+  font-weight: 750 !important;
+  line-height: 1 !important;
+  box-shadow: 0 2px 5px rgba(0,0,0,.07) !important;
+}
+#cupones .cupon-horizontal-v16 .etiqueta-mayor-ahorro { background:#dff7e8 !important; color:#168b45 !important; }
+#cupones .cupon-horizontal-v16 .etiqueta-mas-usado { background:#e3efff !important; color:#2563c9 !important; }
+#cupones .cupon-horizontal-v16 .etiqueta-top { background:#fff1c7 !important; color:#a56b00 !important; }
+#cupones .cupon-horizontal-v16 .etiqueta-popular-integrada { background:#ffe4ea !important; color:#d93d61 !important; }
+#cupones .cupon-horizontal-v16 .etiqueta-ultimas-horas { background:#fff0e3 !important; color:#d95f0b !important; }
+#cupones .cupon-horizontal-v16 .etiqueta-ultima-oportunidad { background:#ffe3e3 !important; color:#c73535 !important; }
+#cupones .cupon-horizontal-v16 .etiqueta-regreso { background:#e6f5f3 !important; color:#157f75 !important; }
+#cupones .cupon-horizontal-v16 .etiqueta-nuevo { background:#eee8ff !important; color:#6c45c7 !important; }
+
+@media (max-width:680px){
+  #cupones .cupon-horizontal-v16 .hc16-copiar {
+    min-height:31px !important;
+    padding:5px 7px !important;
+    font-size:8px !important;
+    outline-offset:-4px !important;
+  }
+  #cupones .cupon-horizontal-v16 .hc16-copiar::after { width:11px !important; height:11px !important; }
+  #cupones .cupon-horizontal-v16 .hc16-etiquetas .etiqueta-cupon,
+  #cupones .cupon-horizontal-v16 .hc16-etiquetas .etiqueta-popular-integrada { padding:3px 5px !important; font-size:6.7px !important; }
+}
+
+/* ================================================================
+   PAQUETE 4.0 — MUESCAS VISIBLES + CONTORNO CONSERVADO
+   Único objetivo visual: mantener el contorno/sombra actual y recuperar
+   las dos muescas semicirculares en la unión 65/35.
+   ================================================================ */
+#cupones .cupon-horizontal-v16 {
+  --ticket-border: color-mix(in srgb, var(--hc16-accent, var(--categoria-cupon-color, #16ad77)) 20%, #d9e1de 80%);
+  --ticket-cutout-bg: #ffffff; /* JS 4.1 la sincroniza con el fondo real de la sección */
+  position: relative !important;
+  overflow: hidden !important;
+  -webkit-mask: none !important;
+  mask: none !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  clip-path: none !important;
+  border: 1px solid var(--ticket-border) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 12px rgba(20, 30, 45, .10) !important;
+}
+#cupones .cupon-horizontal-v16::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  z-index: 100 !important;
+  top: -8px !important;
+  left: 65% !important;
+  width: 18px !important;
+  height: 18px !important;
+  transform: translateX(-50%) !important;
+  border: 1px solid var(--ticket-border) !important;
+  border-radius: 50% !important;
+  background: var(--ticket-cutout-bg) !important;
+  box-shadow: none !important;
+  pointer-events: none !important;
+  opacity: 1 !important;
+  -webkit-mask: none !important;
+  mask: none !important;
+}
+#cupones .cupon-horizontal-v16::after {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  z-index: 100 !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: -8px !important;
+  left: 65% !important;
+  inset: auto auto -9px 65% !important;
+  width: 18px !important;
+  height: 18px !important;
+  transform: translateX(-50%) !important;
+  border: 1px solid var(--ticket-border) !important;
+  border-radius: 50% !important;
+  background: var(--ticket-cutout-bg) !important;
+  box-shadow: none !important;
+  pointer-events: none !important;
+  opacity: 1 !important;
+  -webkit-mask: none !important;
+  mask: none !important;
+}
+#cupones .cupon-horizontal-v16 > .hc16-acciones::before,
+#cupones .cupon-horizontal-v16 > .hc16-acciones::after {
+  content: none !important;
+  display: none !important;
+}
+#cupones .cupon-bancario-unificado .hc16-descuento {
+  font-size: clamp(23px, 3.4vw, 34px) !important;
+  line-height: .94 !important;
+}
+#cupones .cupon-bancario-unificado .hc25-banco-info {
+  justify-content: center !important;
+  padding: 13px 13px 12px !important;
+}
+#cupones .cupon-bancario-unificado .hc16-categoria { margin-bottom: 8px !important; }
+#cupones .cupon-bancario-unificado .hc16-condicion {
+  font-size: 13px !important;
+  line-height: 1.15 !important;
+}
+#cupones .cupon-bancario-unificado .hc16-detalle,
+#cupones .cupon-bancario-unificado .hc25-banco-detalle {
+  margin: 0 0 8px !important;
+  font-size: 10.5px !important;
+  line-height: 1.15 !important;
+}
+#cupones .cupon-horizontal-v16 .boton-like:not(.activo),
+#cupones .cupon-horizontal-v16 .boton-like:not(.activo) svg {
+  color: #7b8491 !important;
+  fill: currentColor !important;
+}
+#cupones .cupon-horizontal-v16 .boton-like.activo,
+#cupones .cupon-horizontal-v16 .boton-like.activo svg {
+  color: var(--hc16-accent) !important;
+  fill: currentColor !important;
+}
+@media (max-width: 680px) {
+  #cupones .cupon-horizontal-v16 { border-radius: 13px !important; }
+  #cupones .cupon-horizontal-v16::before {
+    top: -7px !important;
+    width: 14px !important;
+    height: 14px !important;
+  }
+  #cupones .cupon-horizontal-v16::after {
+    bottom: -7px !important;
+    inset: auto auto -7px 65% !important;
+    width: 14px !important;
+    height: 14px !important;
+  }
+  #cupones .cupon-bancario-unificado .hc16-descuento {
+    font-size: clamp(18px, 5vw, 26px) !important;
+  }
+  #cupones .cupon-bancario-unificado .hc25-banco-info { padding: 9px 7px 8px !important; }
+  #cupones .cupon-bancario-unificado .hc16-categoria { margin-bottom: 6px !important; }
+  #cupones .cupon-bancario-unificado .hc16-condicion {
+    font-size: 9.2px !important;
+    line-height: 1.15 !important;
+  }
+  #cupones .cupon-bancario-unificado .hc16-detalle,
+  #cupones .cupon-bancario-unificado .hc25-banco-detalle {
+    margin: 0 0 5px !important;
+    font-size: 7.3px !important;
+    line-height: 1.15 !important;
+  }
+}
+
+
+/* ================================================================
+   PAQUETE 4.1 — MUESCAS VISIBLES SIN PERDER CONTORNO
+   El color interno se obtiene por JS del fondo efectivo detrás de cada
+   tarjeta. Se conserva borde, sombra, distribución y contenido actuales.
+   ================================================================ */
+@media (max-width:680px){
+  #cupones .cupon-horizontal-v16::before {
+    top:-7px !important; width:14px !important; height:14px !important;
+  }
+  #cupones .cupon-horizontal-v16::after {
+    bottom:-7px !important; inset:auto auto -7px 65% !important;
+    width:14px !important; height:14px !important;
+  }
+}
+
+/* ================================================================
+   PAQUETE 4.2 — MUESCA ESTABLE SIN MÁSCARAS NI PSEUDOELEMENTOS
+   Único cambio: muescas superior/inferior visibles manteniendo intactos
+   el borde, sombra, estructura y contenido aprobados.
+   ================================================================ */
+#cupones .cupon-horizontal-v16 {
+  /* Se desactivan únicamente las muescas experimentales 4.0/4.1. */
+  overflow: hidden !important;
+}
+#cupones .cupon-horizontal-v16::before,
+#cupones .cupon-horizontal-v16::after {
+  content: none !important;
+  display: none !important;
+}
+#cupones .cupon-horizontal-v16 > .ticket-notch {
+  position: absolute !important;
+  left: 65% !important;
+  z-index: 120 !important;
+  display: block !important;
+  width: 16px !important;
+  box-sizing: border-box !important;
+  transform: translateX(-50%) !important;
+  background: var(--ticket-cutout-bg, #f4f8f6) !important;
+  pointer-events: none !important;
+}
+/* Media luna superior: sólo existe dentro de la tarjeta, por lo que no
+   depende de overflow, mask ni clip-path del navegador. */
+#cupones .cupon-horizontal-v16 > .ticket-notch-top {
+  top: -1px !important;
+  height: 9px !important;
+  border: 1px solid var(--ticket-border, #dbe3df) !important;
+  border-top: 0 !important;
+  border-radius: 0 0 10px 10px !important;
+}
+/* Media luna inferior, espejo exacto de la superior. */
+#cupones .cupon-horizontal-v16 > .ticket-notch-bottom {
+  bottom: -1px !important;
+  height: 9px !important;
+  border: 1px solid var(--ticket-border, #dbe3df) !important;
+  border-bottom: 0 !important;
+  border-radius: 10px 10px 0 0 !important;
+}
+@media (max-width:680px) {
+  #cupones .cupon-horizontal-v16 > .ticket-notch {
+    width: 14px !important;
+  }
+  #cupones .cupon-horizontal-v16 > .ticket-notch-top,
+  #cupones .cupon-horizontal-v16 > .ticket-notch-bottom {
+    height: 8px !important;
+  }
+}
+/* Asegura el contorno exterior aprobado aun si style.css intenta anularlo. */
+#cupones .cupon-horizontal-v16 {
+  border: 1px solid var(--ticket-border, #dbe3df) !important;
+  box-shadow: 0 4px 12px rgba(20, 30, 45, .10) !important;
+}
+/* Máxima especificidad para el contorno exterior de la tarjeta. */
+#cupones.cupones-grid-compacta > article.cupon.cupon-horizontal-v16,
+#cupones article.cupon.cupon-horizontal-v16 {
+  border: 1px solid var(--ticket-border, #dbe3df) !important;
+  box-shadow: 0 4px 12px rgba(20, 30, 45, .10) !important;
+}
+
+/* ================================================================
+   PAQUETE 4.3 — LIMPIEZA INTERIOR DE LAS MUESCAS
+   Único cambio: ocultar la línea vertical dentro de la muesca sin
+   modificar forma, tamaño, borde, sombra ni distribución de tarjetas.
+   ================================================================ */
+#cupones .cupon-horizontal-v16 > .ticket-notch {
+  z-index: 9999 !important;
+  isolation: isolate !important;
+}
+#cupones .cupon-horizontal-v16 > .ticket-notch::after {
+  content: "" !important;
+  position: absolute !important;
+  z-index: 2 !important;
+  inset: 1px !important;
+  display: block !important;
+  border-radius: inherit !important;
+  background: var(--ticket-cutout-bg, #f4f8f6) !important;
+  pointer-events: none !important;
+}
+
+/* ================================================================
+   PAQUETE 4.4 — MUESCA REAL SIN LÍNEA EXTERIOR
+   La muesca se construye con un círculo completo centrado exactamente
+   sobre el borde de la tarjeta. Como la tarjeta conserva overflow:hidden,
+   sólo se ve la mitad interior del círculo: desaparecen las líneas rectas
+   laterales/exteriores de la versión 4.3 y queda un recorte tipo ticket.
+   ================================================================ */
+#cupones .cupon-horizontal-v16 > .ticket-notch {
+  width: 18px !important;
+  height: 18px !important;
+  border: 1px solid var(--ticket-border, #dbe3df) !important;
+  border-radius: 50% !important;
+  background: var(--ticket-cutout-bg, #f4f8f6) !important;
+  z-index: 9999 !important;
+}
+#cupones .cupon-horizontal-v16 > .ticket-notch-top {
+  top: -9px !important;
+  bottom: auto !important;
+}
+#cupones .cupon-horizontal-v16 > .ticket-notch-bottom {
+  top: auto !important;
+  bottom: -9px !important;
+}
+/* La limpieza 4.3 ya no es necesaria y podía generar un segundo contorno. */
+#cupones .cupon-horizontal-v16 > .ticket-notch::after {
+  content: none !important;
+  display: none !important;
+}
+@media (max-width:680px) {
+  #cupones .cupon-horizontal-v16 > .ticket-notch {
+    width: 16px !important;
+    height: 16px !important;
+  }
+  #cupones .cupon-horizontal-v16 > .ticket-notch-top { top: -8px !important; }
+  #cupones .cupon-horizontal-v16 > .ticket-notch-bottom { bottom: -8px !important; }
 }
