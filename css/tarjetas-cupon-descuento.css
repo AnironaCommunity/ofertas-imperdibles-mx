@@ -2635,3 +2635,41 @@
     justify-content: center !important;
   }
 }
+
+
+/* ================================================================
+   PAQUETE 5.4 — AJUSTES VISUALES EN CUPONES BANCARIOS
+   Base: 5.3 / muescas 4.8 intactas.
+   - OFF se trata igual que en Tienda/Exclusivo: texto secundario.
+   - Compartir | Me gusta | Vistas centrado en el talon derecho.
+   - Logo del banco 20% mas grande, sin alterar la tarjeta.
+   ================================================================ */
+#cupones .cupon-bancario-unificado .hc16-descuento {
+  column-gap: 4px !important;
+  row-gap: 0 !important;
+}
+#cupones .cupon-bancario-unificado .hc19-off {
+  flex: 0 0 auto !important;
+}
+#cupones .cupon-bancario-unificado .hc16-social {
+  width: 100% !important;
+  justify-content: center !important;
+  align-self: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+/* 34px x 1.20 = 40.8px */
+#cupones > .cupon-bancario-unificado .hc25-banco-logo {
+  max-height: 41px !important;
+  max-width: 96% !important;
+}
+@media (max-width: 680px) {
+  /* 25px x 1.20 = 30px */
+  #cupones > .cupon-bancario-unificado .hc25-banco-logo {
+    max-height: 30px !important;
+    max-width: 96% !important;
+  }
+  #cupones .cupon-bancario-unificado .hc16-social {
+    justify-content: center !important;
+  }
+}

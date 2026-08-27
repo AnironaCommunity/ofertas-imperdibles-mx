@@ -1448,7 +1448,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
     <span class="ticket-notch ticket-notch-bottom" aria-hidden="true"></span>
     <div class="hc16-valor hc25-banco-valor">
       ${logoBanco ? `<img class="banco-logo hc25-banco-logo" src="${escaparHtml(logoBanco)}" alt="" loading="lazy" />` : `<span class="banco-logo-fallback">BANCO</span>`}
-      <h2 class="hc16-descuento descuento">${escaparHtml(cupon.titulo || "Beneficio")}${/\boff\b/i.test(String(cupon.titulo || "")) ? "" : '<span class="hc19-off">OFF</span>'}</h2>
+      <h2 class="hc16-descuento descuento">${escaparHtml(String(cupon.titulo || "Beneficio").replace(/\s*OFF\s*$/i, "").trim())}<span class="hc19-off">OFF</span></h2>
     </div>
     <div class="hc16-info hc25-banco-info">
       <div class="hc16-categoria">CUPÓN BANCARIO</div>
