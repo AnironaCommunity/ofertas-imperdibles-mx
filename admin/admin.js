@@ -102,12 +102,14 @@ const generateShareSummary = document.querySelector("#generar-resumen");
 const copyShareSummaryText = document.querySelector("#copiar-resumen-texto");
 const downloadShareSummaryImage = document.querySelector("#descargar-resumen-imagen");
 const shareShareSummaryImage = document.querySelector("#compartir-resumen-imagen");
+const printShareSummaryCards = document.querySelector("#imprimir-resumen-tarjetas");
 const shareSummaryMessage = document.querySelector("#resumen-compartir-mensaje");
 const shareSummaryResult = document.querySelector("#resumen-compartir-resultado");
 const shareSummaryText = document.querySelector("#resumen-texto");
 const shareSummaryPreview = document.querySelector("#resumen-imagen-preview");
 const shareSummaryCanvas = document.querySelector("#resumen-canvas");
 let shareSummaryBlob = null;
+let shareSummarySelectedCoupons = [];
 
 /* Importador */
 const importerPanel = document.querySelector("#importador-panel");
@@ -1139,6 +1141,175 @@ async function drawShareSummaryImage(selectedCoupons, link, totalActive) {
     }, "image/png", 0.95);
   });
 }
+
+
+/* =========================================================
+   V82.34 — Impresión exacta de tarjetas activas
+   Genera una vista de impresión usando el MISMO HTML/clases y el MISMO CSS
+   de las tarjetas públicas. No redibuja la tarjeta en canvas.
+   ========================================================= */
+const PRINT_COUPON_PALETTE = [
+  "#0FAF72", "#F28C18", "#7A43C6", "#1E73D8", "#12AEB3", "#E85C9E", "#EF5A4C", "#1AA57A",
+  "#087EA4", "#8B4DD1", "#F07A20", "#D93C78", "#4B78A8", "#4F46B8", "#C9369E", "#26734D",
+];
+
+const PRINT_BANKS = [
+  { patron: /TCMP|MERCADO(?:\s|-|_)*PAGO.*VISA|MERCADO-PAGO-VISA/i, banco: "mercado-pago-visa", logo: "../img/bancos/mercado-pago-visa.jpg", color: "#ffe600" },
+  { patron: /MESES|MST|MERCADO(?:\s|-|_)*PAGO|MERCADO-PAGO/i, banco: "mercado-pago", logo: "../img/bancos/mercado-pago.jpg", color: "#ffe600" },
+  { patron: /BNMX|BANAMEX/i, banco: "banamex", logo: "../img/bancos/banamex.jpg", color: "#e71950" },
+  { patron: /BBVA/i, banco: "bbva", logo: "../img/bancos/bbva.jpg", color: "#00549f" },
+  { patron: /HSBC/i, banco: "hsbc", logo: "../img/bancos/hsbc.jpg", color: "#db0011" },
+  { patron: /AMEX|AMERICAN/i, banco: "american-express", logo: "../img/bancos/american-express.jpg", color: "#0077a8" },
+  { patron: /INVE|INVEX/i, banco: "invex", logo: "../img/bancos/invex.jpg", color: "#c60045" },
+  { patron: /SCOT|SCOTIA/i, banco: "scotiabank", logo: "../img/bancos/scotiabank.jpg", color: "#ec111a" },
+  { patron: /AFRM|AFIRME/i, banco: "afirme", logo: "../img/bancos/afirme.jpg", color: "#009c76" },
+  { patron: /MIFE|MIFEL/i, banco: "mifel", logo: "../img/bancos/mifel.jpg", color: "#003b67" },
+  { patron: /INBR|INBURSA/i, banco: "inbursa", logo: "../img/bancos/inbursa.jpg", color: "#00457c" },
+  { patron: /FALA|FALABELLA/i, banco: "falabella", logo: "../img/bancos/falabella.jpg", color: "#19b81f" },
+  { patron: /DIDI/i, banco: "didi-card", logo: "../img/bancos/didi-card.jpg", color: "#ff5a00" },
+  { patron: /OPBA|OPENBANK/i, banco: "openbank", logo: "../img/bancos/openbank.jpg", color: "#111111" },
+  { patron: /BANO|BANORTE/i, banco: "banorte", logo: "../img/bancos/banorte.jpg", color: "#e30613" },
+  { patron: /SANT|SANTANDER/i, banco: "santander", logo: "../img/bancos/santander.jpg", color: "#ec0000" },
+];
+
+function printEscape(value = "") {
+  return String(value)
+    .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+}
+
+function printCouponCategory(coupon) {
+  const raw = String(coupon?.categoria || "tienda").toLowerCase();
+  if (raw === "bancario" || raw === "bancarios") return "bancarios";
+  if (raw === "exclusivo" || raw === "exclusivos") return "exclusivo";
+  return "tienda";
+}
+
+function printCouponColor(coupon) {
+  const seed = String(coupon?.id ?? coupon?.codigo ?? coupon?.titulo ?? "cupon-tienda");
+  let hash = 0;
+  for (let i = 0; i < seed.length; i += 1) hash = ((hash << 5) - hash + seed.charCodeAt(i)) | 0;
+  return PRINT_COUPON_PALETTE[Math.abs(hash) % PRINT_COUPON_PALETTE.length];
+}
+
+function printBankVisual(coupon) {
+  const source = [coupon?.codigo, coupon?.titulo, coupon?.detalle_bancario, coupon?.imagen_url].filter(Boolean).join(" ");
+  return PRINT_BANKS.find((item) => item.patron.test(source)) || {
+    banco: "generico", logo: coupon?.imagen_url || "", color: "#17139d",
+  };
+}
+
+function printIconShare() { return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 16a3 3 0 0 0-2.39 1.19L8.91 13.7a3.1 3.1 0 0 0 0-3.4l6.7-3.49A3 3 0 1 0 15 5c0 .23.03.45.08.66l-6.7 3.49a3 3 0 1 0 0 5.7l6.7 3.49A3 3 0 1 0 18 16Z"/></svg>`; }
+function printIconLike() { return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h4v12Zm2 0V9.38l3.21-5.35A2 2 0 0 1 17.93 5v3h2.38a2.69 2.69 0 0 1 2.62 3.29l-1.38 6A4.69 4.69 0 0 1 16.98 21H11Z"/></svg>`; }
+function printIconView() { return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c5.4 0 9.2 4.8 10.4 6.6a.75.75 0 0 1 0 .8C21.2 14.2 17.4 19 12 19S2.8 14.2 1.6 12.4a.75.75 0 0 1 0-.8C2.8 9.8 6.6 5 12 5Zm0 2C8.1 7 5 10.2 3.7 12 5 13.8 8.1 17 12 17s7-3.2 8.3-5C19 10.2 15.9 7 12 7Zm0 1.5A3.5 3.5 0 1 1 12 15a3.5 3.5 0 0 1 0-7Zm0 2A1.5 1.5 0 1 0 12 13.5a1.5 1.5 0 0 0 0-3Z"/></svg>`; }
+function printIconCopy() { return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7V5a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3h-2v3a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-8a3 3 0 0 1 3-3h2Zm3 1h3a3 3 0 0 1 3 3v2h2V5h-8v3Zm3 3H6v8h8v-8Z"/></svg>`; }
+
+function printCouponRemaining(coupon) {
+  const end = coupon?.fecha_fin ? new Date(coupon.fecha_fin).getTime() : NaN;
+  if (!Number.isFinite(end)) return "";
+  const ms = Math.max(0, end - Date.now());
+  const total = Math.floor(ms / 1000);
+  const days = Math.floor(total / 86400);
+  const hours = Math.floor((total % 86400) / 3600);
+  const minutes = Math.floor((total % 3600) / 60);
+  const seconds = total % 60;
+  return days > 0
+    ? `Termina en ${days}d ${String(hours).padStart(2, "0")}h`
+    : `Termina en ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
+function printMoneyValue(value) {
+  const text = String(value ?? "").replace(/\s/g, "").replace(/,/g, "").replace(/[^0-9.-]/g, "");
+  const num = Number.parseFloat(text);
+  return Number.isFinite(num) ? Math.max(0, num) : 0;
+}
+function printTopIds(list, getValue, proportion = .20) {
+  const ranked = list.map(c => ({ c, v: Number(getValue(c)) || 0 })).filter(x => x.v > 0).sort((a,b) => b.v-a.v);
+  if (!ranked.length) return new Set();
+  return new Set(ranked.slice(0, Math.max(1, Math.ceil(ranked.length * proportion))).map(x => Number(x.c.id)));
+}
+function printCouponDate(c) {
+  const value = c?.fecha_publicacion || c?.fecha_inicio || c?.fecha_creacion;
+  const d = value ? new Date(value) : null;
+  return d && !Number.isNaN(d.getTime()) ? d : null;
+}
+function printCouponTags(coupon, activeList) {
+  const tags = [];
+  const remaining = coupon?.fecha_fin ? new Date(coupon.fecha_fin).getTime() - Date.now() : Infinity;
+  if (remaining > 0 && remaining <= 2 * 60 * 60 * 1000) tags.push(["ultima-oportunidad", "🔴 Última oportunidad"]);
+  else if (remaining > 2 * 60 * 60 * 1000 && remaining <= 24 * 60 * 60 * 1000) tags.push(["ultimas-horas", "⏰ Últimas horas"]);
+  const idsUsed = printTopIds(activeList, c => c.clics);
+  const idsPopular = printTopIds(activeList, c => c.likes);
+  const idsSaving = printTopIds(activeList, c => printMoneyValue(c.ahorro_maximo));
+  const top = [...activeList].filter(c => Number(c.clics||0)>0 || Number(c.likes||0)>0).sort((a,b) => (Number(b.clics||0)+Number(b.likes||0)*2)-(Number(a.clics||0)+Number(a.likes||0)*2))[0];
+  if (idsUsed.has(Number(coupon.id))) tags.push(["mas-usado", "⚡ Más usado"]);
+  if (idsPopular.has(Number(coupon.id))) tags.push(["popular-integrada", "🔥 Popular"]);
+  if (idsSaving.has(Number(coupon.id))) tags.push(["mayor-ahorro", "💰 Mayor ahorro"]);
+  if (top && Number(top.id) === Number(coupon.id)) tags.push(["top", "⭐ Top"]);
+  const d = printCouponDate(coupon);
+  if (d && Date.now() - d.getTime() >= 0 && Date.now() - d.getTime() < 60*60*1000) tags.push(["nuevo", "🆕 Nuevo"]);
+  return tags.slice(0, 2).map(([cls,label]) => `<span class="etiqueta-cupon etiqueta-${cls}">${label}</span>`).join("");
+}
+
+function printCouponCardHtml(coupon, activeList) {
+  const category = printCouponCategory(coupon);
+  const bank = category === "bancarios";
+  const exclusive = category === "exclusivo";
+  const tags = printCouponTags(coupon, activeList);
+  const title = printEscape(String(coupon?.titulo || (bank ? "Beneficio" : "")).replace(/\s*OFF\s*$/i, "").trim());
+  const remaining = printCouponRemaining(coupon);
+  const likes = Number(coupon?.likes || 0);
+  const clicks = Number(coupon?.clics || 0);
+  const copyButton = `${printIconCopy()}<span>Copiar código</span>`;
+  const social = `<div class="hc16-social acciones-secundarias" aria-label="Actividad del cupón"><button class="boton-compartir hc16-icono hc20-compartir" type="button">${printIconShare()}</button><span class="hc16-separador"></span><button class="boton-like hc16-icono" type="button">${printIconLike()}</button><span class="numero-likes hc16-numero">${likes}</span><span class="hc16-separador"></span><span class="estadistica-item estadistica-usos hc16-usos hc16-vistas">${printIconView()} <span class="numero-clics">${clicks}</span></span></div>`;
+
+  if (bank) {
+    const b = printBankVisual(coupon);
+    return `<article class="cupon cupon-horizontal-v16 cupon-bancario-unificado" data-banco="${printEscape(b.banco)}" style="--hc16-accent:${b.color};--categoria-cupon-color:${b.color};--banco-color:${b.color};--ticket-cutout-bg:#fff"><span class="ticket-notch ticket-notch-top"></span><span class="ticket-notch ticket-notch-bottom"></span><div class="hc16-valor hc25-banco-valor">${b.logo ? `<img class="banco-logo hc25-banco-logo" src="${printEscape(new URL(b.logo, location.href).href)}" alt="">` : `<span class="banco-logo-fallback">BANCO</span>`}<h2 class="hc16-descuento descuento">${title}<span class="hc19-off">OFF</span></h2></div><div class="hc16-info hc25-banco-info"><div class="hc16-categoria">CUPÓN BANCARIO</div><div class="hc16-condiciones"><p class="hc16-condicion">Compra mínima <strong>${printEscape(coupon?.compra_minima || "Consultar")}</strong></p></div>${coupon?.ahorro_maximo ? `<p class="hc16-detalle">Tope de descuento <strong>${printEscape(coupon.ahorro_maximo)}</strong></p>` : ""}${coupon?.detalle_bancario ? `<p class="hc16-detalle hc25-banco-detalle">${printEscape(coupon.detalle_bancario)}</p>` : ""}<div class="hc16-etiquetas">${tags}</div></div><div class="hc16-acciones"><div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar" type="button">${copyButton}</button></div><p class="mensaje hc16-mensaje"></p>${social}<div class="estado-programacion hc16-tiempo">${printEscape(remaining)}</div></div></article>`;
+  }
+
+  const color = printCouponColor(coupon);
+  const categoryText = exclusive ? "EXCLUSIVO" : "CUPÓN TIENDA";
+  const percent = /%|por\s*ciento/i.test(String(coupon?.titulo || ""));
+  const image = coupon?.imagen_url ? `<img class="hc16-logo cupon-logo" src="${printEscape(new URL(coupon.imagen_url, location.href).href)}" alt="">` : "";
+  return `<article class="cupon cupon-horizontal-v16${exclusive ? " cupon-exclusivo" : ""}" style="--categoria-cupon-color:${color};--categoria-cupon-texto:#fff;--ticket-cutout-bg:#fff"><span class="ticket-notch ticket-notch-top"></span><span class="ticket-notch ticket-notch-bottom"></span><div class="hc16-valor">${image}<h2 class="hc16-descuento descuento">${title}<span class="hc19-off">OFF</span></h2><span class="hc19-porcentaje">%</span></div><div class="hc16-info"><div class="hc16-categoria">${categoryText}</div><div class="hc16-condiciones"><p class="hc16-condicion">En compras desde <strong>${printEscape(coupon?.compra_minima || "Consultar")}</strong></p></div>${(exclusive || category === "tienda") && coupon?.detalle_bancario ? `<p class="hc16-detalle">${printEscape(coupon.detalle_bancario)}</p>` : ""}${percent ? `<p class="hc16-ahorro-extra">Ahorra hasta <strong>${printEscape(coupon?.ahorro_maximo || "Consultar")}</strong></p>` : ""}<div class="hc16-etiquetas">${tags}</div></div><div class="hc16-acciones"><div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar" type="button">${copyButton}</button></div><p class="mensaje hc16-mensaje"></p>${social}<div class="estado-programacion hc16-tiempo">${printEscape(remaining)}</div></div></article>`;
+}
+
+function printExactCouponCards() {
+  const active = activeCouponsForSharing();
+  const category = shareSummaryCategory?.value || "todos";
+  const filtered = couponsForShareCategory(active, category);
+  const limitValue = shareSummaryLimit?.value || "all";
+  const limit = limitValue === "all" ? filtered.length : Math.max(1, Number(limitValue) || filtered.length);
+  const selected = filtered.slice(0, limit);
+  if (!selected.length) {
+    setMessage(shareSummaryMessage, "No hay cupones activos para imprimir con los filtros seleccionados.", true);
+    return;
+  }
+
+  const cssUrl = new URL("../css/tarjetas-cupon-descuento.css?v=5.4", location.href).href;
+  const rootCssUrl = new URL("../style.css?v=81.69.4", location.href).href;
+  const cards = selected.map(c => printCouponCardHtml(c, selected)).join("");
+  const win = window.open("", "_blank");
+  if (!win) {
+    setMessage(shareSummaryMessage, "Permite ventanas emergentes para imprimir las tarjetas.", true);
+    return;
+  }
+  win.document.open();
+  win.document.write(`<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cupones activos</title><link rel="stylesheet" href="${rootCssUrl}"><link rel="stylesheet" href="${cssUrl}"><style>
+    html,body{margin:0!important;padding:0!important;background:#fff!important;color:#111!important;font-family:Inter,Segoe UI,Arial,sans-serif!important}
+    body{padding:12mm!important}.print-title{font-size:17px;font-weight:800;margin:0 0 10px}.print-sub{font-size:11px;color:#64748b;margin:0 0 14px}
+    #cupones{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
+    #cupones>.cupon-horizontal-v16{break-inside:avoid!important;page-break-inside:avoid!important}
+    #cupones button{pointer-events:none!important}
+    @page{size:A4 landscape;margin:8mm}
+    @media print{body{padding:0!important}.print-title,.print-sub{display:none!important}#cupones{gap:7mm 6mm!important}.cupon-horizontal-v16{box-shadow:none!important}}
+    @media(max-width:900px){#cupones{grid-template-columns:1fr!important}}
+  </style></head><body><h1 class="print-title">Cupones activos</h1><p class="print-sub">Copia exacta de las tarjetas visibles en la página.</p><section id="cupones" class="cupones-grid-compacta">${cards}</section><script>window.addEventListener('load',()=>setTimeout(()=>window.print(),450));<\/script></body></html>`);
+  win.document.close();
+  setMessage(shareSummaryMessage, `✅ Vista de impresión abierta con ${selected.length} tarjetas activas usando el diseño actual de la página.`);
+}
+
 function validShareLink(value) {
   const text = String(value || "").trim();
   try {
@@ -1166,6 +1337,7 @@ async function createShareSummary() {
     const limitValue = shareSummaryLimit.value;
     const limit = limitValue === "all" ? filtered.length : Math.max(1, Number(limitValue) || filtered.length);
     const selected = filtered.slice(0, limit);
+    shareSummarySelectedCoupons = [...selected];
     shareSummaryText.value = buildShareSummaryText(selected, link, filtered.length);
     shareSummaryBlob = await drawShareSummaryImage(selected, link, filtered.length);
     if (shareSummaryPreview.src) URL.revokeObjectURL(shareSummaryPreview.src);
@@ -1174,6 +1346,7 @@ async function createShareSummary() {
     copyShareSummaryText.disabled = false;
     downloadShareSummaryImage.disabled = false;
     shareShareSummaryImage.disabled = false;
+    if (printShareSummaryCards) printShareSummaryCards.disabled = false;
     setMessage(shareSummaryMessage, `✅ Resumen generado con ${selected.length} de ${filtered.length} cupones activos de la categoría seleccionada. Los códigos no se incluyen.`);
   } catch (error) {
     setMessage(shareSummaryMessage, readableError(error), true);
@@ -3648,6 +3821,7 @@ generateShareSummary?.addEventListener("click", createShareSummary);
 copyShareSummaryText?.addEventListener("click", copyGeneratedShareText);
 downloadShareSummaryImage?.addEventListener("click", downloadGeneratedShareImage);
 shareShareSummaryImage?.addEventListener("click", shareGeneratedImage);
+printShareSummaryCards?.addEventListener("click", printExactCouponCards);
 newCoupon.addEventListener("click", resetCouponForm);
 cancelCoupon.addEventListener("click", resetCouponForm);
 
