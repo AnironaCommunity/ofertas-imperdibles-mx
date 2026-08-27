@@ -3103,3 +3103,88 @@
   fill: none !important;
   stroke: #f04f91 !important;
 }
+
+/* ================================================================
+   PAQUETE 6.7 — AJUSTE PUNTUAL DEL ICONO COMPARTIR
+   - Solo corrige Compartir y el centrado horizontal del bloque social.
+   - No modifica alturas, vigencia, muescas, CTA ni contenido.
+   ================================================================ */
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social {
+  transform: translateX(-1px) !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social > .boton-compartir.hc61-share,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social > .boton-compartir.hc61-share:hover,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social > .boton-compartir.hc61-share:focus,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social > .boton-compartir.hc61-share:active {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  flex: 0 0 28px !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  max-width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  outline: 0 !important;
+  background: #eaf9f2 !important;
+  color: #14b86a !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+  line-height: 1 !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social > .boton-compartir.hc61-share svg {
+  display: block !important;
+  flex: 0 0 16px !important;
+  width: 16px !important;
+  min-width: 16px !important;
+  max-width: 16px !important;
+  height: 16px !important;
+  min-height: 16px !important;
+  max-height: 16px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  fill: none !important;
+  stroke: #14b86a !important;
+  stroke-width: 2 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social > .boton-compartir.hc61-share svg * {
+  fill: none !important;
+  stroke: #14b86a !important;
+}
+@media (max-width: 680px) {
+  #cupones .cupon-horizontal-v16 .hc16-social.hc61-social {
+    transform: translateX(-4px) !important;
+  }
+  #cupones .cupon-horizontal-v16 .hc16-social.hc61-social > .boton-compartir.hc61-share,
+  #cupones .cupon-horizontal-v16 .hc16-social.hc61-social > .boton-compartir.hc61-share:hover,
+  #cupones .cupon-horizontal-v16 .hc16-social.hc61-social > .boton-compartir.hc61-share:focus,
+  #cupones .cupon-horizontal-v16 .hc16-social.hc61-social > .boton-compartir.hc61-share:active {
+    flex-basis: 24px !important;
+    width: 24px !important;
+    min-width: 24px !important;
+    max-width: 24px !important;
+    height: 24px !important;
+    min-height: 24px !important;
+    max-height: 24px !important;
+  }
+  #cupones .cupon-horizontal-v16 .hc16-social.hc61-social > .boton-compartir.hc61-share svg {
+    flex-basis: 14px !important;
+    width: 14px !important;
+    min-width: 14px !important;
+    max-width: 14px !important;
+    height: 14px !important;
+    min-height: 14px !important;
+    max-height: 14px !important;
+  }
+}
