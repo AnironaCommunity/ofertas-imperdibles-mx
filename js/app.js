@@ -1408,7 +1408,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
   const bancoVisual = obtenerBancoVisual(cupon);
   const logoBanco = bancoVisual.logo;
   const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
-  articulo.className = `cupon cupon-horizontal-v16 cupon-bancario cupon-bancario-unificado${estados.map((estado) => ` cupon-${estado}`).join("")}`;
+  articulo.className = `cupon cupon-horizontal-v16 cupon-bancario-unificado${estados.map((estado) => ` cupon-${estado}`).join("")}`;
   articulo.dataset.id = String(cupon.id);
   articulo.dataset.banco = bancoVisual.banco;
   articulo.style.setProperty("--hc16-accent", bancoVisual.color);
@@ -4298,7 +4298,7 @@ load();
 // Evitamos volver a renderizar las tarjetas al terminar de cargar la configuración,
 // ya que eso provocaba un segundo parpadeo durante la carga inicial.
 document.addEventListener("ofertas:etiquetas-cargadas", () => {
-  document.querySelectorAll(".cupon[data-id]:not(.cupon-bancario)").forEach((tarjeta) => {
+  document.querySelectorAll(".cupon[data-id]:not(.cupon-bancario):not(.cupon-bancario-unificado)").forEach((tarjeta) => {
     const cupon = todosLosCupones.find((item) => Number(item.id) === Number(tarjeta.dataset.id));
     if (!cupon) return;
     const visual = configuracionVisualCupon(cupon);

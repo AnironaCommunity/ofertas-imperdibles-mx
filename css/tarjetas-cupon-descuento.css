@@ -2304,46 +2304,90 @@
 }
 
 /* ================================================================
-   PAQUETE 3.4 — LIMPIEZA QUIRÚRGICA TRAS REVISIÓN TRIPLE
-   Alcance solicitado:
-   1) Recuperar muescas en TODOS los cupones con el mismo fondo de sección.
-   2) El bancario usa el MISMO talón derecho base que Tienda/Exclusivo.
-   3) Reducir solo la escala visual del porcentaje bancario.
-   4) Conservar la misma sombra/contorno general sin tocar el resto del diseño.
-   Se retiraron las capas 2.8–3.1 que duplicaban/contradecían estas reglas.
+   PAQUETE 3.5 — MUESCA REAL + BANCARIO SOBRE LA MISMA BASE VISUAL
+   - La muesca es un recorte real; no se pinta con un color de fondo.
+   - Tienda, Exclusivo y Bancario usan el mismo talón derecho.
+   - Bancario conserva únicamente logo/contenido/color propios.
+   - No se modifica la distribución aprobada de Tienda/Exclusivo.
    ================================================================ */
 
-/* Fondo real actual de la sección: evita el círculo gris de la muesca. */
-#cupones { --fondo-seccion-cupones:#ffffff !important; }
+/* Muescas REALES en la división 65/35. El hueco es transparente y, por
+   tanto, siempre muestra exactamente el fondo real que exista detrás. */
+#cupones > .cupon-horizontal-v16 {
+  -webkit-mask-image:
+    radial-gradient(circle 9px at 65% 0, transparent 0 8.5px, #000 9px),
+    radial-gradient(circle 9px at 65% 100%, transparent 0 8.5px, #000 9px);
+  -webkit-mask-size:100% 100%,100% 100%;
+  -webkit-mask-repeat:no-repeat,no-repeat;
+  -webkit-mask-composite:source-in;
+  mask-image:
+    radial-gradient(circle 9px at 65% 0, transparent 0 8.5px, #000 9px),
+    radial-gradient(circle 9px at 65% 100%, transparent 0 8.5px, #000 9px);
+  mask-size:100% 100%,100% 100%;
+  mask-repeat:no-repeat,no-repeat;
+  mask-composite:intersect;
+  box-shadow:none !important;
+  filter:drop-shadow(0 4px 9px rgba(20,30,45,.10));
+}
 
-/* Las muescas son las originales del diseño aprobado y se aplican a todos. */
+/* Se eliminan las muescas simuladas: ya no hay círculos pintados. */
 #cupones > .cupon-horizontal-v16 > .hc16-acciones::before,
 #cupones > .cupon-horizontal-v16 > .hc16-acciones::after {
-  content:"" !important;
-  display:block !important;
-  background:var(--fondo-seccion-cupones) !important;
-  box-shadow:0 0 0 2px var(--fondo-seccion-cupones) !important;
+  content:none !important;
+  display:none !important;
 }
 
-/* El bancario recupera exactamente el acabado exterior común. */
-#cupones > .cupon-horizontal-v16.cupon-bancario-unificado {
-  border:1px solid #ececec !important;
-  border-radius:16px !important;
-  background:#ffffff !important;
-  box-shadow:0 4px 14px rgba(20,30,45,.10) !important;
-}
-
-/* ÚNICA diferencia tipográfica adicional solicitada en bancario: beneficio más contenido. */
+/* El banco mantiene su bloque izquierdo, pero con escala visual contenida. */
 #cupones > .cupon-bancario-unificado .hc16-descuento {
-  font-size:clamp(23px,3.6vw,36px) !important;
-  line-height:.92 !important;
+  font-size:clamp(23px,3.4vw,34px) !important;
+  line-height:.94 !important;
+}
+
+/* Centro bancario: misma tipografía/respiración que la plantilla común. */
+#cupones > .cupon-bancario-unificado .hc25-banco-info {
+  justify-content:center !important;
+  padding:13px 13px 12px !important;
+}
+#cupones > .cupon-bancario-unificado .hc16-categoria {
+  margin-bottom:8px !important;
+}
+#cupones > .cupon-bancario-unificado .hc16-condicion {
+  font-size:13px !important;
+  line-height:1.15 !important;
+}
+#cupones > .cupon-bancario-unificado .hc16-detalle,
+#cupones > .cupon-bancario-unificado .hc25-banco-detalle {
+  margin:0 0 8px !important;
+  font-size:10.5px !important;
+  line-height:1.15 !important;
 }
 
 @media (max-width:680px){
-  #cupones > .cupon-horizontal-v16.cupon-bancario-unificado {
-    border-radius:13px !important;
+  #cupones > .cupon-horizontal-v16 {
+    -webkit-mask-image:
+      radial-gradient(circle 8px at 65% 0, transparent 0 7.5px, #000 8px),
+      radial-gradient(circle 8px at 65% 100%, transparent 0 7.5px, #000 8px);
+    mask-image:
+      radial-gradient(circle 8px at 65% 0, transparent 0 7.5px, #000 8px),
+      radial-gradient(circle 8px at 65% 100%, transparent 0 7.5px, #000 8px);
   }
   #cupones > .cupon-bancario-unificado .hc16-descuento {
-    font-size:clamp(18px,5.1vw,27px) !important;
+    font-size:clamp(18px,5vw,26px) !important;
+  }
+  #cupones > .cupon-bancario-unificado .hc25-banco-info {
+    padding:9px 7px 8px !important;
+  }
+  #cupones > .cupon-bancario-unificado .hc16-categoria {
+    margin-bottom:6px !important;
+  }
+  #cupones > .cupon-bancario-unificado .hc16-condicion {
+    font-size:9.2px !important;
+    line-height:1.15 !important;
+  }
+  #cupones > .cupon-bancario-unificado .hc16-detalle,
+  #cupones > .cupon-bancario-unificado .hc25-banco-detalle {
+    margin:0 0 5px !important;
+    font-size:7.3px !important;
+    line-height:1.15 !important;
   }
 }
