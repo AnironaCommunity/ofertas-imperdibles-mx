@@ -1279,6 +1279,32 @@ function htmlCondicionesCupon(cupon) {
   `;
 }
 
+
+function obtenerColorFondoEfectivo(elemento) {
+  let actual = elemento;
+  while (actual && actual !== document.documentElement) {
+    const estilo = getComputedStyle(actual);
+    const color = estilo.backgroundColor;
+    const match = color && color.match(/rgba?\(([^)]+)\)/i);
+    if (match) {
+      const partes = match[1].split(',').map((v) => v.trim());
+      const alpha = partes.length >= 4 ? Number(partes[3]) : 1;
+      if (Number.isFinite(alpha) && alpha > 0.01) return color;
+    } else if (color && color !== 'transparent') {
+      return color;
+    }
+    actual = actual.parentElement;
+  }
+  return getComputedStyle(document.body).backgroundColor || '#ffffff';
+}
+
+function sincronizarFondoMuescas() {
+  document.querySelectorAll('#cupones .cupon-horizontal-v16').forEach((tarjeta) => {
+    const colorFondo = obtenerColorFondoEfectivo(tarjeta.parentElement);
+    tarjeta.style.setProperty('--ticket-cutout-bg', colorFondo);
+  });
+}
+
 function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   const articulo = document.createElement("article");
   const categoria = normalizarCategoria(cupon);
@@ -2171,6 +2197,9 @@ function renderizarCategoria() {
     });
     cuponesContainer.appendChild(fragmentoBancos);
   }
+
+  // Paquete 4.1: la muesca usa exactamente el fondo renderizado de la sección.
+  sincronizarFondoMuescas();
 
   // En "Todos", un cupón Nuevo también tiene prioridad GLOBAL durante su primera hora,
   // aunque pertenezca a Tienda, Exclusivo o Bancarios. Al terminar esa hora recupera

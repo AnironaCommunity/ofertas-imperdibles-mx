@@ -1058,7 +1058,7 @@
 #cupones .cupon-horizontal-v16 .hc16-cta > .cupon-copiado-mini {
   position: absolute !important;
   z-index: 9 !important;
-  top: -8px !important;
+  top: -9px !important;
   right: 1px !important;
   min-height: 14px !important;
   margin: 0 !important;
@@ -1551,7 +1551,7 @@
   #cupones .cupon-horizontal-v16 .hc16-valor { padding: 9px 5px 8px 9px !important; }
   #cupones .cupon-horizontal-v16 .hc16-logo { max-width: 58px !important; height: 22px !important; max-height: 22px !important; margin-bottom: 3px !important; }
   #cupones .cupon-horizontal-v16 .hc16-descuento { font-size: clamp(27px, 8vw, 38px) !important; }
-  #cupones .cupon-horizontal-v16 .hc19-porcentaje { left: 5px !important; bottom: -8px !important; font-size: 48px !important; }
+  #cupones .cupon-horizontal-v16 .hc19-porcentaje { left: 5px !important; bottom: -9px !important; font-size: 48px !important; }
   #cupones .cupon-horizontal-v16 .hc16-info { padding: 9px 7px 8px !important; }
   #cupones .cupon-horizontal-v16 .hc16-categoria { margin-bottom: 6px !important; padding: 4px 17px 4px 7px !important; font-size: 9.5px !important; }
   #cupones .cupon-horizontal-v16 .hc16-condicion { font-size: 9.2px !important; }
@@ -2308,7 +2308,7 @@
    ================================================================ */
 #cupones .cupon-horizontal-v16 {
   --ticket-border: color-mix(in srgb, var(--hc16-accent, var(--categoria-cupon-color, #16ad77)) 20%, #d9e1de 80%);
-  --ticket-cutout-bg: var(--fondo-seccion-cupones, #ffffff);
+  --ticket-cutout-bg: #ffffff; /* JS 4.1 la sincroniza con el fondo real de la sección */
   position: relative !important;
   overflow: hidden !important;
   -webkit-mask: none !important;
@@ -2327,8 +2327,8 @@
   z-index: 100 !important;
   top: -8px !important;
   left: 65% !important;
-  width: 16px !important;
-  height: 16px !important;
+  width: 18px !important;
+  height: 18px !important;
   transform: translateX(-50%) !important;
   border: 1px solid var(--ticket-border) !important;
   border-radius: 50% !important;
@@ -2348,9 +2348,9 @@
   right: auto !important;
   bottom: -8px !important;
   left: 65% !important;
-  inset: auto auto -8px 65% !important;
-  width: 16px !important;
-  height: 16px !important;
+  inset: auto auto -9px 65% !important;
+  width: 18px !important;
+  height: 18px !important;
   transform: translateX(-50%) !important;
   border: 1px solid var(--ticket-border) !important;
   border-radius: 50% !important;
@@ -2422,5 +2422,21 @@
     margin: 0 0 5px !important;
     font-size: 7.3px !important;
     line-height: 1.15 !important;
+  }
+}
+
+
+/* ================================================================
+   PAQUETE 4.1 — MUESCAS VISIBLES SIN PERDER CONTORNO
+   El color interno se obtiene por JS del fondo efectivo detrás de cada
+   tarjeta. Se conserva borde, sombra, distribución y contenido actuales.
+   ================================================================ */
+@media (max-width:680px){
+  #cupones .cupon-horizontal-v16::before {
+    top:-7px !important; width:14px !important; height:14px !important;
+  }
+  #cupones .cupon-horizontal-v16::after {
+    bottom:-7px !important; inset:auto auto -7px 65% !important;
+    width:14px !important; height:14px !important;
   }
 }
