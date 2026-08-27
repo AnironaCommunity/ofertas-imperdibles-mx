@@ -2607,3 +2607,31 @@
     ) !important;
   }
 }
+
+
+/* ================================================================
+   PAQUETE 5.3 — DESCUENTO UNIFORME + ACTIVIDAD CENTRADA
+   Base: 4.8. No modifica la geometria ni las muescas del ticket.
+   - OFF siempre se renderiza como elemento secundario, evitando que
+     reduzca visualmente el importe cuando viene incluido en el titulo.
+   - Compartir | Me gusta | Vistas queda centrado en el talon derecho.
+   ================================================================ */
+#cupones .cupon-horizontal-v16 .hc16-descuento {
+  column-gap: 4px !important;
+  row-gap: 0 !important;
+}
+#cupones .cupon-horizontal-v16 .hc19-off {
+  flex: 0 0 auto !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-social {
+  width: 100% !important;
+  justify-content: center !important;
+  align-self: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+@media (max-width: 680px) {
+  #cupones .cupon-horizontal-v16 .hc16-social {
+    justify-content: center !important;
+  }
+}

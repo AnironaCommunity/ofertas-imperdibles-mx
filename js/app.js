@@ -1327,7 +1327,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
     <span class="ticket-notch ticket-notch-bottom" aria-hidden="true"></span>
     <div class="hc16-valor">
       ${cupon.imagen_url ? `<img class="hc16-logo cupon-logo" src="${escaparHtml(cupon.imagen_url)}" alt="" loading="lazy" />` : ""}
-      <h2 class="hc16-descuento descuento">${escaparHtml(cupon.titulo)}${/\boff\b/i.test(String(cupon.titulo || "")) ? "" : '<span class="hc19-off">OFF</span>'}</h2>
+      <h2 class="hc16-descuento descuento">${escaparHtml(String(cupon.titulo || "").replace(/\s*OFF\s*$/i, "").trim())}<span class="hc19-off">OFF</span></h2>
       <span class="hc19-porcentaje" aria-hidden="true">%</span>
     </div>
 
