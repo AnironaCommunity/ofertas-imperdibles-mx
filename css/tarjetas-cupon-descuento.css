@@ -2440,3 +2440,66 @@
     width:14px !important; height:14px !important;
   }
 }
+
+/* ================================================================
+   PAQUETE 4.2 — MUESCA ESTABLE SIN MÁSCARAS NI PSEUDOELEMENTOS
+   Único cambio: muescas superior/inferior visibles manteniendo intactos
+   el borde, sombra, estructura y contenido aprobados.
+   ================================================================ */
+#cupones .cupon-horizontal-v16 {
+  /* Se desactivan únicamente las muescas experimentales 4.0/4.1. */
+  overflow: hidden !important;
+}
+#cupones .cupon-horizontal-v16::before,
+#cupones .cupon-horizontal-v16::after {
+  content: none !important;
+  display: none !important;
+}
+#cupones .cupon-horizontal-v16 > .ticket-notch {
+  position: absolute !important;
+  left: 65% !important;
+  z-index: 120 !important;
+  display: block !important;
+  width: 16px !important;
+  box-sizing: border-box !important;
+  transform: translateX(-50%) !important;
+  background: var(--ticket-cutout-bg, #f4f8f6) !important;
+  pointer-events: none !important;
+}
+/* Media luna superior: sólo existe dentro de la tarjeta, por lo que no
+   depende de overflow, mask ni clip-path del navegador. */
+#cupones .cupon-horizontal-v16 > .ticket-notch-top {
+  top: -1px !important;
+  height: 9px !important;
+  border: 1px solid var(--ticket-border, #dbe3df) !important;
+  border-top: 0 !important;
+  border-radius: 0 0 10px 10px !important;
+}
+/* Media luna inferior, espejo exacto de la superior. */
+#cupones .cupon-horizontal-v16 > .ticket-notch-bottom {
+  bottom: -1px !important;
+  height: 9px !important;
+  border: 1px solid var(--ticket-border, #dbe3df) !important;
+  border-bottom: 0 !important;
+  border-radius: 10px 10px 0 0 !important;
+}
+@media (max-width:680px) {
+  #cupones .cupon-horizontal-v16 > .ticket-notch {
+    width: 14px !important;
+  }
+  #cupones .cupon-horizontal-v16 > .ticket-notch-top,
+  #cupones .cupon-horizontal-v16 > .ticket-notch-bottom {
+    height: 8px !important;
+  }
+}
+/* Asegura el contorno exterior aprobado aun si style.css intenta anularlo. */
+#cupones .cupon-horizontal-v16 {
+  border: 1px solid var(--ticket-border, #dbe3df) !important;
+  box-shadow: 0 4px 12px rgba(20, 30, 45, .10) !important;
+}
+/* Máxima especificidad para el contorno exterior de la tarjeta. */
+#cupones.cupones-grid-compacta > article.cupon.cupon-horizontal-v16,
+#cupones article.cupon.cupon-horizontal-v16 {
+  border: 1px solid var(--ticket-border, #dbe3df) !important;
+  box-shadow: 0 4px 12px rgba(20, 30, 45, .10) !important;
+}

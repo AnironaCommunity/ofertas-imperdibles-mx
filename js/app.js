@@ -1323,6 +1323,8 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   articulo.style.setProperty("--categoria-cupon-texto", colorTextoContraste(colorCupon));
 
   articulo.innerHTML = `
+    <span class="ticket-notch ticket-notch-top" aria-hidden="true"></span>
+    <span class="ticket-notch ticket-notch-bottom" aria-hidden="true"></span>
     <div class="hc16-valor">
       ${cupon.imagen_url ? `<img class="hc16-logo cupon-logo" src="${escaparHtml(cupon.imagen_url)}" alt="" loading="lazy" />` : ""}
       <h2 class="hc16-descuento descuento">${escaparHtml(cupon.titulo)}${/\boff\b/i.test(String(cupon.titulo || "")) ? "" : '<span class="hc19-off">OFF</span>'}</h2>
@@ -1442,6 +1444,8 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
   articulo.style.setProperty("--banco-color", bancoVisual.color);
 
   articulo.innerHTML = `
+    <span class="ticket-notch ticket-notch-top" aria-hidden="true"></span>
+    <span class="ticket-notch ticket-notch-bottom" aria-hidden="true"></span>
     <div class="hc16-valor hc25-banco-valor">
       ${logoBanco ? `<img class="banco-logo hc25-banco-logo" src="${escaparHtml(logoBanco)}" alt="" loading="lazy" />` : `<span class="banco-logo-fallback">BANCO</span>`}
       <h2 class="hc16-descuento descuento">${escaparHtml(cupon.titulo || "Beneficio")}${/\boff\b/i.test(String(cupon.titulo || "")) ? "" : '<span class="hc19-off">OFF</span>'}</h2>
