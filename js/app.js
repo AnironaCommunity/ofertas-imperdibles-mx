@@ -709,7 +709,7 @@ function escaparHtml(valor = "") {
 function iconoCompartir() {
   return `
     <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M18 16a3 3 0 0 0-2.39 1.19L8.91 13.7a3.1 3.1 0 0 0 0-3.4l6.7-3.49A3 3 0 1 0 15 5c0 .23.03.45.08.66l-6.7 3.49a3 3 0 1 0 0 5.7l6.7 3.49A3 3 0 1 0 18 16Z"/>
+      <path d="M20 4v6h-6M19.4 4.6 13 11M20 10c-5.7 0-10.3 1.9-13.1 5.2C5.4 17 4.6 18.9 4 21c.1-5.6 1.9-10 5.3-12.7C12 6.1 15.5 5 20 5"/>
     </svg>
   `;
 }
@@ -717,7 +717,7 @@ function iconoCompartir() {
 function iconoMeGusta() {
   return `
     <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M9 21H5a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h4v12Zm2 0V9.38l3.21-5.35A2 2 0 0 1 17.93 5v3h2.38a2.69 2.69 0 0 1 2.62 3.29l-1.38 6A4.69 4.69 0 0 1 16.98 21H11Z"/>
+      <path d="M12 20.5S4 15.8 4 9.6A4.1 4.1 0 0 1 8.2 5.5c1.6 0 3 0.8 3.8 2 0.8-1.2 2.2-2 3.8-2A4.1 4.1 0 0 1 20 9.6c0 6.2-8 10.9-8 10.9Z"/>
     </svg>
   `;
 }
@@ -733,7 +733,8 @@ function iconoCopias() {
 function iconoVista() {
   return `
     <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 5c5.4 0 9.2 4.8 10.4 6.6a.75.75 0 0 1 0 .8C21.2 14.2 17.4 19 12 19S2.8 14.2 1.6 12.4a.75.75 0 0 1 0-.8C2.8 9.8 6.6 5 12 5Zm0 2C8.1 7 5 10.2 3.7 12 5 13.8 8.1 17 12 17s7-3.2 8.3-5C19 10.2 15.9 7 12 7Zm0 1.5A3.5 3.5 0 1 1 12 15a3.5 3.5 0 0 1 0-7Zm0 2A1.5 1.5 0 1 0 12 13.5a1.5 1.5 0 0 0 0-3Z"/>
+      <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/>
+      <circle cx="12" cy="12" r="2.8"/>
     </svg>
   `;
 }
@@ -1354,13 +1355,15 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
         </button>
       </div>
       <p class="mensaje hc16-mensaje" aria-live="polite"></p>
-      <div class="hc16-social acciones-secundarias" aria-label="Actividad del cupón">
-        <button class="boton-compartir hc16-icono hc20-compartir" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
-        <span class="hc16-separador" aria-hidden="true"></span>
-        <button class="boton-like hc16-icono ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
-        <span class="numero-likes hc16-numero">${Number(cupon.likes || 0)}</span>
-        <span class="hc16-separador" aria-hidden="true"></span>
-        <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas" aria-label="Vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
+      <div class="hc16-social acciones-secundarias hc61-social" aria-label="Actividad del cupón">
+        <button class="boton-compartir hc16-icono hc20-compartir hc61-chip hc61-share" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
+        <span class="hc16-separador hc61-separador" aria-hidden="true"></span>
+        <span class="hc61-chip hc61-like-chip">
+          <button class="boton-like hc16-icono ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
+          <span class="numero-likes hc16-numero">${Number(cupon.likes || 0)}</span>
+        </span>
+        <span class="hc16-separador hc61-separador" aria-hidden="true"></span>
+        <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas hc61-chip hc61-view-chip" aria-label="Vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
       </div>
       <div class="estado-programacion hc16-tiempo" hidden></div>
     </div>
@@ -1468,13 +1471,15 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
     <div class="hc16-acciones">
       <div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar${cupon.agotado === true ? " boton-agotado boton-ofertazo-agotado" : ""}" type="button">${cupon.agotado === true ? contenidoBotonOfertazo() : contenidoBotonCopiar()}</button></div>
       <p class="mensaje hc16-mensaje" aria-live="polite"></p>
-      <div class="hc16-social acciones-secundarias" aria-label="Actividad del cupón">
-        <button class="boton-compartir hc16-icono hc20-compartir" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
-        <span class="hc16-separador" aria-hidden="true"></span>
-        <button class="boton-like hc16-icono ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
-        <span class="numero-likes hc16-numero">${Number(cupon.likes || 0)}</span>
-        <span class="hc16-separador" aria-hidden="true"></span>
-        <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas" aria-label="Vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
+      <div class="hc16-social acciones-secundarias hc61-social" aria-label="Actividad del cupón">
+        <button class="boton-compartir hc16-icono hc20-compartir hc61-chip hc61-share" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
+        <span class="hc16-separador hc61-separador" aria-hidden="true"></span>
+        <span class="hc61-chip hc61-like-chip">
+          <button class="boton-like hc16-icono ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
+          <span class="numero-likes hc16-numero">${Number(cupon.likes || 0)}</span>
+        </span>
+        <span class="hc16-separador hc61-separador" aria-hidden="true"></span>
+        <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas hc61-chip hc61-view-chip" aria-label="Vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
       </div>
       <div class="estado-programacion hc16-tiempo" hidden></div>
     </div>`;
