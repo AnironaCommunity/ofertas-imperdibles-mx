@@ -2096,3 +2096,134 @@
   #cupones .cupon-bancario-unificado .hc16-descuento { font-size:clamp(20px,6.5vw,31px)!important; }
   #cupones .cupon-bancario-unificado .hc16-detalle { font-size:7px!important; line-height:1.08!important; margin-bottom:3px!important; }
 }
+
+/* ================================================================
+   PAQUETE 2.6 — CORRECCIÓN DE REJILLA Y SIMETRÍA
+   - Fuerza la misma plantilla de 3 zonas para Tienda/Exclusivo/Bancario.
+   - Recupera el descuento visible del bloque izquierdo.
+   - Bancario no puede apilarse ni crecer fuera de la altura estándar.
+   - Logo bancario sobre el beneficio, dentro de la columna izquierda.
+   - Talón derecho idéntico en las tres categorías.
+   ================================================================ */
+#cupones > .cupon-horizontal-v16,
+#cupones > .cupon-horizontal-v16.cupon-bancario,
+#cupones > .cupon-horizontal-v16.cupon-bancario-unificado {
+  display:grid!important;
+  grid-template-columns:25% minmax(0,1fr) 35%!important;
+  grid-template-rows:1fr!important;
+  width:100%!important;
+  height:132px!important;
+  min-height:132px!important;
+  max-height:132px!important;
+  overflow:hidden!important;
+  align-items:stretch!important;
+}
+#cupones > .cupon-horizontal-v16 > .hc16-valor,
+#cupones > .cupon-horizontal-v16 > .hc16-info,
+#cupones > .cupon-horizontal-v16 > .hc16-acciones {
+  position:relative!important;
+  min-width:0!important;
+  width:auto!important;
+  height:132px!important;
+  min-height:132px!important;
+  max-height:132px!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+#cupones > .cupon-horizontal-v16 > .hc16-acciones { overflow:visible!important; }
+
+/* El valor debe ser siempre visible por encima del porcentaje decorativo. */
+#cupones .cupon-horizontal-v16 .hc16-descuento {
+  display:flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+  position:relative!important;
+  z-index:3!important;
+  color:var(--hc16-accent,var(--categoria-cupon-color,#f57c00))!important;
+  -webkit-text-fill-color:var(--hc16-accent,var(--categoria-cupon-color,#f57c00))!important;
+}
+#cupones .cupon-horizontal-v16 .hc19-porcentaje { z-index:1!important; }
+
+/* Bancario: misma geometría; logo + beneficio en la primera zona. */
+#cupones > .cupon-bancario-unificado .hc25-banco-valor {
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:4px!important;
+  padding:8px 6px!important;
+}
+#cupones > .cupon-bancario-unificado .hc25-banco-logo {
+  flex:0 0 auto!important;
+  display:block!important;
+  width:auto!important;
+  height:auto!important;
+  max-width:88%!important;
+  max-height:34px!important;
+  margin:0!important;
+  padding:0!important;
+  object-fit:contain!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+#cupones > .cupon-bancario-unificado .hc16-descuento {
+  flex:0 0 auto!important;
+  width:100%!important;
+  margin:0!important;
+  justify-content:center!important;
+  text-align:center!important;
+  font-size:clamp(25px,4vw,40px)!important;
+  line-height:.9!important;
+}
+#cupones > .cupon-bancario-unificado .hc25-banco-info {
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  padding:10px 10px!important;
+  overflow:hidden!important;
+}
+#cupones > .cupon-bancario-unificado .hc16-categoria { margin-bottom:6px!important; }
+#cupones > .cupon-bancario-unificado .hc16-condicion { font-size:13px!important; line-height:1.12!important; }
+#cupones > .cupon-bancario-unificado .hc16-detalle {
+  font-size:10px!important;
+  line-height:1.1!important;
+  margin:1px 0 3px!important;
+  white-space:normal!important;
+  overflow:hidden!important;
+}
+#cupones > .cupon-bancario-unificado .hc16-etiquetas { margin-top:2px!important; }
+#cupones > .cupon-bancario-unificado .hc25-banco-acciones {
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  padding:12px 14px 10px!important;
+  background:#fff!important;
+}
+
+@media (max-width:680px){
+  #cupones > .cupon-horizontal-v16,
+  #cupones > .cupon-horizontal-v16.cupon-bancario,
+  #cupones > .cupon-horizontal-v16.cupon-bancario-unificado {
+    display:grid!important;
+    grid-template-columns:25% minmax(0,1fr) 35%!important;
+    height:112px!important;
+    min-height:112px!important;
+    max-height:112px!important;
+  }
+  #cupones > .cupon-horizontal-v16 > .hc16-valor,
+  #cupones > .cupon-horizontal-v16 > .hc16-info,
+  #cupones > .cupon-horizontal-v16 > .hc16-acciones {
+    height:112px!important;
+    min-height:112px!important;
+    max-height:112px!important;
+  }
+  #cupones > .cupon-bancario-unificado .hc25-banco-logo { max-height:25px!important; max-width:88%!important; }
+  #cupones > .cupon-bancario-unificado .hc16-descuento { font-size:clamp(19px,5.6vw,29px)!important; }
+  #cupones > .cupon-bancario-unificado .hc25-banco-info { padding:7px 6px!important; }
+  #cupones > .cupon-bancario-unificado .hc16-categoria { margin-bottom:4px!important; }
+  #cupones > .cupon-bancario-unificado .hc16-condicion { font-size:8px!important; }
+  #cupones > .cupon-bancario-unificado .hc16-detalle { font-size:7px!important; line-height:1.05!important; margin:1px 0 2px!important; }
+  #cupones > .cupon-bancario-unificado .hc25-banco-acciones { padding:9px 7px 7px!important; }
+}
