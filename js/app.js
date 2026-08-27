@@ -709,7 +709,8 @@ function escaparHtml(valor = "") {
 function iconoCompartir() {
   return `
     <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M14 5l6 5-6 5v-3.2c-4.4.1-7.3 1.6-9.5 5.2.6-5.5 3.6-9 9.5-9.7V5Z"/>
+      <path d="M20 5v6h-6"/>
+      <path d="M20 11c-2.3-3.2-5.1-4.8-8.3-4.2C7.8 7.5 5.1 10.5 4 15.8c2.2-3.1 5.1-4.7 8.5-4.7H20"/>
     </svg>
   `;
 }
@@ -1357,12 +1358,10 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
       <p class="mensaje hc16-mensaje" aria-live="polite"></p>
       <div class="hc16-social acciones-secundarias hc61-social" aria-label="Actividad del cupón">
         <button class="boton-compartir hc16-icono hc20-compartir hc61-chip hc61-share" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
-        <span class="hc16-separador hc61-separador" aria-hidden="true"></span>
         <span class="hc61-chip hc61-like-chip">
           <button class="boton-like hc16-icono ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
           <span class="numero-likes hc16-numero">${Number(cupon.likes || 0)}</span>
         </span>
-        <span class="hc16-separador hc61-separador" aria-hidden="true"></span>
         <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas hc61-chip hc61-view-chip" aria-label="Vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
       </div>
       <div class="estado-programacion hc16-tiempo" hidden></div>
@@ -1473,12 +1472,10 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
       <p class="mensaje hc16-mensaje" aria-live="polite"></p>
       <div class="hc16-social acciones-secundarias hc61-social" aria-label="Actividad del cupón">
         <button class="boton-compartir hc16-icono hc20-compartir hc61-chip hc61-share" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
-        <span class="hc16-separador hc61-separador" aria-hidden="true"></span>
         <span class="hc61-chip hc61-like-chip">
           <button class="boton-like hc16-icono ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
           <span class="numero-likes hc16-numero">${Number(cupon.likes || 0)}</span>
         </span>
-        <span class="hc16-separador hc61-separador" aria-hidden="true"></span>
         <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas hc61-chip hc61-view-chip" aria-label="Vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
       </div>
       <div class="estado-programacion hc16-tiempo" hidden></div>
