@@ -810,8 +810,6 @@
   color: #151515 !important;
   box-shadow: 0 5px 14px rgba(23, 63, 39, .11) !important;
   isolation: isolate !important;
-  -webkit-mask: none !important;
-  mask: none !important;
 }
 #cupones > .cupon-horizontal-v16:not(.cupon-bancario)::before { content: none !important; }
 #cupones > .cupon-horizontal-v16:not(.cupon-bancario)::after {
@@ -2316,13 +2314,13 @@
 #cupones .cupon-horizontal-v16 {
   -webkit-mask-image:
     radial-gradient(circle 9px at 65% 0, transparent 0 8.5px, #000 9px),
-    radial-gradient(circle 9px at 65% 100%, transparent 0 8.5px, #000 9px);
+    radial-gradient(circle 9px at 65% 100%, transparent 0 8.5px, #000 9px) !important;
   -webkit-mask-size:100% 100%,100% 100%;
   -webkit-mask-repeat:no-repeat,no-repeat;
   -webkit-mask-composite:source-in;
   mask-image:
     radial-gradient(circle 9px at 65% 0, transparent 0 8.5px, #000 9px),
-    radial-gradient(circle 9px at 65% 100%, transparent 0 8.5px, #000 9px);
+    radial-gradient(circle 9px at 65% 100%, transparent 0 8.5px, #000 9px) !important;
   mask-size:100% 100%,100% 100%;
   mask-repeat:no-repeat,no-repeat;
   mask-composite:intersect;
@@ -2366,10 +2364,10 @@
   #cupones .cupon-horizontal-v16 {
     -webkit-mask-image:
       radial-gradient(circle 8px at 65% 0, transparent 0 7.5px, #000 8px),
-      radial-gradient(circle 8px at 65% 100%, transparent 0 7.5px, #000 8px);
+      radial-gradient(circle 8px at 65% 100%, transparent 0 7.5px, #000 8px) !important;
     mask-image:
       radial-gradient(circle 8px at 65% 0, transparent 0 7.5px, #000 8px),
-      radial-gradient(circle 8px at 65% 100%, transparent 0 7.5px, #000 8px);
+      radial-gradient(circle 8px at 65% 100%, transparent 0 7.5px, #000 8px) !important;
   }
   #cupones .cupon-bancario-unificado .hc16-descuento {
     font-size:clamp(18px,5vw,26px) !important;
@@ -2408,3 +2406,10 @@
   color:var(--hc16-accent) !important;
   fill:currentColor !important;
 }
+
+
+/* ================================================================
+   PAQUETE 3.7 — CORRECCIÓN REAL DE MUESCAS
+   Se elimina el reset histórico `mask:none !important` de v16 que
+   anulaba las muescas de 3.5/3.6. No cambia estructura ni layout.
+   ================================================================ */
