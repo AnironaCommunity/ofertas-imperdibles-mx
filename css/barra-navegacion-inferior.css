@@ -498,3 +498,62 @@
   transform: none !important;
   filter: none !important;
 }
+
+/* ============================================================
+   V82.84 — Contador llamativo de productos en Ofertazo
+   ============================================================ */
+@media (max-width: 700px) {
+  #barra-inferior-ofertazo {
+    position: relative;
+    overflow: visible;
+  }
+
+  .barra-inferior-notificacion-ofertazo {
+    position: absolute;
+    top: 1px;
+    left: calc(50% + 14px);
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    border: 2px solid #fff;
+    border-radius: 999px;
+    background: #e53935;
+    color: #fff;
+    box-shadow: 0 2px 7px rgba(229, 57, 53, .36);
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1;
+    pointer-events: none;
+    transform-origin: center;
+    animation: ofertazo-notificacion-parpadeo 1.15s ease-in-out infinite;
+  }
+
+  .barra-inferior-notificacion-ofertazo[hidden] {
+    display: none !important;
+  }
+
+  @keyframes ofertazo-notificacion-parpadeo {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+      box-shadow: 0 2px 7px rgba(229, 57, 53, .36), 0 0 0 0 rgba(229, 57, 53, .28);
+    }
+    48% {
+      opacity: .52;
+      transform: scale(.90);
+      box-shadow: 0 2px 7px rgba(229, 57, 53, .18), 0 0 0 6px rgba(229, 57, 53, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .barra-inferior-notificacion-ofertazo {
+      animation: none;
+    }
+  }
+}
+

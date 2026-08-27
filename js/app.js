@@ -29,6 +29,7 @@ const tabExclusivo = document.querySelector("#tab-exclusivo");
 const vistaCupones = document.querySelector("#vista-cupones");
 const barraInferiorCupones = document.querySelector("#barra-inferior-cupones");
 const barraInferiorOfertazo = document.querySelector("#barra-inferior-ofertazo");
+const contadorOfertazoBarra = document.querySelector("#contador-ofertazo-barra");
 const barraInferiorMas = document.querySelector("#barra-inferior-mas");
 const botonesMenuOfertas = document.querySelectorAll(".menu-ofertas [data-vista]");
 const botonComunidadAnirona = document.querySelector("#boton-anirona-hero[data-vista]");
@@ -264,8 +265,22 @@ function actualizarContadoresSecciones() {
       publicidadPerteneceASeccion(
         publicidad,
         "ofertas_mercado_libre"
-      )
+      ) &&
+      !ofertaExpirada(publicidad)
   ).length;
+
+  // V82.84 — Notificación dinámica del botón Ofertazo.
+  // Muestra exactamente los productos activos y vigentes que el usuario verá al entrar.
+  if (contadorOfertazoBarra) {
+    contadorOfertazoBarra.textContent = cantidadMercadoLibre.toLocaleString("es-MX");
+    contadorOfertazoBarra.hidden = cantidadMercadoLibre <= 0;
+  }
+  if (barraInferiorOfertazo) {
+    const textoAccesible = cantidadMercadoLibre === 1
+      ? "Ir a Ofertazo, 1 producto disponible"
+      : `Ir a Ofertazo, ${cantidadMercadoLibre} productos disponibles`;
+    barraInferiorOfertazo.setAttribute("aria-label", textoAccesible);
+  }
 
   const cantidadAmazon = todasLasPublicidades.filter(
     (publicidad) =>
