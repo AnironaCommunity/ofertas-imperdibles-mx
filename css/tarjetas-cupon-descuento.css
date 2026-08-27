@@ -2503,3 +2503,23 @@
   border: 1px solid var(--ticket-border, #dbe3df) !important;
   box-shadow: 0 4px 12px rgba(20, 30, 45, .10) !important;
 }
+
+/* ================================================================
+   PAQUETE 4.3 — LIMPIEZA INTERIOR DE LAS MUESCAS
+   Único cambio: ocultar la línea vertical dentro de la muesca sin
+   modificar forma, tamaño, borde, sombra ni distribución de tarjetas.
+   ================================================================ */
+#cupones .cupon-horizontal-v16 > .ticket-notch {
+  z-index: 9999 !important;
+  isolation: isolate !important;
+}
+#cupones .cupon-horizontal-v16 > .ticket-notch::after {
+  content: "" !important;
+  position: absolute !important;
+  z-index: 2 !important;
+  inset: 1px !important;
+  display: block !important;
+  border-radius: inherit !important;
+  background: var(--ticket-cutout-bg, #f4f8f6) !important;
+  pointer-events: none !important;
+}
