@@ -709,7 +709,7 @@ function escaparHtml(valor = "") {
 function iconoCompartir() {
   return `
     <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M20 4v6h-6M19.4 4.6 13 11M20 10c-5.7 0-10.3 1.9-13.1 5.2C5.4 17 4.6 18.9 4 21c.1-5.6 1.9-10 5.3-12.7C12 6.1 15.5 5 20 5"/>
+      <path d="M14 5l6 5-6 5v-3.2c-4.4.1-7.3 1.6-9.5 5.2.6-5.5 3.6-9 9.5-9.7V5Z"/>
     </svg>
   `;
 }
