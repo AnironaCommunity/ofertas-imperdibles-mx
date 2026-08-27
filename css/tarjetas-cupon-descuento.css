@@ -2607,3 +2607,25 @@
     ) !important;
   }
 }
+
+/* ================================================================
+   PAQUETE 4.9 — ACABADO SUAVE SIN LÍNEA EXTERIOR
+   Conserva exactamente la muesca real 4.8. Se elimina el contorno lineal
+   de la tarjeta y se reemplaza por una sombra suave que sigue la silueta
+   recortada del ticket, incluidas las muescas superior e inferior.
+   ================================================================ */
+#cupones.cupones-grid-compacta > article.cupon.cupon-horizontal-v16,
+#cupones article.cupon.cupon-horizontal-v16,
+#cupones .cupon-horizontal-v16 {
+  border: 0 !important;
+  box-shadow: none !important;
+  filter: drop-shadow(0 3px 7px rgba(20, 30, 45, .11)) !important;
+}
+
+@media (max-width: 680px) {
+  #cupones.cupones-grid-compacta > article.cupon.cupon-horizontal-v16,
+  #cupones article.cupon.cupon-horizontal-v16,
+  #cupones .cupon-horizontal-v16 {
+    filter: drop-shadow(0 3px 6px rgba(20, 30, 45, .10)) !important;
+  }
+}
