@@ -2417,3 +2417,18 @@
     font-size:7.6px!important;
   }
 }
+
+/* ================================================================
+   PAQUETE 2.9 — TALÓN BANCARIO REALMENTE UNIFICADO + MUESCAS
+   - Bancario usa la misma clase .hc16-acciones que Tienda/Exclusivo.
+   - Las muescas toman el fondo REAL de la sección (blanco actual).
+   - No modifica logo, porcentaje, texto ni etiquetas del lado izquierdo/central.
+   ================================================================ */
+#cupones {
+  --fondo-seccion-cupones: #ffffff !important;
+}
+#cupones .cupon-horizontal-v16 .hc16-acciones::before,
+#cupones .cupon-horizontal-v16 .hc16-acciones::after {
+  background: var(--fondo-seccion-cupones) !important;
+  box-shadow: none !important;
+}

@@ -1427,7 +1427,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
       ${cupon.detalle_bancario ? `<p class="hc16-detalle hc25-banco-detalle">${escaparHtml(cupon.detalle_bancario)}</p>` : ""}
       <div class="hc16-etiquetas">${htmlEtiquetasCupon(estados)}</div>
     </div>
-    <div class="hc16-acciones hc25-banco-acciones">
+    <div class="hc16-acciones">
       <div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar" type="button" ${cupon.agotado === true ? 'disabled aria-disabled="true"' : ""}>${contenidoBotonCopiar()}</button></div>
       <p class="mensaje hc16-mensaje" aria-live="polite"></p>
       <div class="hc16-social acciones-secundarias" aria-label="Actividad del cupón">
