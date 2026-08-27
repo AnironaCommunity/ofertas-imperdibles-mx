@@ -2313,7 +2313,7 @@
 
 /* Muescas REALES en la división 65/35. El hueco es transparente y, por
    tanto, siempre muestra exactamente el fondo real que exista detrás. */
-#cupones > .cupon-horizontal-v16 {
+#cupones .cupon-horizontal-v16 {
   -webkit-mask-image:
     radial-gradient(circle 9px at 65% 0, transparent 0 8.5px, #000 9px),
     radial-gradient(circle 9px at 65% 100%, transparent 0 8.5px, #000 9px);
@@ -2331,39 +2331,39 @@
 }
 
 /* Se eliminan las muescas simuladas: ya no hay círculos pintados. */
-#cupones > .cupon-horizontal-v16 > .hc16-acciones::before,
-#cupones > .cupon-horizontal-v16 > .hc16-acciones::after {
+#cupones .cupon-horizontal-v16 > .hc16-acciones::before,
+#cupones .cupon-horizontal-v16 > .hc16-acciones::after {
   content:none !important;
   display:none !important;
 }
 
 /* El banco mantiene su bloque izquierdo, pero con escala visual contenida. */
-#cupones > .cupon-bancario-unificado .hc16-descuento {
+#cupones .cupon-bancario-unificado .hc16-descuento {
   font-size:clamp(23px,3.4vw,34px) !important;
   line-height:.94 !important;
 }
 
 /* Centro bancario: misma tipografía/respiración que la plantilla común. */
-#cupones > .cupon-bancario-unificado .hc25-banco-info {
+#cupones .cupon-bancario-unificado .hc25-banco-info {
   justify-content:center !important;
   padding:13px 13px 12px !important;
 }
-#cupones > .cupon-bancario-unificado .hc16-categoria {
+#cupones .cupon-bancario-unificado .hc16-categoria {
   margin-bottom:8px !important;
 }
-#cupones > .cupon-bancario-unificado .hc16-condicion {
+#cupones .cupon-bancario-unificado .hc16-condicion {
   font-size:13px !important;
   line-height:1.15 !important;
 }
-#cupones > .cupon-bancario-unificado .hc16-detalle,
-#cupones > .cupon-bancario-unificado .hc25-banco-detalle {
+#cupones .cupon-bancario-unificado .hc16-detalle,
+#cupones .cupon-bancario-unificado .hc25-banco-detalle {
   margin:0 0 8px !important;
   font-size:10.5px !important;
   line-height:1.15 !important;
 }
 
 @media (max-width:680px){
-  #cupones > .cupon-horizontal-v16 {
+  #cupones .cupon-horizontal-v16 {
     -webkit-mask-image:
       radial-gradient(circle 8px at 65% 0, transparent 0 7.5px, #000 8px),
       radial-gradient(circle 8px at 65% 100%, transparent 0 7.5px, #000 8px);
@@ -2371,23 +2371,40 @@
       radial-gradient(circle 8px at 65% 0, transparent 0 7.5px, #000 8px),
       radial-gradient(circle 8px at 65% 100%, transparent 0 7.5px, #000 8px);
   }
-  #cupones > .cupon-bancario-unificado .hc16-descuento {
+  #cupones .cupon-bancario-unificado .hc16-descuento {
     font-size:clamp(18px,5vw,26px) !important;
   }
-  #cupones > .cupon-bancario-unificado .hc25-banco-info {
+  #cupones .cupon-bancario-unificado .hc25-banco-info {
     padding:9px 7px 8px !important;
   }
-  #cupones > .cupon-bancario-unificado .hc16-categoria {
+  #cupones .cupon-bancario-unificado .hc16-categoria {
     margin-bottom:6px !important;
   }
-  #cupones > .cupon-bancario-unificado .hc16-condicion {
+  #cupones .cupon-bancario-unificado .hc16-condicion {
     font-size:9.2px !important;
     line-height:1.15 !important;
   }
-  #cupones > .cupon-bancario-unificado .hc16-detalle,
-  #cupones > .cupon-bancario-unificado .hc25-banco-detalle {
+  #cupones .cupon-bancario-unificado .hc16-detalle,
+  #cupones .cupon-bancario-unificado .hc25-banco-detalle {
     margin:0 0 5px !important;
     font-size:7.3px !important;
     line-height:1.15 !important;
   }
+}
+
+
+/* ================================================================
+   PAQUETE 3.6 — AJUSTE PUNTUAL MUESCAS + LIKE
+   - Corrige alcance de la muesca en tarjetas anidadas dentro de #cupones.
+   - Like inactivo gris; activo toma el color de acento de la tarjeta.
+   ================================================================ */
+#cupones .cupon-horizontal-v16 .boton-like:not(.activo),
+#cupones .cupon-horizontal-v16 .boton-like:not(.activo) svg {
+  color:#7b8491 !important;
+  fill:currentColor !important;
+}
+#cupones .cupon-horizontal-v16 .boton-like.activo,
+#cupones .cupon-horizontal-v16 .boton-like.activo svg {
+  color:var(--hc16-accent) !important;
+  fill:currentColor !important;
 }
