@@ -156,7 +156,10 @@ window.addEventListener("resize", () => {
 const SEGUNDOS_ACTUALIZACION = 5;
 const MILISEGUNDOS_PUBLICIDAD = 8000;
 const URL_PAGINA = "https://ofertasimperdiblesmx.vercel.app/";
-const COLORES = ["turquesa", "azul", "morado", "coral", "oliva"];
+const COLORES = [
+  "#10a85a", "#f57c00", "#7b3fc6", "#1976d2", "#10a9a0", "#e83e8c", "#ef5350", "#00a878",
+  "#0077b6", "#8e44ad", "#f28c28", "#d81b60", "#4682a9", "#3949ab", "#c2185b", "#237a3b"
+];
 
 let segundosRestantes = SEGUNDOS_ACTUALIZACION;
 let cargando = false;
@@ -1288,9 +1291,10 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   const clasesEstado = estados.map((estado) => ` cupon-${estado}`).join("");
   articulo.className = `cupon cupon-horizontal-v16${clasesEstado}${esBancario ? " cupon-bancario" : ""}${esExclusivo ? " cupon-exclusivo" : ""}`;
   articulo.dataset.id = String(cupon.id);
-  articulo.dataset.color = COLORES[indice % COLORES.length];
-  articulo.style.setProperty("--categoria-cupon-color", visualCategoria.color);
-  articulo.style.setProperty("--categoria-cupon-texto", colorTextoContraste(visualCategoria.color));
+  const colorCupon = COLORES[indice % COLORES.length];
+  articulo.dataset.color = colorCupon;
+  articulo.style.setProperty("--categoria-cupon-color", colorCupon);
+  articulo.style.setProperty("--categoria-cupon-texto", colorTextoContraste(colorCupon));
 
   articulo.innerHTML = `
     <div class="hc16-valor">
@@ -1404,45 +1408,49 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
   const bancoVisual = obtenerBancoVisual(cupon);
   const logoBanco = bancoVisual.logo;
   const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
-  articulo.className = `cupon-bancario-mini cupon-bancario-ticket${estados.map((estado) => ` cupon-${estado}`).join("")}`;
+  articulo.className = `cupon cupon-horizontal-v16 cupon-bancario cupon-bancario-unificado${estados.map((estado) => ` cupon-${estado}`).join("")}`;
   articulo.dataset.id = String(cupon.id);
   articulo.dataset.banco = bancoVisual.banco;
+  articulo.style.setProperty("--hc16-accent", bancoVisual.color);
+  articulo.style.setProperty("--categoria-cupon-color", bancoVisual.color);
   articulo.style.setProperty("--banco-color", bancoVisual.color);
-  articulo.style.setProperty("--banco-texto", bancoVisual.texto);
+
   articulo.innerHTML = `
-    <div class="bt20-main">
-      <div class="bt20-logo-wrap">${logoBanco ? `<img class="banco-logo bt20-logo" src="${escaparHtml(logoBanco)}" alt="" loading="lazy" />` : `<span class="banco-logo-fallback">BANCO</span>`}</div>
-      <div class="bt20-beneficio">
-        <span class="bt20-tipo">CUPÓN BANCARIO</span>
-        <h3>${escaparHtml(cupon.titulo || "Beneficio bancario")}</h3>
-        <p>Compra mínima <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
-        ${cupon.ahorro_maximo ? `<p>Tope de descuento <strong>${escaparHtml(cupon.ahorro_maximo)}</strong></p>` : ""}
-        ${cupon.detalle_bancario ? `<p class="bt20-detalle">${escaparHtml(cupon.detalle_bancario)}</p>` : ""}
-        <div class="bt20-etiquetas">${htmlEtiquetasCupon(estados)}</div>
-      </div>
+    <div class="hc16-valor hc25-banco-valor">
+      ${logoBanco ? `<img class="banco-logo hc25-banco-logo" src="${escaparHtml(logoBanco)}" alt="" loading="lazy" />` : `<span class="banco-logo-fallback">BANCO</span>`}
+      <h2 class="hc16-descuento descuento">${escaparHtml(cupon.titulo || "Beneficio")}${/\boff\b/i.test(String(cupon.titulo || "")) ? "" : '<span class="hc19-off">OFF</span>'}</h2>
     </div>
-    <div class="bt20-actions">
-      <button class="banco-canjear bt20-copiar" type="button" ${cupon.agotado === true ? 'disabled aria-disabled="true"' : ""}>${contenidoBotonCopiar()}</button>
-      <div class="bt20-social">
-        <button class="banco-compartir bt20-icon" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
-        <span class="bt20-sep"></span>
-        <button class="banco-like bt20-icon ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button><span class="numero-likes">${Number(cupon.likes || 0)}</span>
-        <span class="bt20-sep"></span>
-        <span class="bt20-vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
+    <div class="hc16-info hc25-banco-info">
+      <div class="hc16-categoria">CUPÓN BANCARIO</div>
+      <div class="hc16-condiciones"><p class="hc16-condicion">Compra mínima <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p></div>
+      ${cupon.ahorro_maximo ? `<p class="hc16-detalle">Tope de descuento <strong>${escaparHtml(cupon.ahorro_maximo)}</strong></p>` : ""}
+      ${cupon.detalle_bancario ? `<p class="hc16-detalle hc25-banco-detalle">${escaparHtml(cupon.detalle_bancario)}</p>` : ""}
+      <div class="hc16-etiquetas">${htmlEtiquetasCupon(estados)}</div>
+    </div>
+    <div class="hc16-acciones hc25-banco-acciones">
+      <div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar" type="button" ${cupon.agotado === true ? 'disabled aria-disabled="true"' : ""}>${contenidoBotonCopiar()}</button></div>
+      <p class="mensaje hc16-mensaje" aria-live="polite"></p>
+      <div class="hc16-social acciones-secundarias" aria-label="Actividad del cupón">
+        <button class="boton-compartir hc16-icono hc20-compartir" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
+        <span class="hc16-separador" aria-hidden="true"></span>
+        <button class="boton-like hc16-icono ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
+        <span class="numero-likes hc16-numero">${Number(cupon.likes || 0)}</span>
+        <span class="hc16-separador" aria-hidden="true"></span>
+        <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas" aria-label="Vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
       </div>
-      <div class="estado-programacion bt20-tiempo" hidden></div>
-      <p class="mensaje" aria-live="polite"></p>
+      <div class="estado-programacion hc16-tiempo" hidden></div>
     </div>`;
-  const boton = articulo.querySelector(".banco-canjear");
+
+  const boton = articulo.querySelector(".boton-canjear");
   const estadoInicial = couponTimeState(cupon);
   if (!estadoInicial.enabled) {
     boton.disabled = true;
     if (estadoInicial.state === "agotado") { articulo.classList.add("cupon-agotado"); boton.classList.add("boton-agotado"); boton.textContent = "Cupón agotado"; }
-    else boton.textContent = "⏳ Disponible pronto";
+    else { boton.classList.add("boton-programado"); boton.textContent = "⏳ Disponible pronto"; }
   }
   boton.addEventListener("click", () => { if (couponTimeState(cupon).enabled) copiarYCanjear(cupon, articulo); });
-  articulo.querySelector(".banco-compartir")?.addEventListener("click", () => compartirPagina(articulo));
-  articulo.querySelector(".banco-like")?.addEventListener("click", () => darMeGusta(cupon, articulo));
+  articulo.querySelector(".boton-compartir")?.addEventListener("click", () => compartirPagina(articulo));
+  articulo.querySelector(".boton-like")?.addEventListener("click", () => darMeGusta(cupon, articulo));
   return articulo;
 }
 
