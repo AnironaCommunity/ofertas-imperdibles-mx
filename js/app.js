@@ -708,9 +708,8 @@ function escaparHtml(valor = "") {
 
 function iconoCompartir() {
   return `
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M20 5v6h-6"/>
-      <path d="M20 11c-2.3-3.2-5.1-4.8-8.3-4.2C7.8 7.5 5.1 10.5 4 15.8c2.2-3.1 5.1-4.7 8.5-4.7H20"/>
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M14.5 5.5 20 11l-5.5 5.5v-3.2c-4.8 0-8 1.6-10.5 5.2.7-5.9 4.1-9.1 10.5-9.1V5.5Z"/>
     </svg>
   `;
 }

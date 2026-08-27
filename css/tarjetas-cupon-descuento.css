@@ -3188,3 +3188,128 @@
     max-height: 14px !important;
   }
 }
+
+/* ================================================================
+   PAQUETE 6.8 — AJUSTE FINAL SOLO DE ICONOS SOCIALES
+   Objetivos:
+   1) Compartir visualmente equivalente a Me gusta / Vistas.
+   2) Los tres elementos quedan centrados como grupo debajo del CTA.
+   3) Se elimina cualquier borde/cuadro residual del botón Compartir.
+   No modifica alturas, vigencia, CTA, muescas ni contenido.
+   ================================================================ */
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social {
+  display: grid !important;
+  grid-template-columns: 28px 43px 47px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  column-gap: 5px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  transform: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social > .hc61-share,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social > .hc61-like-chip,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social > .hc61-view-chip {
+  justify-self: center !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social > button.boton-compartir.hc61-share,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social > button.boton-compartir.hc61-share:hover,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social > button.boton-compartir.hc61-share:focus,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social > button.boton-compartir.hc61-share:focus-visible,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social > button.boton-compartir.hc61-share:active {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: none !important;
+  width: 28px !important;
+  min-width: 28px !important;
+  max-width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-width: 0 !important;
+  border-style: none !important;
+  border-color: transparent !important;
+  border-radius: 50% !important;
+  outline: none !important;
+  outline-offset: 0 !important;
+  background: #eaf9f2 !important;
+  background-color: #eaf9f2 !important;
+  color: #12aa63 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  overflow: hidden !important;
+  clip-path: circle(50%) !important;
+  -webkit-clip-path: circle(50%) !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social > button.boton-compartir.hc61-share::before,
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social > button.boton-compartir.hc61-share::after {
+  content: none !important;
+  display: none !important;
+}
+
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social > button.boton-compartir.hc61-share svg {
+  display: block !important;
+  width: 16px !important;
+  min-width: 16px !important;
+  max-width: 16px !important;
+  height: 16px !important;
+  min-height: 16px !important;
+  max-height: 16px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.8 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  overflow: visible !important;
+}
+
+#cupones .cupon-horizontal-v16 .hc16-social.hc61-social > button.boton-compartir.hc61-share svg path {
+  fill: none !important;
+  stroke: currentColor !important;
+}
+
+@media (max-width: 680px) {
+  #cupones .cupon-horizontal-v16 .hc16-social.hc61-social {
+    grid-template-columns: 24px 37px 41px !important;
+    column-gap: 4px !important;
+    transform: none !important;
+  }
+
+  #cupones .cupon-horizontal-v16 .hc16-social.hc61-social > button.boton-compartir.hc61-share,
+  #cupones .cupon-horizontal-v16 .hc16-social.hc61-social > button.boton-compartir.hc61-share:hover,
+  #cupones .cupon-horizontal-v16 .hc16-social.hc61-social > button.boton-compartir.hc61-share:focus,
+  #cupones .cupon-horizontal-v16 .hc16-social.hc61-social > button.boton-compartir.hc61-share:focus-visible,
+  #cupones .cupon-horizontal-v16 .hc16-social.hc61-social > button.boton-compartir.hc61-share:active {
+    width: 24px !important;
+    min-width: 24px !important;
+    max-width: 24px !important;
+    height: 24px !important;
+    min-height: 24px !important;
+    max-height: 24px !important;
+  }
+
+  #cupones .cupon-horizontal-v16 .hc16-social.hc61-social > button.boton-compartir.hc61-share svg {
+    width: 14px !important;
+    min-width: 14px !important;
+    max-width: 14px !important;
+    height: 14px !important;
+    min-height: 14px !important;
+    max-height: 14px !important;
+  }
+}
