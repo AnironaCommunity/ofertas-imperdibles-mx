@@ -2432,3 +2432,230 @@
   background: var(--fondo-seccion-cupones) !important;
   box-shadow: none !important;
 }
+
+/* ================================================================
+   PAQUETE 3.0 — CORRECCIÓN REAL TALÓN BANCARIO + MUESCAS REALES
+   - SOLO se corrige la zona derecha del bancario.
+   - El lado izquierdo/central bancario queda intacto.
+   - Las muescas siguen presentes, pero ahora son recortes reales:
+     muestran el fondo que exista detrás de la tarjeta, sin color pintado.
+   ================================================================ */
+
+/* 1) Muescas reales en el punto de separación 65% / 35%.
+      Dos máscaras intersectadas = tarjeta completa menos los dos círculos.
+      Así el interior SIEMPRE muestra el fondo real de la sección. */
+#cupones > .cupon-horizontal-v16 {
+  -webkit-mask-image:
+    radial-gradient(circle 10px at 65% 0, transparent 0 9.5px, #000 10px),
+    radial-gradient(circle 10px at 65% 100%, transparent 0 9.5px, #000 10px);
+  -webkit-mask-size:100% 100%,100% 100%;
+  -webkit-mask-repeat:no-repeat,no-repeat;
+  -webkit-mask-composite:source-in;
+  mask-image:
+    radial-gradient(circle 10px at 65% 0, transparent 0 9.5px, #000 10px),
+    radial-gradient(circle 10px at 65% 100%, transparent 0 9.5px, #000 10px);
+  mask-size:100% 100%,100% 100%;
+  mask-repeat:no-repeat,no-repeat;
+  mask-composite:intersect;
+}
+
+/* Ya no se pintan círculos encima: el recorte lo hace la máscara. */
+#cupones > .cupon-horizontal-v16 > .hc16-acciones::before,
+#cupones > .cupon-horizontal-v16 > .hc16-acciones::after {
+  content:none!important;
+  display:none!important;
+}
+
+/* 2) Talón bancario: reset explícito para que quede idéntico al de
+      Tienda/Exclusivo aunque existan reglas históricas de Bancarios. */
+#cupones > .cupon-bancario-unificado > .hc16-acciones {
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  justify-content:center!important;
+  width:auto!important;
+  height:132px!important;
+  min-height:132px!important;
+  max-height:132px!important;
+  padding:12px 14px 10px!important;
+  margin:0!important;
+  background:#fff!important;
+  color:#252525!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+  box-sizing:border-box!important;
+}
+#cupones > .cupon-bancario-unificado > .hc16-acciones > .hc16-cta {
+  position:relative!important;
+  width:100%!important;
+  margin:0!important;
+  padding:0!important;
+  flex:0 0 auto!important;
+}
+#cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-copiar {
+  width:100%!important;
+  max-width:none!important;
+  min-height:38px!important;
+  height:auto!important;
+  padding:7px 13px!important;
+  margin:0!important;
+  border:1px solid #d8b900!important;
+  border-radius:6px!important;
+  background:#ffe600!important;
+  color:#171717!important;
+  font-size:11.5px!important;
+  line-height:1.15!important;
+  font-weight:850!important;
+  text-transform:none!important;
+  box-shadow:0 3px 7px rgba(80,65,0,.16)!important;
+  outline:1px dashed rgba(75,62,0,.38)!important;
+  outline-offset:-5px!important;
+  box-sizing:border-box!important;
+}
+#cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-copiar svg {
+  width:16px!important;
+  height:16px!important;
+  flex:0 0 16px!important;
+  margin-right:5px!important;
+  color:#171717!important;
+  stroke:currentColor!important;
+}
+#cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-social {
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-height:24px!important;
+  margin:7px 0 0!important;
+  padding:0!important;
+  gap:6px!important;
+  color:#657080!important;
+  border:0!important;
+  box-sizing:border-box!important;
+}
+#cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-icono {
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:22px!important;
+  height:22px!important;
+  min-width:22px!important;
+  min-height:22px!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#657080!important;
+}
+#cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-icono svg,
+#cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-usos svg {
+  width:13px!important;
+  height:13px!important;
+  flex:0 0 13px!important;
+}
+#cupones > .cupon-bancario-unificado > .hc16-acciones .boton-like.activo {
+  color:var(--hc16-accent)!important;
+}
+#cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-separador {
+  display:block!important;
+  width:1px!important;
+  height:18px!important;
+  margin:0 2px!important;
+  background:#b7bec7!important;
+  flex:0 0 1px!important;
+}
+#cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-numero,
+#cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-usos,
+#cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-usos .numero-clics {
+  font-size:10px!important;
+  line-height:1!important;
+  color:#657080!important;
+}
+#cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-tiempo {
+  width:100%!important;
+  margin:7px 0 0!important;
+  padding:8px 0 0!important;
+  border:0!important;
+  border-top:0!important;
+  background:transparent!important;
+  color:#657080!important;
+  font-size:10px!important;
+  font-weight:400!important;
+  line-height:1.15!important;
+  text-align:center!important;
+  box-sizing:border-box!important;
+}
+#cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-tiempo .estado-linea,
+#cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-tiempo .estado-tiempo,
+#cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-tiempo .estado-tiempo::before {
+  color:#657080!important;
+  font-size:10px!important;
+  font-weight:400!important;
+}
+
+@media (max-width:680px){
+  #cupones > .cupon-horizontal-v16 {
+    -webkit-mask-image:
+      radial-gradient(circle 8px at 65% 0, transparent 0 7.5px, #000 8px),
+      radial-gradient(circle 8px at 65% 100%, transparent 0 7.5px, #000 8px);
+    mask-image:
+      radial-gradient(circle 8px at 65% 0, transparent 0 7.5px, #000 8px),
+      radial-gradient(circle 8px at 65% 100%, transparent 0 7.5px, #000 8px);
+  }
+  #cupones > .cupon-bancario-unificado > .hc16-acciones {
+    height:112px!important;
+    min-height:112px!important;
+    max-height:112px!important;
+    padding:9px 7px 7px!important;
+  }
+  #cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-copiar {
+    min-height:31px!important;
+    padding:5px 7px!important;
+    font-size:8px!important;
+    outline-offset:-4px!important;
+  }
+  #cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-copiar svg {
+    width:13px!important;
+    height:13px!important;
+    flex-basis:13px!important;
+    margin-right:3px!important;
+  }
+  #cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-social {
+    min-height:18px!important;
+    margin-top:4px!important;
+    gap:3px!important;
+  }
+  #cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-icono {
+    width:18px!important;
+    height:18px!important;
+    min-width:18px!important;
+    min-height:18px!important;
+  }
+  #cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-icono svg,
+  #cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-usos svg {
+    width:11px!important;
+    height:11px!important;
+    flex-basis:11px!important;
+  }
+  #cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-separador {
+    height:16px!important;
+    margin:0 1px!important;
+  }
+  #cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-numero,
+  #cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-usos,
+  #cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-usos .numero-clics {
+    font-size:8px!important;
+  }
+  #cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-tiempo,
+  #cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-tiempo .estado-linea,
+  #cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-tiempo .estado-tiempo,
+  #cupones > .cupon-bancario-unificado > .hc16-acciones .hc16-tiempo .estado-tiempo::before {
+    margin-top:4px!important;
+    padding-top:5px!important;
+    font-size:7.6px!important;
+  }
+}
