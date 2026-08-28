@@ -659,7 +659,8 @@
     overflow: hidden;
     border: 1px solid #42b91f;
     border-radius: 14px;
-    background: linear-gradient(135deg, #08150e 0%, #10251a 100%);
+    /* V82.88 — Zona blanca para el logo y transición hacia negro en el contenido */
+    background: linear-gradient(90deg, #ffffff 0%, #ffffff 27%, #ededed 34%, #777777 43%, #171717 52%, #080808 100%);
     color: #fff;
     text-align: left;
     cursor: pointer;
@@ -674,9 +675,6 @@
     width: 108px;
     max-height: 90px;
     object-fit: contain;
-    /* V82.87 — Suaviza las orillas del logo para integrarlo al fondo */
-    -webkit-mask-image: radial-gradient(ellipse 88% 82% at center, #000 62%, rgba(0,0,0,.88) 72%, rgba(0,0,0,.35) 88%, transparent 100%);
-    mask-image: radial-gradient(ellipse 88% 82% at center, #000 62%, rgba(0,0,0,.88) 72%, rgba(0,0,0,.35) 88%, transparent 100%);
   }
 
   .menu-mas-anirona-contenido {
