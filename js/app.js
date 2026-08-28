@@ -331,10 +331,10 @@ function actualizarContadoresSecciones() {
   );
 
   // El botón Exclusivos permanece visible aunque no haya cupones activos.
-  // Así el selector conserva siempre las cuatro categorías disponibles.
+  // Así el selector conserva siempre las cinco opciones disponibles, incluyendo Anirona.
   if (tabExclusivo) tabExclusivo.hidden = false;
   if (selectorCupones) {
-    selectorCupones.style.setProperty("--selector-columnas", "4");
+    selectorCupones.style.setProperty("--selector-columnas", "5");
   }
 }
 
