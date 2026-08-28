@@ -2156,9 +2156,108 @@ function textoCuentaRegresivaBanner() {
   return `${Math.max(1, minutos)} min`;
 }
 
+let bannerEstadoCarruselIndice = 0;
+
+function mostrarBannerEstadoCarrusel(indice = 0, animar = true) {
+  const banner = document.querySelector("#banner-estado-cupones");
+  const track = banner?.querySelector(".hero-banner-track");
+  const puntos = Array.from(banner?.querySelectorAll(".hero-banner-punto") || []);
+  if (!banner || !track) return;
+
+  const total = Math.max(1, track.children.length);
+  bannerEstadoCarruselIndice = (Number(indice) + total) % total;
+  track.style.transition = animar ? "transform .36s cubic-bezier(.22,.61,.36,1)" : "none";
+  track.style.transform = `translate3d(-${bannerEstadoCarruselIndice * 100}%,0,0)`;
+
+  Array.from(track.children).forEach((slide, i) => {
+    const activo = i === bannerEstadoCarruselIndice;
+    slide.setAttribute("aria-hidden", activo ? "false" : "true");
+  });
+
+  puntos.forEach((punto, i) => {
+    const activo = i === bannerEstadoCarruselIndice;
+    punto.classList.toggle("activo", activo);
+    punto.setAttribute("aria-current", activo ? "true" : "false");
+  });
+}
+
+function prepararBannerEstadoCarrusel() {
+  const banner = document.querySelector("#banner-estado-cupones");
+  const viewport = banner?.querySelector(".hero-banner-viewport");
+  const track = banner?.querySelector(".hero-banner-track");
+  if (!banner || !viewport || !track || banner.dataset.carruselListo === "true") return;
+  banner.dataset.carruselListo = "true";
+
+  banner.querySelector("#banner-estado-anterior")?.addEventListener("click", () => {
+    mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice - 1);
+  });
+  banner.querySelector("#banner-estado-siguiente")?.addEventListener("click", () => {
+    mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice + 1);
+  });
+  banner.querySelectorAll(".hero-banner-punto").forEach((punto) => {
+    punto.addEventListener("click", () => mostrarBannerEstadoCarrusel(Number(punto.dataset.bannerIndice) || 0));
+  });
+
+  let inicioX = 0;
+  let inicioY = 0;
+  let deltaX = 0;
+  let arrastrando = false;
+  let horizontal = false;
+
+  viewport.addEventListener("pointerdown", (evento) => {
+    if (evento.pointerType === "mouse" && evento.button !== 0) return;
+    inicioX = evento.clientX;
+    inicioY = evento.clientY;
+    deltaX = 0;
+    arrastrando = true;
+    horizontal = false;
+    track.style.transition = "none";
+  });
+
+  viewport.addEventListener("pointermove", (evento) => {
+    if (!arrastrando) return;
+    const dx = evento.clientX - inicioX;
+    const dy = evento.clientY - inicioY;
+    if (!horizontal) {
+      if (Math.abs(dx) < 7 && Math.abs(dy) < 7) return;
+      if (Math.abs(dy) > Math.abs(dx)) {
+        arrastrando = false;
+        mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice);
+        return;
+      }
+      horizontal = true;
+      viewport.classList.add("arrastrando");
+      try { viewport.setPointerCapture(evento.pointerId); } catch {}
+    }
+    deltaX = dx;
+    const ancho = viewport.clientWidth || 1;
+    const base = -(bannerEstadoCarruselIndice * 100);
+    const arrastre = (deltaX / ancho) * 100;
+    track.style.transform = `translate3d(${base + arrastre}%,0,0)`;
+  });
+
+  const terminar = (evento) => {
+    if (!arrastrando) return;
+    const ancho = viewport.clientWidth || 1;
+    const cambiar = horizontal && Math.abs(deltaX) >= Math.min(72, Math.max(36, ancho * .12));
+    if (cambiar) mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice + (deltaX < 0 ? 1 : -1));
+    else mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice);
+    viewport.classList.remove("arrastrando");
+    try { viewport.releasePointerCapture(evento.pointerId); } catch {}
+    arrastrando = false;
+    horizontal = false;
+    deltaX = 0;
+  };
+
+  viewport.addEventListener("pointerup", terminar);
+  viewport.addEventListener("pointercancel", terminar);
+  mostrarBannerEstadoCarrusel(0, false);
+}
+
 function actualizarBannerEstadoCupones() {
   const banner = document.querySelector("#banner-estado-cupones");
   if (!banner) return;
+  prepararBannerEstadoCarrusel();
 
   const superior = document.querySelector("#banner-estado-superior");
   const prefijo = document.querySelector("#banner-estado-prefijo");
@@ -2168,9 +2267,13 @@ function actualizarBannerEstadoCupones() {
   const vigencia = document.querySelector("#banner-estado-vigencia");
   const whatsappTitulo = document.querySelector("#banner-whatsapp-titulo");
   const whatsappSubtitulo = document.querySelector("#banner-whatsapp-subtitulo");
+  const ilustracion = document.querySelector("#banner-estado-ilustracion");
+  const alertaTitulo = document.querySelector("#banner-alerta-titulo");
+  const alertaTexto = document.querySelector("#banner-alerta-texto");
 
   const disponibles = todosLosCupones.filter(cuponDisponibleParaBanner);
   const total = disponibles.length;
+  const estadoAnterior = banner.dataset.estado;
 
   if (total > 0) {
     const ahorroMaximo = disponibles.reduce(
@@ -2183,27 +2286,37 @@ function actualizarBannerEstadoCupones() {
     if (prefijo) prefijo.textContent = ahorroMaximo > 0 ? "Hasta" : "Cupones";
     if (destacado) destacado.textContent = ahorroMaximo > 0 ? ` ${monedaBuscador(ahorroMaximo)}` : " disponibles";
     if (sufijo) sufijo.textContent = ahorroMaximo > 0 ? " OFF" : "";
-    if (detalle) detalle.textContent = "Revisa Tienda, Bancarios y Exclusivos antes de que se agoten.";
+    if (detalle) detalle.textContent = "Aplican según las condiciones de cada cupón.";
     if (vigencia) {
       vigencia.hidden = false;
       vigencia.textContent = "⏱ Úsalos antes de que se agoten";
     }
     if (whatsappTitulo) whatsappTitulo.textContent = "No te pierdas nada";
     if (whatsappSubtitulo) whatsappSubtitulo.textContent = "Únete a nuestro canal";
+    if (ilustracion) ilustracion.src = "img/banner-dinamico-cesta-activos.png?v=3.6";
+    if (alertaTitulo) alertaTitulo.textContent = "No te pierdas nuevos cupones";
+    if (alertaTexto) alertaTexto.textContent = "Te avisamos cuando aparezcan nuevas promociones y cupones.";
   } else {
     banner.dataset.estado = "agotados";
     if (superior) superior.textContent = "¡Se acabaron los cupones por hoy! 😢";
-    if (prefijo) prefijo.textContent = "Más cupones relámpago";
+    if (prefijo) prefijo.textContent = "Más cupones";
     if (destacado) destacado.textContent = ` dentro de ${textoCuentaRegresivaBanner()}`;
     if (sufijo) sufijo.textContent = " ⚡";
-    if (detalle) detalle.textContent = "Estamos pendientes por si aparece o reactivan algún cupón.";
+    if (detalle) detalle.textContent = "Algunos cupones pueden seguir o volver a estar activos.";
     if (vigencia) {
-      vigencia.hidden = false;
-      vigencia.textContent = "🔔 Algunos cupones pueden volver a estar activos";
+      vigencia.hidden = true;
+      vigencia.textContent = "";
     }
     if (whatsappTitulo) whatsappTitulo.textContent = "Aquí te avisamos";
     if (whatsappSubtitulo) whatsappSubtitulo.textContent = "cuando salgan nuevos";
+    if (ilustracion) ilustracion.src = "img/banner-dinamico-cesta-agotados.png?v=3.6";
+    if (alertaTitulo) alertaTitulo.textContent = "Aquí te avisamos cuando salgan";
+    if (alertaTexto) alertaTexto.textContent = "Únete al canal para enterarte cuando aparezcan nuevos cupones.";
   }
+
+  // Si el estado cambió por la disponibilidad real de cupones, el carrusel
+  // vuelve al banner principal. Después el usuario puede moverlo manualmente.
+  if (estadoAnterior !== banner.dataset.estado) mostrarBannerEstadoCarrusel(0, false);
 }
 
 function limpiarVista() {
