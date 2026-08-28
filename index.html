@@ -49,7 +49,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="img/icon-192.png?v=81.72" />
   <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png?v=81.73" />
   <link rel="stylesheet" href="css/style.css?v=82.46.0" />
-  <link rel="stylesheet" href="css/hero-redes.css?v=82.41" />
+  <link rel="stylesheet" href="css/hero-redes.css?v=82.66.0" />
   <link rel="stylesheet" href="css/ajustes-visuales-v67-16.css?v=70.0.0" />
   <link rel="stylesheet" href="css/eventos-v68.css?v=70.0.0" />
   <link rel="stylesheet" href="css/header-dinamico-v68-3.css?v=70.0.0" />
@@ -105,9 +105,40 @@
         />
       </div>
 
-      <div class="hero-promo-compacto hero-promo-imagen" aria-hidden="true">
-        <img src="img/banner-cupones-exclusivos-hd.jpg?v=82.10.0" alt="" />
-      </div>
+      <section id="banner-estado-cupones" class="hero-promo-compacto hero-banner-estado" data-estado="cargando" aria-live="polite" aria-label="Estado de los cupones">
+        <div class="hero-banner-ilustracion" aria-hidden="true">
+          <span class="hero-banner-cesta">🛒</span>
+          <span class="hero-banner-ticket hero-banner-ticket-a">%</span>
+          <span class="hero-banner-ticket hero-banner-ticket-b">%</span>
+        </div>
+
+        <div class="hero-banner-copy">
+          <p id="banner-estado-superior" class="hero-banner-superior">Consultando cupones...</p>
+          <p class="hero-banner-titulo">
+            <span id="banner-estado-prefijo">Ofertas</span>
+            <strong id="banner-estado-destacado"> disponibles</strong>
+            <span id="banner-estado-sufijo"></span>
+          </p>
+          <p id="banner-estado-detalle" class="hero-banner-detalle">Estamos revisando los cupones disponibles.</p>
+          <span id="banner-estado-vigencia" class="hero-banner-vigencia" hidden></span>
+        </div>
+
+        <a
+          id="enlace-banner-whatsapp"
+          class="hero-banner-whatsapp"
+          href="https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Unirme al canal de WhatsApp de Ofertas Imperdibles MX"
+        >
+          <span class="hero-banner-whatsapp-icono" aria-hidden="true">W</span>
+          <span>
+            <strong id="banner-whatsapp-titulo">No te pierdas nada</strong>
+            <small id="banner-whatsapp-subtitulo">Únete a nuestro canal</small>
+          </span>
+          <span class="hero-banner-whatsapp-flecha" aria-hidden="true">→</span>
+        </a>
+      </section>
 
       <div class="hero-redes-contenido">
         <strong id="nombre-sitio">Ofertas Imperdibles MX</strong>
@@ -609,7 +640,7 @@
   </div>
 
 
-  <script type="module" src="js/app.js?v=82.95.0"></script>
+  <script type="module" src="js/app.js?v=82.96.0"></script>
   <script src="js/hero-redes.js?v=82.39" defer></script>
   <script src="js/header-dinamico-v68-3.js?v=70.0.0" defer></script>
   <script src="js/cabecera-inteligente.js?v=77.15.7" defer></script>

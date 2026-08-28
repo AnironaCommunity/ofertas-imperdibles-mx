@@ -2123,6 +2123,89 @@ function cambiarCategoria(
   }
 }
 
+/* ============================================================
+   V82.96 — Banner superior dinámico según disponibilidad
+   Reemplaza únicamente la imagen promocional del encabezado.
+   ============================================================ */
+function cuponDisponibleParaBanner(cupon) {
+  if (!cupon || cupon.activo === false || cupon.agotado === true) return false;
+  const estado = couponTimeState(cupon);
+  return estado.state !== "finalizado" && estado.enabled === true;
+}
+
+function ahorroMaximoParaBanner(cupon) {
+  const ahorroCapturado = numeroDineroCupon(cupon?.ahorro_maximo);
+  if (ahorroCapturado > 0) return ahorroCapturado;
+
+  const titulo = String(cupon?.titulo || "");
+  const fijo = titulo.match(/^\s*\$\s*([\d.,]+)/)
+    || titulo.match(/\$\s*([\d.,]+)\s*(?:OFF|DE DESCUENTO)/i);
+  return fijo ? numeroDineroCupon(fijo[1]) : 0;
+}
+
+function textoCuentaRegresivaBanner() {
+  const ahora = new Date();
+  const siguiente = new Date(ahora);
+  siguiente.setHours(8, 30, 0, 0);
+  if (ahora.getTime() >= siguiente.getTime()) siguiente.setDate(siguiente.getDate() + 1);
+
+  const diferencia = Math.max(0, siguiente.getTime() - ahora.getTime());
+  const horas = Math.floor(diferencia / 3600000);
+  const minutos = Math.floor((diferencia % 3600000) / 60000);
+  if (horas >= 1) return `${horas} h${minutos >= 30 ? " 30 min" : ""}`;
+  return `${Math.max(1, minutos)} min`;
+}
+
+function actualizarBannerEstadoCupones() {
+  const banner = document.querySelector("#banner-estado-cupones");
+  if (!banner) return;
+
+  const superior = document.querySelector("#banner-estado-superior");
+  const prefijo = document.querySelector("#banner-estado-prefijo");
+  const destacado = document.querySelector("#banner-estado-destacado");
+  const sufijo = document.querySelector("#banner-estado-sufijo");
+  const detalle = document.querySelector("#banner-estado-detalle");
+  const vigencia = document.querySelector("#banner-estado-vigencia");
+  const whatsappTitulo = document.querySelector("#banner-whatsapp-titulo");
+  const whatsappSubtitulo = document.querySelector("#banner-whatsapp-subtitulo");
+
+  const disponibles = todosLosCupones.filter(cuponDisponibleParaBanner);
+  const total = disponibles.length;
+
+  if (total > 0) {
+    const ahorroMaximo = disponibles.reduce(
+      (maximo, cupon) => Math.max(maximo, ahorroMaximoParaBanner(cupon)),
+      0
+    );
+
+    banner.dataset.estado = "activos";
+    if (superior) superior.textContent = `¡Hay ${total} ${total === 1 ? "cupón activo" : "cupones activos"}!`;
+    if (prefijo) prefijo.textContent = ahorroMaximo > 0 ? "Hasta" : "Cupones";
+    if (destacado) destacado.textContent = ahorroMaximo > 0 ? ` ${monedaBuscador(ahorroMaximo)}` : " disponibles";
+    if (sufijo) sufijo.textContent = ahorroMaximo > 0 ? " OFF" : "";
+    if (detalle) detalle.textContent = "Revisa Tienda, Bancarios y Exclusivos antes de que se agoten.";
+    if (vigencia) {
+      vigencia.hidden = false;
+      vigencia.textContent = "⏱ Úsalos antes de que se agoten";
+    }
+    if (whatsappTitulo) whatsappTitulo.textContent = "No te pierdas nada";
+    if (whatsappSubtitulo) whatsappSubtitulo.textContent = "Únete a nuestro canal";
+  } else {
+    banner.dataset.estado = "agotados";
+    if (superior) superior.textContent = "¡Se acabaron los cupones por hoy! 😢";
+    if (prefijo) prefijo.textContent = "Más cupones relámpago";
+    if (destacado) destacado.textContent = ` dentro de ${textoCuentaRegresivaBanner()}`;
+    if (sufijo) sufijo.textContent = " ⚡";
+    if (detalle) detalle.textContent = "Estamos pendientes por si aparece o reactivan algún cupón.";
+    if (vigencia) {
+      vigencia.hidden = false;
+      vigencia.textContent = "🔔 Algunos cupones pueden volver a estar activos";
+    }
+    if (whatsappTitulo) whatsappTitulo.textContent = "Aquí te avisamos";
+    if (whatsappSubtitulo) whatsappSubtitulo.textContent = "cuando salgan nuevos";
+  }
+}
+
 function limpiarVista() {
   cuponesContainer.replaceChildren();
   todosWrapper.hidden = true;
@@ -2417,6 +2500,7 @@ async function cargarCupones() {
 
     todosLosCupones = nuevosCupones;
     actualizarFiltrosBuscadorCupones();
+    actualizarBannerEstadoCupones();
 
     if (buscadorCuponesResultado && !buscadorCuponesResultado.hidden && Number(buscadorCuponesMonto?.value || 0) > 0) {
       ejecutarBuscadorCupones();
@@ -5067,3 +5151,10 @@ document.addEventListener("visibilitychange", actualizarTextoAvisosMenuMas);
 
 
 window.setInterval(actualizarTemporizadoresOfertazo, 60 * 1000);
+
+
+// V82.96 — Mantiene vigencia y cuenta regresiva del banner sin recargar.
+window.setInterval(() => {
+  const banner = document.querySelector("#banner-estado-cupones");
+  if (banner && banner.dataset.estado !== "cargando") actualizarBannerEstadoCupones();
+}, 60 * 1000);

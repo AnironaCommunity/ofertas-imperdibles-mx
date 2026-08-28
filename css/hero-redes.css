@@ -2604,3 +2604,358 @@
 .hero-redes.hero-redes-lista #nombre-sitio {
   font-family: Arial, Helvetica, sans-serif !important;
 }
+
+
+/* ============================================================
+   V82.66 — Banner superior dinámico Ofertas Imperdibles MX
+   Sustituye la imagen fija, sin alterar el bloque inferior del hero.
+   ============================================================ */
+.hero-redes.hero-redes-lista .hero-banner-estado {
+  grid-column: 1 / -1 !important;
+  grid-row: 1 !important;
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: 190px minmax(0, 1fr) minmax(250px, 340px) !important;
+  align-items: center !important;
+  gap: 22px !important;
+  width: 100% !important;
+  min-height: 210px !important;
+  margin: 0 0 7px !important;
+  padding: 22px 28px !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  border-radius: 16px !important;
+  background:
+    radial-gradient(circle at 72% 28%, rgba(255,255,255,.72) 0 8%, transparent 8.3%),
+    radial-gradient(circle at 64% 72%, rgba(255,255,255,.38) 0 11%, transparent 11.3%),
+    linear-gradient(120deg, #fff0ae 0%, #ffe38a 58%, #fff0b7 100%) !important;
+  color: #101321 !important;
+  box-shadow: none !important;
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado::before,
+.hero-redes.hero-redes-lista .hero-banner-estado::after {
+  content: "%";
+  position: absolute;
+  z-index: 0;
+  color: rgba(255,255,255,.52);
+  font-weight: 900;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado::before {
+  right: 30%;
+  top: 18px;
+  font-size: 58px;
+  transform: rotate(-12deg);
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado::after {
+  right: 5%;
+  bottom: -18px;
+  font-size: 94px;
+  transform: rotate(13deg);
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-banner-ilustracion {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  height: 150px;
+}
+
+.hero-banner-cesta {
+  display: grid;
+  place-items: center;
+  width: 132px;
+  height: 120px;
+  border-radius: 34px;
+  background: rgba(255,255,255,.32);
+  box-shadow: 0 14px 30px rgba(97,66,0,.16);
+  font-size: 82px;
+  line-height: 1;
+  transform: rotate(-4deg);
+}
+
+.hero-banner-ticket {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 47px;
+  height: 34px;
+  border-radius: 8px;
+  background: #2f61df;
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(36,73,170,.22);
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.hero-banner-ticket-a { top: 2px; right: 8px; transform: rotate(14deg); }
+.hero-banner-ticket-b { bottom: 2px; left: 8px; transform: rotate(-12deg); background: #ffca0a; color: #1f252f; }
+
+.hero-banner-copy {
+  min-width: 0;
+}
+
+.hero-banner-superior,
+.hero-banner-titulo,
+.hero-banner-detalle {
+  margin: 0;
+}
+
+.hero-banner-superior {
+  margin-bottom: 5px;
+  font-size: clamp(16px, 1.65vw, 24px);
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.hero-banner-titulo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0;
+  font-size: clamp(28px, 3.6vw, 52px);
+  font-weight: 900;
+  line-height: .98;
+  letter-spacing: -1.6px;
+}
+
+.hero-banner-titulo strong {
+  display: inline !important;
+  color: #3158d7 !important;
+  font-size: 1.12em !important;
+  font-weight: 900 !important;
+  line-height: inherit !important;
+}
+
+.hero-banner-detalle {
+  margin-top: 12px;
+  color: #2d3038;
+  font-size: clamp(14px, 1.25vw, 18px);
+  line-height: 1.3;
+}
+
+.hero-banner-vigencia {
+  display: inline-flex !important;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 13px;
+  padding: 7px 13px;
+  align-items: center;
+  border-radius: 999px;
+  background: rgba(255,255,255,.82);
+  color: #d71920;
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.hero-banner-vigencia[hidden] { display: none !important; }
+
+.hero-banner-whatsapp {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) 24px;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  min-width: 0;
+  padding: 16px 17px;
+  box-sizing: border-box;
+  border: 1px solid rgba(18,92,47,.08);
+  border-radius: 22px;
+  background: rgba(255,255,255,.92);
+  color: #0f4f28;
+  text-decoration: none;
+  box-shadow: 0 12px 28px rgba(75,66,25,.10);
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+
+.hero-banner-whatsapp:hover,
+.hero-banner-whatsapp:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 31px rgba(75,66,25,.15);
+  outline: none;
+}
+
+.hero-banner-whatsapp-icono {
+  display: grid !important;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #16aa52;
+  color: #fff !important;
+  font-size: 25px !important;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.hero-banner-whatsapp > span:nth-child(2) {
+  min-width: 0;
+}
+
+.hero-banner-whatsapp strong,
+.hero-banner-whatsapp small {
+  display: block !important;
+}
+
+.hero-banner-whatsapp strong {
+  color: #105629 !important;
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  line-height: 1.1 !important;
+}
+
+.hero-banner-whatsapp small {
+  margin-top: 4px;
+  color: #23462f;
+  font-size: 12px;
+  line-height: 1.15;
+}
+
+.hero-banner-whatsapp-flecha {
+  color: #176c37 !important;
+  font-size: 27px !important;
+  line-height: 1;
+}
+
+/* Estado sin cupones */
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] {
+  background:
+    radial-gradient(circle at 78% 28%, rgba(94,75,247,.22) 0 8%, transparent 8.4%),
+    radial-gradient(circle at 25% 105%, #1a298d 0 22%, transparent 22.5%),
+    linear-gradient(120deg, #091658 0%, #101f78 58%, #1c1b7d 100%) !important;
+  color: #fff !important;
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"]::before,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"]::after {
+  content: "✦";
+  color: rgba(255,209,38,.86);
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-cesta {
+  background: rgba(55,50,179,.55);
+  filter: saturate(.75) brightness(.82);
+  box-shadow: 0 14px 30px rgba(0,0,0,.24);
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-ticket {
+  background: #ff944f;
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-ticket-b {
+  background: #6657e9;
+  color: #fff;
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-titulo strong {
+  color: #ffd21c !important;
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-detalle {
+  color: rgba(255,255,255,.84);
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-vigencia {
+  background: transparent;
+  color: rgba(255,255,255,.84);
+  padding-left: 0;
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-whatsapp {
+  border-color: rgba(255,255,255,.18);
+  background: linear-gradient(135deg, rgba(91,84,208,.94), rgba(87,58,198,.94));
+  color: #fff;
+  box-shadow: 0 12px 28px rgba(0,0,0,.17);
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-whatsapp-icono {
+  background: transparent;
+  border: 3px solid #fff;
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-whatsapp strong,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-whatsapp small,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-whatsapp-flecha {
+  color: #fff !important;
+}
+
+@media (max-width: 900px) {
+  .hero-redes.hero-redes-lista .hero-banner-estado {
+    grid-template-columns: 125px minmax(0, 1fr) !important;
+    gap: 15px !important;
+    min-height: 190px !important;
+    padding: 18px 20px !important;
+  }
+
+  .hero-banner-ilustracion { height: 128px; }
+  .hero-banner-cesta { width: 108px; height: 98px; font-size: 65px; }
+  .hero-banner-whatsapp { grid-column: 1 / -1; max-width: 440px; justify-self: end; padding: 11px 14px; border-radius: 17px; }
+  .hero-banner-whatsapp-icono { width: 42px; height: 42px; font-size: 21px !important; }
+}
+
+@media (max-width: 600px) {
+  .hero-redes.hero-redes-lista .hero-banner-estado {
+    grid-template-columns: 70px minmax(0, 1fr) !important;
+    gap: 9px !important;
+    min-height: 0 !important;
+    margin-bottom: 4px !important;
+    padding: 12px 12px 11px !important;
+    border-radius: 12px !important;
+  }
+
+  .hero-banner-ilustracion { height: 82px; align-self: start; }
+  .hero-banner-cesta { width: 66px; height: 64px; border-radius: 19px; font-size: 42px; box-shadow: 0 8px 18px rgba(97,66,0,.14); }
+  .hero-banner-ticket { width: 27px; height: 20px; border-radius: 5px; font-size: 11px; }
+  .hero-banner-ticket-a { top: 1px; right: -2px; }
+  .hero-banner-ticket-b { bottom: 1px; left: -1px; }
+
+  .hero-banner-superior { margin-bottom: 3px; font-size: 11px; }
+  .hero-banner-titulo { font-size: clamp(20px, 6.6vw, 28px); line-height: 1.02; letter-spacing: -.8px; }
+  .hero-banner-detalle { margin-top: 6px; font-size: 10px; line-height: 1.25; }
+  .hero-banner-vigencia { margin-top: 7px; padding: 5px 8px; font-size: 9px; }
+
+  .hero-banner-whatsapp {
+    grid-column: 1 / -1;
+    grid-template-columns: 34px minmax(0, 1fr) 18px;
+    gap: 8px;
+    max-width: none;
+    margin-top: 1px;
+    padding: 8px 10px;
+    border-radius: 13px;
+  }
+  .hero-banner-whatsapp-icono { width: 34px; height: 34px; border-width: 2px !important; font-size: 17px !important; }
+  .hero-banner-whatsapp strong { font-size: 11px !important; }
+  .hero-banner-whatsapp small { margin-top: 2px; font-size: 9px; }
+  .hero-banner-whatsapp-flecha { font-size: 19px !important; }
+
+  .hero-redes.hero-redes-lista .hero-banner-estado::before { right: 12%; top: 8px; font-size: 30px; }
+  .hero-redes.hero-redes-lista .hero-banner-estado::after { right: 2%; bottom: -8px; font-size: 48px; }
+}
+
+@media (max-width: 390px) {
+  .hero-redes.hero-redes-lista .hero-banner-estado {
+    grid-template-columns: 58px minmax(0, 1fr) !important;
+    padding: 10px !important;
+  }
+  .hero-banner-ilustracion { height: 70px; }
+  .hero-banner-cesta { width: 55px; height: 54px; font-size: 35px; }
+  .hero-banner-superior { font-size: 10px; }
+  .hero-banner-titulo { font-size: clamp(18px, 6.5vw, 24px); }
+  .hero-banner-detalle { font-size: 9px; }
+  .hero-banner-vigencia { font-size: 8.5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-banner-whatsapp { transition: none; }
+}
