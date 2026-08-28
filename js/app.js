@@ -3018,7 +3018,7 @@ function crearTarjetaOferta(publicidad, categoria) {
       ` : ""}
 
       <div class="oferta-meta">
-        <span class="oferta-visitas" data-visitas-id="${Number(publicidad.id) || 0}">👁️ ${Number(publicidad.visitas) || 0} visitas</span>
+        <span class="oferta-visitas" data-visitas-id="${Number(publicidad.id) || 0}">👁️ ${Number(publicidad.visitas) || 0} ${esComunidadAnirona ? (Number(publicidad.visitas) === 1 ? "vista" : "vistas") : (Number(publicidad.visitas) === 1 ? "visita" : "visitas")}</span>
       </div>
 
       <div class="oferta-acciones ${esComunidadAnirona ? `oferta-acciones-anirona${enlaceMercadoLibre && enlaceAmazon ? " ambos-marketplaces" : ""}` : ""}">
@@ -3522,6 +3522,7 @@ function renderizarCatalogoAnirona() {
   actualizarResumenCatalogoAnirona(totalMostrados, todos.length, consulta);
 
   if (limpiarBusquedaAnirona) limpiarBusquedaAnirona.hidden = !consulta;
+  iniciarObservadorVistasAnirona();
 }
 
 function renderizarModuloOfertas(categoria, contenedor, seccion) {
@@ -3556,6 +3557,9 @@ function renderizarModuloOfertas(categoria, contenedor, seccion) {
 }
 
 const DURACION_VISITA_PRODUCTO_MS = 24 * 60 * 60 * 1000;
+const TIEMPO_MINIMO_VISTA_ANIRONA_MS = 900;
+let observadorVistasAnirona = null;
+const temporizadoresVistasAnirona = new Map();
 
 function claveVisitaPublicidad(id, plataforma = "general") {
   const destino = plataforma === "amazon" ? "amazon" : plataforma === "mercadolibre" ? "mercadolibre" : "general";
@@ -3583,7 +3587,11 @@ function actualizarVisitasEnPantalla(id, visitas) {
   document.querySelectorAll(`[data-visitas-id="${id}"]`).forEach((elemento) => {
     const total = Number(visitas) || 0;
     const esOfertazo = Boolean(elemento.closest(".tarjeta-oferta-ofertazo"));
-    elemento.textContent = `${esOfertazo ? "" : "👁️ "}${total} ${total === 1 ? "visita" : "visitas"}`;
+    const esAnirona = Boolean(elemento.closest(".tarjeta-oferta-anirona"));
+    const etiqueta = esAnirona
+      ? (total === 1 ? "vista" : "vistas")
+      : (total === 1 ? "visita" : "visitas");
+    elemento.textContent = `${esOfertazo ? "" : "👁️ "}${total} ${etiqueta}`;
   });
 }
 
@@ -3618,6 +3626,55 @@ async function registrarVisitaPublicidad(publicidad, plataforma = "general") {
     localStorage.removeItem(clave);
     console.warn("No fue posible registrar la visita del producto.", error);
   }
+}
+
+function detenerObservadorVistasAnirona() {
+  observadorVistasAnirona?.disconnect();
+  observadorVistasAnirona = null;
+  temporizadoresVistasAnirona.forEach((temporizador) => clearTimeout(temporizador));
+  temporizadoresVistasAnirona.clear();
+}
+
+function iniciarObservadorVistasAnirona() {
+  detenerObservadorVistasAnirona();
+  if (!ofertasComunidadAnirona || typeof IntersectionObserver === "undefined") return;
+
+  observadorVistasAnirona = new IntersectionObserver((entradas) => {
+    entradas.forEach((entrada) => {
+      const tarjeta = entrada.target;
+      const id = Number(tarjeta.dataset.publicidadId);
+      if (!Number.isInteger(id) || id <= 0) return;
+
+      const temporizadorActual = temporizadoresVistasAnirona.get(id);
+      if (!entrada.isIntersecting || entrada.intersectionRatio < 0.5) {
+        if (temporizadorActual) clearTimeout(temporizadorActual);
+        temporizadoresVistasAnirona.delete(id);
+        return;
+      }
+
+      if (visitaPublicidadVigente(id, "general")) {
+        observadorVistasAnirona?.unobserve(tarjeta);
+        return;
+      }
+      if (temporizadorActual) return;
+
+      const temporizador = setTimeout(() => {
+        temporizadoresVistasAnirona.delete(id);
+        if (!tarjeta.isConnected || visitaPublicidadVigente(id, "general")) return;
+        const publicidad = todasLasPublicidades.find((item) => Number(item?.id) === id);
+        if (!publicidad) return;
+        registrarVisitaPublicidad(publicidad, "general");
+        observadorVistasAnirona?.unobserve(tarjeta);
+      }, TIEMPO_MINIMO_VISTA_ANIRONA_MS);
+
+      temporizadoresVistasAnirona.set(id, temporizador);
+    });
+  }, { threshold: [0.5] });
+
+  ofertasComunidadAnirona.querySelectorAll(".tarjeta-oferta-anirona[data-publicidad-id]").forEach((tarjeta) => {
+    const id = Number(tarjeta.dataset.publicidadId);
+    if (!visitaPublicidadVigente(id, "general")) observadorVistasAnirona.observe(tarjeta);
+  });
 }
 
 
@@ -3844,7 +3901,9 @@ async function abrirPublicidad(publicidad, { copiarCuponAsignado = true } = {}) 
   const precioCupon = String(publicidad.precio_cupon || "").trim();
   try {
     if (copiarCuponAsignado && codigo) await copiarTexto(codigo);
-    registrarVisitaPublicidad(publicidad, publicidad.plataforma);
+    if (!publicidadPerteneceASeccion(publicidad, "comunidad_anirona")) {
+      registrarVisitaPublicidad(publicidad, publicidad.plataforma);
+    }
     registrarClicPublicidad(publicidad.id);
     window.location.assign(enlace);
   } catch (error) {
