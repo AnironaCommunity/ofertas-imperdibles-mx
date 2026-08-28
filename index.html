@@ -57,7 +57,7 @@
   <link rel="stylesheet" href="css/cabecera-inteligente.css?v=82.26.0" />
   <link rel="stylesheet" href="css/selector-cupones-oscuro.css?v=82.37.0" />
   <link rel="stylesheet" href="css/buscador-cupones.css?v=82.35.0" />
-  <link rel="stylesheet" href="css/barra-navegacion-inferior.css?v=82.86.0" />
+  <link rel="stylesheet" href="css/barra-navegacion-inferior.css?v=82.90.0" />
   <link rel="stylesheet" href="css/tarjetas-cupon-descuento.css?v=7.2" />
   <script>
     try {
@@ -407,22 +407,19 @@
       aria-label="Ofertas de Anirona Community"
       hidden
     >
-      <nav class="selector-regreso-cupones" aria-label="Regresar a cupones" style="--selector-columnas: 1">
+      <nav class="selector-regreso-cupones" aria-label="Regresar a cupones">
         <button
           id="boton-regresar-cupones-anirona"
-          class="tab-inferior activo"
+          class="tab-regreso-cupones-anirona"
           type="button"
-          aria-pressed="true"
           aria-label="Regresar a todos los cupones"
         >
-          <span class="tab-icono" aria-hidden="true">
+          <span class="tab-regreso-icono" aria-hidden="true">
             <svg viewBox="0 0 24 24" focusable="false">
               <path d="M10 6 4 12l6 6M5 12h15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
             </svg>
           </span>
-          <span class="tab-textos">
-            <strong class="tab-etiqueta-principal">Regresar a cupones</strong>
-          </span>
+          <span class="tab-regreso-texto">Regresar a cupones</span>
         </button>
       </nav>
 
@@ -622,7 +619,7 @@
   </div>
 
 
-  <script type="module" src="js/app.js?v=82.83.7"></script>
+  <script type="module" src="js/app.js?v=82.90.0"></script>
   <script src="js/hero-redes.js?v=82.39" defer></script>
   <script src="js/header-dinamico-v68-3.js?v=70.0.0" defer></script>
   <script src="js/cabecera-inteligente.js?v=77.15.7" defer></script>
@@ -716,27 +713,27 @@
     <button id="menu-mas-anirona" class="menu-mas-anirona-inferior" type="button" aria-label="Visitar Anirona">
       <img src="img/anirona.png" alt="" aria-hidden="true" />
       <span class="menu-mas-anirona-contenido">
-        <strong>🐊 Anirona</strong>
+        <strong>Anirona <span class="menu-mas-cocodrilo" aria-hidden="true">🐊</span></strong>
         <small>Herramientas, lanzamientos y novedades</small>
         <span class="menu-mas-anirona-accion">Visitar Anirona</span>
       </span>
     </button>
-    <button id="menu-mas-tutorial" class="menu-mas-opcion-inferior" type="button">
-      <span class="menu-mas-icono-inferior menu-mas-icono-tutorial-inferior" aria-hidden="true">
-        <svg viewBox="0 0 48 48" focusable="false">
-          <path d="M5 18.5 24 9l19 9.5L24 28 5 18.5Z" fill="#ffd21a" stroke="#222" stroke-width="2.4" stroke-linejoin="round"/>
-          <path d="M13 23v9.5c5.6 5.2 16.4 5.2 22 0V23" fill="#ffd21a" stroke="#222" stroke-width="2.4" stroke-linejoin="round"/>
-          <path d="M41 20v12" stroke="#222" stroke-width="2.4" stroke-linecap="round"/>
-          <circle cx="41" cy="34.5" r="2.2" fill="#ffd21a"/>
-        </svg>
-      </span>
-      <span class="menu-mas-contenido-inferior">
-        <strong>Ver tutorial</strong>
-        <small>Aprende a usar los cupones paso a paso</small>
-      </span>
-    </button>
 
-    <button id="menu-mas-avisos" class="menu-mas-opcion-inferior" type="button">
+    <section class="menu-mas-guia-cupones" aria-labelledby="menu-mas-guia-titulo">
+      <div class="menu-mas-guia-encabezado">
+        <span class="menu-mas-guia-icono" aria-hidden="true">%</span>
+        <strong id="menu-mas-guia-titulo">¿Cómo usar los cupones?</strong>
+      </div>
+      <ol class="menu-mas-guia-pasos">
+        <li><span>1</span><p>Busca el mejor cupón para tu compra.</p></li>
+        <li><span>2</span><p>Copia el código del cupón que elijas.</p></li>
+        <li><span>3</span><p>Ve a Mercado Libre, entra a la sección <strong>Cupones</strong> e ingresa tu código.</p></li>
+        <li><span>4</span><p>¡Listo! Disfruta tu descuento.</p></li>
+      </ol>
+      <button id="menu-mas-tutorial" class="menu-mas-tutorial-completo" type="button">Ver tutorial completo</button>
+    </section>
+
+    <button id="menu-mas-avisos" class="menu-mas-opcion-inferior menu-mas-avisos-destacado" type="button">
       <span class="menu-mas-icono-inferior menu-mas-icono-avisos-inferior" aria-hidden="true">
         <svg viewBox="0 0 48 48" focusable="false">
           <path d="M24 7c-7 0-11.5 5.5-11.5 12.5v7c0 3.1-1.2 6.1-3.3 8.6L7.5 37h33l-1.7-1.9c-2.1-2.5-3.3-5.5-3.3-8.6v-7C35.5 12.5 31 7 24 7Z" fill="#ffd21a" stroke="#222" stroke-width="2.4" stroke-linejoin="round"/>
@@ -744,7 +741,7 @@
         </svg>
       </span>
       <span class="menu-mas-contenido-inferior">
-        <strong id="menu-mas-avisos-texto">Activar notificaciones</strong>
+        <strong id="menu-mas-avisos-texto">Activar avisos</strong>
         <small>Recibe avisos cuando haya nuevos cupones</small>
       </span>
     </button>

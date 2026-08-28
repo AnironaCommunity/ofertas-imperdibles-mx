@@ -4904,8 +4904,26 @@ function actualizarTextoAvisosMenuMas() {
   const activos =
     typeof avisosNovedadesActivos === "function" && avisosNovedadesActivos();
 
-  texto.textContent = activos ? "Avisos activados" : "Activar notificaciones";
+  texto.textContent = activos ? "Avisos activados" : "Activar avisos";
   boton.classList.toggle("activo", Boolean(activos));
+}
+
+function posicionarWhatsappSegunMenuMas(abierto) {
+  const whatsapp = document.querySelector("#whatsapp-flotante");
+  const panel = document.querySelector("#menu-mas-panel");
+  if (!whatsapp) return;
+
+  if (!abierto || !panel || panel.hidden) {
+    whatsapp.style.removeProperty("bottom");
+    return;
+  }
+
+  requestAnimationFrame(() => {
+    const rect = panel.getBoundingClientRect();
+    const separacion = window.innerWidth <= 700 ? 12 : 10;
+    const bottom = Math.max(18, window.innerHeight - rect.top + separacion);
+    whatsapp.style.setProperty("bottom", `${Math.round(bottom)}px`, "important");
+  });
 }
 
 function cerrarMenuMasFlotante() {
@@ -4915,6 +4933,8 @@ function cerrarMenuMasFlotante() {
 
   panel.hidden = true;
   boton.setAttribute("aria-expanded", "false");
+  document.body.classList.remove("menu-mas-abierto");
+  posicionarWhatsappSegunMenuMas(false);
 }
 
 function abrirMenuMasInferior() {
@@ -4925,6 +4945,8 @@ function abrirMenuMasInferior() {
   actualizarTextoAvisosMenuMas();
   panel.hidden = false;
   boton.setAttribute("aria-expanded", "true");
+  document.body.classList.add("menu-mas-abierto");
+  posicionarWhatsappSegunMenuMas(true);
 }
 
 function inicializarMenuMasFlotante() {
@@ -4979,6 +5001,10 @@ function inicializarMenuMasFlotante() {
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") cerrarMenuMasFlotante();
   });
+
+  window.addEventListener("resize", () => {
+    if (!panel.hidden) posicionarWhatsappSegunMenuMas(true);
+  }, { passive: true });
 }
 
 document.addEventListener("DOMContentLoaded", inicializarMenuMasFlotante);
