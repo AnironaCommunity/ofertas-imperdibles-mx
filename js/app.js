@@ -26,6 +26,7 @@ const tabTodos = document.querySelector("#tab-todos");
 const tabTienda = document.querySelector("#tab-tienda");
 const tabBancarios = document.querySelector("#tab-bancarios");
 const tabExclusivo = document.querySelector("#tab-exclusivo");
+const tabAnirona = document.querySelector("#tab-anirona");
 const vistaCupones = document.querySelector("#vista-cupones");
 const barraInferiorCupones = document.querySelector("#barra-inferior-cupones");
 const barraInferiorOfertazo = document.querySelector("#barra-inferior-ofertazo");
@@ -442,9 +443,10 @@ function actualizarNavegacionPrincipal(seccion) {
     tienda: tabTienda,
     bancarios: tabBancarios,
     exclusivo: tabExclusivo,
+    comunidad_anirona: tabAnirona,
   };
 
-  [tabTodos, tabTienda, tabBancarios, tabExclusivo].forEach((boton) => {
+  [tabTodos, tabTienda, tabBancarios, tabExclusivo, tabAnirona].forEach((boton) => {
     if (!boton) return;
     const activo = boton === mapa[seccion];
     boton.classList.toggle("activo", activo);
@@ -470,6 +472,14 @@ tabBancarios.addEventListener("click", () => {
 tabExclusivo?.addEventListener("click", () => {
   cambiarCategoria("exclusivo", { actualizarHistorial: true, desplazamiento: "auto" });
   actualizarNavegacionPrincipal("exclusivo");
+});
+
+tabAnirona?.addEventListener("click", () => {
+  cambiarVista("comunidad_anirona", {
+    actualizarHistorial: true,
+    desplazamiento: "smooth",
+  });
+  actualizarNavegacionPrincipal("comunidad_anirona");
 });
 
 barraInferiorCupones?.addEventListener("click", () => {
@@ -678,6 +688,8 @@ function cambiarVista(
   });
 
   const mostrarCupones = vista === "cupones";
+  const mostrarSelectorPrincipal = vista === "cupones" || vista === "comunidad_anirona";
+  if (selectorCupones) selectorCupones.hidden = !mostrarSelectorPrincipal;
 
   botonesMenuOfertas.forEach((boton) => {
     const activo = boton.dataset.vista === vista;
@@ -695,14 +707,17 @@ function cambiarVista(
   const tiendaActiva = mostrarCupones && categoriaActiva === "tienda";
   const bancariosActivos = mostrarCupones && categoriaActiva === "bancarios";
   const exclusivoActivo = mostrarCupones && categoriaActiva === "exclusivo";
+  const anironaActiva = vista === "comunidad_anirona";
   tabTodos?.classList.toggle("activo", todosActivos);
   tabTienda.classList.toggle("activo", tiendaActiva);
   tabBancarios.classList.toggle("activo", bancariosActivos);
   tabExclusivo?.classList.toggle("activo", exclusivoActivo);
+  tabAnirona?.classList.toggle("activo", anironaActiva);
   tabTodos?.setAttribute("aria-pressed", String(todosActivos));
   tabTienda.setAttribute("aria-pressed", String(tiendaActiva));
   tabBancarios.setAttribute("aria-pressed", String(bancariosActivos));
   tabExclusivo?.setAttribute("aria-pressed", String(exclusivoActivo));
+  tabAnirona?.setAttribute("aria-pressed", String(anironaActiva));
 
   if (actualizarHistorial) {
     const seccion =
@@ -2089,11 +2104,13 @@ function cambiarCategoria(
   tabTienda.classList.toggle("activo", esTienda);
   tabBancarios.classList.toggle("activo", esBancarios);
   tabExclusivo?.classList.toggle("activo", esExclusivo);
+  tabAnirona?.classList.remove("activo");
 
   tabTodos?.setAttribute("aria-pressed", String(esTodos));
   tabTienda.setAttribute("aria-pressed", String(esTienda));
   tabBancarios.setAttribute("aria-pressed", String(esBancarios));
   tabExclusivo?.setAttribute("aria-pressed", String(esExclusivo));
+  tabAnirona?.setAttribute("aria-pressed", "false");
   actualizarNavegacionPrincipal(
     esTodos ? "todos" : esTienda ? "tienda" : esBancarios ? "bancarios" : "exclusivo"
   );

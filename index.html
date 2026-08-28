@@ -55,7 +55,7 @@
   <link rel="stylesheet" href="css/header-dinamico-v68-3.css?v=70.0.0" />
   <link rel="stylesheet" href="css/estabilidad.css?v=81.58.0" />
   <link rel="stylesheet" href="css/cabecera-inteligente.css?v=82.26.0" />
-  <link rel="stylesheet" href="css/selector-cupones-oscuro.css?v=82.37.0" />
+  <link rel="stylesheet" href="css/selector-cupones-oscuro.css?v=82.91.0" />
   <link rel="stylesheet" href="css/buscador-cupones.css?v=82.35.0" />
   <link rel="stylesheet" href="css/barra-navegacion-inferior.css?v=82.90.0" />
   <link rel="stylesheet" href="css/tarjetas-cupon-descuento.css?v=7.2" />
@@ -238,6 +238,32 @@
   </header>
 
   <main class="contenedor">
+    <nav class="selector-cupones-menu selector-cupones-oscuro" aria-label="Tipos de descuentos">
+      <button id="tab-todos" class="tab-inferior activo" type="button" data-categoria="todos" aria-pressed="true" aria-label="Mostrar todos los cupones">
+        <span class="tab-icono tab-icono-todos" aria-hidden="true"><svg viewBox="0 0 64 64"><rect class="icon-outline" x="14" y="10" width="36" height="44" rx="8"/><circle class="icon-dot" cx="25" cy="25" r="4"/><circle class="icon-dot" cx="39" cy="39" r="4"/><path class="icon-line" d="M41 22 23 42"/></svg></span>
+        <span class="tab-textos"><strong id="nombre-boton-todos" class="tab-etiqueta-principal">Todos</strong></span>
+      </button>
+      <button id="tab-tienda" class="tab-inferior" type="button" data-categoria="tienda" aria-pressed="false" aria-label="Mostrar cupones de tienda">
+        <span class="tab-icono tab-icono-tienda" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="icon-outline" d="M17 22h30l3 32H14l3-32Z"/><path class="icon-line" d="M24 24v-6a8 8 0 0 1 16 0v6"/></svg></span>
+        <span class="tab-textos"><strong id="nombre-boton-tienda" class="tab-etiqueta-principal">Tienda</strong></span>
+        <span id="contador-cupones-tienda" class="contador-seccion contador-seccion-inferior" hidden>0</span>
+      </button>
+      <button id="tab-bancarios" class="tab-inferior" type="button" data-categoria="bancarios" aria-pressed="false" aria-label="Mostrar cupones bancarios">
+        <span class="tab-icono tab-icono-tarjeta" aria-hidden="true"><svg viewBox="0 0 64 64"><rect class="icon-outline" x="8" y="15" width="48" height="34" rx="7"/><path class="card-band" d="M9 25h46"/><path class="icon-line" d="M18 39h9M40 39h7"/></svg></span>
+        <span class="tab-textos"><strong id="nombre-boton-bancarios" class="tab-etiqueta-principal">Bancarios</strong></span>
+        <span id="contador-cupones-bancarios" class="contador-seccion contador-seccion-inferior" hidden>0</span>
+      </button>
+      <button id="tab-exclusivo" class="tab-inferior" type="button" data-categoria="exclusivo" aria-pressed="false" aria-label="Mostrar cupones exclusivos">
+        <span class="tab-icono tab-icono-exclusivo" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="icon-outline" d="M12 15h40v10a7 7 0 0 0 0 14v10H12V39a7 7 0 0 0 0-14V15Z"/><circle class="icon-dot" cx="25" cy="27" r="3.5"/><circle class="icon-dot" cx="39" cy="37" r="3.5"/><path class="icon-line" d="M40 24 24 41"/></svg></span>
+        <span class="tab-textos"><strong id="nombre-boton-exclusivo" class="tab-etiqueta-principal">Exclusivos</strong></span>
+        <span id="contador-cupones-exclusivo" class="contador-seccion contador-seccion-inferior" hidden>0</span>
+      </button>
+
+      <button id="tab-anirona" class="tab-inferior tab-anirona" type="button" data-vista="comunidad_anirona" aria-pressed="false" aria-label="Abrir Anirona">
+        <span class="tab-icono tab-icono-anirona" aria-hidden="true">🐊</span>
+        <span class="tab-textos"><strong class="tab-etiqueta-principal">Anirona</strong></span>
+      </button>
+    </nav>
     <section id="vista-cupones" class="vista-principal vista-activa">
 <section id="ayuda-cupones" class="ayuda-cupones" aria-labelledby="ayuda-cupones-titulo" hidden data-oculto-temporalmente="true">
       <button id="ayuda-cupones-toggle" class="ayuda-cupones-toggle" type="button"
@@ -288,27 +314,7 @@
       </div>
     </section>
 
-    <nav class="selector-cupones-menu selector-cupones-oscuro" aria-label="Tipos de descuentos">
-      <button id="tab-todos" class="tab-inferior activo" type="button" data-categoria="todos" aria-pressed="true" aria-label="Mostrar todos los cupones">
-        <span class="tab-icono tab-icono-todos" aria-hidden="true"><svg viewBox="0 0 64 64"><rect class="icon-outline" x="14" y="10" width="36" height="44" rx="8"/><circle class="icon-dot" cx="25" cy="25" r="4"/><circle class="icon-dot" cx="39" cy="39" r="4"/><path class="icon-line" d="M41 22 23 42"/></svg></span>
-        <span class="tab-textos"><strong id="nombre-boton-todos" class="tab-etiqueta-principal">Todos</strong></span>
-      </button>
-      <button id="tab-tienda" class="tab-inferior" type="button" data-categoria="tienda" aria-pressed="false" aria-label="Mostrar cupones de tienda">
-        <span class="tab-icono tab-icono-tienda" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="icon-outline" d="M17 22h30l3 32H14l3-32Z"/><path class="icon-line" d="M24 24v-6a8 8 0 0 1 16 0v6"/></svg></span>
-        <span class="tab-textos"><strong id="nombre-boton-tienda" class="tab-etiqueta-principal">Tienda</strong></span>
-        <span id="contador-cupones-tienda" class="contador-seccion contador-seccion-inferior" hidden>0</span>
-      </button>
-      <button id="tab-bancarios" class="tab-inferior" type="button" data-categoria="bancarios" aria-pressed="false" aria-label="Mostrar cupones bancarios">
-        <span class="tab-icono tab-icono-tarjeta" aria-hidden="true"><svg viewBox="0 0 64 64"><rect class="icon-outline" x="8" y="15" width="48" height="34" rx="7"/><path class="card-band" d="M9 25h46"/><path class="icon-line" d="M18 39h9M40 39h7"/></svg></span>
-        <span class="tab-textos"><strong id="nombre-boton-bancarios" class="tab-etiqueta-principal">Bancarios</strong></span>
-        <span id="contador-cupones-bancarios" class="contador-seccion contador-seccion-inferior" hidden>0</span>
-      </button>
-      <button id="tab-exclusivo" class="tab-inferior" type="button" data-categoria="exclusivo" aria-pressed="false" aria-label="Mostrar cupones exclusivos">
-        <span class="tab-icono tab-icono-exclusivo" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="icon-outline" d="M12 15h40v10a7 7 0 0 0 0 14v10H12V39a7 7 0 0 0 0-14V15Z"/><circle class="icon-dot" cx="25" cy="27" r="3.5"/><circle class="icon-dot" cx="39" cy="37" r="3.5"/><path class="icon-line" d="M40 24 24 41"/></svg></span>
-        <span class="tab-textos"><strong id="nombre-boton-exclusivo" class="tab-etiqueta-principal">Exclusivos</strong></span>
-        <span id="contador-cupones-exclusivo" class="contador-seccion contador-seccion-inferior" hidden>0</span>
-      </button>
-    </nav>
+
 
     <section class="buscador-cupones" aria-labelledby="buscador-cupones-titulo">
       <div class="buscador-cupones-cabecera">
@@ -619,7 +625,7 @@
   </div>
 
 
-  <script type="module" src="js/app.js?v=82.90.0"></script>
+  <script type="module" src="js/app.js?v=82.91.0"></script>
   <script src="js/hero-redes.js?v=82.39" defer></script>
   <script src="js/header-dinamico-v68-3.js?v=70.0.0" defer></script>
   <script src="js/cabecera-inteligente.js?v=77.15.7" defer></script>

@@ -1,6 +1,6 @@
 /* V81.59 — Selector independiente de estilos heredados de la navegación inferior */
 .selector-cupones-menu.selector-cupones-oscuro {
-  --selector-columnas: 4;
+  --selector-columnas: 5;
   box-sizing: border-box !important;
   display: grid !important;
   grid-template-columns: repeat(var(--selector-columnas), minmax(0, 1fr)) !important;
@@ -27,10 +27,11 @@
   overflow: visible !important;
 }
 
-/* Todos, Tienda y Bancarios son siempre visibles. */
+/* Todos, Tienda, Bancarios y Anirona son siempre visibles. */
 .selector-cupones-menu > #tab-todos,
 .selector-cupones-menu > #tab-tienda,
-.selector-cupones-menu > #tab-bancarios {
+.selector-cupones-menu > #tab-bancarios,
+.selector-cupones-menu > #tab-anirona {
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -282,4 +283,57 @@ body.hay-cupones-visibles #separador-fin-cupones { display: block !important; }
     font-size: 10.5px !important;
     line-height: 11px !important;
   }
+}
+
+
+/* Paquete 4.0 — acceso directo a Anirona dentro del selector principal. */
+.selector-cupones-menu .tab-icono-anirona {
+  font-size: 24px !important;
+  line-height: 1 !important;
+  filter: none !important;
+  transform: translateY(-1px) !important;
+}
+.selector-cupones-menu > #tab-anirona.activo .tab-etiqueta-principal,
+.selector-cupones-menu > #tab-anirona[aria-pressed="true"] .tab-etiqueta-principal {
+  color: #168a32 !important;
+}
+@media (max-width: 600px) {
+  .selector-cupones-menu.selector-cupones-oscuro {
+    --selector-columnas: 5;
+  }
+  .selector-cupones-menu > .tab-inferior,
+  .selector-cupones-menu > .tab-inferior:hover,
+  .selector-cupones-menu > .tab-inferior:focus,
+  .selector-cupones-menu > .tab-inferior:focus-visible,
+  .selector-cupones-menu > .tab-inferior:active,
+  .selector-cupones-menu > .tab-inferior.activo,
+  .selector-cupones-menu > .tab-inferior[aria-pressed="true"] {
+    padding-left: 1px !important;
+    padding-right: 1px !important;
+  }
+  .selector-cupones-menu .tab-etiqueta-principal {
+    font-size: 9.2px !important;
+    letter-spacing: -0.12px !important;
+  }
+  .selector-cupones-menu .tab-icono,
+  .selector-cupones-menu .tab-icono-anirona {
+    width: 26px !important;
+    height: 25px !important;
+    min-width: 26px !important;
+    flex-basis: 25px !important;
+  }
+  .selector-cupones-menu .tab-icono svg {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  .selector-cupones-menu .tab-icono-anirona {
+    font-size: 22px !important;
+  }
+}
+@media (max-width: 380px) {
+  .selector-cupones-menu .tab-etiqueta-principal {
+    font-size: 8.6px !important;
+    letter-spacing: -0.2px !important;
+  }
+  .selector-cupones-menu .tab-icono-anirona { font-size: 20px !important; }
 }
