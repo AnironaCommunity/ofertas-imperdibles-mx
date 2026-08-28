@@ -10325,3 +10325,34 @@ body.hay-cupones-visibles #separador-fin-cupones {
     margin-top: 10px !important;
   }
 }
+
+/* ============================================================
+   Paquete 4.6 — Separación Ofertazo + 4 tarjetas Anirona en WEB
+   ============================================================ */
+/* 1) Ofertazo: evita que la primera fila quede pegada a la línea del selector. */
+#seccion-ofertas-mercado-libre > #ofertas-mercado-libre {
+  margin-top: 12px !important;
+}
+
+@media (max-width: 520px) {
+  #seccion-ofertas-mercado-libre > #ofertas-mercado-libre {
+    margin-top: 10px !important;
+  }
+}
+
+/* 2) Anirona: catálogo más aprovechado en WEB.
+   3 columnas en escritorio medio y hasta 4 en escritorio amplio.
+   Móvil conserva su distribución actual. */
+@media (min-width: 769px) and (max-width: 1199px) {
+  #ofertas-comunidad-anirona.ofertas-grid-compacta {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  #ofertas-comunidad-anirona.ofertas-grid-compacta {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+}
