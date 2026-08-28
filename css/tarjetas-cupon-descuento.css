@@ -3340,3 +3340,23 @@
   border-color: #c7aa00 !important;
   box-shadow: 0 3px 7px rgba(80,65,0,.16) !important;
 }
+
+/* ================================================================
+   PAQUETE 7.2 — CTA AGOTADO 100% ACTIVO
+   Corrige una regla histórica con :not(.cupon-bancario) que aplicaba
+   opacity al contenedor completo. La atenuación queda solo en el
+   contenido del cupón; el CTA "Ver ofertas" conserva el amarillo activo.
+   ================================================================ */
+#cupones > .cupon-horizontal-v16.cupon-agotado:not(.cupon-bancario),
+#cupones > .cupon-horizontal-v16.cupon-agotado.cupon-bancario {
+  opacity: 1 !important;
+  filter: none !important;
+}
+#cupones > .cupon-horizontal-v16.cupon-agotado .hc16-copiar.boton-ofertazo-agotado {
+  opacity: 1 !important;
+  filter: none !important;
+  background: #ffe600 !important;
+  color: #171717 !important;
+  border-color: #d8b900 !important;
+  box-shadow: 0 3px 7px rgba(80,65,0,.16) !important;
+}
