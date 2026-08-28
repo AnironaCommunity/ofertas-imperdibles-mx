@@ -616,3 +616,102 @@
     }
   }
 }
+
+/* ============================================================
+   V82.86 — Acceso destacado a Anirona dentro de “Más”
+   ============================================================ */
+@media (max-width: 700px) {
+  .menu-mas-panel-inferior {
+    right: 10px;
+    width: min(360px, calc(100vw - 20px));
+    padding: 8px;
+  }
+
+  .menu-mas-cabecera-inferior {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 2px 8px 8px;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    color: #181818;
+  }
+
+  .menu-mas-arrastre-inferior {
+    align-self: center;
+    width: 34px;
+    height: 4px;
+    border-radius: 999px;
+    background: #d0d0d0;
+  }
+
+  .menu-mas-anirona-inferior {
+    appearance: none;
+    -webkit-appearance: none;
+    display: grid;
+    grid-template-columns: 112px minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 112px;
+    margin: 0 0 5px;
+    padding: 10px 12px;
+    overflow: hidden;
+    border: 1px solid #42b91f;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #08150e 0%, #10251a 100%);
+    color: #fff;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0,0,0,.12);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .menu-mas-anirona-inferior:active { transform: scale(.99); }
+
+  .menu-mas-anirona-inferior img {
+    display: block;
+    width: 108px;
+    max-height: 90px;
+    object-fit: contain;
+  }
+
+  .menu-mas-anirona-contenido {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .menu-mas-anirona-contenido strong {
+    font: 700 15px/18px 'Inter', Arial, Helvetica, sans-serif;
+    color: #72db36;
+  }
+
+  .menu-mas-anirona-contenido small {
+    font: 400 11.5px/15px 'Inter', Arial, Helvetica, sans-serif;
+    color: #f2f2f2;
+  }
+
+  .menu-mas-anirona-accion {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 5px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #2dcc4f;
+    color: #fff;
+    font: 700 11.5px/14px 'Inter', Arial, Helvetica, sans-serif;
+  }
+}
+
+@media (max-width: 380px) {
+  .menu-mas-anirona-inferior {
+    grid-template-columns: 92px minmax(0, 1fr);
+    min-height: 102px;
+  }
+  .menu-mas-anirona-inferior img { width: 90px; }
+}

@@ -4930,10 +4930,11 @@ function abrirMenuMasInferior() {
 function inicializarMenuMasFlotante() {
   const panel = document.querySelector("#menu-mas-panel");
   const boton = document.querySelector("#barra-inferior-mas");
+  const anirona = document.querySelector("#menu-mas-anirona");
   const tutorial = document.querySelector("#menu-mas-tutorial");
   const avisos = document.querySelector("#menu-mas-avisos");
 
-  if (!panel || !boton || !tutorial || !avisos) return;
+  if (!panel || !boton || !anirona || !tutorial || !avisos) return;
 
   actualizarTextoAvisosMenuMas();
 
@@ -4942,6 +4943,17 @@ function inicializarMenuMasFlotante() {
     const abrir = panel.hidden;
     if (abrir) abrirMenuMasInferior();
     else cerrarMenuMasFlotante();
+  });
+
+  anirona.addEventListener("click", () => {
+    cerrarMenuMasFlotante();
+    if (botonComunidadAnirona) {
+      cambiarVista(botonComunidadAnirona.dataset.vista, {
+        seccion: "anirona",
+        actualizarHistorial: true
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   });
 
   tutorial.addEventListener("click", () => {
