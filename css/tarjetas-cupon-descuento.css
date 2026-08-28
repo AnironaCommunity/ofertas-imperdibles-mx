@@ -3313,3 +3313,30 @@
     max-height: 14px !important;
   }
 }
+
+
+/* ================================================================
+   PAQUETE 7.1 — CUPÓN AGOTADO: CTA VISUALMENTE ACTIVO
+   - La tarjeta continúa atenuada para indicar que el cupón se agotó.
+   - Solo “Ver ofertas” conserva exactamente el acabado amarillo activo.
+   - El destino del botón lo resuelve app.js hacia el enlace de Mercado Libre.
+   ================================================================ */
+#cupones .cupon-horizontal-v16.cupon-agotado .hc16-copiar.boton-ofertazo-agotado {
+  opacity: 1 !important;
+  filter: none !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  background: #ffe600 !important;
+  color: #171717 !important;
+  border: 1px solid #d8b900 !important;
+  box-shadow: 0 3px 7px rgba(80,65,0,.16) !important;
+  outline: 1px dashed rgba(75,62,0,.38) !important;
+  outline-offset: -5px !important;
+}
+#cupones .cupon-horizontal-v16.cupon-agotado .hc16-copiar.boton-ofertazo-agotado:hover,
+#cupones .cupon-horizontal-v16.cupon-agotado .hc16-copiar.boton-ofertazo-agotado:focus-visible {
+  background: #ffea22 !important;
+  color: #171717 !important;
+  border-color: #c7aa00 !important;
+  box-shadow: 0 3px 7px rgba(80,65,0,.16) !important;
+}
