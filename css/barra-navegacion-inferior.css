@@ -674,6 +674,9 @@
     width: 108px;
     max-height: 90px;
     object-fit: contain;
+    /* V82.87 — Suaviza las orillas del logo para integrarlo al fondo */
+    -webkit-mask-image: radial-gradient(ellipse 88% 82% at center, #000 62%, rgba(0,0,0,.88) 72%, rgba(0,0,0,.35) 88%, transparent 100%);
+    mask-image: radial-gradient(ellipse 88% 82% at center, #000 62%, rgba(0,0,0,.88) 72%, rgba(0,0,0,.35) 88%, transparent 100%);
   }
 
   .menu-mas-anirona-contenido {
