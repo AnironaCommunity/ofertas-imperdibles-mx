@@ -10311,3 +10311,17 @@ body.hay-cupones-visibles #separador-fin-cupones {
 .tarjeta-oferta-ofertazo .ofertazo-precios strong {
   color: #00a650;
 }
+
+/* ============================================================
+   Paquete 4.4 — Separación superior del buscador de Anirona
+   Evita que el buscador quede pegado a la línea inferior del selector.
+   ============================================================ */
+#seccion-comunidad-anirona > .buscador-catalogo-anirona {
+  margin-top: 12px !important;
+}
+
+@media (max-width: 520px) {
+  #seccion-comunidad-anirona > .buscador-catalogo-anirona {
+    margin-top: 10px !important;
+  }
+}
