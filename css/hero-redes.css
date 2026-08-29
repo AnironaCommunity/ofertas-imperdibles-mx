@@ -3734,3 +3734,155 @@
   .hero-banner-whatsapp small { font-size: 5.5px !important; }
   .hero-banner-slide-alerta { padding: 8px 25px 11px !important; }
 }
+
+/* ============================================================
+   PAQUETE 3.8 — Carrusel definitivo de DOS banners
+   1) Amarillo: cupones activos.
+   2) Azul: cupones agotados.
+   Ambos existen siempre y el estado real define solo la posición inicial.
+   Las ilustraciones forman parte visual del fondo del banner.
+   ============================================================ */
+.hero-banner-slide-activos,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos {
+  background:
+    radial-gradient(circle at 77% 24%, rgba(255,255,255,.66) 0 5.5%, transparent 5.8%),
+    radial-gradient(circle at 66% 76%, rgba(255,255,255,.30) 0 8%, transparent 8.4%),
+    linear-gradient(112deg, #fff0b3 0%, #ffe293 55%, #fff0bc 100%) !important;
+  color: #111318 !important;
+}
+
+.hero-banner-slide-agotados,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-agotados {
+  background:
+    radial-gradient(circle at 79% 27%, rgba(79,61,224,.24) 0 7%, transparent 7.4%),
+    radial-gradient(circle at 18% 118%, #182681 0 24%, transparent 24.4%),
+    linear-gradient(112deg, #08155a 0%, #111d73 56%, #191475 100%) !important;
+  color: #fff !important;
+}
+
+/* La canasta ya no se presenta como una tarjeta/imagen superpuesta:
+   se integra como fondo de su propia zona dentro del banner. */
+.hero-banner-slide-activos .hero-banner-ilustracion {
+  background-image: url("../img/banner-dinamico-cesta-activos.png?v=3.8");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 0;
+  mix-blend-mode: multiply;
+}
+.hero-banner-slide-agotados .hero-banner-ilustracion {
+  background-image: url("../img/banner-dinamico-cesta-agotados.png?v=3.8");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 0;
+}
+
+.hero-banner-slide-activos .hero-banner-titulo,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-titulo {
+  display: flex !important;
+  max-width: none !important;
+  color: #111318 !important;
+}
+.hero-banner-slide-activos .hero-banner-titulo strong,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-titulo strong {
+  color: #3157df !important;
+}
+.hero-banner-slide-activos .hero-banner-detalle,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-detalle {
+  color: #26282d !important;
+}
+.hero-banner-slide-activos .hero-banner-whatsapp,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-whatsapp {
+  background: rgba(255,255,255,.94) !important;
+  color: #0a552b !important;
+}
+.hero-banner-slide-activos .hero-banner-whatsapp-icono,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-whatsapp-icono {
+  background: #12a447 !important;
+  border: 0 !important;
+}
+.hero-banner-slide-activos .hero-banner-whatsapp strong,
+.hero-banner-slide-activos .hero-banner-whatsapp small,
+.hero-banner-slide-activos .hero-banner-whatsapp-flecha,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-whatsapp strong,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-whatsapp small,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-whatsapp-flecha {
+  color: #0b582d !important;
+}
+
+.hero-banner-slide-agotados .hero-banner-titulo,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-titulo {
+  display: block !important;
+  max-width: 650px !important;
+  color: #fff !important;
+  font-size: clamp(34px, 3.8vw, 56px) !important;
+  line-height: .98 !important;
+}
+.hero-banner-slide-agotados .hero-banner-titulo > span:first-child {
+  display: block !important;
+}
+.hero-banner-slide-agotados .hero-banner-titulo strong,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-titulo strong {
+  display: inline !important;
+  color: #ffd21c !important;
+  font-size: 1em !important;
+}
+.hero-banner-slide-agotados .hero-banner-detalle,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-detalle {
+  color: rgba(255,255,255,.88) !important;
+}
+.hero-banner-slide-agotados .hero-banner-whatsapp,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-whatsapp {
+  background: linear-gradient(135deg, #5d54d1, #6134cf) !important;
+  color: #fff !important;
+  box-shadow: 0 14px 34px rgba(0,0,0,.18) !important;
+}
+.hero-banner-slide-agotados .hero-banner-whatsapp-icono,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-whatsapp-icono {
+  background: transparent !important;
+  border: 3px solid rgba(255,255,255,.95) !important;
+}
+.hero-banner-slide-agotados .hero-banner-whatsapp strong,
+.hero-banner-slide-agotados .hero-banner-whatsapp small,
+.hero-banner-slide-agotados .hero-banner-whatsapp-flecha,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-whatsapp strong,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-whatsapp small,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-whatsapp-flecha {
+  color: #fff !important;
+}
+
+/* Cada banner conserva sus propios puntos/colores sin depender del estado real. */
+.hero-banner-estado .hero-banner-punto { background: rgba(17,24,39,.30) !important; }
+.hero-banner-estado .hero-banner-punto.activo { background: #111827 !important; }
+.hero-banner-estado[data-estado="agotados"] .hero-banner-punto { background: rgba(255,255,255,.45) !important; }
+.hero-banner-estado[data-estado="agotados"] .hero-banner-punto.activo { background: #fff !important; }
+
+@media (max-width: 720px) {
+  /* Se conserva exactamente la altura compacta aprobada en 3.7. */
+  .hero-banner-slide-activos .hero-banner-ilustracion,
+  .hero-banner-slide-agotados .hero-banner-ilustracion {
+    background-size: cover !important;
+    background-position: center !important;
+  }
+  .hero-banner-slide-activos .hero-banner-titulo,
+  .hero-banner-slide-agotados .hero-banner-titulo,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-titulo,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-titulo {
+    font-size: clamp(14px, 4.45vw, 21px) !important;
+    line-height: .98 !important;
+  }
+  .hero-banner-slide-agotados .hero-banner-titulo > span:first-child {
+    display: inline !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .hero-banner-slide-activos .hero-banner-titulo,
+  .hero-banner-slide-agotados .hero-banner-titulo,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-titulo,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-titulo {
+    font-size: 15px !important;
+  }
+}

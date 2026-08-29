@@ -2259,64 +2259,43 @@ function actualizarBannerEstadoCupones() {
   if (!banner) return;
   prepararBannerEstadoCarrusel();
 
-  const superior = document.querySelector("#banner-estado-superior");
-  const prefijo = document.querySelector("#banner-estado-prefijo");
-  const destacado = document.querySelector("#banner-estado-destacado");
-  const sufijo = document.querySelector("#banner-estado-sufijo");
-  const detalle = document.querySelector("#banner-estado-detalle");
-  const vigencia = document.querySelector("#banner-estado-vigencia");
-  const whatsappTitulo = document.querySelector("#banner-whatsapp-titulo");
-  const whatsappSubtitulo = document.querySelector("#banner-whatsapp-subtitulo");
-  const ilustracion = document.querySelector("#banner-estado-ilustracion");
-  const alertaTitulo = document.querySelector("#banner-alerta-titulo");
-  const alertaTexto = document.querySelector("#banner-alerta-texto");
+  const superiorActivos = document.querySelector("#banner-activos-superior");
+  const prefijoActivos = document.querySelector("#banner-activos-prefijo");
+  const destacadoActivos = document.querySelector("#banner-activos-destacado");
+  const sufijoActivos = document.querySelector("#banner-activos-sufijo");
+  const vigenciaActivos = document.querySelector("#banner-activos-vigencia");
+  const tiempoAgotados = document.querySelector("#banner-agotados-tiempo");
 
   const disponibles = todosLosCupones.filter(cuponDisponibleParaBanner);
   const total = disponibles.length;
+  const estadoNuevo = total > 0 ? "activos" : "agotados";
   const estadoAnterior = banner.dataset.estado;
 
-  if (total > 0) {
-    const ahorroMaximo = disponibles.reduce(
-      (maximo, cupon) => Math.max(maximo, ahorroMaximoParaBanner(cupon)),
-      0
-    );
+  const ahorroMaximo = disponibles.reduce(
+    (maximo, cupon) => Math.max(maximo, ahorroMaximoParaBanner(cupon)),
+    0
+  );
 
-    banner.dataset.estado = "activos";
-    if (superior) superior.textContent = `¡Hay ${total} ${total === 1 ? "cupón activo" : "cupones activos"}!`;
-    if (prefijo) prefijo.textContent = ahorroMaximo > 0 ? "Hasta" : "Cupones";
-    if (destacado) destacado.textContent = ahorroMaximo > 0 ? ` ${monedaBuscador(ahorroMaximo)}` : " disponibles";
-    if (sufijo) sufijo.textContent = ahorroMaximo > 0 ? " OFF" : "";
-    if (detalle) detalle.textContent = "Aplican según las condiciones de cada cupón.";
-    if (vigencia) {
-      vigencia.hidden = false;
-      vigencia.textContent = "⏱ Úsalos antes de que se agoten";
-    }
-    if (whatsappTitulo) whatsappTitulo.textContent = "No te pierdas nada";
-    if (whatsappSubtitulo) whatsappSubtitulo.textContent = "Únete a nuestro canal";
-    if (ilustracion) ilustracion.src = "img/banner-dinamico-cesta-activos.png?v=3.7";
-    if (alertaTitulo) alertaTitulo.textContent = "No te pierdas nuevos cupones";
-    if (alertaTexto) alertaTexto.textContent = "Te avisamos cuando aparezcan nuevas promociones y cupones.";
-  } else {
-    banner.dataset.estado = "agotados";
-    if (superior) superior.textContent = "¡Se acabaron los cupones por hoy! 😢";
-    if (prefijo) prefijo.textContent = "Más cupones";
-    if (destacado) destacado.textContent = ` dentro de ${textoCuentaRegresivaBanner()}`;
-    if (sufijo) sufijo.textContent = " ⚡";
-    if (detalle) detalle.textContent = "Algunos cupones pueden seguir o volver a estar activos.";
-    if (vigencia) {
-      vigencia.hidden = true;
-      vigencia.textContent = "";
-    }
-    if (whatsappTitulo) whatsappTitulo.textContent = "Aquí te avisamos";
-    if (whatsappSubtitulo) whatsappSubtitulo.textContent = "cuando salgan nuevos";
-    if (ilustracion) ilustracion.src = "img/banner-dinamico-cesta-agotados.png?v=3.7";
-    if (alertaTitulo) alertaTitulo.textContent = "Aquí te avisamos cuando salgan";
-    if (alertaTexto) alertaTexto.textContent = "Únete al canal para enterarte cuando aparezcan nuevos cupones.";
+  // El banner amarillo siempre conserva el diseño de cupones activos.
+  if (superiorActivos) superiorActivos.textContent = `¡Hay ${total} ${total === 1 ? "cupón activo" : "cupones activos"}!`;
+  if (prefijoActivos) prefijoActivos.textContent = ahorroMaximo > 0 ? "Hasta" : "Cupones";
+  if (destacadoActivos) destacadoActivos.textContent = ahorroMaximo > 0 ? ` ${monedaBuscador(ahorroMaximo)}` : " disponibles";
+  if (sufijoActivos) sufijoActivos.textContent = ahorroMaximo > 0 ? " OFF" : "";
+  if (vigenciaActivos) {
+    vigenciaActivos.hidden = total <= 0;
+    vigenciaActivos.textContent = "⏱ Úsalos antes de que se agoten";
   }
 
-  // Si el estado cambió por la disponibilidad real de cupones, el carrusel
-  // vuelve al banner principal. Después el usuario puede moverlo manualmente.
-  if (estadoAnterior !== banner.dataset.estado) mostrarBannerEstadoCarrusel(0, false);
+  // El banner azul siempre conserva el diseño de cupones agotados.
+  if (tiempoAgotados) tiempoAgotados.textContent = ` dentro de ${textoCuentaRegresivaBanner()}`;
+
+  banner.dataset.estado = estadoNuevo;
+
+  // Posición automática únicamente al cargar o cuando cambia el estado real.
+  // Después el usuario puede navegar libremente entre los DOS banners.
+  if (estadoAnterior !== estadoNuevo) {
+    mostrarBannerEstadoCarrusel(estadoNuevo === "activos" ? 0 : 1, false);
+  }
 }
 
 function limpiarVista() {

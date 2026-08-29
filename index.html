@@ -49,7 +49,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="img/icon-192.png?v=81.72" />
   <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png?v=81.73" />
   <link rel="stylesheet" href="css/style.css?v=82.46.0" />
-  <link rel="stylesheet" href="css/hero-redes.css?v=82.68.0" />
+  <link rel="stylesheet" href="css/hero-redes.css?v=82.99.0" />
   <link rel="stylesheet" href="css/ajustes-visuales-v67-16.css?v=70.0.0" />
   <link rel="stylesheet" href="css/eventos-v68.css?v=70.0.0" />
   <link rel="stylesheet" href="css/header-dinamico-v68-3.css?v=70.0.0" />
@@ -108,24 +108,21 @@
       <section id="banner-estado-cupones" class="hero-promo-compacto hero-banner-estado" data-estado="cargando" aria-live="polite" aria-label="Estado de los cupones">
         <div class="hero-banner-viewport">
           <div class="hero-banner-track">
-            <article class="hero-banner-slide hero-banner-slide-principal" aria-label="Resumen de cupones">
-              <div class="hero-banner-ilustracion" aria-hidden="true">
-                <img id="banner-estado-ilustracion" class="hero-banner-ilustracion-img" src="img/banner-dinamico-cesta-activos.png?v=3.7" alt="" />
-              </div>
+            <article class="hero-banner-slide hero-banner-slide-principal hero-banner-slide-activos" aria-label="Cupones activos">
+              <div class="hero-banner-ilustracion" aria-hidden="true"></div>
 
               <div class="hero-banner-copy">
-                <p id="banner-estado-superior" class="hero-banner-superior">Consultando cupones...</p>
+                <p id="banner-activos-superior" class="hero-banner-superior">Consultando cupones...</p>
                 <p class="hero-banner-titulo">
-                  <span id="banner-estado-prefijo">Ofertas</span>
-                  <strong id="banner-estado-destacado"> disponibles</strong>
-                  <span id="banner-estado-sufijo"></span>
+                  <span id="banner-activos-prefijo">Hasta</span>
+                  <strong id="banner-activos-destacado"> $0</strong>
+                  <span id="banner-activos-sufijo"> OFF</span>
                 </p>
-                <p id="banner-estado-detalle" class="hero-banner-detalle">Estamos revisando los cupones disponibles.</p>
-                <span id="banner-estado-vigencia" class="hero-banner-vigencia" hidden></span>
+                <p id="banner-activos-detalle" class="hero-banner-detalle">Aplican según las condiciones de cada cupón.</p>
+                <span id="banner-activos-vigencia" class="hero-banner-vigencia">⏱ Úsalos antes de que se agoten</span>
               </div>
 
               <a
-                id="enlace-banner-whatsapp"
                 class="hero-banner-whatsapp"
                 href="https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n"
                 target="_blank"
@@ -134,26 +131,39 @@
               >
                 <span class="hero-banner-whatsapp-icono" aria-hidden="true"><img src="img/whatsapp-logo-original-transparente.png" alt="" /></span>
                 <span>
-                  <strong id="banner-whatsapp-titulo">No te pierdas nada</strong>
-                  <small id="banner-whatsapp-subtitulo">Únete a nuestro canal</small>
+                  <strong>No te pierdas nada</strong>
+                  <small>Únete a nuestro canal</small>
                 </span>
                 <span class="hero-banner-whatsapp-flecha" aria-hidden="true">→</span>
               </a>
-
-              <img id="banner-estado-decoracion" class="hero-banner-decoracion" src="img/banner-dinamico-reloj-agotados.png?v=3.7" alt="" aria-hidden="true" />
             </article>
 
-            <article class="hero-banner-slide hero-banner-slide-alerta" aria-label="Avisos de nuevos cupones">
-              <div class="hero-banner-alerta-icono" aria-hidden="true">🔔</div>
-              <div class="hero-banner-alerta-copy">
-                <span>Ofertas Imperdibles MX</span>
-                <strong id="banner-alerta-titulo">No te pierdas nuevos cupones</strong>
-                <p id="banner-alerta-texto">Te avisamos cuando aparezcan nuevas promociones.</p>
+            <article class="hero-banner-slide hero-banner-slide-principal hero-banner-slide-agotados" aria-label="Cupones agotados">
+              <div class="hero-banner-ilustracion" aria-hidden="true"></div>
+
+              <div class="hero-banner-copy">
+                <p class="hero-banner-superior">¡Se acabaron los cupones por hoy! 😢</p>
+                <p class="hero-banner-titulo">
+                  <span>Más cupones</span>
+                  <strong id="banner-agotados-tiempo"> dentro de --</strong>
+                  <span> ⚡</span>
+                </p>
+                <p class="hero-banner-detalle">Algunos cupones pueden seguir o volver a estar activos.</p>
               </div>
-              <a class="hero-banner-alerta-boton" href="https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n" target="_blank" rel="noopener noreferrer">
-                <span aria-hidden="true">◉</span>
-                <strong>Únete al canal</strong>
-                <span aria-hidden="true">→</span>
+
+              <a
+                class="hero-banner-whatsapp"
+                href="https://whatsapp.com/channel/0029Vb75TftCxoAqrcjedS1n"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Unirme al canal de WhatsApp de Ofertas Imperdibles MX"
+              >
+                <span class="hero-banner-whatsapp-icono" aria-hidden="true"><img src="img/whatsapp-logo-original-transparente.png" alt="" /></span>
+                <span>
+                  <strong>Aquí te avisamos</strong>
+                  <small>cuando salgan nuevos</small>
+                </span>
+                <span class="hero-banner-whatsapp-flecha" aria-hidden="true">→</span>
               </a>
             </article>
           </div>
@@ -162,8 +172,8 @@
         <button id="banner-estado-anterior" class="hero-banner-control hero-banner-control-anterior" type="button" aria-label="Banner anterior">‹</button>
         <button id="banner-estado-siguiente" class="hero-banner-control hero-banner-control-siguiente" type="button" aria-label="Banner siguiente">›</button>
         <div class="hero-banner-puntos" aria-label="Seleccionar banner">
-          <button type="button" class="hero-banner-punto activo" data-banner-indice="0" aria-label="Mostrar banner 1" aria-current="true"></button>
-          <button type="button" class="hero-banner-punto" data-banner-indice="1" aria-label="Mostrar banner 2" aria-current="false"></button>
+          <button type="button" class="hero-banner-punto activo" data-banner-indice="0" aria-label="Mostrar banner de cupones activos" aria-current="true"></button>
+          <button type="button" class="hero-banner-punto" data-banner-indice="1" aria-label="Mostrar banner de cupones agotados" aria-current="false"></button>
         </div>
       </section>
 
@@ -667,7 +677,7 @@
   </div>
 
 
-  <script type="module" src="js/app.js?v=82.98.0"></script>
+  <script type="module" src="js/app.js?v=82.99.0"></script>
   <script src="js/hero-redes.js?v=82.39" defer></script>
   <script src="js/header-dinamico-v68-3.js?v=70.0.0" defer></script>
   <script src="js/cabecera-inteligente.js?v=77.15.7" defer></script>

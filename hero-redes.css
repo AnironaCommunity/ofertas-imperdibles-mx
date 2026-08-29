@@ -2595,156 +2595,1294 @@
   }
 }
 
-/* ============================================================
-   V82.26 — Ajuste de Inter en descripción del encabezado móvil
-   Mantiene "Cupones de Mercado Libre | Hoy ..." en una sola línea
-   y dentro del ancho disponible, sin alterar escritorio.
-   ============================================================ */
-@media (max-width: 600px) {
-  .hero-redes.hero-redes-lista #hero-texto-descriptivo {
-    font-size: clamp(8.4px, 2.68vw, 10.4px) !important;
-    line-height: 1.15 !important;
-    letter-spacing: -0.12px !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: clip !important;
-    min-width: 0 !important;
-    max-width: 100% !important;
-  }
-}
 
 /* ============================================================
-   V82.27 — Corrección definitiva descripción del encabezado móvil
-   Fuerza el texto dentro del ancho real disponible con Inter.
+   V82.41 — Restauración exacta del encabezado móvil aprobado
+   El resto del sitio conserva Inter. Solo el título dinámico usa
+   la tipografía previa para recuperar tamaño/ancho y una sola línea.
    ============================================================ */
-@media (max-width: 600px) {
-  .hero-redes.hero-redes-lista {
-    box-sizing: border-box !important;
-    width: calc(100% - 12px) !important;
-    max-width: calc(100% - 12px) !important;
-  }
-
-  .hero-redes.hero-redes-lista .hero-redes-contenido {
-    box-sizing: border-box !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    overflow: hidden !important;
-  }
-
-  .hero-redes.hero-redes-lista #hero-texto-descriptivo {
-    display: block !important;
-    flex: 0 0 100% !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: clip !important;
-    transform-origin: left center !important;
-  }
+.hero-redes.hero-redes-lista #nombre-sitio {
+  font-family: Arial, Helvetica, sans-serif !important;
 }
 
 
 /* ============================================================
-   V82.35 — Contención del título dinámico
-   El JS reduce la tipografía hasta mostrar el texto completo.
-   Overflow oculto evita cualquier desborde durante la carga.
+   V82.66 — Banner superior dinámico Ofertas Imperdibles MX
+   Sustituye la imagen fija, sin alterar el bloque inferior del hero.
    ============================================================ */
-@media (max-width: 600px) {
-  .hero-redes.hero-redes-lista #nombre-sitio {
-    display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: clip !important;
-    letter-spacing: -0.08px !important;
+.hero-redes.hero-redes-lista .hero-banner-estado {
+  grid-column: 1 / -1 !important;
+  grid-row: 1 !important;
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: 190px minmax(0, 1fr) minmax(250px, 340px) !important;
+  align-items: center !important;
+  gap: 22px !important;
+  width: 100% !important;
+  min-height: 210px !important;
+  margin: 0 0 7px !important;
+  padding: 22px 28px !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  border-radius: 16px !important;
+  background:
+    radial-gradient(circle at 72% 28%, rgba(255,255,255,.72) 0 8%, transparent 8.3%),
+    radial-gradient(circle at 64% 72%, rgba(255,255,255,.38) 0 11%, transparent 11.3%),
+    linear-gradient(120deg, #fff0ae 0%, #ffe38a 58%, #fff0b7 100%) !important;
+  color: #101321 !important;
+  box-shadow: none !important;
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado::before,
+.hero-redes.hero-redes-lista .hero-banner-estado::after {
+  content: "%";
+  position: absolute;
+  z-index: 0;
+  color: rgba(255,255,255,.52);
+  font-weight: 900;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado::before {
+  right: 30%;
+  top: 18px;
+  font-size: 58px;
+  transform: rotate(-12deg);
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado::after {
+  right: 5%;
+  bottom: -18px;
+  font-size: 94px;
+  transform: rotate(13deg);
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-banner-ilustracion {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  height: 150px;
+}
+
+.hero-banner-cesta {
+  display: grid;
+  place-items: center;
+  width: 132px;
+  height: 120px;
+  border-radius: 34px;
+  background: rgba(255,255,255,.32);
+  box-shadow: 0 14px 30px rgba(97,66,0,.16);
+  font-size: 82px;
+  line-height: 1;
+  transform: rotate(-4deg);
+}
+
+.hero-banner-ticket {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 47px;
+  height: 34px;
+  border-radius: 8px;
+  background: #2f61df;
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(36,73,170,.22);
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.hero-banner-ticket-a { top: 2px; right: 8px; transform: rotate(14deg); }
+.hero-banner-ticket-b { bottom: 2px; left: 8px; transform: rotate(-12deg); background: #ffca0a; color: #1f252f; }
+
+.hero-banner-copy {
+  min-width: 0;
+}
+
+.hero-banner-superior,
+.hero-banner-titulo,
+.hero-banner-detalle {
+  margin: 0;
+}
+
+.hero-banner-superior {
+  margin-bottom: 5px;
+  font-size: clamp(16px, 1.65vw, 24px);
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.hero-banner-titulo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0;
+  font-size: clamp(28px, 3.6vw, 52px);
+  font-weight: 900;
+  line-height: .98;
+  letter-spacing: -1.6px;
+}
+
+.hero-banner-titulo strong {
+  display: inline !important;
+  color: #3158d7 !important;
+  font-size: 1.12em !important;
+  font-weight: 900 !important;
+  line-height: inherit !important;
+}
+
+.hero-banner-detalle {
+  margin-top: 12px;
+  color: #2d3038;
+  font-size: clamp(14px, 1.25vw, 18px);
+  line-height: 1.3;
+}
+
+.hero-banner-vigencia {
+  display: inline-flex !important;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 13px;
+  padding: 7px 13px;
+  align-items: center;
+  border-radius: 999px;
+  background: rgba(255,255,255,.82);
+  color: #d71920;
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.hero-banner-vigencia[hidden] { display: none !important; }
+
+.hero-banner-whatsapp {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) 24px;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  min-width: 0;
+  padding: 16px 17px;
+  box-sizing: border-box;
+  border: 1px solid rgba(18,92,47,.08);
+  border-radius: 22px;
+  background: rgba(255,255,255,.92);
+  color: #0f4f28;
+  text-decoration: none;
+  box-shadow: 0 12px 28px rgba(75,66,25,.10);
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+
+.hero-banner-whatsapp:hover,
+.hero-banner-whatsapp:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 31px rgba(75,66,25,.15);
+  outline: none;
+}
+
+.hero-banner-whatsapp-icono {
+  display: grid !important;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #16aa52;
+  color: #fff !important;
+  font-size: 25px !important;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.hero-banner-whatsapp > span:nth-child(2) {
+  min-width: 0;
+}
+
+.hero-banner-whatsapp strong,
+.hero-banner-whatsapp small {
+  display: block !important;
+}
+
+.hero-banner-whatsapp strong {
+  color: #105629 !important;
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  line-height: 1.1 !important;
+}
+
+.hero-banner-whatsapp small {
+  margin-top: 4px;
+  color: #23462f;
+  font-size: 12px;
+  line-height: 1.15;
+}
+
+.hero-banner-whatsapp-flecha {
+  color: #176c37 !important;
+  font-size: 27px !important;
+  line-height: 1;
+}
+
+/* Estado sin cupones */
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] {
+  background:
+    radial-gradient(circle at 78% 28%, rgba(94,75,247,.22) 0 8%, transparent 8.4%),
+    radial-gradient(circle at 25% 105%, #1a298d 0 22%, transparent 22.5%),
+    linear-gradient(120deg, #091658 0%, #101f78 58%, #1c1b7d 100%) !important;
+  color: #fff !important;
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"]::before,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"]::after {
+  content: "✦";
+  color: rgba(255,209,38,.86);
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-cesta {
+  background: rgba(55,50,179,.55);
+  filter: saturate(.75) brightness(.82);
+  box-shadow: 0 14px 30px rgba(0,0,0,.24);
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-ticket {
+  background: #ff944f;
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-ticket-b {
+  background: #6657e9;
+  color: #fff;
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-titulo strong {
+  color: #ffd21c !important;
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-detalle {
+  color: rgba(255,255,255,.84);
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-vigencia {
+  background: transparent;
+  color: rgba(255,255,255,.84);
+  padding-left: 0;
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-whatsapp {
+  border-color: rgba(255,255,255,.18);
+  background: linear-gradient(135deg, rgba(91,84,208,.94), rgba(87,58,198,.94));
+  color: #fff;
+  box-shadow: 0 12px 28px rgba(0,0,0,.17);
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-whatsapp-icono {
+  background: transparent;
+  border: 3px solid #fff;
+}
+
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-whatsapp strong,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-whatsapp small,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-whatsapp-flecha {
+  color: #fff !important;
+}
+
+@media (max-width: 900px) {
+  .hero-redes.hero-redes-lista .hero-banner-estado {
+    grid-template-columns: 125px minmax(0, 1fr) !important;
+    gap: 15px !important;
+    min-height: 190px !important;
+    padding: 18px 20px !important;
   }
+
+  .hero-banner-ilustracion { height: 128px; }
+  .hero-banner-cesta { width: 108px; height: 98px; font-size: 65px; }
+  .hero-banner-whatsapp { grid-column: 1 / -1; max-width: 440px; justify-self: end; padding: 11px 14px; border-radius: 17px; }
+  .hero-banner-whatsapp-icono { width: 42px; height: 42px; font-size: 21px !important; }
+}
+
+@media (max-width: 600px) {
+  .hero-redes.hero-redes-lista .hero-banner-estado {
+    grid-template-columns: 70px minmax(0, 1fr) !important;
+    gap: 9px !important;
+    min-height: 0 !important;
+    margin-bottom: 4px !important;
+    padding: 12px 12px 11px !important;
+    border-radius: 12px !important;
+  }
+
+  .hero-banner-ilustracion { height: 82px; align-self: start; }
+  .hero-banner-cesta { width: 66px; height: 64px; border-radius: 19px; font-size: 42px; box-shadow: 0 8px 18px rgba(97,66,0,.14); }
+  .hero-banner-ticket { width: 27px; height: 20px; border-radius: 5px; font-size: 11px; }
+  .hero-banner-ticket-a { top: 1px; right: -2px; }
+  .hero-banner-ticket-b { bottom: 1px; left: -1px; }
+
+  .hero-banner-superior { margin-bottom: 3px; font-size: 11px; }
+  .hero-banner-titulo { font-size: clamp(20px, 6.6vw, 28px); line-height: 1.02; letter-spacing: -.8px; }
+  .hero-banner-detalle { margin-top: 6px; font-size: 10px; line-height: 1.25; }
+  .hero-banner-vigencia { margin-top: 7px; padding: 5px 8px; font-size: 9px; }
+
+  .hero-banner-whatsapp {
+    grid-column: 1 / -1;
+    grid-template-columns: 34px minmax(0, 1fr) 18px;
+    gap: 8px;
+    max-width: none;
+    margin-top: 1px;
+    padding: 8px 10px;
+    border-radius: 13px;
+  }
+  .hero-banner-whatsapp-icono { width: 34px; height: 34px; border-width: 2px !important; font-size: 17px !important; }
+  .hero-banner-whatsapp strong { font-size: 11px !important; }
+  .hero-banner-whatsapp small { margin-top: 2px; font-size: 9px; }
+  .hero-banner-whatsapp-flecha { font-size: 19px !important; }
+
+  .hero-redes.hero-redes-lista .hero-banner-estado::before { right: 12%; top: 8px; font-size: 30px; }
+  .hero-redes.hero-redes-lista .hero-banner-estado::after { right: 2%; bottom: -8px; font-size: 48px; }
+}
+
+@media (max-width: 390px) {
+  .hero-redes.hero-redes-lista .hero-banner-estado {
+    grid-template-columns: 58px minmax(0, 1fr) !important;
+    padding: 10px !important;
+  }
+  .hero-banner-ilustracion { height: 70px; }
+  .hero-banner-cesta { width: 55px; height: 54px; font-size: 35px; }
+  .hero-banner-superior { font-size: 10px; }
+  .hero-banner-titulo { font-size: clamp(18px, 6.5vw, 24px); }
+  .hero-banner-detalle { font-size: 9px; }
+  .hero-banner-vigencia { font-size: 8.5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-banner-whatsapp { transition: none; }
 }
 
 /* ============================================================
-   V82.36 — Contención real del título variable en móvil
-   El ancho del texto lo resuelve JS según el contenido actual.
+   PAQUETE 3.6 — Banner dinámico fiel a la propuesta aprobada
+   - Estado automático según cupones activos.
+   - Carrusel manual por flechas, puntos y gesto horizontal.
+   - El estado real siempre ocupa la primera posición al cambiar.
    ============================================================ */
-@media (max-width: 600px) {
-  .hero-redes.hero-redes-lista .hero-redes-contenido {
-    min-width: 0 !important;
-    max-width: 100% !important;
-    overflow: hidden !important;
-  }
+.hero-redes.hero-redes-lista .hero-banner-estado {
+  grid-column: 1 / -1 !important;
+  grid-row: 1 !important;
+  display: block !important;
+  position: relative !important;
+  width: 100% !important;
+  min-height: 0 !important;
+  margin: 0 0 7px !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  border-radius: 17px !important;
+  background: transparent !important;
+  color: #111827 !important;
+  box-shadow: none !important;
+  isolation: isolate;
+}
 
-  .hero-redes.hero-redes-lista #nombre-sitio {
-    display: block !important;
-    flex: 0 0 100% !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: clip !important;
-    padding-right: 2px !important;
+.hero-redes.hero-redes-lista .hero-banner-estado::before,
+.hero-redes.hero-redes-lista .hero-banner-estado::after {
+  display: none !important;
+}
+
+.hero-banner-viewport {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 17px;
+  touch-action: pan-y pinch-zoom;
+  cursor: grab;
+}
+.hero-banner-viewport.arrastrando { cursor: grabbing; }
+
+.hero-banner-track {
+  display: flex;
+  width: 100%;
+  transform: translate3d(0,0,0);
+  will-change: transform;
+}
+
+.hero-banner-slide {
+  position: relative;
+  flex: 0 0 100%;
+  width: 100%;
+  min-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 17px;
+}
+
+.hero-banner-slide-principal {
+  display: grid;
+  grid-template-columns: minmax(225px, 290px) minmax(0, 1fr) minmax(285px, 350px);
+  align-items: center;
+  gap: 24px;
+  min-height: 238px;
+  padding: 24px 58px 26px 54px;
+  background:
+    radial-gradient(circle at 77% 24%, rgba(255,255,255,.66) 0 5.5%, transparent 5.8%),
+    radial-gradient(circle at 66% 76%, rgba(255,255,255,.30) 0 8%, transparent 8.4%),
+    linear-gradient(112deg, #fff0b3 0%, #ffe293 55%, #fff0bc 100%);
+  color: #111318;
+}
+
+.hero-banner-slide-principal::before,
+.hero-banner-slide-principal::after {
+  content: "%";
+  position: absolute;
+  z-index: 0;
+  color: rgba(255,255,255,.43);
+  font-weight: 900;
+  line-height: 1;
+  pointer-events: none;
+}
+.hero-banner-slide-principal::before { right: 24%; top: 12px; font-size: 62px; transform: rotate(-13deg); }
+.hero-banner-slide-principal::after { right: 5%; bottom: -26px; font-size: 105px; transform: rotate(12deg); }
+
+.hero-banner-slide-principal > * { position: relative; z-index: 2; }
+
+.hero-banner-ilustracion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 175px;
+  min-width: 0;
+}
+
+.hero-banner-ilustracion-img {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 28px;
+  mix-blend-mode: multiply;
+  filter: saturate(1.04) contrast(1.01);
+}
+
+.hero-banner-copy { min-width: 0; }
+.hero-banner-superior,
+.hero-banner-titulo,
+.hero-banner-detalle { margin: 0; }
+
+.hero-banner-superior {
+  margin-bottom: 6px;
+  color: inherit;
+  font-size: clamp(18px, 1.7vw, 25px);
+  font-weight: 850;
+  line-height: 1.13;
+}
+
+.hero-banner-titulo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0;
+  color: inherit;
+  font-size: clamp(36px, 4vw, 60px);
+  font-weight: 900;
+  line-height: .96;
+  letter-spacing: -2px;
+}
+.hero-banner-titulo strong {
+  display: inline !important;
+  margin: 0 !important;
+  color: #3157df !important;
+  font-size: 1.14em !important;
+  font-weight: 900 !important;
+  line-height: inherit !important;
+}
+
+.hero-banner-detalle {
+  margin-top: 12px;
+  color: #26282d;
+  font-size: clamp(15px, 1.3vw, 20px);
+  line-height: 1.28;
+}
+
+.hero-banner-vigencia {
+  display: inline-flex !important;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 13px;
+  padding: 7px 14px;
+  align-items: center;
+  border-radius: 999px;
+  background: rgba(255,255,255,.91);
+  color: #e21d2a;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.15;
+  box-shadow: 0 4px 14px rgba(154,103,0,.06);
+}
+.hero-banner-vigencia[hidden] { display: none !important; }
+
+.hero-banner-whatsapp {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) 25px;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  padding: 17px 18px;
+  box-sizing: border-box;
+  border: 0;
+  border-radius: 24px;
+  background: rgba(255,255,255,.94);
+  color: #0a552b;
+  text-decoration: none;
+  box-shadow: 0 14px 34px rgba(99,76,20,.11);
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+.hero-banner-whatsapp:hover,
+.hero-banner-whatsapp:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 17px 38px rgba(99,76,20,.16);
+  outline: none;
+}
+.hero-banner-whatsapp-icono {
+  display: grid !important;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #12a447;
+  color: #fff !important;
+  font-size: 32px !important;
+  font-weight: 900;
+  line-height: 1;
+}
+.hero-banner-whatsapp > span:nth-child(2) { min-width: 0; }
+.hero-banner-whatsapp strong,
+.hero-banner-whatsapp small { display: block !important; }
+.hero-banner-whatsapp strong {
+  color: #0b582d !important;
+  font-size: 19px !important;
+  font-weight: 850 !important;
+  line-height: 1.08 !important;
+}
+.hero-banner-whatsapp small {
+  margin-top: 5px;
+  color: #243d2d;
+  font-size: 13px;
+  line-height: 1.15;
+}
+.hero-banner-whatsapp-flecha {
+  color: #16723a !important;
+  font-size: 29px !important;
+  line-height: 1;
+}
+
+.hero-banner-decoracion {
+  display: none;
+  position: absolute !important;
+  right: 4%;
+  top: 0;
+  width: 210px;
+  height: 112px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 0 0 20px 20px;
+  opacity: .42;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 1 !important;
+}
+
+/* Segundo panel del carrusel: recordatorio/WhatsApp, sin contradecir el estado real. */
+.hero-banner-slide-alerta {
+  display: grid;
+  grid-template-columns: 115px minmax(0,1fr) minmax(265px, 340px);
+  align-items: center;
+  gap: 28px;
+  min-height: 238px;
+  padding: 34px 72px;
+  background: linear-gradient(112deg, #fff0b3 0%, #ffe293 55%, #fff0bc 100%);
+  color: #111318;
+}
+.hero-banner-alerta-icono {
+  display: grid;
+  place-items: center;
+  width: 104px;
+  height: 104px;
+  border-radius: 28px;
+  background: rgba(255,255,255,.75);
+  font-size: 54px;
+  box-shadow: 0 14px 30px rgba(99,76,20,.10);
+}
+.hero-banner-alerta-copy span {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 800;
+  opacity: .68;
+}
+.hero-banner-alerta-copy strong {
+  display: block;
+  font-size: clamp(26px, 3vw, 44px);
+  line-height: 1.02;
+  letter-spacing: -1px;
+}
+.hero-banner-alerta-copy p {
+  margin: 10px 0 0;
+  font-size: 16px;
+  line-height: 1.3;
+}
+.hero-banner-alerta-boton {
+  display: grid;
+  grid-template-columns: 48px minmax(0,1fr) 22px;
+  align-items: center;
+  gap: 11px;
+  padding: 17px 18px;
+  border-radius: 22px;
+  background: #fff;
+  color: #0b582d;
+  text-decoration: none;
+  box-shadow: 0 14px 34px rgba(99,76,20,.11);
+}
+.hero-banner-alerta-boton > span:first-child {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #12a447;
+  color: #fff;
+  font-size: 26px;
+}
+.hero-banner-alerta-boton strong { font-size: 16px; }
+.hero-banner-alerta-boton > span:last-child { font-size: 26px; }
+
+/* Estado agotado: misma composición aprobada, con la ilustración nocturna. */
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-principal,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-alerta {
+  background:
+    radial-gradient(circle at 79% 27%, rgba(79,61,224,.24) 0 7%, transparent 7.4%),
+    radial-gradient(circle at 18% 118%, #182681 0 24%, transparent 24.4%),
+    linear-gradient(112deg, #08155a 0%, #111d73 56%, #191475 100%);
+  color: #fff;
+}
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-principal::before,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-principal::after {
+  content: "✦";
+  color: rgba(255,207,34,.9);
+}
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-ilustracion-img {
+  mix-blend-mode: normal;
+  border-radius: 22px;
+  filter: saturate(1.06) contrast(1.02);
+}
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-titulo {
+  display: block;
+  max-width: 650px;
+  font-size: clamp(34px, 3.8vw, 56px);
+  line-height: .98;
+}
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-titulo #banner-estado-prefijo {
+  display: block;
+}
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-titulo strong {
+  display: inline !important;
+  color: #ffd21c !important;
+  font-size: 1em !important;
+}
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-detalle {
+  color: rgba(255,255,255,.88);
+}
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-whatsapp,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-alerta-boton {
+  background: linear-gradient(135deg, #5d54d1, #6134cf);
+  color: #fff;
+  box-shadow: 0 14px 34px rgba(0,0,0,.18);
+}
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-whatsapp-icono,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-alerta-boton > span:first-child {
+  background: transparent;
+  border: 3px solid rgba(255,255,255,.95);
+}
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-whatsapp strong,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-whatsapp small,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-whatsapp-flecha,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-alerta-boton {
+  color: #fff !important;
+}
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-decoracion { display: block; }
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-alerta-icono {
+  background: rgba(91,72,211,.35);
+  box-shadow: 0 14px 30px rgba(0,0,0,.15);
+}
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-alerta-copy span,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-alerta-copy p {
+  color: rgba(255,255,255,.84);
+}
+
+.hero-banner-control {
+  position: absolute;
+  top: 50%;
+  z-index: 6;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin: 0;
+  padding: 0 0 4px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,.94);
+  color: #111827;
+  box-shadow: 0 7px 20px rgba(21,24,38,.14);
+  transform: translateY(-50%);
+  font: 400 37px/1 Arial, sans-serif;
+  cursor: pointer;
+}
+.hero-banner-control:hover,
+.hero-banner-control:focus-visible { background: #fff; outline: 2px solid rgba(49,87,223,.28); }
+.hero-banner-control-anterior { left: 14px; }
+.hero-banner-control-siguiente { right: 14px; }
+
+.hero-banner-puntos {
+  position: absolute;
+  z-index: 7;
+  left: 50%;
+  bottom: 9px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transform: translateX(-50%);
+}
+.hero-banner-punto {
+  width: 10px;
+  height: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(17,24,39,.28);
+  cursor: pointer;
+}
+.hero-banner-punto.activo { background: #111827; }
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-punto { background: rgba(255,255,255,.45); }
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-punto.activo { background: #fff; }
+
+@media (max-width: 980px) {
+  .hero-banner-slide-principal {
+    grid-template-columns: 185px minmax(0,1fr) 250px;
+    gap: 15px;
+    min-height: 210px;
+    padding: 22px 50px;
   }
+  .hero-banner-ilustracion { height: 150px; }
+  .hero-banner-whatsapp { grid-template-columns: 46px minmax(0,1fr) 20px; padding: 13px 14px; border-radius: 19px; }
+  .hero-banner-whatsapp-icono { width: 46px; height: 46px; font-size: 25px !important; }
+  .hero-banner-whatsapp strong { font-size: 15px !important; }
+  .hero-banner-whatsapp small { font-size: 11px; }
+  .hero-banner-slide-alerta { grid-template-columns: 92px minmax(0,1fr) 250px; min-height: 210px; padding: 30px 55px; gap: 20px; }
+  .hero-banner-alerta-icono { width: 82px; height: 82px; font-size: 43px; }
+}
+
+@media (max-width: 720px) {
+  .hero-redes.hero-redes-lista .hero-banner-estado { border-radius: 14px !important; }
+  .hero-banner-viewport,
+  .hero-banner-slide { border-radius: 14px; }
+  .hero-banner-slide-principal {
+    grid-template-columns: 91px minmax(0,1fr);
+    grid-template-areas:
+      "art copy"
+      "cta cta";
+    align-items: center;
+    gap: 7px 11px;
+    min-height: 260px;
+    padding: 14px 14px 28px;
+  }
+  .hero-banner-ilustracion { grid-area: art; height: 108px; align-self: start; }
+  .hero-banner-ilustracion-img { width: 100%; height: 100%; border-radius: 18px; object-fit: cover; }
+  .hero-banner-copy { grid-area: copy; align-self: start; padding-top: 7px; }
+  .hero-banner-whatsapp { grid-area: cta; max-width: none; width: 100%; margin-top: 1px; }
+  .hero-banner-superior { margin-bottom: 3px; font-size: 12px; }
+  .hero-banner-titulo { font-size: clamp(23px, 7.8vw, 35px); line-height: .98; letter-spacing: -1px; }
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-titulo { font-size: clamp(22px, 7.4vw, 33px); }
+  .hero-banner-detalle { margin-top: 7px; font-size: 10.5px; line-height: 1.22; }
+  .hero-banner-vigencia { margin-top: 7px; padding: 5px 8px; font-size: 9.5px; }
+  .hero-banner-whatsapp { grid-template-columns: 38px minmax(0,1fr) 18px; gap: 8px; padding: 9px 11px; border-radius: 14px; }
+  .hero-banner-whatsapp-icono { width: 38px; height: 38px; font-size: 20px !important; }
+  .hero-banner-whatsapp strong { font-size: 12px !important; }
+  .hero-banner-whatsapp small { margin-top: 2px; font-size: 9px; }
+  .hero-banner-whatsapp-flecha { font-size: 20px !important; }
+  .hero-banner-decoracion { width: 128px; height: 76px; right: 2%; opacity: .30; }
+
+  .hero-banner-slide-alerta {
+    grid-template-columns: 70px minmax(0,1fr);
+    grid-template-areas:
+      "icon copy"
+      "button button";
+    min-height: 260px;
+    padding: 25px 20px 30px;
+    gap: 16px 14px;
+  }
+  .hero-banner-alerta-icono { grid-area: icon; width: 64px; height: 64px; border-radius: 18px; font-size: 34px; }
+  .hero-banner-alerta-copy { grid-area: copy; }
+  .hero-banner-alerta-copy span { margin-bottom: 3px; font-size: 10px; }
+  .hero-banner-alerta-copy strong { font-size: clamp(21px, 6.4vw, 30px); }
+  .hero-banner-alerta-copy p { margin-top: 6px; font-size: 11px; }
+  .hero-banner-alerta-boton { grid-area: button; grid-template-columns: 38px minmax(0,1fr) 18px; padding: 10px 12px; border-radius: 14px; }
+  .hero-banner-alerta-boton > span:first-child { width: 38px; height: 38px; font-size: 20px; }
+  .hero-banner-alerta-boton strong { font-size: 12px; }
+
+  .hero-banner-control { width: 34px; height: 34px; font-size: 27px; }
+  .hero-banner-control-anterior { left: 7px; }
+  .hero-banner-control-siguiente { right: 7px; }
+  .hero-banner-puntos { bottom: 8px; gap: 6px; }
+  .hero-banner-punto { width: 8px; height: 8px; }
+}
+
+@media (max-width: 430px) {
+  .hero-banner-slide-principal { grid-template-columns: 78px minmax(0,1fr); min-height: 244px; padding: 12px 12px 26px; }
+  .hero-banner-ilustracion { height: 95px; }
+  .hero-banner-superior { font-size: 11px; }
+  .hero-banner-titulo { font-size: clamp(21px, 7.6vw, 31px); }
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-titulo { font-size: clamp(20px, 7.3vw, 29px); }
+  .hero-banner-detalle { font-size: 9.5px; }
+  .hero-banner-vigencia { font-size: 8.7px; }
+  .hero-banner-control { width: 30px; height: 30px; font-size: 24px; opacity: .92; }
+  .hero-banner-slide-alerta { min-height: 244px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-banner-track,
+  .hero-banner-whatsapp { transition: none !important; }
 }
 
 
 /* ============================================================
-   V82.38 — Corrección estructural del encabezado compacto móvil
-   El bloque de texto deja de usar display:contents para que tenga
-   un ancho físico real. Así título y descripción quedan contenidos
-   junto al logo y el título puede ajustarse al texto dinámico.
+   PAQUETE 3.7 — Banner superior compacto / móvil panorámico
+   Conserva la altura del banner anterior y evita superposición.
    ============================================================ */
-@media (max-width: 600px) {
-  .hero-redes.hero-redes-lista .hero-redes-contenido {
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
+@media (max-width: 720px) {
+  .hero-redes.hero-redes-lista .hero-banner-estado {
+    height: 118px !important;
+    min-height: 118px !important;
+    max-height: 118px !important;
+    margin-bottom: 4px !important;
+    overflow: hidden !important;
+    border-radius: 11px !important;
+  }
+
+  .hero-banner-viewport,
+  .hero-banner-track,
+  .hero-banner-slide {
+    height: 118px !important;
+    min-height: 118px !important;
+    max-height: 118px !important;
+    border-radius: 11px !important;
+  }
+
+  .hero-banner-track {
     align-items: stretch !important;
-    grid-column: 2 !important;
-    grid-row: 2 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    height: 46px !important;
-    min-height: 46px !important;
-    box-sizing: border-box !important;
-    overflow: hidden !important;
-    padding: 0 3px 0 0 !important;
-    margin: 0 !important;
   }
 
-  .hero-redes.hero-redes-lista #nombre-sitio,
-  .hero-redes.hero-redes-lista #hero-texto-descriptivo {
-    display: block !important;
-    flex: 0 0 auto !important;
-    grid-column: auto !important;
-    grid-row: auto !important;
+  .hero-banner-slide-principal {
+    grid-template-columns: 23% minmax(0, 47%) minmax(0, 30%) !important;
+    grid-template-areas: "art copy cta" !important;
+    align-items: center !important;
+    gap: 4px !important;
+    height: 118px !important;
+    min-height: 118px !important;
+    max-height: 118px !important;
+    padding: 7px 26px 11px 24px !important;
+  }
+
+  .hero-banner-ilustracion {
+    grid-area: art !important;
+    align-self: center !important;
     width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-    margin: 0 !important;
+    height: 94px !important;
+    min-height: 0 !important;
     padding: 0 !important;
-    transform: none !important;
-    transform-origin: left center !important;
+  }
+
+  .hero-banner-ilustracion-img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 94px !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    border-radius: 0 !important;
+  }
+
+  .hero-banner-copy {
+    grid-area: copy !important;
+    align-self: center !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+  }
+
+  .hero-banner-superior {
+    margin: 0 0 2px !important;
+    font-size: clamp(7px, 2.35vw, 11px) !important;
+    line-height: 1.05 !important;
     white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: clip !important;
   }
 
-  .hero-redes.hero-redes-lista #nombre-sitio {
-    line-height: 1.08 !important;
-    letter-spacing: -0.08px !important;
+  .hero-banner-titulo,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-titulo {
+    display: block !important;
+    max-width: none !important;
+    margin: 0 !important;
+    font-size: clamp(14px, 4.45vw, 21px) !important;
+    line-height: .98 !important;
+    letter-spacing: -.5px !important;
   }
 
-  .hero-redes.hero-redes-lista #hero-texto-descriptivo {
+  .hero-banner-titulo #banner-estado-prefijo,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-titulo #banner-estado-prefijo {
+    display: inline !important;
+  }
+
+  .hero-banner-titulo strong,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-titulo strong {
+    display: inline !important;
+    font-size: 1em !important;
+  }
+
+  .hero-banner-detalle {
     margin-top: 3px !important;
-    font-size: clamp(9px, 2.55vw, 10.5px) !important;
+    font-size: clamp(6.5px, 1.85vw, 8.5px) !important;
+    line-height: 1.12 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+  .hero-banner-vigencia {
+    margin-top: 4px !important;
+    padding: 3px 6px !important;
+    font-size: clamp(6px, 1.7vw, 8px) !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+  }
+
+  .hero-banner-whatsapp {
+    grid-area: cta !important;
+    align-self: center !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 6px 6px !important;
+    grid-template-columns: 27px minmax(0,1fr) 12px !important;
+    gap: 4px !important;
+    border-radius: 10px !important;
+  }
+
+  .hero-banner-whatsapp-icono {
+    width: 27px !important;
+    height: 27px !important;
+    border-width: 1.5px !important;
+    font-size: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .hero-banner-whatsapp-icono img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+  }
+
+  .hero-banner-whatsapp strong {
+    font-size: clamp(6.5px, 1.9vw, 9px) !important;
+    line-height: 1.05 !important;
+  }
+
+  .hero-banner-whatsapp small {
+    margin-top: 1px !important;
+    font-size: clamp(5.5px, 1.5vw, 7px) !important;
+    line-height: 1.05 !important;
+  }
+
+  .hero-banner-whatsapp-flecha {
+    font-size: 13px !important;
+  }
+
+  .hero-banner-decoracion {
+    width: 72px !important;
+    height: 42px !important;
+    right: 3% !important;
+    opacity: .20 !important;
+  }
+
+  .hero-banner-slide-alerta {
+    grid-template-columns: 18% minmax(0, 50%) minmax(0, 32%) !important;
+    grid-template-areas: "icon copy button" !important;
+    align-items: center !important;
+    gap: 5px !important;
+    height: 118px !important;
+    min-height: 118px !important;
+    max-height: 118px !important;
+    padding: 9px 28px 12px 27px !important;
+  }
+
+  .hero-banner-alerta-icono {
+    grid-area: icon !important;
+    width: 46px !important;
+    height: 46px !important;
+    border-radius: 12px !important;
+    font-size: 24px !important;
+    justify-self: center !important;
+  }
+
+  .hero-banner-alerta-copy {
+    grid-area: copy !important;
+    min-width: 0 !important;
+  }
+
+  .hero-banner-alerta-copy span {
+    margin-bottom: 2px !important;
+    font-size: 6.5px !important;
+  }
+
+  .hero-banner-alerta-copy strong {
+    font-size: clamp(13px, 3.8vw, 18px) !important;
+    line-height: 1 !important;
+  }
+
+  .hero-banner-alerta-copy p {
+    margin-top: 3px !important;
+    font-size: 7.5px !important;
     line-height: 1.1 !important;
-    letter-spacing: -0.08px !important;
+  }
+
+  .hero-banner-alerta-boton {
+    grid-area: button !important;
+    min-width: 0 !important;
+    grid-template-columns: 25px minmax(0,1fr) 11px !important;
+    gap: 4px !important;
+    padding: 6px !important;
+    border-radius: 10px !important;
+  }
+
+  .hero-banner-alerta-boton > span:first-child {
+    width: 25px !important;
+    height: 25px !important;
+    font-size: 12px !important;
+  }
+
+  .hero-banner-alerta-boton strong {
+    font-size: 7.5px !important;
+    line-height: 1.05 !important;
+  }
+
+  .hero-banner-alerta-boton > span:last-child {
+    font-size: 13px !important;
+  }
+
+  .hero-banner-control {
+    width: 22px !important;
+    height: 22px !important;
+    padding-bottom: 2px !important;
+    font-size: 18px !important;
+    box-shadow: 0 3px 10px rgba(21,24,38,.12) !important;
+  }
+
+  .hero-banner-control-anterior { left: 4px !important; }
+  .hero-banner-control-siguiente { right: 4px !important; }
+
+  .hero-banner-puntos {
+    bottom: 4px !important;
+    gap: 4px !important;
+  }
+
+  .hero-banner-punto {
+    width: 5px !important;
+    height: 5px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .hero-redes.hero-redes-lista .hero-banner-estado,
+  .hero-banner-viewport,
+  .hero-banner-track,
+  .hero-banner-slide,
+  .hero-banner-slide-principal,
+  .hero-banner-slide-alerta {
+    height: 112px !important;
+    min-height: 112px !important;
+    max-height: 112px !important;
+  }
+
+  .hero-banner-slide-principal {
+    grid-template-columns: 22% minmax(0, 48%) minmax(0, 30%) !important;
+    padding: 6px 24px 10px 22px !important;
+  }
+
+  .hero-banner-ilustracion,
+  .hero-banner-ilustracion-img { height: 86px !important; }
+
+  .hero-banner-superior { font-size: 7.5px !important; }
+  .hero-banner-titulo,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-titulo { font-size: 15px !important; }
+  .hero-banner-detalle { font-size: 6.5px !important; }
+  .hero-banner-vigencia { font-size: 6px !important; }
+  .hero-banner-whatsapp { grid-template-columns: 24px minmax(0,1fr) 10px !important; padding: 5px !important; }
+  .hero-banner-whatsapp-icono { width: 24px !important; height: 24px !important; }
+  .hero-banner-whatsapp strong { font-size: 6.5px !important; }
+  .hero-banner-whatsapp small { font-size: 5.5px !important; }
+  .hero-banner-slide-alerta { padding: 8px 25px 11px !important; }
+}
+
+/* ============================================================
+   PAQUETE 3.8 — Carrusel definitivo de DOS banners
+   1) Amarillo: cupones activos.
+   2) Azul: cupones agotados.
+   Ambos existen siempre y el estado real define solo la posición inicial.
+   Las ilustraciones forman parte visual del fondo del banner.
+   ============================================================ */
+.hero-banner-slide-activos,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos {
+  background:
+    radial-gradient(circle at 77% 24%, rgba(255,255,255,.66) 0 5.5%, transparent 5.8%),
+    radial-gradient(circle at 66% 76%, rgba(255,255,255,.30) 0 8%, transparent 8.4%),
+    linear-gradient(112deg, #fff0b3 0%, #ffe293 55%, #fff0bc 100%) !important;
+  color: #111318 !important;
+}
+
+.hero-banner-slide-agotados,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-agotados {
+  background:
+    radial-gradient(circle at 79% 27%, rgba(79,61,224,.24) 0 7%, transparent 7.4%),
+    radial-gradient(circle at 18% 118%, #182681 0 24%, transparent 24.4%),
+    linear-gradient(112deg, #08155a 0%, #111d73 56%, #191475 100%) !important;
+  color: #fff !important;
+}
+
+/* La canasta ya no se presenta como una tarjeta/imagen superpuesta:
+   se integra como fondo de su propia zona dentro del banner. */
+.hero-banner-slide-activos .hero-banner-ilustracion {
+  background-image: url("../img/banner-dinamico-cesta-activos.png?v=3.8");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 0;
+  mix-blend-mode: multiply;
+}
+.hero-banner-slide-agotados .hero-banner-ilustracion {
+  background-image: url("../img/banner-dinamico-cesta-agotados.png?v=3.8");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 0;
+}
+
+.hero-banner-slide-activos .hero-banner-titulo,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-titulo {
+  display: flex !important;
+  max-width: none !important;
+  color: #111318 !important;
+}
+.hero-banner-slide-activos .hero-banner-titulo strong,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-titulo strong {
+  color: #3157df !important;
+}
+.hero-banner-slide-activos .hero-banner-detalle,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-detalle {
+  color: #26282d !important;
+}
+.hero-banner-slide-activos .hero-banner-whatsapp,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-whatsapp {
+  background: rgba(255,255,255,.94) !important;
+  color: #0a552b !important;
+}
+.hero-banner-slide-activos .hero-banner-whatsapp-icono,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-whatsapp-icono {
+  background: #12a447 !important;
+  border: 0 !important;
+}
+.hero-banner-slide-activos .hero-banner-whatsapp strong,
+.hero-banner-slide-activos .hero-banner-whatsapp small,
+.hero-banner-slide-activos .hero-banner-whatsapp-flecha,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-whatsapp strong,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-whatsapp small,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-whatsapp-flecha {
+  color: #0b582d !important;
+}
+
+.hero-banner-slide-agotados .hero-banner-titulo,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-titulo {
+  display: block !important;
+  max-width: 650px !important;
+  color: #fff !important;
+  font-size: clamp(34px, 3.8vw, 56px) !important;
+  line-height: .98 !important;
+}
+.hero-banner-slide-agotados .hero-banner-titulo > span:first-child {
+  display: block !important;
+}
+.hero-banner-slide-agotados .hero-banner-titulo strong,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-titulo strong {
+  display: inline !important;
+  color: #ffd21c !important;
+  font-size: 1em !important;
+}
+.hero-banner-slide-agotados .hero-banner-detalle,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-detalle {
+  color: rgba(255,255,255,.88) !important;
+}
+.hero-banner-slide-agotados .hero-banner-whatsapp,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-whatsapp {
+  background: linear-gradient(135deg, #5d54d1, #6134cf) !important;
+  color: #fff !important;
+  box-shadow: 0 14px 34px rgba(0,0,0,.18) !important;
+}
+.hero-banner-slide-agotados .hero-banner-whatsapp-icono,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-whatsapp-icono {
+  background: transparent !important;
+  border: 3px solid rgba(255,255,255,.95) !important;
+}
+.hero-banner-slide-agotados .hero-banner-whatsapp strong,
+.hero-banner-slide-agotados .hero-banner-whatsapp small,
+.hero-banner-slide-agotados .hero-banner-whatsapp-flecha,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-whatsapp strong,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-whatsapp small,
+.hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-whatsapp-flecha {
+  color: #fff !important;
+}
+
+/* Cada banner conserva sus propios puntos/colores sin depender del estado real. */
+.hero-banner-estado .hero-banner-punto { background: rgba(17,24,39,.30) !important; }
+.hero-banner-estado .hero-banner-punto.activo { background: #111827 !important; }
+.hero-banner-estado[data-estado="agotados"] .hero-banner-punto { background: rgba(255,255,255,.45) !important; }
+.hero-banner-estado[data-estado="agotados"] .hero-banner-punto.activo { background: #fff !important; }
+
+@media (max-width: 720px) {
+  /* Se conserva exactamente la altura compacta aprobada en 3.7. */
+  .hero-banner-slide-activos .hero-banner-ilustracion,
+  .hero-banner-slide-agotados .hero-banner-ilustracion {
+    background-size: cover !important;
+    background-position: center !important;
+  }
+  .hero-banner-slide-activos .hero-banner-titulo,
+  .hero-banner-slide-agotados .hero-banner-titulo,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-titulo,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-titulo {
+    font-size: clamp(14px, 4.45vw, 21px) !important;
+    line-height: .98 !important;
+  }
+  .hero-banner-slide-agotados .hero-banner-titulo > span:first-child {
+    display: inline !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .hero-banner-slide-activos .hero-banner-titulo,
+  .hero-banner-slide-agotados .hero-banner-titulo,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-titulo,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-titulo {
+    font-size: 15px !important;
   }
 }
