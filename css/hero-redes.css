@@ -4034,3 +4034,167 @@
     mask-image: radial-gradient(ellipse 82% 78% at 50% 52%, #000 62%, transparent 100%);
   }
 }
+
+/* ============================================================
+   PAQUETE 4.0 — Corrección definitiva WEB del banner dinámico
+   - En escritorio el bloque deja de ser sticky para no cubrir cupones.
+   - Altura panorámica real y espacio reservado dentro del flujo.
+   - Canastas recortadas con transparencia: forman parte del banner.
+   - WhatsApp queda contenido dentro de su círculo.
+   - Móvil conserva las dimensiones aprobadas en 3.9.
+   ============================================================ */
+@media (min-width: 721px) {
+  /* El banner dinámico es contenido de cabecera, no una capa flotante. */
+  .cabecera-fija-original {
+    position: relative !important;
+    top: auto !important;
+    z-index: 2 !important;
+    overflow: visible !important;
+  }
+
+  .cabecera-fija-original.esta-pegada {
+    box-shadow: none !important;
+    border-bottom-color: transparent !important;
+    background: transparent !important;
+  }
+
+  body.cabecera-original-pegada {
+    --cabecera-fija-alto: 0px !important;
+  }
+
+  .hero-redes.hero-redes-lista {
+    grid-template-rows: 160px auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-banner-estado,
+  .hero-banner-viewport,
+  .hero-banner-track,
+  .hero-banner-slide,
+  .hero-banner-slide-principal {
+    height: 160px !important;
+    min-height: 160px !important;
+    max-height: 160px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-banner-estado {
+    width: 100% !important;
+    margin: 0 0 8px !important;
+    overflow: hidden !important;
+    isolation: isolate !important;
+  }
+
+  .hero-banner-slide-principal {
+    grid-template-columns: minmax(190px, 25%) minmax(0, 1fr) minmax(235px, 29%) !important;
+    gap: 18px !important;
+    padding: 12px 48px 15px !important;
+    overflow: hidden !important;
+  }
+
+  .hero-banner-ilustracion {
+    width: 100% !important;
+    height: 136px !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    align-self: center !important;
+  }
+
+  /* Recursos transparentes: ya no existe ningún rectángulo detrás de la canasta. */
+  .hero-banner-slide-activos .hero-banner-ilustracion::before,
+  .hero-banner-slide-agotados .hero-banner-ilustracion::before {
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-size: contain !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+    mix-blend-mode: normal !important;
+    filter: none !important;
+  }
+
+  .hero-banner-slide-activos .hero-banner-ilustracion::before {
+    background-image: url("../img/banner-cesta-activos-integrada.png?v=4.0") !important;
+  }
+
+  .hero-banner-slide-agotados .hero-banner-ilustracion::before {
+    background-image: url("../img/banner-cesta-agotados-integrada.png?v=4.0") !important;
+  }
+
+  .hero-banner-superior {
+    margin-bottom: 3px !important;
+    font-size: clamp(13px, 1.2vw, 18px) !important;
+    line-height: 1.05 !important;
+  }
+
+  .hero-banner-titulo,
+  .hero-banner-slide-agotados .hero-banner-titulo,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-titulo,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-titulo {
+    font-size: clamp(27px, 2.65vw, 39px) !important;
+    line-height: .94 !important;
+    letter-spacing: -1.1px !important;
+  }
+
+  .hero-banner-detalle {
+    margin-top: 6px !important;
+    font-size: clamp(11px, .95vw, 14px) !important;
+    line-height: 1.16 !important;
+  }
+
+  .hero-banner-vigencia {
+    margin-top: 6px !important;
+    padding: 4px 9px !important;
+    font-size: 10px !important;
+  }
+
+  .hero-banner-whatsapp {
+    grid-template-columns: 36px minmax(0, 1fr) 17px !important;
+    gap: 8px !important;
+    padding: 9px 11px !important;
+    border-radius: 15px !important;
+    align-self: center !important;
+    overflow: hidden !important;
+  }
+
+  .hero-banner-whatsapp-icono {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .hero-banner-whatsapp-icono img {
+    position: static !important;
+    display: block !important;
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 0 !important;
+    max-width: 24px !important;
+    min-height: 0 !important;
+    max-height: 24px !important;
+    margin: auto !important;
+    object-fit: contain !important;
+    transform: none !important;
+  }
+
+  .hero-banner-whatsapp strong { font-size: 12px !important; }
+  .hero-banner-whatsapp small { margin-top: 1px !important; font-size: 9px !important; }
+  .hero-banner-whatsapp-flecha { font-size: 19px !important; }
+
+  .hero-banner-control {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 25px !important;
+  }
+  .hero-banner-control-anterior { left: 7px !important; }
+  .hero-banner-control-siguiente { right: 7px !important; }
+  .hero-banner-puntos { bottom: 5px !important; }
+}
