@@ -4961,3 +4961,60 @@
   .hero-banner-puntos { bottom: 3px !important; gap: 4px !important; }
   .hero-banner-punto { width: 5px !important; height: 5px !important; }
 }
+
+/* ============================================================
+   PAQUETE 4.4 — Composición final inspirada en la propuesta aprobada
+   Mantiene las alturas existentes; ambos slides usan la misma caja.
+   ============================================================ */
+.hero-banner-slide-activos,
+.hero-banner-slide-agotados{
+  grid-template-areas:"ilustracion copy" !important;
+  grid-template-columns:minmax(190px,34%) minmax(0,66%) !important;
+  grid-template-rows:1fr !important;
+  gap:18px !important;
+  padding:10px 48px 14px !important;
+  isolation:isolate !important;
+}
+.hero-banner-ilustracion{overflow:visible !important;border-radius:0 !important;z-index:2 !important;}
+.hero-banner-slide-activos .hero-banner-ilustracion::before,
+.hero-banner-slide-agotados .hero-banner-ilustracion::before{
+  inset:0 !important;background-size:contain !important;background-position:center !important;
+  filter:drop-shadow(0 9px 9px rgba(31,32,55,.18)) !important;
+}
+.hero-banner-copy{justify-content:center !important;z-index:3 !important;padding-bottom:35px !important;}
+.hero-banner-superior{font-weight:800 !important;margin:0 0 2px !important;}
+.hero-banner-titulo{display:flex !important;align-items:baseline !important;flex-wrap:wrap !important;gap:0 .18em !important;margin:0 !important;}
+.hero-banner-slide-activos .hero-banner-titulo strong{color:#2454df !important;font-size:1.18em !important;}
+.hero-banner-slide-agotados .hero-banner-titulo strong{color:#ffd329 !important;}
+.hero-banner-detalle{margin-top:3px !important;}
+.hero-banner-vigencia{position:absolute !important;left:34%;bottom:42px !important;margin:0 !important;background:rgba(255,255,255,.82) !important;border-radius:999px !important;color:#ef3c2f !important;font-weight:700 !important;}
+.hero-banner-resumen{
+  position:absolute !important;left:34% !important;right:7% !important;bottom:10px !important;
+  display:grid !important;grid-template-columns:1fr 1fr !important;gap:10px !important;z-index:4 !important;
+}
+.hero-banner-resumen-item{height:30px !important;min-height:30px !important;padding:4px 10px !important;grid-template-columns:24px minmax(0,1fr) !important;border-radius:11px !important;}
+.hero-banner-resumen-icono{width:24px !important;height:24px !important;min-width:24px !important;min-height:24px !important;font-size:14px !important;border-radius:8px !important;}
+.hero-banner-resumen-item strong{font-size:11px !important;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;}
+.hero-banner-resumen-item small{display:none !important;}
+.hero-banner-slide-activos{background:radial-gradient(circle at 83% 22%,rgba(255,255,255,.55) 0 28px,transparent 29px),linear-gradient(112deg,#ffd966 0%,#fff0ad 52%,#ffd65d 100%) !important;}
+.hero-banner-slide-agotados{background:radial-gradient(circle at 86% 18%,rgba(115,91,238,.28) 0 32px,transparent 33px),linear-gradient(115deg,#081966 0%,#14247e 55%,#24106d 100%) !important;}
+.hero-banner-slide-activos::before,.hero-banner-slide-agotados::before{content:"%  ✦  %" !important;position:absolute !important;inset:auto 3% 18% auto !important;font-size:38px !important;letter-spacing:18px !important;opacity:.09 !important;transform:rotate(-12deg) !important;pointer-events:none !important;}
+.hero-banner-slide-activos::before{color:#b77b00 !important}.hero-banner-slide-agotados::before{color:#fff !important}
+
+@media(max-width:720px){
+ .hero-banner-slide-activos,.hero-banner-slide-agotados{
+   grid-template-areas:"ilustracion copy" !important;grid-template-columns:31% minmax(0,69%) !important;grid-template-rows:1fr !important;
+   gap:5px !important;padding:5px 29px 8px !important;
+ }
+ .hero-banner-copy{padding-bottom:27px !important;}
+ .hero-banner-ilustracion{align-self:stretch !important;}
+ .hero-banner-superior{font-size:8px !important;}
+ .hero-banner-titulo,.hero-banner-slide-agotados .hero-banner-titulo{font-size:clamp(14px,4.9vw,20px) !important;line-height:.96 !important;}
+ .hero-banner-detalle{font-size:7px !important;line-height:1.05 !important;}
+ .hero-banner-vigencia{left:34% !important;bottom:31px !important;font-size:6.5px !important;padding:2px 5px !important;}
+ .hero-banner-resumen{left:31% !important;right:28px !important;bottom:5px !important;gap:4px !important;}
+ .hero-banner-resumen-item{height:22px !important;min-height:22px !important;padding:2px 5px !important;grid-template-columns:17px minmax(0,1fr) !important;border-radius:7px !important;}
+ .hero-banner-resumen-icono{width:17px !important;height:17px !important;min-width:17px !important;min-height:17px !important;font-size:10px !important;border-radius:5px !important;}
+ .hero-banner-resumen-item strong{font-size:6.7px !important;}
+ .hero-banner-slide-activos::before,.hero-banner-slide-agotados::before{font-size:20px !important;letter-spacing:7px !important;bottom:22% !important;}
+}
