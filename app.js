@@ -26,9 +26,11 @@ const tabTodos = document.querySelector("#tab-todos");
 const tabTienda = document.querySelector("#tab-tienda");
 const tabBancarios = document.querySelector("#tab-bancarios");
 const tabExclusivo = document.querySelector("#tab-exclusivo");
+const tabAnirona = document.querySelector("#tab-anirona");
 const vistaCupones = document.querySelector("#vista-cupones");
 const barraInferiorCupones = document.querySelector("#barra-inferior-cupones");
 const barraInferiorOfertazo = document.querySelector("#barra-inferior-ofertazo");
+const contadorOfertazoBarra = document.querySelector("#contador-ofertazo-barra");
 const barraInferiorMas = document.querySelector("#barra-inferior-mas");
 const botonesMenuOfertas = document.querySelectorAll(".menu-ofertas [data-vista]");
 const botonComunidadAnirona = document.querySelector("#boton-anirona-hero[data-vista]");
@@ -78,7 +80,6 @@ let ajusteTecladoProgramado = null;
 
 const carruselesPublicidad = [];
 const seccionComunidadAnirona = document.querySelector("#seccion-comunidad-anirona");
-const botonRegresarCuponesAnirona = document.querySelector("#boton-regresar-cupones-anirona");
 const seccionOfertasAmazon = document.querySelector("#seccion-ofertas-amazon");
 const seccionOfertasMercadoLibre = document.querySelector("#seccion-ofertas-mercado-libre");
 const ofertasComunidadAnirona = document.querySelector("#ofertas-comunidad-anirona");
@@ -156,7 +157,10 @@ window.addEventListener("resize", () => {
 const SEGUNDOS_ACTUALIZACION = 5;
 const MILISEGUNDOS_PUBLICIDAD = 8000;
 const URL_PAGINA = "https://ofertasimperdiblesmx.vercel.app/";
-const COLORES = ["turquesa", "azul", "morado", "coral", "oliva"];
+const COLORES = [
+  "#10a85a", "#f57c00", "#7b3fc6", "#1976d2", "#10a9a0", "#e83e8c", "#ef5350", "#00a878",
+  "#0077b6", "#8e44ad", "#f28c28", "#d81b60", "#4682a9", "#3949ab", "#c2185b", "#237a3b"
+];
 
 let segundosRestantes = SEGUNDOS_ACTUALIZACION;
 let cargando = false;
@@ -261,8 +265,22 @@ function actualizarContadoresSecciones() {
       publicidadPerteneceASeccion(
         publicidad,
         "ofertas_mercado_libre"
-      )
+      ) &&
+      !ofertaExpirada(publicidad)
   ).length;
+
+  // V82.84 — Notificación dinámica del botón Ofertazo.
+  // Muestra exactamente los productos activos y vigentes que el usuario verá al entrar.
+  if (contadorOfertazoBarra) {
+    contadorOfertazoBarra.textContent = cantidadMercadoLibre.toLocaleString("es-MX");
+    contadorOfertazoBarra.hidden = cantidadMercadoLibre <= 0;
+  }
+  if (barraInferiorOfertazo) {
+    const textoAccesible = cantidadMercadoLibre === 1
+      ? "Ir a Ofertazo, 1 producto disponible"
+      : `Ir a Ofertazo, ${cantidadMercadoLibre} productos disponibles`;
+    barraInferiorOfertazo.setAttribute("aria-label", textoAccesible);
+  }
 
   const cantidadAmazon = todasLasPublicidades.filter(
     (publicidad) =>
@@ -312,21 +330,11 @@ function actualizarContadoresSecciones() {
     "cupón"
   );
 
-  const hayExclusivos = cantidadExclusivos > 0;
-  if (tabExclusivo) tabExclusivo.hidden = !hayExclusivos;
+  // El botón Exclusivos permanece visible aunque no haya cupones activos.
+  // Así el selector conserva siempre las cinco opciones disponibles, incluyendo Anirona.
+  if (tabExclusivo) tabExclusivo.hidden = false;
   if (selectorCupones) {
-    selectorCupones.style.setProperty(
-      "--selector-columnas",
-      hayExclusivos ? "4" : "3"
-    );
-  }
-
-  // Si el usuario conserva una URL de Exclusivos cuando ya no hay cupones,
-  // volvemos a Todos para evitar una vista vacía con el botón oculto.
-  if (!hayExclusivos && categoriaActiva === "exclusivo") {
-    categoriaActiva = "todos";
-    actualizarUrlSeccion("todos", "replace");
-    renderizarCategoria();
+    selectorCupones.style.setProperty("--selector-columnas", "5");
   }
 }
 
@@ -434,9 +442,10 @@ function actualizarNavegacionPrincipal(seccion) {
     tienda: tabTienda,
     bancarios: tabBancarios,
     exclusivo: tabExclusivo,
+    comunidad_anirona: tabAnirona,
   };
 
-  [tabTodos, tabTienda, tabBancarios, tabExclusivo].forEach((boton) => {
+  [tabTodos, tabTienda, tabBancarios, tabExclusivo, tabAnirona].forEach((boton) => {
     if (!boton) return;
     const activo = boton === mapa[seccion];
     boton.classList.toggle("activo", activo);
@@ -464,6 +473,14 @@ tabExclusivo?.addEventListener("click", () => {
   actualizarNavegacionPrincipal("exclusivo");
 });
 
+tabAnirona?.addEventListener("click", () => {
+  cambiarVista("comunidad_anirona", {
+    actualizarHistorial: true,
+    desplazamiento: "smooth",
+  });
+  actualizarNavegacionPrincipal("comunidad_anirona");
+});
+
 barraInferiorCupones?.addEventListener("click", () => {
   cambiarCategoria("todos", {
     actualizarHistorial: true,
@@ -471,12 +488,25 @@ barraInferiorCupones?.addEventListener("click", () => {
   });
 });
 
-barraInferiorOfertazo?.addEventListener("click", () => {
+function abrirMercadoLibreDesdeCuponAgotado(cupon, tarjeta) {
+  const enlaceDestino = enlaceWebSeguro(cupon?.enlace);
+  if (!enlaceDestino) {
+    const mensaje = tarjeta?.querySelector(".mensaje");
+    if (mensaje) mensaje.textContent = "El enlace de Mercado Libre no es válido.";
+    return;
+  }
+
+  window.location.assign(enlaceDestino);
+}
+
+function abrirOfertazoDesdeCupon() {
   cambiarVista("ofertas_mercado_libre", {
     actualizarHistorial: true,
     desplazamiento: "smooth",
   });
-});
+}
+
+barraInferiorOfertazo?.addEventListener("click", abrirOfertazoDesdeCupon);
 
 
 /* Navegación táctil entre categorías de cupones.
@@ -615,14 +645,6 @@ botonComunidadAnirona?.addEventListener("click", () => {
   });
 });
 
-botonRegresarCuponesAnirona?.addEventListener("click", () => {
-  cambiarCategoria("todos", {
-    actualizarHistorial: true,
-    desplazamiento: "smooth",
-  });
-  actualizarNavegacionPrincipal("todos");
-});
-
 
 function cambiarVista(
   vista,
@@ -657,6 +679,8 @@ function cambiarVista(
   });
 
   const mostrarCupones = vista === "cupones";
+  const mostrarSelectorPrincipal = vista === "cupones" || vista === "comunidad_anirona";
+  if (selectorCupones) selectorCupones.hidden = !mostrarSelectorPrincipal;
 
   botonesMenuOfertas.forEach((boton) => {
     const activo = boton.dataset.vista === vista;
@@ -674,14 +698,17 @@ function cambiarVista(
   const tiendaActiva = mostrarCupones && categoriaActiva === "tienda";
   const bancariosActivos = mostrarCupones && categoriaActiva === "bancarios";
   const exclusivoActivo = mostrarCupones && categoriaActiva === "exclusivo";
+  const anironaActiva = vista === "comunidad_anirona";
   tabTodos?.classList.toggle("activo", todosActivos);
   tabTienda.classList.toggle("activo", tiendaActiva);
   tabBancarios.classList.toggle("activo", bancariosActivos);
   tabExclusivo?.classList.toggle("activo", exclusivoActivo);
+  tabAnirona?.classList.toggle("activo", anironaActiva);
   tabTodos?.setAttribute("aria-pressed", String(todosActivos));
   tabTienda.setAttribute("aria-pressed", String(tiendaActiva));
   tabBancarios.setAttribute("aria-pressed", String(bancariosActivos));
   tabExclusivo?.setAttribute("aria-pressed", String(exclusivoActivo));
+  tabAnirona?.setAttribute("aria-pressed", String(anironaActiva));
 
   if (actualizarHistorial) {
     const seccion =
@@ -713,16 +740,16 @@ function escaparHtml(valor = "") {
 
 function iconoCompartir() {
   return `
-    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
-      <path d="M20 5.5 13.8 11V7.8C8.2 8.2 4.6 11.4 3.4 17.7c2.5-3.1 5.8-4.7 10.4-4.7v3.2L20 10.7V5.5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M14.5 5.5 20 11l-5.5 5.5v-3.2c-4.8 0-8 1.6-10.5 5.2.7-5.9 4.1-9.1 10.5-9.1V5.5Z"/>
     </svg>
   `;
 }
 
 function iconoMeGusta() {
   return `
-    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
-      <path d="M20.8 5.9a5.1 5.1 0 0 0-7.2 0L12 7.5l-1.6-1.6a5.1 5.1 0 0 0-7.2 7.2L12 21l8.8-7.9a5.1 5.1 0 0 0 0-7.2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 20.5S4 15.8 4 9.6A4.1 4.1 0 0 1 8.2 5.5c1.6 0 3 0.8 3.8 2 0.8-1.2 2.2-2 3.8-2A4.1 4.1 0 0 1 20 9.6c0 6.2-8 10.9-8 10.9Z"/>
     </svg>
   `;
 }
@@ -737,15 +764,23 @@ function iconoCopias() {
 
 function iconoVista() {
   return `
-    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
-      <path d="M2.2 12s3.5-6 9.8-6 9.8 6 9.8 6-3.5 6-9.8 6-9.8-6-9.8-6Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="12" cy="12" r="2.6" stroke="currentColor" stroke-width="1.8"/>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/>
+      <circle cx="12" cy="12" r="2.8"/>
     </svg>
   `;
 }
 
 function contenidoBotonCopiar() {
   return `${iconoCopias()}<span>Copiar código</span>`;
+}
+
+function iconoOfertazoBoton() {
+  return `<span class="boton-ofertazo-icono" aria-hidden="true"><svg viewBox="0 0 64 54" focusable="false"><path d="M32 3.6c2.3 0 4.3 2.7 6.4 3.3 2.2.7 5.4-.5 7.1.8 1.8 1.3 1.7 4.7 3 6.5 1.3 1.8 4.5 2.7 5.2 4.9.7 2.1-1.4 4.8-1.4 7.1s2.1 5 1.4 7.1c-.7 2.2-3.9 3.1-5.2 4.9-1.3 1.8-1.2 5.2-3 6.5-1.7 1.3-4.9.1-7.1.8-2.1.6-4.1 3.3-6.4 3.3s-4.3-2.7-6.4-3.3c-2.2-.7-5.4.5-7.1-.8-1.8-1.3-1.7-4.7-3-6.5-1.3-1.8-4.5-2.7-5.2-4.9-.7-2.1 1.4-4.8 1.4-7.1s-2.1-5-1.4-7.1c.7-2.2 3.9-3.1 5.2-4.9 1.3-1.8 1.2-5.2 3-6.5 1.7-1.3 4.9-.1 7.1-.8C27.7 6.3 29.7 3.6 32 3.6Z" fill="#f4c900"/><path d="M25.1 16.3c4 0 6.7 2.7 6.7 6.5s-2.7 6.5-6.7 6.5-6.7-2.7-6.7-6.5 2.7-6.5 6.7-6.5Zm0 4.2c-1.3 0-2.1.8-2.1 2.3s.8 2.3 2.1 2.3 2.1-.8 2.1-2.3-.8-2.3-2.1-2.3Zm14-4.4h5.4L26.1 38.6h-5.4L39.1 16.1Zm1 9.4c4 0 6.7 2.7 6.7 6.5s-2.7 6.5-6.7 6.5-6.7-2.7-6.7-6.5 2.7-6.5 6.7-6.5Zm0 4.2c-1.3 0-2.1.8-2.1 2.3s.8 2.3 2.1 2.3 2.1-.8 2.1-2.3-.8-2.3-2.1-2.3Z" fill="#252525"/></svg></span>`;
+}
+
+function contenidoBotonOfertazo() {
+  return `${iconoOfertazoBoton()}<span>Ver ofertas</span>`;
 }
 
 function claveUsado(id) {
@@ -917,9 +952,11 @@ function updateCouponTimes() {
       status.className = "estado-programacion agotado";
       status.innerHTML = `<div class="estado-linea"><span class="estado-agotado-mensaje"><span class="estado-agotado-icono" aria-hidden="true">!</span><span>El cupón se agotó.</span></span></div>`;
       card.classList.add("cupon-agotado");
-      redeemButton.disabled = true;
-      redeemButton.classList.add("boton-agotado");
-      redeemButton.textContent = "Cupón agotado";
+      redeemButton.disabled = false;
+      redeemButton.removeAttribute("aria-disabled");
+      redeemButton.classList.remove("boton-programado");
+      redeemButton.classList.add("boton-ofertazo-agotado");
+      redeemButton.innerHTML = contenidoBotonOfertazo();
       return;
     }
 
@@ -936,7 +973,7 @@ function updateCouponTimes() {
 
     card.classList.remove("cupon-agotado");
     redeemButton.disabled = false;
-    redeemButton.classList.remove("boton-programado", "boton-agotado");
+    redeemButton.classList.remove("boton-programado", "boton-agotado", "boton-ofertazo-agotado");
 
     if (!redireccionEnProceso) {
       redeemButton.innerHTML = contenidoBotonCopiar();
@@ -1277,6 +1314,32 @@ function htmlCondicionesCupon(cupon) {
   `;
 }
 
+
+function obtenerColorFondoEfectivo(elemento) {
+  let actual = elemento;
+  while (actual && actual !== document.documentElement) {
+    const estilo = getComputedStyle(actual);
+    const color = estilo.backgroundColor;
+    const match = color && color.match(/rgba?\(([^)]+)\)/i);
+    if (match) {
+      const partes = match[1].split(',').map((v) => v.trim());
+      const alpha = partes.length >= 4 ? Number(partes[3]) : 1;
+      if (Number.isFinite(alpha) && alpha > 0.01) return color;
+    } else if (color && color !== 'transparent') {
+      return color;
+    }
+    actual = actual.parentElement;
+  }
+  return getComputedStyle(document.body).backgroundColor || '#ffffff';
+}
+
+function sincronizarFondoMuescas() {
+  document.querySelectorAll('#cupones .cupon-horizontal-v16').forEach((tarjeta) => {
+    const colorFondo = obtenerColorFondoEfectivo(tarjeta.parentElement);
+    tarjeta.style.setProperty('--ticket-cutout-bg', colorFondo);
+  });
+}
+
 function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   const articulo = document.createElement("article");
   const categoria = normalizarCategoria(cupon);
@@ -1289,14 +1352,17 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   const clasesEstado = estados.map((estado) => ` cupon-${estado}`).join("");
   articulo.className = `cupon cupon-horizontal-v16${clasesEstado}${esBancario ? " cupon-bancario" : ""}${esExclusivo ? " cupon-exclusivo" : ""}`;
   articulo.dataset.id = String(cupon.id);
-  articulo.dataset.color = COLORES[indice % COLORES.length];
-  articulo.style.setProperty("--categoria-cupon-color", visualCategoria.color);
-  articulo.style.setProperty("--categoria-cupon-texto", colorTextoContraste(visualCategoria.color));
+  const colorCupon = COLORES[indice % COLORES.length];
+  articulo.dataset.color = colorCupon;
+  articulo.style.setProperty("--categoria-cupon-color", colorCupon);
+  articulo.style.setProperty("--categoria-cupon-texto", colorTextoContraste(colorCupon));
 
   articulo.innerHTML = `
+    <span class="ticket-notch ticket-notch-top" aria-hidden="true"></span>
+    <span class="ticket-notch ticket-notch-bottom" aria-hidden="true"></span>
     <div class="hc16-valor">
       ${cupon.imagen_url ? `<img class="hc16-logo cupon-logo" src="${escaparHtml(cupon.imagen_url)}" alt="" loading="lazy" />` : ""}
-      <h2 class="hc16-descuento descuento">${escaparHtml(cupon.titulo)}${/\boff\b/i.test(String(cupon.titulo || "")) ? "" : '<span class="hc19-off">OFF</span>'}</h2>
+      <h2 class="hc16-descuento descuento">${escaparHtml(String(cupon.titulo || "").replace(/\s*OFF\s*$/i, "").trim())}<span class="hc19-off">OFF</span></h2>
       <span class="hc19-porcentaje" aria-hidden="true">%</span>
     </div>
 
@@ -1316,20 +1382,18 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
 
     <div class="hc16-acciones">
       <div class="hc16-cta acciones-cupon">
-        <button class="boton-canjear hc16-copiar" type="button" ${cupon.agotado === true ? 'disabled aria-disabled="true"' : ""}>
-          ${contenidoBotonCopiar()}
+        <button class="boton-canjear hc16-copiar${cupon.agotado === true ? " boton-ofertazo-agotado" : ""}" type="button">
+          ${cupon.agotado === true ? contenidoBotonOfertazo() : contenidoBotonCopiar()}
         </button>
       </div>
       <p class="mensaje hc16-mensaje" aria-live="polite"></p>
-      <div class="hc16-social acciones-secundarias" aria-label="Actividad del cupón">
-        <button class="boton-compartir hc16-icono hc20-compartir" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
-        <span class="hc16-separador" aria-hidden="true"></span>
-        <span class="hc16-like-grupo">
+      <div class="hc16-social acciones-secundarias hc61-social" aria-label="Actividad del cupón">
+        <button class="boton-compartir hc16-icono hc20-compartir hc61-chip hc61-share" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
+        <span class="hc61-chip hc61-like-chip">
           <button class="boton-like hc16-icono ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
           <span class="numero-likes hc16-numero">${Number(cupon.likes || 0)}</span>
         </span>
-        <span class="hc16-separador" aria-hidden="true"></span>
-        <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas" aria-label="Vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
+        <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas hc61-chip hc61-view-chip" aria-label="Vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
       </div>
       <div class="estado-programacion hc16-tiempo" hidden></div>
     </div>
@@ -1339,19 +1403,25 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   const redeemButton = articulo.querySelector(".boton-canjear");
 
   if (!initialTimeState.enabled) {
-    redeemButton.disabled = true;
     if (initialTimeState.state === "agotado") {
       articulo.classList.add("cupon-agotado");
-      redeemButton.classList.add("boton-agotado");
-      redeemButton.textContent = "Cupón agotado";
+      redeemButton.disabled = false;
+      redeemButton.classList.add("boton-ofertazo-agotado");
+      redeemButton.innerHTML = contenidoBotonOfertazo();
     } else {
+      redeemButton.disabled = true;
       redeemButton.classList.add("boton-programado");
       redeemButton.textContent = "⏳ Disponible pronto";
     }
   }
 
   redeemButton.addEventListener("click", () => {
-    if (couponTimeState(cupon).enabled) copiarYCanjear(cupon, articulo);
+    const estado = couponTimeState(cupon);
+    if (estado.state === "agotado") {
+      abrirMercadoLibreDesdeCuponAgotado(cupon, articulo);
+      return;
+    }
+    if (estado.enabled) copiarYCanjear(cupon, articulo);
   });
   articulo.querySelector(".boton-like")?.addEventListener("click", () => darMeGusta(cupon, articulo));
   articulo.querySelector(".hc20-compartir")?.addEventListener("click", () => compartirPagina(articulo));
@@ -1407,45 +1477,62 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
   const bancoVisual = obtenerBancoVisual(cupon);
   const logoBanco = bancoVisual.logo;
   const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
-  articulo.className = `cupon-bancario-mini cupon-bancario-ticket${estados.map((estado) => ` cupon-${estado}`).join("")}`;
+  articulo.className = `cupon cupon-horizontal-v16 cupon-bancario-unificado${estados.map((estado) => ` cupon-${estado}`).join("")}`;
   articulo.dataset.id = String(cupon.id);
   articulo.dataset.banco = bancoVisual.banco;
+  articulo.style.setProperty("--hc16-accent", bancoVisual.color);
+  articulo.style.setProperty("--categoria-cupon-color", bancoVisual.color);
   articulo.style.setProperty("--banco-color", bancoVisual.color);
-  articulo.style.setProperty("--banco-texto", bancoVisual.texto);
+
   articulo.innerHTML = `
-    <div class="bt20-main">
-      <div class="bt20-logo-wrap">${logoBanco ? `<img class="banco-logo bt20-logo" src="${escaparHtml(logoBanco)}" alt="" loading="lazy" />` : `<span class="banco-logo-fallback">BANCO</span>`}</div>
-      <div class="bt20-beneficio">
-        <span class="bt20-tipo">CUPÓN BANCARIO</span>
-        <h3>${escaparHtml(cupon.titulo || "Beneficio bancario")}</h3>
-        <p>Compra mínima <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
-        ${cupon.ahorro_maximo ? `<p>Tope de descuento <strong>${escaparHtml(cupon.ahorro_maximo)}</strong></p>` : ""}
-        ${cupon.detalle_bancario ? `<p class="bt20-detalle">${escaparHtml(cupon.detalle_bancario)}</p>` : ""}
-        <div class="bt20-etiquetas">${htmlEtiquetasCupon(estados)}</div>
-      </div>
+    <span class="ticket-notch ticket-notch-top" aria-hidden="true"></span>
+    <span class="ticket-notch ticket-notch-bottom" aria-hidden="true"></span>
+    <div class="hc16-valor hc25-banco-valor">
+      ${logoBanco ? `<img class="banco-logo hc25-banco-logo" src="${escaparHtml(logoBanco)}" alt="" loading="lazy" />` : `<span class="banco-logo-fallback">BANCO</span>`}
+      <h2 class="hc16-descuento descuento">${escaparHtml(String(cupon.titulo || "Beneficio").replace(/\s*OFF\s*$/i, "").trim())}<span class="hc19-off">OFF</span></h2>
     </div>
-    <div class="bt20-actions">
-      <button class="banco-canjear bt20-copiar" type="button" ${cupon.agotado === true ? 'disabled aria-disabled="true"' : ""}>${contenidoBotonCopiar()}</button>
-      <div class="bt20-social">
-        <button class="banco-compartir bt20-icon" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
-        <span class="bt20-sep"></span>
-        <span class="bt20-like-grupo"><button class="banco-like bt20-icon ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button><span class="numero-likes">${Number(cupon.likes || 0)}</span></span>
-        <span class="bt20-sep"></span>
-        <span class="bt20-vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
+    <div class="hc16-info hc25-banco-info">
+      <div class="hc16-categoria">CUPÓN BANCARIO</div>
+      <div class="hc16-condiciones"><p class="hc16-condicion">Compra mínima <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p></div>
+      ${cupon.ahorro_maximo ? `<p class="hc16-detalle">Tope de descuento <strong>${escaparHtml(cupon.ahorro_maximo)}</strong></p>` : ""}
+      ${cupon.detalle_bancario ? `<p class="hc16-detalle hc25-banco-detalle">${escaparHtml(cupon.detalle_bancario)}</p>` : ""}
+      <div class="hc16-etiquetas">${htmlEtiquetasCupon(estados)}</div>
+    </div>
+    <div class="hc16-acciones">
+      <div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar${cupon.agotado === true ? " boton-ofertazo-agotado" : ""}" type="button">${cupon.agotado === true ? contenidoBotonOfertazo() : contenidoBotonCopiar()}</button></div>
+      <p class="mensaje hc16-mensaje" aria-live="polite"></p>
+      <div class="hc16-social acciones-secundarias hc61-social" aria-label="Actividad del cupón">
+        <button class="boton-compartir hc16-icono hc20-compartir hc61-chip hc61-share" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
+        <span class="hc61-chip hc61-like-chip">
+          <button class="boton-like hc16-icono ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
+          <span class="numero-likes hc16-numero">${Number(cupon.likes || 0)}</span>
+        </span>
+        <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas hc61-chip hc61-view-chip" aria-label="Vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
       </div>
-      <div class="estado-programacion bt20-tiempo" hidden></div>
-      <p class="mensaje" aria-live="polite"></p>
+      <div class="estado-programacion hc16-tiempo" hidden></div>
     </div>`;
-  const boton = articulo.querySelector(".banco-canjear");
+
+  const boton = articulo.querySelector(".boton-canjear");
   const estadoInicial = couponTimeState(cupon);
   if (!estadoInicial.enabled) {
-    boton.disabled = true;
-    if (estadoInicial.state === "agotado") { articulo.classList.add("cupon-agotado"); boton.classList.add("boton-agotado"); boton.textContent = "Cupón agotado"; }
-    else boton.textContent = "⏳ Disponible pronto";
+    if (estadoInicial.state === "agotado") {
+      articulo.classList.add("cupon-agotado");
+      boton.disabled = false;
+      boton.classList.add("boton-ofertazo-agotado");
+      boton.innerHTML = contenidoBotonOfertazo();
+    } else {
+      boton.disabled = true;
+      boton.classList.add("boton-programado");
+      boton.textContent = "⏳ Disponible pronto";
+    }
   }
-  boton.addEventListener("click", () => { if (couponTimeState(cupon).enabled) copiarYCanjear(cupon, articulo); });
-  articulo.querySelector(".banco-compartir")?.addEventListener("click", () => compartirPagina(articulo));
-  articulo.querySelector(".banco-like")?.addEventListener("click", () => darMeGusta(cupon, articulo));
+  boton.addEventListener("click", () => {
+    const estado = couponTimeState(cupon);
+    if (estado.state === "agotado") { abrirMercadoLibreDesdeCuponAgotado(cupon, articulo); return; }
+    if (estado.enabled) copiarYCanjear(cupon, articulo);
+  });
+  articulo.querySelector(".boton-compartir")?.addEventListener("click", () => compartirPagina(articulo));
+  articulo.querySelector(".boton-like")?.addEventListener("click", () => darMeGusta(cupon, articulo));
   return articulo;
 }
 
@@ -2008,11 +2095,13 @@ function cambiarCategoria(
   tabTienda.classList.toggle("activo", esTienda);
   tabBancarios.classList.toggle("activo", esBancarios);
   tabExclusivo?.classList.toggle("activo", esExclusivo);
+  tabAnirona?.classList.remove("activo");
 
   tabTodos?.setAttribute("aria-pressed", String(esTodos));
   tabTienda.setAttribute("aria-pressed", String(esTienda));
   tabBancarios.setAttribute("aria-pressed", String(esBancarios));
   tabExclusivo?.setAttribute("aria-pressed", String(esExclusivo));
+  tabAnirona?.setAttribute("aria-pressed", "false");
   actualizarNavegacionPrincipal(
     esTodos ? "todos" : esTienda ? "tienda" : esBancarios ? "bancarios" : "exclusivo"
   );
@@ -2031,6 +2120,283 @@ function cambiarCategoria(
 
   if (actualizarHistorial) {
     actualizarUrlSeccion(categoria);
+  }
+}
+
+/* ============================================================
+   V82.96 — Banner superior dinámico según disponibilidad
+   Reemplaza únicamente la imagen promocional del encabezado.
+   ============================================================ */
+function cuponDisponibleParaBanner(cupon) {
+  if (!cupon || cupon.activo === false || cupon.agotado === true) return false;
+  const estado = couponTimeState(cupon);
+  return estado.state !== "finalizado" && estado.enabled === true;
+}
+
+function ahorroMaximoParaBanner(cupon) {
+  const ahorroCapturado = numeroDineroCupon(cupon?.ahorro_maximo);
+  if (ahorroCapturado > 0) return ahorroCapturado;
+
+  const titulo = String(cupon?.titulo || "");
+  const fijo = titulo.match(/^\s*\$\s*([\d.,]+)/)
+    || titulo.match(/\$\s*([\d.,]+)\s*(?:OFF|DE DESCUENTO)/i);
+  return fijo ? numeroDineroCupon(fijo[1]) : 0;
+}
+
+function textoCuentaRegresivaBanner() {
+  const ahora = new Date();
+  const siguiente = new Date(ahora);
+  siguiente.setHours(8, 30, 0, 0);
+  if (ahora.getTime() >= siguiente.getTime()) siguiente.setDate(siguiente.getDate() + 1);
+
+  const diferencia = Math.max(0, siguiente.getTime() - ahora.getTime());
+  const horas = Math.floor(diferencia / 3600000);
+  const minutos = Math.floor((diferencia % 3600000) / 60000);
+  if (horas >= 1) return `${horas} h${minutos >= 30 ? " 30 min" : ""}`;
+  return `${Math.max(1, minutos)} min`;
+}
+
+let bannerEstadoCarruselIndice = 0;
+let bannerEstadoCarruselFisico = 1;
+let bannerEstadoCarruselEnTransicion = false;
+
+function datosCarruselBanner() {
+  const banner = document.querySelector("#banner-estado-cupones");
+  const track = banner?.querySelector(".hero-banner-track");
+  const puntos = Array.from(banner?.querySelectorAll(".hero-banner-punto") || []);
+  if (!banner || !track) return null;
+  const slidesReales = Array.from(track.querySelectorAll(".hero-banner-slide:not([data-banner-clon])"));
+  return { banner, track, puntos, slidesReales };
+}
+
+function actualizarAccesibilidadBanner(indiceLogico) {
+  const datos = datosCarruselBanner();
+  if (!datos) return;
+  const { banner, track, puntos, slidesReales } = datos;
+  banner.dataset.bannerVisible = String(indiceLogico);
+  slidesReales.forEach((slide, i) => slide.setAttribute("aria-hidden", i === indiceLogico ? "false" : "true"));
+  Array.from(track.querySelectorAll('[data-banner-clon="true"]')).forEach((slide) => slide.setAttribute("aria-hidden", "true"));
+  puntos.forEach((punto, i) => {
+    const activo = i === indiceLogico;
+    punto.classList.toggle("activo", activo);
+    punto.setAttribute("aria-current", activo ? "true" : "false");
+  });
+}
+
+function asegurarClonesBanner() {
+  const datos = datosCarruselBanner();
+  if (!datos) return false;
+  const { banner, track, slidesReales } = datos;
+  if (slidesReales.length < 2) return false;
+  if (banner.dataset.carruselClonado === "true") return true;
+
+  const primero = slidesReales[0];
+  const ultimo = slidesReales[slidesReales.length - 1];
+  const clonUltimo = ultimo.cloneNode(true);
+  const clonPrimero = primero.cloneNode(true);
+  clonUltimo.dataset.bannerClon = "true";
+  clonPrimero.dataset.bannerClon = "true";
+  clonUltimo.removeAttribute("aria-label");
+  clonPrimero.removeAttribute("aria-label");
+  clonUltimo.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
+  clonPrimero.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
+  track.prepend(clonUltimo);
+  track.append(clonPrimero);
+  banner.dataset.carruselClonado = "true";
+  bannerEstadoCarruselFisico = bannerEstadoCarruselIndice + 1;
+  track.style.transition = "none";
+  track.style.transform = `translate3d(-${bannerEstadoCarruselFisico * 100}%,0,0)`;
+  actualizarAccesibilidadBanner(bannerEstadoCarruselIndice);
+  return true;
+}
+
+function moverCarruselBannerFisico(destinoFisico, indiceLogico, animar = true) {
+  const datos = datosCarruselBanner();
+  if (!datos) return;
+  const { track, slidesReales } = datos;
+  const total = slidesReales.length;
+  if (!total) return;
+
+  bannerEstadoCarruselIndice = (Number(indiceLogico) + total) % total;
+  bannerEstadoCarruselFisico = destinoFisico;
+  bannerEstadoCarruselEnTransicion = !!animar;
+  track.style.transition = animar ? "transform .36s cubic-bezier(.22,.61,.36,1)" : "none";
+  track.style.transform = `translate3d(-${destinoFisico * 100}%,0,0)`;
+  actualizarAccesibilidadBanner(bannerEstadoCarruselIndice);
+}
+
+function mostrarBannerEstadoCarrusel(indice = 0, animar = true, direccion = 0) {
+  const datos = datosCarruselBanner();
+  if (!datos) return;
+  const { slidesReales } = datos;
+  const total = slidesReales.length;
+  if (!total) return;
+  asegurarClonesBanner();
+
+  const destinoLogico = (Number(indice) + total) % total;
+  if (!animar || direccion === 0) {
+    moverCarruselBannerFisico(destinoLogico + 1, destinoLogico, animar);
+    return;
+  }
+
+  // Con clones, "siguiente" siempre continúa hacia la izquierda y "anterior"
+  // siempre hacia la derecha; nunca rebota visualmente al llegar al extremo.
+  const destinoFisico = bannerEstadoCarruselFisico + (direccion > 0 ? 1 : -1);
+  moverCarruselBannerFisico(destinoFisico, destinoLogico, true);
+}
+
+function prepararBannerEstadoCarrusel() {
+  const datos = datosCarruselBanner();
+  if (!datos) return;
+  const { banner, viewport, track } = { ...datos, viewport: datos.banner.querySelector('.hero-banner-viewport') };
+  if (!viewport || banner.dataset.carruselListo === "true") return;
+  banner.dataset.carruselListo = "true";
+  asegurarClonesBanner();
+
+  track.addEventListener("transitionend", (evento) => {
+    if (evento.propertyName !== "transform" || !bannerEstadoCarruselEnTransicion) return;
+    const total = datosCarruselBanner()?.slidesReales.length || 2;
+    bannerEstadoCarruselEnTransicion = false;
+    if (bannerEstadoCarruselFisico === total + 1) {
+      bannerEstadoCarruselFisico = 1;
+      track.style.transition = "none";
+      track.style.transform = "translate3d(-100%,0,0)";
+    } else if (bannerEstadoCarruselFisico === 0) {
+      bannerEstadoCarruselFisico = total;
+      track.style.transition = "none";
+      track.style.transform = `translate3d(-${total * 100}%,0,0)`;
+    }
+  });
+
+  banner.querySelector("#banner-estado-anterior")?.addEventListener("click", () => {
+    if (bannerEstadoCarruselEnTransicion) return;
+    mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice - 1, true, -1);
+  });
+  banner.querySelector("#banner-estado-siguiente")?.addEventListener("click", () => {
+    if (bannerEstadoCarruselEnTransicion) return;
+    mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice + 1, true, 1);
+  });
+  banner.querySelectorAll(".hero-banner-punto").forEach((punto) => {
+    punto.addEventListener("click", () => {
+      if (bannerEstadoCarruselEnTransicion) return;
+      const destino = Number(punto.dataset.bannerIndice) || 0;
+      if (destino === bannerEstadoCarruselIndice) return;
+      const direccion = destino > bannerEstadoCarruselIndice ? 1 : -1;
+      mostrarBannerEstadoCarrusel(destino, true, direccion);
+    });
+  });
+
+  let inicioX = 0;
+  let inicioY = 0;
+  let deltaX = 0;
+  let arrastrando = false;
+  let horizontal = false;
+
+  viewport.addEventListener("pointerdown", (evento) => {
+    if (bannerEstadoCarruselEnTransicion) return;
+    if (evento.pointerType === "mouse" && evento.button !== 0) return;
+    inicioX = evento.clientX;
+    inicioY = evento.clientY;
+    deltaX = 0;
+    arrastrando = true;
+    horizontal = false;
+    track.style.transition = "none";
+  });
+
+  viewport.addEventListener("pointermove", (evento) => {
+    if (!arrastrando) return;
+    const dx = evento.clientX - inicioX;
+    const dy = evento.clientY - inicioY;
+    if (!horizontal) {
+      if (Math.abs(dx) < 7 && Math.abs(dy) < 7) return;
+      if (Math.abs(dy) > Math.abs(dx)) {
+        arrastrando = false;
+        moverCarruselBannerFisico(bannerEstadoCarruselFisico, bannerEstadoCarruselIndice, true);
+        return;
+      }
+      horizontal = true;
+      viewport.classList.add("arrastrando");
+      try { viewport.setPointerCapture(evento.pointerId); } catch {}
+    }
+    deltaX = dx;
+    const ancho = viewport.clientWidth || 1;
+    const base = -(bannerEstadoCarruselFisico * 100);
+    const arrastre = (deltaX / ancho) * 100;
+    track.style.transform = `translate3d(${base + arrastre}%,0,0)`;
+  });
+
+  const terminar = (evento) => {
+    if (!arrastrando) return;
+    const ancho = viewport.clientWidth || 1;
+    const cambiar = horizontal && Math.abs(deltaX) >= Math.min(72, Math.max(36, ancho * .12));
+    if (cambiar) {
+      const direccion = deltaX < 0 ? 1 : -1;
+      mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice + direccion, true, direccion);
+    } else {
+      moverCarruselBannerFisico(bannerEstadoCarruselFisico, bannerEstadoCarruselIndice, true);
+    }
+    viewport.classList.remove("arrastrando");
+    try { viewport.releasePointerCapture(evento.pointerId); } catch {}
+    arrastrando = false;
+    horizontal = false;
+    deltaX = 0;
+  };
+
+  viewport.addEventListener("pointerup", terminar);
+  viewport.addEventListener("pointercancel", terminar);
+  mostrarBannerEstadoCarrusel(0, false, 0);
+}
+
+function actualizarBannerEstadoCupones() {
+  const banner = document.querySelector("#banner-estado-cupones");
+  if (!banner) return;
+  prepararBannerEstadoCarrusel();
+
+  const superiorActivos = document.querySelector("#banner-activos-superior");
+  const prefijoActivos = document.querySelector("#banner-activos-prefijo");
+  const destacadoActivos = document.querySelector("#banner-activos-destacado");
+  const sufijoActivos = document.querySelector("#banner-activos-sufijo");
+  const vigenciaActivos = document.querySelector("#banner-activos-vigencia");
+  const tiempoAgotados = document.querySelector("#banner-agotados-tiempo");
+
+  const disponibles = todosLosCupones.filter(cuponDisponibleParaBanner);
+  const total = disponibles.length;
+  const estadoNuevo = total > 0 ? "activos" : "agotados";
+  const estadoAnterior = banner.dataset.estado;
+
+  const ahorroMaximo = disponibles.reduce(
+    (maximo, cupon) => Math.max(maximo, ahorroMaximoParaBanner(cupon)),
+    0
+  );
+
+  // El banner amarillo conserva la composición aprobada. Si el usuario navega
+  // manualmente hacia él cuando no hay cupones, evita mensajes contradictorios.
+  if (total > 0) {
+    if (superiorActivos) superiorActivos.textContent = `¡Hay ${total} ${total === 1 ? "cupón activo" : "cupones activos"}!`;
+    if (prefijoActivos) prefijoActivos.textContent = ahorroMaximo > 0 ? "Hasta" : "Cupones";
+    if (destacadoActivos) destacadoActivos.textContent = ahorroMaximo > 0 ? ` ${monedaBuscador(ahorroMaximo)}` : " disponibles";
+    if (sufijoActivos) sufijoActivos.textContent = ahorroMaximo > 0 ? " OFF" : "";
+    if (vigenciaActivos) {
+      vigenciaActivos.hidden = false;
+      vigenciaActivos.textContent = "⏱ Úsalos antes de que se agoten";
+    }
+  } else {
+    if (superiorActivos) superiorActivos.textContent = "Cupones de Mercado Libre";
+    if (prefijoActivos) prefijoActivos.textContent = "Hoy no hay";
+    if (destacadoActivos) destacadoActivos.textContent = " cupones activos";
+    if (sufijoActivos) sufijoActivos.textContent = "";
+    if (vigenciaActivos) vigenciaActivos.hidden = true;
+  }
+
+  // El banner azul siempre conserva el diseño de cupones agotados.
+  if (tiempoAgotados) tiempoAgotados.textContent = ` dentro de ${textoCuentaRegresivaBanner()}`;
+
+  banner.dataset.estado = estadoNuevo;
+
+  // Posición automática únicamente al cargar o cuando cambia el estado real.
+  // Después el usuario puede navegar libremente entre los DOS banners.
+  if (estadoAnterior !== estadoNuevo) {
+    mostrarBannerEstadoCarrusel(estadoNuevo === "activos" ? 0 : 1, false);
   }
 }
 
@@ -2166,6 +2532,9 @@ function renderizarCategoria() {
     });
     cuponesContainer.appendChild(fragmentoBancos);
   }
+
+  // Paquete 4.1: la muesca usa exactamente el fondo renderizado de la sección.
+  sincronizarFondoMuescas();
 
   // En "Todos", un cupón Nuevo también tiene prioridad GLOBAL durante su primera hora,
   // aunque pertenezca a Tienda, Exclusivo o Bancarios. Al terminar esa hora recupera
@@ -2325,6 +2694,7 @@ async function cargarCupones() {
 
     todosLosCupones = nuevosCupones;
     actualizarFiltrosBuscadorCupones();
+    actualizarBannerEstadoCupones();
 
     if (buscadorCuponesResultado && !buscadorCuponesResultado.hidden && Number(buscadorCuponesMonto?.value || 0) > 0) {
       ejecutarBuscadorCupones();
@@ -2926,7 +3296,7 @@ function crearTarjetaOferta(publicidad, categoria) {
       ` : ""}
 
       <div class="oferta-meta">
-        <span class="oferta-visitas" data-visitas-id="${Number(publicidad.id) || 0}">👁️ ${Number(publicidad.visitas) || 0} visitas</span>
+        <span class="oferta-visitas" data-visitas-id="${Number(publicidad.id) || 0}">👁️ ${Number(publicidad.visitas) || 0} ${esComunidadAnirona ? (Number(publicidad.visitas) === 1 ? "vista" : "vistas") : (Number(publicidad.visitas) === 1 ? "visita" : "visitas")}</span>
       </div>
 
       <div class="oferta-acciones ${esComunidadAnirona ? `oferta-acciones-anirona${enlaceMercadoLibre && enlaceAmazon ? " ambos-marketplaces" : ""}` : ""}">
@@ -3430,6 +3800,7 @@ function renderizarCatalogoAnirona() {
   actualizarResumenCatalogoAnirona(totalMostrados, todos.length, consulta);
 
   if (limpiarBusquedaAnirona) limpiarBusquedaAnirona.hidden = !consulta;
+  iniciarObservadorVistasAnirona();
 }
 
 function renderizarModuloOfertas(categoria, contenedor, seccion) {
@@ -3464,6 +3835,9 @@ function renderizarModuloOfertas(categoria, contenedor, seccion) {
 }
 
 const DURACION_VISITA_PRODUCTO_MS = 24 * 60 * 60 * 1000;
+const TIEMPO_MINIMO_VISTA_ANIRONA_MS = 900;
+let observadorVistasAnirona = null;
+const temporizadoresVistasAnirona = new Map();
 
 function claveVisitaPublicidad(id, plataforma = "general") {
   const destino = plataforma === "amazon" ? "amazon" : plataforma === "mercadolibre" ? "mercadolibre" : "general";
@@ -3491,7 +3865,11 @@ function actualizarVisitasEnPantalla(id, visitas) {
   document.querySelectorAll(`[data-visitas-id="${id}"]`).forEach((elemento) => {
     const total = Number(visitas) || 0;
     const esOfertazo = Boolean(elemento.closest(".tarjeta-oferta-ofertazo"));
-    elemento.textContent = `${esOfertazo ? "" : "👁️ "}${total} ${total === 1 ? "visita" : "visitas"}`;
+    const esAnirona = Boolean(elemento.closest(".tarjeta-oferta-anirona"));
+    const etiqueta = esAnirona
+      ? (total === 1 ? "vista" : "vistas")
+      : (total === 1 ? "visita" : "visitas");
+    elemento.textContent = `${esOfertazo ? "" : "👁️ "}${total} ${etiqueta}`;
   });
 }
 
@@ -3526,6 +3904,55 @@ async function registrarVisitaPublicidad(publicidad, plataforma = "general") {
     localStorage.removeItem(clave);
     console.warn("No fue posible registrar la visita del producto.", error);
   }
+}
+
+function detenerObservadorVistasAnirona() {
+  observadorVistasAnirona?.disconnect();
+  observadorVistasAnirona = null;
+  temporizadoresVistasAnirona.forEach((temporizador) => clearTimeout(temporizador));
+  temporizadoresVistasAnirona.clear();
+}
+
+function iniciarObservadorVistasAnirona() {
+  detenerObservadorVistasAnirona();
+  if (!ofertasComunidadAnirona || typeof IntersectionObserver === "undefined") return;
+
+  observadorVistasAnirona = new IntersectionObserver((entradas) => {
+    entradas.forEach((entrada) => {
+      const tarjeta = entrada.target;
+      const id = Number(tarjeta.dataset.publicidadId);
+      if (!Number.isInteger(id) || id <= 0) return;
+
+      const temporizadorActual = temporizadoresVistasAnirona.get(id);
+      if (!entrada.isIntersecting || entrada.intersectionRatio < 0.5) {
+        if (temporizadorActual) clearTimeout(temporizadorActual);
+        temporizadoresVistasAnirona.delete(id);
+        return;
+      }
+
+      if (visitaPublicidadVigente(id, "general")) {
+        observadorVistasAnirona?.unobserve(tarjeta);
+        return;
+      }
+      if (temporizadorActual) return;
+
+      const temporizador = setTimeout(() => {
+        temporizadoresVistasAnirona.delete(id);
+        if (!tarjeta.isConnected || visitaPublicidadVigente(id, "general")) return;
+        const publicidad = todasLasPublicidades.find((item) => Number(item?.id) === id);
+        if (!publicidad) return;
+        registrarVisitaPublicidad(publicidad, "general");
+        observadorVistasAnirona?.unobserve(tarjeta);
+      }, TIEMPO_MINIMO_VISTA_ANIRONA_MS);
+
+      temporizadoresVistasAnirona.set(id, temporizador);
+    });
+  }, { threshold: [0.5] });
+
+  ofertasComunidadAnirona.querySelectorAll(".tarjeta-oferta-anirona[data-publicidad-id]").forEach((tarjeta) => {
+    const id = Number(tarjeta.dataset.publicidadId);
+    if (!visitaPublicidadVigente(id, "general")) observadorVistasAnirona.observe(tarjeta);
+  });
 }
 
 
@@ -3752,7 +4179,9 @@ async function abrirPublicidad(publicidad, { copiarCuponAsignado = true } = {}) 
   const precioCupon = String(publicidad.precio_cupon || "").trim();
   try {
     if (copiarCuponAsignado && codigo) await copiarTexto(codigo);
-    registrarVisitaPublicidad(publicidad, publicidad.plataforma);
+    if (!publicidadPerteneceASeccion(publicidad, "comunidad_anirona")) {
+      registrarVisitaPublicidad(publicidad, publicidad.plataforma);
+    }
     registrarClicPublicidad(publicidad.id);
     window.location.assign(enlace);
   } catch (error) {
@@ -4260,7 +4689,7 @@ const formatNo=n=>String(n||0).padStart(6,'0');
 async function api(url,opt){const r=await fetch(url,opt);const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'No fue posible completar la operación.');return d;}
 function countdown(date,el){if(!date||!el)return;const tick=()=>{const diff=new Date(date)-new Date();if(diff<=0){el.textContent='El sorteo está por realizarse';return;}const days=Math.floor(diff/86400000),hours=Math.floor(diff%86400000/3600000),mins=Math.floor(diff%3600000/60000);el.textContent=`Faltan ${days} días, ${hours} h y ${mins} min`;};tick();setInterval(tick,60000);}
 function winnerHero(e){document.querySelector('#hero-ganador-evento')?.remove();const w=e?.ganadores?.[0];if(!w||!heroButtons)return;const a=document.createElement('a');a.id='hero-ganador-evento';a.className='hero-ganador';a.href='#eventos-comunidad';a.innerHTML=`🏆 Ganador: <strong>${esc(formatNo(w.numero))}</strong>`;a.addEventListener('click',()=>document.querySelector('[data-vista="comunidad_anirona"]')?.click());heroButtons.append(a);}
-function render(e){currentEvent=e;winnerHero(e);if(!root)return;if(!e){root.innerHTML='<div class="evento-estado-vacio"><strong>🎁 Próximamente habrá una nueva dinámica.</strong><p>Mantente pendiente de Comunidad Anirona.</p></div>';return;}const pct=Math.min(100,Math.round((e.participantes_count/e.limite_boletos)*100));const open=e.estado==='abierta'&&e.disponibles>0;const winners=(e.ganadores||[]).map(w=>`<div class="evento-ganador"><span>🏆 Ganador${w.posicion>1?' '+w.posicion:''}</span><strong>${formatNo(w.numero)}</strong><span>${esc(w.nombre_parcial)}</span></div>`).join('');root.innerHTML=`<article class="evento-card"><div class="evento-portada">${e.imagen_url?`<img class="evento-imagen" src="${esc(e.imagen_url)}" alt="${esc(e.producto_nombre)}">`:'<div class="evento-imagen"></div>'}<div class="evento-info"><span class="evento-etiqueta">${esc(e.tipo)}</span><h3>${esc(e.nombre)}</h3><p class="evento-producto">🎁 ${esc(e.producto_nombre)}</p>${e.premio_enlace?`<div class="evento-premio-enlace"><span><strong>🏆 Premio</strong><small>${esc(e.premio_plataforma||'Ver producto')}</small></span><a id="evento-premio-btn" class="evento-boton evento-premio-boton" href="${esc(e.premio_enlace)}" target="_blank" rel="noopener noreferrer" data-cupon="${esc(e.premio_cupon||'')}">🛒 Conocer el premio</a></div>`:''}<p class="evento-descripcion">${esc(e.descripcion)}</p>${e.fecha_sorteo?`<p class="evento-fecha">📅 Sorteo: ${esc(dateText(e.fecha_sorteo))}</p>`:''}${e.mostrar_contador?`<div class="evento-progreso"><div class="evento-progreso-texto"><strong>${e.participantes_count} participantes</strong><span>${e.disponibles} disponibles</span></div><div class="evento-progreso-barra"><span style="width:${pct}%"></span></div></div>`:''}${winners}${open?`<form id="evento-form" class="evento-form-grid"><div class="evento-campo evento-campo-completo"><label>Nombre completo</label><input name="nombre" required maxlength="100" autocomplete="name"></div><div class="evento-campo"><label>Teléfono</label><input name="telefono" required inputmode="numeric" maxlength="14" autocomplete="tel"></div><div class="evento-campo"><label>Ciudad (opcional)</label><input name="ciudad" maxlength="80" autocomplete="address-level2"></div><label class="evento-privacidad evento-campo-completo"><input name="privacidad" type="checkbox" required> <span>Acepto que mis datos se utilicen únicamente para administrar esta dinámica y contactar a las personas ganadoras.</span></label><button class="evento-boton evento-campo-completo" type="submit">Registrarme y obtener mi número</button></form>`:`<div class="evento-resultado"><strong>${e.estado==='finalizada'?'Esta dinámica ha finalizado.':'Los registros están cerrados.'}</strong></div>`}<div class="evento-consulta"><strong>Consultar mi registro</strong><div class="evento-consulta-fila evento-campo"><input id="evento-consulta-tel" inputmode="numeric" maxlength="14" placeholder="Teléfono de 10 dígitos"><button id="evento-consulta-btn" class="evento-boton evento-secundario" type="button">Buscar</button></div></div></div></div></article>`;countdown(e.fecha_sorteo,document.querySelector('#evento-cuenta'));document.querySelector('#evento-form')?.addEventListener('submit',register);document.querySelector('#evento-consulta-btn')?.addEventListener('click',lookup);document.querySelector('#evento-premio-btn')?.addEventListener('click',ev=>{const cup=ev.currentTarget.dataset.cupon;if(cup&&navigator.clipboard){navigator.clipboard.writeText(cup).then(()=>{const original=ev.currentTarget.textContent;ev.currentTarget.textContent=`✓ Cupón ${cup} copiado`;setTimeout(()=>ev.currentTarget.textContent=original,2200)}).catch(()=>{});}});}
+function render(e){currentEvent=e;winnerHero(e);if(!root)return;if(!e){root.innerHTML='<div class="evento-estado-vacio"><strong>🎁 Próximamente habrá una nueva dinámica.</strong><p>Mantente pendiente de Comunidad Anirona.</p></div>';return;}const pct=Math.min(100,Math.round((e.participantes_count/e.limite_boletos)*100));const open=e.estado==='abierta'&&e.disponibles>0;const winners=(e.ganadores||[]).map(w=>`<div class="evento-ganador"><span>🏆 Ganador${w.posicion>1?' '+w.posicion:''}</span><strong>${formatNo(w.numero)}</strong><span>${esc(w.nombre_parcial)}</span></div>`).join('');root.innerHTML=`<article class="evento-card"><div class="evento-portada">${e.imagen_url?`<img class="evento-imagen" src="${esc(e.imagen_url)}" alt="${esc(e.producto_nombre)}">`:'<div class="evento-imagen"></div>'}<div class="evento-info"><span class="evento-etiqueta">${esc(e.tipo)}</span><h3>${esc(e.nombre)}</h3><p class="evento-producto">🎁 ${esc(e.producto_nombre)}</p>${e.premio_enlace?`<div class="evento-premio-enlace"><span><strong>🏆 Premio</strong><small>${esc(e.premio_plataforma||'Ver producto')}</small></span><a id="evento-premio-btn" class="evento-boton evento-premio-boton" href="${esc(e.premio_enlace)}" target="_blank" rel="noopener noreferrer" data-cupon="${esc(e.premio_cupon||'')}">🛒 Conocer el premio</a></div>`:''}<p class="evento-descripcion">${esc(e.descripcion)}</p>${e.fecha_sorteo?`<p class="evento-fecha">📅 Sorteo: ${esc(dateText(e.fecha_sorteo))}</p>`:''}${e.mostrar_contador?`<div class="evento-progreso"><div class="evento-progreso-texto"><strong>${e.participantes_count} participantes</strong><span>${e.disponibles} disponibles</span></div><div class="evento-progreso-barra"><span style="width:${pct}%"></span></div></div>`:''}${winners}${open?`<form id="evento-form" class="evento-form-grid"><div class="evento-campo evento-campo-completo"><label>Nombre completo</label><input name="nombre" required maxlength="100" autocomplete="name"></div><div class="evento-campo"><label>Teléfono</label><input name="telefono" required inputmode="numeric" maxlength="14" autocomplete="tel"></div><div class="evento-campo"><label>Ciudad (opcional)</label><input name="ciudad" maxlength="80" autocomplete="address-level2"></div><label class="evento-privacidad evento-campo-completo"><input name="privacidad" type="checkbox" required> <span>Acepto que mis datos se utilicen únicamente para administrar esta dinámica y contactar a las personas ganadoras.</span></label><button class="evento-boton evento-campo-completo" type="submit">Registrarme y obtener mi número</button><div id="evento-mensaje" class="evento-mensaje evento-campo-completo" role="status" aria-live="polite"></div></form>`:`<div class="evento-resultado"><strong>${e.estado==='finalizada'?'Esta dinámica ha finalizado.':'Los registros están cerrados.'}</strong></div>`}<div class="evento-consulta"><strong>Consultar mi registro</strong><div class="evento-consulta-fila evento-campo"><input id="evento-consulta-tel" inputmode="numeric" maxlength="14" placeholder="Teléfono de 10 dígitos"><button id="evento-consulta-btn" class="evento-boton evento-secundario" type="button">Buscar</button></div></div></div></div></article>`;countdown(e.fecha_sorteo,document.querySelector('#evento-cuenta'));document.querySelector('#evento-form')?.addEventListener('submit',register);document.querySelector('#evento-consulta-btn')?.addEventListener('click',lookup);document.querySelector('#evento-premio-btn')?.addEventListener('click',ev=>{const cup=ev.currentTarget.dataset.cupon;if(cup&&navigator.clipboard){navigator.clipboard.writeText(cup).then(()=>{const original=ev.currentTarget.textContent;ev.currentTarget.textContent=`✓ Cupón ${cup} copiado`;setTimeout(()=>ev.currentTarget.textContent=original,2200)}).catch(()=>{});}});}
 function enfocarRegistroDesdeUrl(){
   const params=new URLSearchParams(window.location.search);
   if(String(params.get('sorteo')||'').toLowerCase()!=='registro')return;
@@ -4281,7 +4710,7 @@ function enfocarRegistroDesdeUrl(){
 }
 
 function resultHtml(p){const share=`🎉 Ya estoy participando en ${currentEvent.nombre}. Mi número es ${formatNo(p.numero)} (${p.codigo}).`;return `<div id="evento-comprobante-print" class="evento-resultado"><strong>✅ ¡Registro exitoso!</strong><span>Tu número de participante es</span><span class="evento-numero">${formatNo(p.numero)}</span><span class="evento-codigo">${esc(p.codigo)}</span><img alt="Código QR del participante" width="150" height="150" src="https://quickchart.io/qr?size=180&text=${encodeURIComponent(p.codigo)}"><div class="evento-acciones"><a class="evento-boton" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(share)}">Compartir por WhatsApp</a><button class="evento-boton evento-secundario" onclick="window.print()" type="button">Guardar comprobante</button></div></div>`;}
-async function register(ev){ev.preventDefault();const f=ev.currentTarget,m=f.querySelector('#evento-mensaje'),btn=f.querySelector('button');m.textContent='Registrando…';m.classList.remove('error');btn.disabled=true;try{const fd=new FormData(f);const p=await api('/api/cupones?action=eventos',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({evento_id:currentEvent.id,nombre:fd.get('nombre'),telefono:fd.get('telefono'),ciudad:fd.get('ciudad'),acepta_privacidad:fd.get('privacidad')==='on'})});f.outerHTML=resultHtml(p);}catch(e){m.textContent=e.message;m.classList.add('error');btn.disabled=false;}}
+async function register(ev){ev.preventDefault();const f=ev.currentTarget,m=f.querySelector('#evento-mensaje'),btn=f.querySelector('button[type="submit"]');if(m){m.textContent='Registrando…';m.classList.remove('error');}if(btn)btn.disabled=true;try{const fd=new FormData(f);const p=await api('/api/cupones?action=eventos',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({evento_id:currentEvent.id,nombre:fd.get('nombre'),telefono:fd.get('telefono'),ciudad:fd.get('ciudad'),acepta_privacidad:fd.get('privacidad')==='on'})});f.outerHTML=resultHtml(p);}catch(e){if(m){m.textContent=e.message;m.classList.add('error');}else{console.error('Error de registro:',e);}if(btn)btn.disabled=false;}}
 async function lookup(){const input=document.querySelector('#evento-consulta-tel'),msg=document.querySelector('#evento-consulta-msg');msg.textContent='Buscando…';msg.classList.remove('error');try{const p=await api(`/api/cupones?action=eventos-consulta&evento_id=${currentEvent.id}&telefono=${encodeURIComponent(input.value)}`);msg.innerHTML=`✅ ${esc(p.nombre)} · Número <strong>${formatNo(p.numero)}</strong> · ${esc(p.codigo)}`;}catch(e){msg.textContent=e.message;msg.classList.add('error');}}
 async function load(){try{const d=await api('/api/cupones?action=eventos');render(d.evento);enfocarRegistroDesdeUrl();}catch(e){if(root)root.innerHTML=`<div class="evento-estado-vacio">${esc(e.message)}</div>`;}}
 load();
@@ -4293,7 +4722,7 @@ load();
 // Evitamos volver a renderizar las tarjetas al terminar de cargar la configuración,
 // ya que eso provocaba un segundo parpadeo durante la carga inicial.
 document.addEventListener("ofertas:etiquetas-cargadas", () => {
-  document.querySelectorAll(".cupon[data-id]:not(.cupon-bancario)").forEach((tarjeta) => {
+  document.querySelectorAll(".cupon[data-id]:not(.cupon-bancario):not(.cupon-bancario-unificado)").forEach((tarjeta) => {
     const cupon = todosLosCupones.find((item) => Number(item.id) === Number(tarjeta.dataset.id));
     if (!cupon) return;
     const visual = configuracionVisualCupon(cupon);
@@ -4820,8 +5249,26 @@ function actualizarTextoAvisosMenuMas() {
   const activos =
     typeof avisosNovedadesActivos === "function" && avisosNovedadesActivos();
 
-  texto.textContent = activos ? "Avisos activados" : "Activar notificaciones";
+  texto.textContent = activos ? "Avisos activados" : "Activar avisos";
   boton.classList.toggle("activo", Boolean(activos));
+}
+
+function posicionarWhatsappSegunMenuMas(abierto) {
+  const whatsapp = document.querySelector("#whatsapp-flotante");
+  const panel = document.querySelector("#menu-mas-panel");
+  if (!whatsapp) return;
+
+  if (!abierto || !panel || panel.hidden) {
+    whatsapp.style.removeProperty("bottom");
+    return;
+  }
+
+  requestAnimationFrame(() => {
+    const rect = panel.getBoundingClientRect();
+    const separacion = window.innerWidth <= 700 ? 12 : 10;
+    const bottom = Math.max(18, window.innerHeight - rect.top + separacion);
+    whatsapp.style.setProperty("bottom", `${Math.round(bottom)}px`, "important");
+  });
 }
 
 function cerrarMenuMasFlotante() {
@@ -4831,6 +5278,8 @@ function cerrarMenuMasFlotante() {
 
   panel.hidden = true;
   boton.setAttribute("aria-expanded", "false");
+  document.body.classList.remove("menu-mas-abierto");
+  posicionarWhatsappSegunMenuMas(false);
 }
 
 function abrirMenuMasInferior() {
@@ -4841,6 +5290,8 @@ function abrirMenuMasInferior() {
   actualizarTextoAvisosMenuMas();
   panel.hidden = false;
   boton.setAttribute("aria-expanded", "true");
+  document.body.classList.add("menu-mas-abierto");
+  posicionarWhatsappSegunMenuMas(true);
 }
 
 function inicializarMenuMasFlotante() {
@@ -4883,6 +5334,10 @@ function inicializarMenuMasFlotante() {
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") cerrarMenuMasFlotante();
   });
+
+  window.addEventListener("resize", () => {
+    if (!panel.hidden) posicionarWhatsappSegunMenuMas(true);
+  }, { passive: true });
 }
 
 document.addEventListener("DOMContentLoaded", inicializarMenuMasFlotante);
@@ -4890,3 +5345,10 @@ document.addEventListener("visibilitychange", actualizarTextoAvisosMenuMas);
 
 
 window.setInterval(actualizarTemporizadoresOfertazo, 60 * 1000);
+
+
+// V82.96 — Mantiene vigencia y cuenta regresiva del banner sin recargar.
+window.setInterval(() => {
+  const banner = document.querySelector("#banner-estado-cupones");
+  if (banner && banner.dataset.estado !== "cargando") actualizarBannerEstadoCupones();
+}, 60 * 1000);

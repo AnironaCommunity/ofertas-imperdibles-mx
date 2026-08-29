@@ -2172,7 +2172,8 @@ function datosCarruselBanner() {
 function actualizarAccesibilidadBanner(indiceLogico) {
   const datos = datosCarruselBanner();
   if (!datos) return;
-  const { track, puntos, slidesReales } = datos;
+  const { banner, track, puntos, slidesReales } = datos;
+  banner.dataset.bannerVisible = String(indiceLogico);
   slidesReales.forEach((slide, i) => slide.setAttribute("aria-hidden", i === indiceLogico ? "false" : "true"));
   Array.from(track.querySelectorAll('[data-banner-clon="true"]')).forEach((slide) => slide.setAttribute("aria-hidden", "true"));
   puntos.forEach((punto, i) => {
@@ -2368,14 +2369,23 @@ function actualizarBannerEstadoCupones() {
     0
   );
 
-  // El banner amarillo siempre conserva el diseño de cupones activos.
-  if (superiorActivos) superiorActivos.textContent = `¡Hay ${total} ${total === 1 ? "cupón activo" : "cupones activos"}!`;
-  if (prefijoActivos) prefijoActivos.textContent = ahorroMaximo > 0 ? "Hasta" : "Cupones";
-  if (destacadoActivos) destacadoActivos.textContent = ahorroMaximo > 0 ? ` ${monedaBuscador(ahorroMaximo)}` : " disponibles";
-  if (sufijoActivos) sufijoActivos.textContent = ahorroMaximo > 0 ? " OFF" : "";
-  if (vigenciaActivos) {
-    vigenciaActivos.hidden = total <= 0;
-    vigenciaActivos.textContent = "⏱ Úsalos antes de que se agoten";
+  // El banner amarillo conserva la composición aprobada. Si el usuario navega
+  // manualmente hacia él cuando no hay cupones, evita mensajes contradictorios.
+  if (total > 0) {
+    if (superiorActivos) superiorActivos.textContent = `¡Hay ${total} ${total === 1 ? "cupón activo" : "cupones activos"}!`;
+    if (prefijoActivos) prefijoActivos.textContent = ahorroMaximo > 0 ? "Hasta" : "Cupones";
+    if (destacadoActivos) destacadoActivos.textContent = ahorroMaximo > 0 ? ` ${monedaBuscador(ahorroMaximo)}` : " disponibles";
+    if (sufijoActivos) sufijoActivos.textContent = ahorroMaximo > 0 ? " OFF" : "";
+    if (vigenciaActivos) {
+      vigenciaActivos.hidden = false;
+      vigenciaActivos.textContent = "⏱ Úsalos antes de que se agoten";
+    }
+  } else {
+    if (superiorActivos) superiorActivos.textContent = "Cupones de Mercado Libre";
+    if (prefijoActivos) prefijoActivos.textContent = "Hoy no hay";
+    if (destacadoActivos) destacadoActivos.textContent = " cupones activos";
+    if (sufijoActivos) sufijoActivos.textContent = "";
+    if (vigenciaActivos) vigenciaActivos.hidden = true;
   }
 
   // El banner azul siempre conserva el diseño de cupones agotados.

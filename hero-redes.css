@@ -4198,3 +4198,204 @@
   .hero-banner-control-siguiente { right: 7px !important; }
   .hero-banner-puntos { bottom: 5px !important; }
 }
+
+/* ============================================================
+   PAQUETE 4.1 — Ajuste visual fiel a propuesta
+   - NO cambia alturas aprobadas.
+   - Los DOS banners tienen exactamente la misma caja.
+   - Distribución más cercana a la propuesta original.
+   - Canastas transparentes integradas al fondo.
+   - Se elimina cualquier sangrado del banner vecino en los bordes.
+   ============================================================ */
+.hero-redes.hero-redes-lista .hero-banner-estado,
+.hero-banner-viewport,
+.hero-banner-track,
+.hero-banner-slide,
+.hero-banner-slide-principal {
+  box-sizing: border-box !important;
+}
+
+.hero-banner-viewport {
+  position: relative !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
+  contain: paint !important;
+  background: transparent !important;
+}
+
+/* El color de respaldo sigue al banner VISIBLE. Así, ni un subpíxel del
+   banner vecino puede asomarse por las esquinas redondeadas. */
+.hero-banner-estado[data-banner-visible="0"] .hero-banner-viewport {
+  background: #ffe69a !important;
+}
+.hero-banner-estado[data-banner-visible="1"] .hero-banner-viewport {
+  background: #101c70 !important;
+}
+
+.hero-banner-track {
+  height: 100% !important;
+  min-height: 100% !important;
+  align-items: stretch !important;
+  backface-visibility: hidden !important;
+}
+
+.hero-banner-slide,
+.hero-banner-slide-principal {
+  height: 100% !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
+  border-radius: inherit !important;
+  background-clip: padding-box !important;
+  backface-visibility: hidden !important;
+  transform: translateZ(0) !important;
+}
+
+/* Mismo lienzo y misma distribución para amarillo y azul. */
+.hero-banner-slide-activos,
+.hero-banner-slide-agotados {
+  grid-template-columns: minmax(150px, 26%) minmax(0, 46%) minmax(205px, 28%) !important;
+  align-items: center !important;
+  column-gap: 16px !important;
+}
+
+/* La canasta ya es un recurso con transparencia real. No existe caja detrás. */
+.hero-banner-slide-activos .hero-banner-ilustracion,
+.hero-banner-slide-agotados .hero-banner-ilustracion {
+  position: relative !important;
+  overflow: visible !important;
+  background: none !important;
+  mix-blend-mode: normal !important;
+}
+.hero-banner-slide-activos .hero-banner-ilustracion::before,
+.hero-banner-slide-agotados .hero-banner-ilustracion::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: -5% -7% !important;
+  width: auto !important;
+  height: auto !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  mix-blend-mode: normal !important;
+  filter: none !important;
+  pointer-events: none !important;
+}
+.hero-banner-slide-activos .hero-banner-ilustracion::before {
+  background-image: url("../img/banner-cesta-activos-transparente.png?v=4.1") !important;
+}
+.hero-banner-slide-agotados .hero-banner-ilustracion::before {
+  background-image: url("../img/banner-cesta-agotados-transparente.png?v=4.1") !important;
+}
+
+/* Jerarquía igual a la propuesta: línea superior pequeña, ahorro protagonista,
+   detalle breve y vigencia compacta. */
+.hero-banner-copy {
+  min-width: 0 !important;
+  align-self: center !important;
+}
+.hero-banner-superior {
+  max-width: 100% !important;
+  white-space: normal !important;
+}
+.hero-banner-slide-activos .hero-banner-titulo,
+.hero-banner-slide-agotados .hero-banner-titulo {
+  max-width: 100% !important;
+}
+.hero-banner-slide-activos .hero-banner-titulo {
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+}
+.hero-banner-slide-activos .hero-banner-detalle,
+.hero-banner-slide-agotados .hero-banner-detalle {
+  max-width: 38rem !important;
+}
+
+/* CTA horizontal, sin saltos extraños y con el icono contenido. */
+.hero-banner-whatsapp {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+.hero-banner-whatsapp > span:nth-child(2) {
+  min-width: 0 !important;
+}
+.hero-banner-whatsapp strong,
+.hero-banner-whatsapp small {
+  display: block !important;
+  white-space: normal !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+}
+
+/* Los controles pertenecen al mismo lienzo y no sobresalen. */
+.hero-banner-control {
+  z-index: 8 !important;
+}
+.hero-banner-puntos {
+  z-index: 8 !important;
+}
+
+@media (min-width: 721px) {
+  /* Se conserva exactamente la altura de 4.0: 160px. */
+  .hero-redes.hero-redes-lista .hero-banner-estado,
+  .hero-banner-viewport,
+  .hero-banner-track,
+  .hero-banner-slide,
+  .hero-banner-slide-principal {
+    height: 160px !important;
+    min-height: 160px !important;
+    max-height: 160px !important;
+  }
+
+  .hero-banner-slide-activos,
+  .hero-banner-slide-agotados {
+    padding: 10px 50px 14px !important;
+  }
+
+  .hero-banner-ilustracion {
+    height: 136px !important;
+  }
+
+  .hero-banner-slide-activos .hero-banner-ilustracion::before,
+  .hero-banner-slide-agotados .hero-banner-ilustracion::before {
+    inset: -7% -5% !important;
+  }
+
+  .hero-banner-superior {
+    margin-bottom: 2px !important;
+  }
+
+  .hero-banner-detalle {
+    margin-top: 4px !important;
+  }
+
+  .hero-banner-vigencia {
+    margin-top: 5px !important;
+  }
+
+  .hero-banner-whatsapp {
+    justify-self: stretch !important;
+    align-self: center !important;
+  }
+}
+
+@media (max-width: 720px) {
+  /* NO se modifica la altura móvil aprobada. Solo se corrige integración y
+     distribución dentro de la caja existente. */
+  .hero-banner-slide-activos,
+  .hero-banner-slide-agotados {
+    grid-template-columns: 23% minmax(0, 49%) minmax(0, 28%) !important;
+  }
+
+  .hero-banner-slide-activos .hero-banner-ilustracion::before,
+  .hero-banner-slide-agotados .hero-banner-ilustracion::before {
+    inset: -8% -13% !important;
+  }
+
+  .hero-banner-slide-activos .hero-banner-titulo {
+    white-space: normal !important;
+  }
+}
