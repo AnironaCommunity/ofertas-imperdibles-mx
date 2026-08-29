@@ -2162,11 +2162,16 @@ let bannerEstadoCarruselEnTransicion = false;
 
 function datosCarruselBanner() {
   const banner = document.querySelector("#banner-estado-cupones");
-  const track = banner?.querySelector(".hero-banner-track");
-  const puntos = Array.from(banner?.querySelectorAll(".hero-banner-punto") || []);
-  if (!banner || !track) return null;
-  const slidesReales = Array.from(track.querySelectorAll(".hero-banner-slide:not([data-banner-clon])"));
-  return { banner, track, puntos, slidesReales };
+  const viewport = banner?.querySelector(".oi-banner__viewport");
+  const track = banner?.querySelector(".oi-banner__track");
+  const puntos = Array.from(banner?.querySelectorAll(".oi-banner__dot") || []);
+  if (!banner || !viewport || !track) return null;
+  const slidesReales = Array.from(track.querySelectorAll(".oi-banner__slide:not([data-banner-clon])"));
+  return { banner, viewport, track, puntos, slidesReales };
+}
+
+function anchoViewportBanner(datos = datosCarruselBanner()) {
+  return Math.max(1, Math.round(datos?.viewport?.getBoundingClientRect().width || datos?.viewport?.clientWidth || 1));
 }
 
 function actualizarAccesibilidadBanner(indiceLogico) {
@@ -2178,34 +2183,37 @@ function actualizarAccesibilidadBanner(indiceLogico) {
   Array.from(track.querySelectorAll('[data-banner-clon="true"]')).forEach((slide) => slide.setAttribute("aria-hidden", "true"));
   puntos.forEach((punto, i) => {
     const activo = i === indiceLogico;
-    punto.classList.toggle("activo", activo);
+    punto.classList.toggle("is-active", activo);
     punto.setAttribute("aria-current", activo ? "true" : "false");
   });
 }
 
+function posicionarTrackBanner(destinoFisico, animar = true) {
+  const datos = datosCarruselBanner();
+  if (!datos) return;
+  const ancho = anchoViewportBanner(datos);
+  datos.track.style.transition = animar ? "transform .36s cubic-bezier(.22,.61,.36,1)" : "none";
+  datos.track.style.transform = `translate3d(${-destinoFisico * ancho}px,0,0)`;
+}
+
 function asegurarClonesBanner() {
   const datos = datosCarruselBanner();
-  if (!datos) return false;
+  if (!datos || datos.slidesReales.length < 2) return false;
   const { banner, track, slidesReales } = datos;
-  if (slidesReales.length < 2) return false;
   if (banner.dataset.carruselClonado === "true") return true;
 
-  const primero = slidesReales[0];
-  const ultimo = slidesReales[slidesReales.length - 1];
-  const clonUltimo = ultimo.cloneNode(true);
-  const clonPrimero = primero.cloneNode(true);
-  clonUltimo.dataset.bannerClon = "true";
-  clonPrimero.dataset.bannerClon = "true";
-  clonUltimo.removeAttribute("aria-label");
-  clonPrimero.removeAttribute("aria-label");
-  clonUltimo.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
-  clonPrimero.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
+  const clonUltimo = slidesReales[slidesReales.length - 1].cloneNode(true);
+  const clonPrimero = slidesReales[0].cloneNode(true);
+  [clonUltimo, clonPrimero].forEach((clon) => {
+    clon.dataset.bannerClon = "true";
+    clon.removeAttribute("aria-label");
+    clon.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
+  });
   track.prepend(clonUltimo);
   track.append(clonPrimero);
   banner.dataset.carruselClonado = "true";
   bannerEstadoCarruselFisico = bannerEstadoCarruselIndice + 1;
-  track.style.transition = "none";
-  track.style.transform = `translate3d(-${bannerEstadoCarruselFisico * 100}%,0,0)`;
+  posicionarTrackBanner(bannerEstadoCarruselFisico, false);
   actualizarAccesibilidadBanner(bannerEstadoCarruselIndice);
   return true;
 }
@@ -2213,137 +2221,100 @@ function asegurarClonesBanner() {
 function moverCarruselBannerFisico(destinoFisico, indiceLogico, animar = true) {
   const datos = datosCarruselBanner();
   if (!datos) return;
-  const { track, slidesReales } = datos;
-  const total = slidesReales.length;
+  const total = datos.slidesReales.length;
   if (!total) return;
-
   bannerEstadoCarruselIndice = (Number(indiceLogico) + total) % total;
   bannerEstadoCarruselFisico = destinoFisico;
   bannerEstadoCarruselEnTransicion = !!animar;
-  track.style.transition = animar ? "transform .36s cubic-bezier(.22,.61,.36,1)" : "none";
-  track.style.transform = `translate3d(-${destinoFisico * 100}%,0,0)`;
+  posicionarTrackBanner(destinoFisico, animar);
   actualizarAccesibilidadBanner(bannerEstadoCarruselIndice);
 }
 
 function mostrarBannerEstadoCarrusel(indice = 0, animar = true, direccion = 0) {
   const datos = datosCarruselBanner();
-  if (!datos) return;
-  const { slidesReales } = datos;
-  const total = slidesReales.length;
-  if (!total) return;
+  if (!datos || !datos.slidesReales.length) return;
   asegurarClonesBanner();
-
+  const total = datos.slidesReales.length;
   const destinoLogico = (Number(indice) + total) % total;
   if (!animar || direccion === 0) {
     moverCarruselBannerFisico(destinoLogico + 1, destinoLogico, animar);
     return;
   }
-
-  // Con clones, "siguiente" siempre continúa hacia la izquierda y "anterior"
-  // siempre hacia la derecha; nunca rebota visualmente al llegar al extremo.
-  const destinoFisico = bannerEstadoCarruselFisico + (direccion > 0 ? 1 : -1);
-  moverCarruselBannerFisico(destinoFisico, destinoLogico, true);
+  moverCarruselBannerFisico(bannerEstadoCarruselFisico + (direccion > 0 ? 1 : -1), destinoLogico, true);
 }
 
 function prepararBannerEstadoCarrusel() {
   const datos = datosCarruselBanner();
   if (!datos) return;
-  const { banner, viewport, track } = { ...datos, viewport: datos.banner.querySelector('.hero-banner-viewport') };
-  if (!viewport || banner.dataset.carruselListo === "true") return;
+  const { banner, viewport, track } = datos;
+  if (banner.dataset.carruselListo === "true") return;
   banner.dataset.carruselListo = "true";
   asegurarClonesBanner();
 
   track.addEventListener("transitionend", (evento) => {
     if (evento.propertyName !== "transform" || !bannerEstadoCarruselEnTransicion) return;
-    const total = datosCarruselBanner()?.slidesReales.length || 2;
+    const actual = datosCarruselBanner();
+    if (!actual) return;
+    const total = actual.slidesReales.length;
     bannerEstadoCarruselEnTransicion = false;
     if (bannerEstadoCarruselFisico === total + 1) {
       bannerEstadoCarruselFisico = 1;
-      track.style.transition = "none";
-      track.style.transform = "translate3d(-100%,0,0)";
+      posicionarTrackBanner(1, false);
     } else if (bannerEstadoCarruselFisico === 0) {
       bannerEstadoCarruselFisico = total;
-      track.style.transition = "none";
-      track.style.transform = `translate3d(-${total * 100}%,0,0)`;
+      posicionarTrackBanner(total, false);
     }
   });
 
   banner.querySelector("#banner-estado-anterior")?.addEventListener("click", () => {
-    if (bannerEstadoCarruselEnTransicion) return;
-    mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice - 1, true, -1);
+    if (!bannerEstadoCarruselEnTransicion) mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice - 1, true, -1);
   });
   banner.querySelector("#banner-estado-siguiente")?.addEventListener("click", () => {
-    if (bannerEstadoCarruselEnTransicion) return;
-    mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice + 1, true, 1);
+    if (!bannerEstadoCarruselEnTransicion) mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice + 1, true, 1);
   });
-  banner.querySelectorAll(".hero-banner-punto").forEach((punto) => {
+  banner.querySelectorAll(".oi-banner__dot").forEach((punto) => {
     punto.addEventListener("click", () => {
       if (bannerEstadoCarruselEnTransicion) return;
       const destino = Number(punto.dataset.bannerIndice) || 0;
       if (destino === bannerEstadoCarruselIndice) return;
-      const direccion = destino > bannerEstadoCarruselIndice ? 1 : -1;
-      mostrarBannerEstadoCarrusel(destino, true, direccion);
+      mostrarBannerEstadoCarrusel(destino, true, destino > bannerEstadoCarruselIndice ? 1 : -1);
     });
   });
 
-  let inicioX = 0;
-  let inicioY = 0;
-  let deltaX = 0;
-  let arrastrando = false;
-  let horizontal = false;
-
+  let inicioX = 0, inicioY = 0, deltaX = 0, arrastrando = false, horizontal = false;
   viewport.addEventListener("pointerdown", (evento) => {
-    if (bannerEstadoCarruselEnTransicion) return;
-    if (evento.pointerType === "mouse" && evento.button !== 0) return;
-    inicioX = evento.clientX;
-    inicioY = evento.clientY;
-    deltaX = 0;
-    arrastrando = true;
-    horizontal = false;
+    if (bannerEstadoCarruselEnTransicion || (evento.pointerType === "mouse" && evento.button !== 0)) return;
+    inicioX = evento.clientX; inicioY = evento.clientY; deltaX = 0; arrastrando = true; horizontal = false;
     track.style.transition = "none";
   });
-
   viewport.addEventListener("pointermove", (evento) => {
     if (!arrastrando) return;
-    const dx = evento.clientX - inicioX;
-    const dy = evento.clientY - inicioY;
+    const dx = evento.clientX - inicioX, dy = evento.clientY - inicioY;
     if (!horizontal) {
       if (Math.abs(dx) < 7 && Math.abs(dy) < 7) return;
-      if (Math.abs(dy) > Math.abs(dx)) {
-        arrastrando = false;
-        moverCarruselBannerFisico(bannerEstadoCarruselFisico, bannerEstadoCarruselIndice, true);
-        return;
-      }
-      horizontal = true;
-      viewport.classList.add("arrastrando");
+      if (Math.abs(dy) > Math.abs(dx)) { arrastrando = false; posicionarTrackBanner(bannerEstadoCarruselFisico, true); return; }
+      horizontal = true; viewport.classList.add("is-dragging");
       try { viewport.setPointerCapture(evento.pointerId); } catch {}
     }
     deltaX = dx;
-    const ancho = viewport.clientWidth || 1;
-    const base = -(bannerEstadoCarruselFisico * 100);
-    const arrastre = (deltaX / ancho) * 100;
-    track.style.transform = `translate3d(${base + arrastre}%,0,0)`;
+    const ancho = anchoViewportBanner();
+    track.style.transform = `translate3d(${(-bannerEstadoCarruselFisico * ancho) + deltaX}px,0,0)`;
   });
-
   const terminar = (evento) => {
     if (!arrastrando) return;
-    const ancho = viewport.clientWidth || 1;
+    const ancho = anchoViewportBanner();
     const cambiar = horizontal && Math.abs(deltaX) >= Math.min(72, Math.max(36, ancho * .12));
     if (cambiar) {
       const direccion = deltaX < 0 ? 1 : -1;
       mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice + direccion, true, direccion);
-    } else {
-      moverCarruselBannerFisico(bannerEstadoCarruselFisico, bannerEstadoCarruselIndice, true);
-    }
-    viewport.classList.remove("arrastrando");
+    } else posicionarTrackBanner(bannerEstadoCarruselFisico, true);
+    viewport.classList.remove("is-dragging");
     try { viewport.releasePointerCapture(evento.pointerId); } catch {}
-    arrastrando = false;
-    horizontal = false;
-    deltaX = 0;
+    arrastrando = false; horizontal = false; deltaX = 0;
   };
-
   viewport.addEventListener("pointerup", terminar);
   viewport.addEventListener("pointercancel", terminar);
+  window.addEventListener("resize", () => posicionarTrackBanner(bannerEstadoCarruselFisico, false), { passive:true });
   mostrarBannerEstadoCarrusel(0, false, 0);
 }
 
@@ -2356,36 +2327,23 @@ function actualizarBannerEstadoCupones() {
   const prefijoActivos = document.querySelector("#banner-activos-prefijo");
   const destacadoActivos = document.querySelector("#banner-activos-destacado");
   const sufijoActivos = document.querySelector("#banner-activos-sufijo");
-  const vigenciaActivos = document.querySelector("#banner-activos-vigencia");
   const tiempoAgotados = document.querySelector("#banner-agotados-tiempo");
-
   const disponibles = todosLosCupones.filter(cuponDisponibleParaBanner);
   const total = disponibles.length;
   const estadoNuevo = total > 0 ? "activos" : "agotados";
   const estadoAnterior = banner.dataset.estado;
+  const ahorroMaximo = disponibles.reduce((maximo, cupon) => Math.max(maximo, ahorroMaximoParaBanner(cupon)), 0);
 
-  const ahorroMaximo = disponibles.reduce(
-    (maximo, cupon) => Math.max(maximo, ahorroMaximoParaBanner(cupon)),
-    0
-  );
-
-  // El banner amarillo conserva la composición aprobada. Si el usuario navega
-  // manualmente hacia él cuando no hay cupones, evita mensajes contradictorios.
   if (total > 0) {
     if (superiorActivos) superiorActivos.textContent = `¡Hay ${total} ${total === 1 ? "cupón activo" : "cupones activos"}!`;
     if (prefijoActivos) prefijoActivos.textContent = ahorroMaximo > 0 ? "Hasta" : "Cupones";
-    if (destacadoActivos) destacadoActivos.textContent = ahorroMaximo > 0 ? ` ${monedaBuscador(ahorroMaximo)}` : " disponibles";
-    if (sufijoActivos) sufijoActivos.textContent = ahorroMaximo > 0 ? " OFF" : "";
-    if (vigenciaActivos) {
-      vigenciaActivos.hidden = false;
-      vigenciaActivos.textContent = "⏱ Úsalos antes de que se agoten";
-    }
+    if (destacadoActivos) destacadoActivos.textContent = ahorroMaximo > 0 ? monedaBuscador(ahorroMaximo) : "disponibles";
+    if (sufijoActivos) sufijoActivos.textContent = ahorroMaximo > 0 ? "OFF" : "";
   } else {
     if (superiorActivos) superiorActivos.textContent = "Cupones de Mercado Libre";
     if (prefijoActivos) prefijoActivos.textContent = "Hoy no hay";
-    if (destacadoActivos) destacadoActivos.textContent = " cupones activos";
+    if (destacadoActivos) destacadoActivos.textContent = "cupones activos";
     if (sufijoActivos) sufijoActivos.textContent = "";
-    if (vigenciaActivos) vigenciaActivos.hidden = true;
   }
 
   const resumenDisponibles = document.querySelector("#banner-resumen-disponibles");
@@ -2393,19 +2351,12 @@ function actualizarBannerEstadoCupones() {
   const resumenProxima = document.querySelector("#banner-resumen-proxima");
   if (resumenDisponibles) resumenDisponibles.textContent = total > 0 ? `${total} ${total === 1 ? "cupón disponible" : "cupones disponibles"}` : "Sin cupones activos";
   if (resumenAhorro) resumenAhorro.textContent = ahorroMaximo > 0 ? `Hasta ${monedaBuscador(ahorroMaximo)} de ahorro` : "Nuevos cupones próximamente";
-
-  // El banner azul siempre conserva el diseño de cupones agotados.
   const cuentaBanner = textoCuentaRegresivaBanner();
   if (tiempoAgotados) tiempoAgotados.textContent = cuentaBanner;
   if (resumenProxima) resumenProxima.textContent = `Próxima revisión en ${cuentaBanner}`;
 
   banner.dataset.estado = estadoNuevo;
-
-  // Posición automática únicamente al cargar o cuando cambia el estado real.
-  // Después el usuario puede navegar libremente entre los DOS banners.
-  if (estadoAnterior !== estadoNuevo) {
-    mostrarBannerEstadoCarrusel(estadoNuevo === "activos" ? 0 : 1, false);
-  }
+  if (estadoAnterior !== estadoNuevo) mostrarBannerEstadoCarrusel(estadoNuevo === "activos" ? 0 : 1, false, 0);
 }
 
 function limpiarVista() {
