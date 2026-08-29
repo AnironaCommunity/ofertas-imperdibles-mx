@@ -4399,3 +4399,228 @@
     white-space: normal !important;
   }
 }
+
+/* ============================================================
+   PAQUETE 4.2 — CTA WhatsApp inferior a todo lo ancho
+   - Mantiene exactamente las alturas ya aprobadas.
+   - Ambos banners comparten la misma retícula y dimensiones.
+   - Canasta + contenido ocupan la franja superior.
+   - WhatsApp ocupa una franja inferior horizontal.
+   ============================================================ */
+.hero-banner-slide-activos,
+.hero-banner-slide-agotados {
+  grid-template-areas:
+    "ilustracion copy"
+    "whatsapp whatsapp" !important;
+  grid-template-columns: minmax(150px, 29%) minmax(0, 71%) !important;
+  grid-template-rows: minmax(0, 1fr) auto !important;
+  column-gap: 18px !important;
+  row-gap: 5px !important;
+  align-items: center !important;
+}
+
+.hero-banner-ilustracion {
+  grid-area: ilustracion !important;
+  align-self: stretch !important;
+  min-width: 0 !important;
+}
+
+.hero-banner-copy {
+  grid-area: copy !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  align-self: center !important;
+}
+
+.hero-banner-whatsapp {
+  grid-area: whatsapp !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  justify-self: stretch !important;
+  align-self: end !important;
+  box-sizing: border-box !important;
+}
+
+/* El CTA inferior se lee de izquierda a derecha, sin columnas comprimidas. */
+.hero-banner-whatsapp > span:nth-child(2) {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 8px !important;
+  min-width: 0 !important;
+}
+.hero-banner-whatsapp strong,
+.hero-banner-whatsapp small {
+  display: inline !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+}
+
+@media (min-width: 721px) {
+  /* Se conserva la caja de 160px exactos del paquete 4.1. */
+  .hero-redes.hero-redes-lista .hero-banner-estado,
+  .hero-banner-viewport,
+  .hero-banner-track,
+  .hero-banner-slide,
+  .hero-banner-slide-principal {
+    height: 160px !important;
+    min-height: 160px !important;
+    max-height: 160px !important;
+  }
+
+  .hero-banner-slide-activos,
+  .hero-banner-slide-agotados {
+    padding: 8px 48px 8px !important;
+  }
+
+  .hero-banner-ilustracion {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .hero-banner-slide-activos .hero-banner-ilustracion::before,
+  .hero-banner-slide-agotados .hero-banner-ilustracion::before {
+    inset: -4% -4% !important;
+    background-size: contain !important;
+    background-position: center !important;
+  }
+
+  .hero-banner-copy {
+    padding-right: 8px !important;
+  }
+
+  .hero-banner-superior {
+    margin: 0 0 1px !important;
+  }
+
+  .hero-banner-titulo,
+  .hero-banner-slide-agotados .hero-banner-titulo,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-titulo,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-titulo {
+    margin: 0 !important;
+    line-height: .94 !important;
+  }
+
+  .hero-banner-detalle {
+    margin: 2px 0 0 !important;
+  }
+
+  .hero-banner-vigencia {
+    margin-top: 3px !important;
+    padding: 3px 8px !important;
+  }
+
+  .hero-banner-whatsapp {
+    min-height: 34px !important;
+    height: 34px !important;
+    padding: 5px 12px !important;
+    border-radius: 12px !important;
+    grid-template-columns: 26px minmax(0, 1fr) 18px !important;
+    gap: 9px !important;
+  }
+
+  .hero-banner-whatsapp-icono {
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 26px !important;
+    min-height: 26px !important;
+  }
+
+  .hero-banner-whatsapp-icono img {
+    width: 19px !important;
+    height: 19px !important;
+    max-width: 19px !important;
+    max-height: 19px !important;
+  }
+
+  .hero-banner-whatsapp strong { font-size: 12px !important; }
+  .hero-banner-whatsapp small { font-size: 10px !important; }
+  .hero-banner-whatsapp-flecha { font-size: 18px !important; }
+
+  /* Los puntos quedan sobre el CTA, centrados, sin alterar la altura. */
+  .hero-banner-puntos {
+    bottom: 11px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 10 !important;
+  }
+}
+
+@media (max-width: 720px) {
+  /* Conserva las alturas móviles existentes (118/112 px según ancho). */
+  .hero-banner-slide-activos,
+  .hero-banner-slide-agotados {
+    grid-template-columns: 28% minmax(0, 72%) !important;
+    grid-template-rows: minmax(0, 1fr) 27px !important;
+    column-gap: 5px !important;
+    row-gap: 2px !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+  }
+
+  .hero-banner-slide-activos .hero-banner-ilustracion::before,
+  .hero-banner-slide-agotados .hero-banner-ilustracion::before {
+    inset: -4% -8% !important;
+    background-size: contain !important;
+  }
+
+  .hero-banner-copy {
+    padding-right: 1px !important;
+  }
+
+  .hero-banner-superior {
+    margin: 0 0 1px !important;
+    line-height: 1 !important;
+  }
+
+  .hero-banner-titulo,
+  .hero-banner-slide-agotados .hero-banner-titulo {
+    margin: 0 !important;
+    line-height: .96 !important;
+  }
+
+  .hero-banner-detalle {
+    margin-top: 1px !important;
+  }
+
+  .hero-banner-vigencia {
+    margin-top: 2px !important;
+    padding: 1px 5px !important;
+  }
+
+  .hero-banner-whatsapp {
+    height: 27px !important;
+    min-height: 27px !important;
+    padding: 3px 8px !important;
+    border-radius: 9px !important;
+    grid-template-columns: 20px minmax(0, 1fr) 14px !important;
+    gap: 5px !important;
+  }
+
+  .hero-banner-whatsapp-icono {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+  }
+
+  .hero-banner-whatsapp-icono img {
+    width: 15px !important;
+    height: 15px !important;
+    max-width: 15px !important;
+    max-height: 15px !important;
+  }
+
+  .hero-banner-whatsapp > span:nth-child(2) {
+    gap: 4px !important;
+    overflow: hidden !important;
+  }
+  .hero-banner-whatsapp strong { font-size: 9px !important; }
+  .hero-banner-whatsapp small { font-size: 8px !important; }
+  .hero-banner-whatsapp-flecha { font-size: 14px !important; }
+
+  .hero-banner-puntos {
+    bottom: 8px !important;
+    z-index: 10 !important;
+  }
+}
