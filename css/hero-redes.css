@@ -704,7 +704,7 @@
   flex: 0 0 18px !important;
   border-radius: 50% !important;
   color: #fff !important;
-  font-family: "Inter", Arial, Helvetica, sans-serif !important;
+  font-family: 'Inter', Arial, Helvetica, sans-serif !important;
   font-size: 12px !important;
   font-weight: 700 !important;
   line-height: 18px !important;
@@ -757,7 +757,7 @@
   display:flex !important;align-items:center !important;justify-content:center !important;
   width:18px !important;height:18px !important;flex:0 0 18px !important;margin:0 0 1px !important;padding:0 !important;
   border:0 !important;border-radius:0 !important;background:transparent !important;box-shadow:none !important;
-  font-family:"Inter",Arial,Helvetica,sans-serif !important;font-size:17px !important;font-weight:700 !important;line-height:18px !important;
+  font-family:'Inter',Arial,Helvetica,sans-serif !important;font-size:17px !important;font-weight:700 !important;line-height:18px !important;
 }
 .hero-redes.hero-redes-lista .hero-redes-whatsapp > .hero-redes-icono-texto {color:#20b95a !important;}
 .hero-redes.hero-redes-lista .hero-redes-facebook > .hero-redes-icono-texto {color:#1767c8 !important;}
@@ -2605,993 +2605,115 @@
   font-family: Arial, Helvetica, sans-serif !important;
 }
 
-
 /* ============================================================
-   V82.66 — Banner superior dinámico Ofertas Imperdibles MX
-   Sustituye la imagen fija, sin alterar el bloque inferior del hero.
-   ============================================================ */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Estado sin cupones */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@media (max-width: 900px) {
-  
-
-  
-  
-  
-  
-}
-
-@media (max-width: 600px) {
-  
-
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-
-  
-  
-}
-
-@media (max-width: 390px) {
-  
-  
-  
-  
-  
-  
-  
-}
-
-@media (prefers-reduced-motion: reduce) {
-  
-}
-
-/* ============================================================
-   PAQUETE 3.6 — Banner dinámico fiel a la propuesta aprobada
-   - Estado automático según cupones activos.
-   - Carrusel manual por flechas, puntos y gesto horizontal.
-   - El estado real siempre ocupa la primera posición al cambiar.
-   ============================================================ */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Segundo panel del carrusel: recordatorio/WhatsApp, sin contradecir el estado real. */
-
-
-
-
-
-
-
-
-
-
-/* Estado agotado: misma composición aprobada, con la ilustración nocturna. */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@media (max-width: 980px) {
-  
-  
-  
-  
-  
-  
-  
-  
-}
-
-@media (max-width: 720px) {
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-}
-
-@media (max-width: 430px) {
-  
-  
-  
-  
-  
-  
-  
-  
-  
-}
-
-@media (prefers-reduced-motion: reduce) {
-  
-}
-
-
-/* ============================================================
-   PAQUETE 3.7 — Banner superior compacto / móvil panorámico
-   Conserva la altura del banner anterior y evita superposición.
-   ============================================================ */
-@media (max-width: 720px) {
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-}
-
-@media (max-width: 390px) {
-  
-
-  
-
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-}
-
-/* ============================================================
-   PAQUETE 3.8 — Carrusel definitivo de DOS banners
-   1) Amarillo: cupones activos.
-   2) Azul: cupones agotados.
-   Ambos existen siempre y el estado real define solo la posición inicial.
-   Las ilustraciones forman parte visual del fondo del banner.
-   ============================================================ */
-
-
-
-
-/* La canasta ya no se presenta como una tarjeta/imagen superpuesta:
-   se integra como fondo de su propia zona dentro del banner. */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Cada banner conserva sus propios puntos/colores sin depender del estado real. */
-
-
-
-
-
-@media (max-width: 720px) {
-  /* Se conserva exactamente la altura compacta aprobada en 3.7. */
-  
-  
-  
-}
-
-@media (max-width: 390px) {
-  
-}
-
-
-/* ============================================================
-   PAQUETE 3.9 — Integración visual + carrusel continuo
-   - Solo existen los 2 banners aprobados.
-   - Escritorio: altura compacta y el hero reserva su espacio.
-   - Las canastas se funden con el fondo, sin apariencia de tarjeta.
+   V82.42 — Posicionamiento final del banner estático restaurado
+   - Mantiene el banner completo dentro de la tarjeta.
+   - Reserva una fila propia para banner y otra para logo/texto.
+   - Evita que el banner cubra el bloque informativo inferior.
+   - Respeta la proporción original 1019x228 de la imagen.
    ============================================================ */
 .hero-redes.hero-redes-lista {
+  display: grid !important;
+  grid-template-columns: 62px minmax(0, 1fr) !important;
   grid-template-rows: auto auto !important;
+  column-gap: 10px !important;
+  row-gap: 10px !important;
+  align-items: center !important;
+  width: min(1120px, calc(100% - 28px)) !important;
+  margin: 10px auto 16px !important;
+  padding: 10px 10px 12px !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+}
+
+.hero-redes.hero-redes-lista .hero-promo-compacto.hero-promo-imagen {
+  grid-column: 1 / -1 !important;
+  grid-row: 1 !important;
+  position: relative !important;
+  width: 100% !important;
+  aspect-ratio: 1019 / 228 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border-radius: 12px !important;
+  background: #ffe600 !important;
+}
+
+.hero-redes.hero-redes-lista .hero-promo-compacto.hero-promo-imagen img {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  object-fit: contain !important;
+  object-position: center !important;
 }
 
 .hero-redes.hero-redes-lista .hero-redes-logo {
   grid-column: 1 !important;
   grid-row: 2 !important;
+  align-self: center !important;
+  width: 62px !important;
+  min-width: 62px !important;
+  height: 52px !important;
+  min-height: 52px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
 }
+
 .hero-redes.hero-redes-lista .hero-redes-contenido {
   grid-column: 2 !important;
   grid-row: 2 !important;
+  display: flex !important;
+  min-width: 0 !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-self: stretch !important;
+  gap: 3px !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
-/* El PNG deja de verse como rectángulo superpuesto: se dibuja en una capa
-   interna con desvanecido de bordes sobre el propio fondo del banner. */
-
-
-
-
-
-/* Evita que el PNG de WhatsApp se expanda fuera de su círculo en escritorio. */
-
-
-@media (min-width: 721px) {
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+.hero-redes.hero-redes-lista #nombre-sitio,
+.hero-redes.hero-redes-lista #hero-texto-descriptivo {
+  position: static !important;
+  display: block !important;
+  grid-column: auto !important;
+  grid-row: auto !important;
+  align-self: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  max-width: 100% !important;
 }
 
-@media (max-width: 720px) {
-  /* Conserva la altura móvil aprobada; solo integra mejor las ilustraciones. */
-  
-}
-
-/* ============================================================
-   PAQUETE 4.0 — Corrección definitiva WEB del banner dinámico
-   - En escritorio el bloque deja de ser sticky para no cubrir cupones.
-   - Altura panorámica real y espacio reservado dentro del flujo.
-   - Canastas recortadas con transparencia: forman parte del banner.
-   - WhatsApp queda contenido dentro de su círculo.
-   - Móvil conserva las dimensiones aprobadas en 3.9.
-   ============================================================ */
-@media (min-width: 721px) {
-  /* El banner dinámico es contenido de cabecera, no una capa flotante. */
-  .cabecera-fija-original {
-    position: relative !important;
-    top: auto !important;
-    z-index: 2 !important;
-    overflow: visible !important;
-  }
-
-  .cabecera-fija-original.esta-pegada {
-    box-shadow: none !important;
-    border-bottom-color: transparent !important;
-    background: transparent !important;
-  }
-
-  body.cabecera-original-pegada {
-    --cabecera-fija-alto: 0px !important;
-  }
-
+@media (max-width: 600px) {
   .hero-redes.hero-redes-lista {
-    grid-template-rows: 160px auto !important;
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    overflow: visible !important;
+    grid-template-columns: 55px minmax(0, 1fr) !important;
+    column-gap: 7px !important;
+    row-gap: 7px !important;
+    width: calc(100% - 20px) !important;
+    margin: 7px auto 10px !important;
+    padding: 7px 7px 8px !important;
+    border-radius: 12px !important;
   }
 
-  
-
-  
-
-  
-
-  
-
-  /* Recursos transparentes: ya no existe ningún rectángulo detrás de la canasta. */
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-  
-
-  
-  
-  
-  
-}
-
-/* ============================================================
-   PAQUETE 4.1 — Ajuste visual fiel a propuesta
-   - NO cambia alturas aprobadas.
-   - Los DOS banners tienen exactamente la misma caja.
-   - Distribución más cercana a la propuesta original.
-   - Canastas transparentes integradas al fondo.
-   - Se elimina cualquier sangrado del banner vecino en los bordes.
-   ============================================================ */
-
-
-
-
-/* El color de respaldo sigue al banner VISIBLE. Así, ni un subpíxel del
-   banner vecino puede asomarse por las esquinas redondeadas. */
-
-
-
-
-
-
-
-/* Mismo lienzo y misma distribución para amarillo y azul. */
-
-
-/* La canasta ya es un recurso con transparencia real. No existe caja detrás. */
-
-
-
-
-
-/* Jerarquía igual a la propuesta: línea superior pequeña, ahorro protagonista,
-   detalle breve y vigencia compacta. */
-
-
-
-
-
-
-/* CTA horizontal, sin saltos extraños y con el icono contenido. */
-
-
-
-
-/* Los controles pertenecen al mismo lienzo y no sobresalen. */
-
-
-
-@media (min-width: 721px) {
-  /* Se conserva exactamente la altura de 4.0: 160px. */
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-}
-
-@media (max-width: 720px) {
-  /* NO se modifica la altura móvil aprobada. Solo se corrige integración y
-     distribución dentro de la caja existente. */
-  
-
-  
-
-  
-}
-
-/* ============================================================
-   PAQUETE 4.2 — CTA WhatsApp inferior a todo lo ancho
-   - Mantiene exactamente las alturas ya aprobadas.
-   - Ambos banners comparten la misma retícula y dimensiones.
-   - Canasta + contenido ocupan la franja superior.
-   - WhatsApp ocupa una franja inferior horizontal.
-   ============================================================ */
-
-
-
-
-
-
-
-
-/* El CTA inferior se lee de izquierda a derecha, sin columnas comprimidas. */
-
-
-
-@media (min-width: 721px) {
-  /* Se conserva la caja de 160px exactos del paquete 4.1. */
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-  
-
-  /* Los puntos quedan sobre el CTA, centrados, sin alterar la altura. */
-  
-}
-
-@media (max-width: 720px) {
-  /* Conserva las alturas móviles existentes (118/112 px según ancho). */
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-  
-  
-
-  
-}
-
-/* ============================================================
-   PAQUETE 4.3 — Rediseño limpio y vivo de los DOS banners
-   - Sin ligas ni botones de WhatsApp dentro de los banners.
-   - Conserva EXACTAMENTE las alturas existentes.
-   - Misma retícula y dimensiones para amarillo y azul.
-   - Ilustraciones, textos, controles e iconos siempre contenidos.
-   - Más profundidad visual sin saturar la cabecera.
-   ============================================================ */
-
-
-
-
-/* La ilustración vive dentro de su propia zona y nunca rebasa el banner. */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Columna informativa: aporta vida visual sin convertir el banner en publicidad. */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Más profundidad y movimiento visual, sin añadir contenido ni aumentar tamaño. */
-
-
-
-
-
-
-/* Controles completos y centrados; nunca se recortan en los bordes. */
-
-
-
-
-/* Los puntos quedan libres, sin mezclarse con ningún texto. */
-
-
-@media (min-width: 721px) {
-  /* IMPORTANTE: no cambia la altura de 160 px. */
-  
-  
-  
-  
-  
-  
-  
-}
-
-@media (max-width: 720px) {
-  /* Conserva las alturas móviles previamente aprobadas. La tercera columna
-     pasa a una franja inferior para que nada quede amontonado ni cortado. */
-  
-  
-  
-  
-  
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-}
-
-/* ============================================================
-   PAQUETE 4.4 — Composición final inspirada en la propuesta aprobada
-   Mantiene las alturas existentes; ambos slides usan la misma caja.
-   ============================================================ */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@media(max-width:720px){
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-}
-
-/* ============================================================
-   PAQUETE 4.5 — Ajuste fiel a la propuesta visual aprobada
-   - Misma caja/altura para ambos banners.
-   - Ilustraciones completas, grandes y sin recorte.
-   - Jerarquía: ilustración | mensaje | cápsulas inferiores.
-   - Sin WhatsApp dentro del banner.
-   ============================================================ */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* decoraciones ligeras, sin invadir texto/arte */
-
-
-
-
-
-
-
-
-@media (min-width:721px){
-  
-  
-  
-  
-  
-}
-
-@media (max-width:720px){
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-}
-
-/* ============================================================
-   PAQUETE 4.6 — Composición final basada en la referencia aprobada
-   - Conserva EXACTAMENTE las alturas existentes: 160px web,
-     118px móvil y 112px móvil estrecho.
-   - Canasta integrada a la izquierda, sin caja visible.
-   - Texto principal al centro/derecha y dos cápsulas inferiores.
-   - Sin WhatsApp y sin elementos recortados.
-   ============================================================ */
-
-
-/* Fondo más vivo, cercano a la propuesta. */
-
-
-
-/* Decoración sutil de fondo. */
-
-
-
-/* La ilustración ocupa una zona amplia y completa a la izquierda. */
-
-
-
-
-
-/* Bloque de información: misma jerarquía que la referencia. */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Dos cápsulas inferiores, como en la propuesta aprobada. */
-
-
-
-
-
-
-
-
-
-/* Flechas y puntos exactamente contenidos en el lienzo. */
-
-
-
-
-
-
-@media (max-width: 720px) {
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  .hero-redes.hero-redes-lista .hero-promo-compacto.hero-promo-imagen {
+    aspect-ratio: 1019 / 228 !important;
+    border-radius: 10px !important;
+  }
+
+  .hero-redes.hero-redes-lista .hero-redes-logo {
+    width: 55px !important;
+    min-width: 55px !important;
+    height: 46px !important;
+    min-height: 46px !important;
+  }
 }
