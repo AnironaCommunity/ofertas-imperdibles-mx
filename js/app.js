@@ -2157,45 +2157,132 @@ function textoCuentaRegresivaBanner() {
 }
 
 let bannerEstadoCarruselIndice = 0;
+let bannerEstadoCarruselFisico = 1;
+let bannerEstadoCarruselEnTransicion = false;
 
-function mostrarBannerEstadoCarrusel(indice = 0, animar = true) {
+function datosCarruselBanner() {
   const banner = document.querySelector("#banner-estado-cupones");
   const track = banner?.querySelector(".hero-banner-track");
   const puntos = Array.from(banner?.querySelectorAll(".hero-banner-punto") || []);
-  if (!banner || !track) return;
+  if (!banner || !track) return null;
+  const slidesReales = Array.from(track.querySelectorAll(".hero-banner-slide:not([data-banner-clon])"));
+  return { banner, track, puntos, slidesReales };
+}
 
-  const total = Math.max(1, track.children.length);
-  bannerEstadoCarruselIndice = (Number(indice) + total) % total;
-  track.style.transition = animar ? "transform .36s cubic-bezier(.22,.61,.36,1)" : "none";
-  track.style.transform = `translate3d(-${bannerEstadoCarruselIndice * 100}%,0,0)`;
-
-  Array.from(track.children).forEach((slide, i) => {
-    const activo = i === bannerEstadoCarruselIndice;
-    slide.setAttribute("aria-hidden", activo ? "false" : "true");
-  });
-
+function actualizarAccesibilidadBanner(indiceLogico) {
+  const datos = datosCarruselBanner();
+  if (!datos) return;
+  const { track, puntos, slidesReales } = datos;
+  slidesReales.forEach((slide, i) => slide.setAttribute("aria-hidden", i === indiceLogico ? "false" : "true"));
+  Array.from(track.querySelectorAll('[data-banner-clon="true"]')).forEach((slide) => slide.setAttribute("aria-hidden", "true"));
   puntos.forEach((punto, i) => {
-    const activo = i === bannerEstadoCarruselIndice;
+    const activo = i === indiceLogico;
     punto.classList.toggle("activo", activo);
     punto.setAttribute("aria-current", activo ? "true" : "false");
   });
 }
 
+function asegurarClonesBanner() {
+  const datos = datosCarruselBanner();
+  if (!datos) return false;
+  const { banner, track, slidesReales } = datos;
+  if (slidesReales.length < 2) return false;
+  if (banner.dataset.carruselClonado === "true") return true;
+
+  const primero = slidesReales[0];
+  const ultimo = slidesReales[slidesReales.length - 1];
+  const clonUltimo = ultimo.cloneNode(true);
+  const clonPrimero = primero.cloneNode(true);
+  clonUltimo.dataset.bannerClon = "true";
+  clonPrimero.dataset.bannerClon = "true";
+  clonUltimo.removeAttribute("aria-label");
+  clonPrimero.removeAttribute("aria-label");
+  clonUltimo.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
+  clonPrimero.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
+  track.prepend(clonUltimo);
+  track.append(clonPrimero);
+  banner.dataset.carruselClonado = "true";
+  bannerEstadoCarruselFisico = bannerEstadoCarruselIndice + 1;
+  track.style.transition = "none";
+  track.style.transform = `translate3d(-${bannerEstadoCarruselFisico * 100}%,0,0)`;
+  actualizarAccesibilidadBanner(bannerEstadoCarruselIndice);
+  return true;
+}
+
+function moverCarruselBannerFisico(destinoFisico, indiceLogico, animar = true) {
+  const datos = datosCarruselBanner();
+  if (!datos) return;
+  const { track, slidesReales } = datos;
+  const total = slidesReales.length;
+  if (!total) return;
+
+  bannerEstadoCarruselIndice = (Number(indiceLogico) + total) % total;
+  bannerEstadoCarruselFisico = destinoFisico;
+  bannerEstadoCarruselEnTransicion = !!animar;
+  track.style.transition = animar ? "transform .36s cubic-bezier(.22,.61,.36,1)" : "none";
+  track.style.transform = `translate3d(-${destinoFisico * 100}%,0,0)`;
+  actualizarAccesibilidadBanner(bannerEstadoCarruselIndice);
+}
+
+function mostrarBannerEstadoCarrusel(indice = 0, animar = true, direccion = 0) {
+  const datos = datosCarruselBanner();
+  if (!datos) return;
+  const { slidesReales } = datos;
+  const total = slidesReales.length;
+  if (!total) return;
+  asegurarClonesBanner();
+
+  const destinoLogico = (Number(indice) + total) % total;
+  if (!animar || direccion === 0) {
+    moverCarruselBannerFisico(destinoLogico + 1, destinoLogico, animar);
+    return;
+  }
+
+  // Con clones, "siguiente" siempre continúa hacia la izquierda y "anterior"
+  // siempre hacia la derecha; nunca rebota visualmente al llegar al extremo.
+  const destinoFisico = bannerEstadoCarruselFisico + (direccion > 0 ? 1 : -1);
+  moverCarruselBannerFisico(destinoFisico, destinoLogico, true);
+}
+
 function prepararBannerEstadoCarrusel() {
-  const banner = document.querySelector("#banner-estado-cupones");
-  const viewport = banner?.querySelector(".hero-banner-viewport");
-  const track = banner?.querySelector(".hero-banner-track");
-  if (!banner || !viewport || !track || banner.dataset.carruselListo === "true") return;
+  const datos = datosCarruselBanner();
+  if (!datos) return;
+  const { banner, viewport, track } = { ...datos, viewport: datos.banner.querySelector('.hero-banner-viewport') };
+  if (!viewport || banner.dataset.carruselListo === "true") return;
   banner.dataset.carruselListo = "true";
+  asegurarClonesBanner();
+
+  track.addEventListener("transitionend", (evento) => {
+    if (evento.propertyName !== "transform" || !bannerEstadoCarruselEnTransicion) return;
+    const total = datosCarruselBanner()?.slidesReales.length || 2;
+    bannerEstadoCarruselEnTransicion = false;
+    if (bannerEstadoCarruselFisico === total + 1) {
+      bannerEstadoCarruselFisico = 1;
+      track.style.transition = "none";
+      track.style.transform = "translate3d(-100%,0,0)";
+    } else if (bannerEstadoCarruselFisico === 0) {
+      bannerEstadoCarruselFisico = total;
+      track.style.transition = "none";
+      track.style.transform = `translate3d(-${total * 100}%,0,0)`;
+    }
+  });
 
   banner.querySelector("#banner-estado-anterior")?.addEventListener("click", () => {
-    mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice - 1);
+    if (bannerEstadoCarruselEnTransicion) return;
+    mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice - 1, true, -1);
   });
   banner.querySelector("#banner-estado-siguiente")?.addEventListener("click", () => {
-    mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice + 1);
+    if (bannerEstadoCarruselEnTransicion) return;
+    mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice + 1, true, 1);
   });
   banner.querySelectorAll(".hero-banner-punto").forEach((punto) => {
-    punto.addEventListener("click", () => mostrarBannerEstadoCarrusel(Number(punto.dataset.bannerIndice) || 0));
+    punto.addEventListener("click", () => {
+      if (bannerEstadoCarruselEnTransicion) return;
+      const destino = Number(punto.dataset.bannerIndice) || 0;
+      if (destino === bannerEstadoCarruselIndice) return;
+      const direccion = destino > bannerEstadoCarruselIndice ? 1 : -1;
+      mostrarBannerEstadoCarrusel(destino, true, direccion);
+    });
   });
 
   let inicioX = 0;
@@ -2205,6 +2292,7 @@ function prepararBannerEstadoCarrusel() {
   let horizontal = false;
 
   viewport.addEventListener("pointerdown", (evento) => {
+    if (bannerEstadoCarruselEnTransicion) return;
     if (evento.pointerType === "mouse" && evento.button !== 0) return;
     inicioX = evento.clientX;
     inicioY = evento.clientY;
@@ -2222,7 +2310,7 @@ function prepararBannerEstadoCarrusel() {
       if (Math.abs(dx) < 7 && Math.abs(dy) < 7) return;
       if (Math.abs(dy) > Math.abs(dx)) {
         arrastrando = false;
-        mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice);
+        moverCarruselBannerFisico(bannerEstadoCarruselFisico, bannerEstadoCarruselIndice, true);
         return;
       }
       horizontal = true;
@@ -2231,7 +2319,7 @@ function prepararBannerEstadoCarrusel() {
     }
     deltaX = dx;
     const ancho = viewport.clientWidth || 1;
-    const base = -(bannerEstadoCarruselIndice * 100);
+    const base = -(bannerEstadoCarruselFisico * 100);
     const arrastre = (deltaX / ancho) * 100;
     track.style.transform = `translate3d(${base + arrastre}%,0,0)`;
   });
@@ -2240,8 +2328,12 @@ function prepararBannerEstadoCarrusel() {
     if (!arrastrando) return;
     const ancho = viewport.clientWidth || 1;
     const cambiar = horizontal && Math.abs(deltaX) >= Math.min(72, Math.max(36, ancho * .12));
-    if (cambiar) mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice + (deltaX < 0 ? 1 : -1));
-    else mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice);
+    if (cambiar) {
+      const direccion = deltaX < 0 ? 1 : -1;
+      mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice + direccion, true, direccion);
+    } else {
+      moverCarruselBannerFisico(bannerEstadoCarruselFisico, bannerEstadoCarruselIndice, true);
+    }
     viewport.classList.remove("arrastrando");
     try { viewport.releasePointerCapture(evento.pointerId); } catch {}
     arrastrando = false;
@@ -2251,7 +2343,7 @@ function prepararBannerEstadoCarrusel() {
 
   viewport.addEventListener("pointerup", terminar);
   viewport.addEventListener("pointercancel", terminar);
-  mostrarBannerEstadoCarrusel(0, false);
+  mostrarBannerEstadoCarrusel(0, false, 0);
 }
 
 function actualizarBannerEstadoCupones() {

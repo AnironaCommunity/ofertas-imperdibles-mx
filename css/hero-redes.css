@@ -3886,3 +3886,151 @@
     font-size: 15px !important;
   }
 }
+
+
+/* ============================================================
+   PAQUETE 3.9 — Integración visual + carrusel continuo
+   - Solo existen los 2 banners aprobados.
+   - Escritorio: altura compacta y el hero reserva su espacio.
+   - Las canastas se funden con el fondo, sin apariencia de tarjeta.
+   ============================================================ */
+.hero-redes.hero-redes-lista {
+  grid-template-rows: auto auto !important;
+}
+.hero-redes.hero-redes-lista .hero-banner-estado {
+  grid-column: 1 / -1 !important;
+  grid-row: 1 !important;
+  align-self: start !important;
+  overflow: hidden !important;
+}
+.hero-redes.hero-redes-lista .hero-redes-logo {
+  grid-column: 1 !important;
+  grid-row: 2 !important;
+}
+.hero-redes.hero-redes-lista .hero-redes-contenido {
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+}
+
+/* El PNG deja de verse como rectángulo superpuesto: se dibuja en una capa
+   interna con desvanecido de bordes sobre el propio fondo del banner. */
+.hero-banner-slide-activos .hero-banner-ilustracion,
+.hero-banner-slide-agotados .hero-banner-ilustracion {
+  position: relative !important;
+  overflow: visible !important;
+  background: none !important;
+  mix-blend-mode: normal !important;
+}
+.hero-banner-slide-activos .hero-banner-ilustracion::before,
+.hero-banner-slide-agotados .hero-banner-ilustracion::before {
+  content: "";
+  position: absolute;
+  inset: -8%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  -webkit-mask-image: radial-gradient(ellipse 76% 74% at 50% 52%, #000 58%, rgba(0,0,0,.92) 72%, transparent 100%);
+  mask-image: radial-gradient(ellipse 76% 74% at 50% 52%, #000 58%, rgba(0,0,0,.92) 72%, transparent 100%);
+  pointer-events: none;
+}
+.hero-banner-slide-activos .hero-banner-ilustracion::before {
+  background-image: url("../img/banner-dinamico-cesta-activos.png?v=3.9");
+  mix-blend-mode: multiply;
+}
+.hero-banner-slide-agotados .hero-banner-ilustracion::before {
+  background-image: url("../img/banner-dinamico-cesta-agotados.png?v=3.9");
+}
+
+/* Evita que el PNG de WhatsApp se expanda fuera de su círculo en escritorio. */
+.hero-banner-whatsapp-icono img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+}
+
+@media (min-width: 721px) {
+  .hero-redes.hero-redes-lista .hero-banner-estado,
+  .hero-banner-viewport,
+  .hero-banner-track,
+  .hero-banner-slide,
+  .hero-banner-slide-principal {
+    height: 188px !important;
+    min-height: 188px !important;
+    max-height: 188px !important;
+  }
+  .hero-redes.hero-redes-lista .hero-banner-estado {
+    margin-bottom: 8px !important;
+    border-radius: 15px !important;
+  }
+  .hero-banner-viewport,
+  .hero-banner-slide { border-radius: 15px !important; }
+  .hero-banner-slide-principal {
+    grid-template-columns: minmax(190px, 24%) minmax(0, 1fr) minmax(245px, 30%) !important;
+    gap: 18px !important;
+    padding: 15px 48px 18px !important;
+    box-sizing: border-box !important;
+  }
+  .hero-banner-ilustracion {
+    height: 154px !important;
+    align-self: center !important;
+  }
+  .hero-banner-slide-activos .hero-banner-ilustracion::before,
+  .hero-banner-slide-agotados .hero-banner-ilustracion::before {
+    inset: -4% -9% !important;
+  }
+  .hero-banner-superior {
+    margin-bottom: 4px !important;
+    font-size: clamp(14px, 1.35vw, 20px) !important;
+    line-height: 1.08 !important;
+  }
+  .hero-banner-titulo,
+  .hero-banner-slide-agotados .hero-banner-titulo,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="activos"] .hero-banner-slide-agotados .hero-banner-titulo,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-slide-activos .hero-banner-titulo {
+    font-size: clamp(29px, 3vw, 44px) !important;
+    line-height: .96 !important;
+    letter-spacing: -1.4px !important;
+  }
+  .hero-banner-detalle {
+    margin-top: 8px !important;
+    font-size: clamp(12px, 1.05vw, 16px) !important;
+    line-height: 1.18 !important;
+  }
+  .hero-banner-vigencia {
+    margin-top: 8px !important;
+    padding: 5px 10px !important;
+    font-size: 11px !important;
+  }
+  .hero-banner-whatsapp {
+    grid-template-columns: 44px minmax(0,1fr) 19px !important;
+    gap: 9px !important;
+    padding: 11px 12px !important;
+    border-radius: 17px !important;
+  }
+  .hero-banner-whatsapp-icono {
+    width: 44px !important;
+    height: 44px !important;
+    overflow: hidden !important;
+  }
+  .hero-banner-whatsapp strong { font-size: 14px !important; }
+  .hero-banner-whatsapp small { margin-top: 2px !important; font-size: 10px !important; }
+  .hero-banner-whatsapp-flecha { font-size: 22px !important; }
+  .hero-banner-control { width: 36px !important; height: 36px !important; font-size: 29px !important; }
+  .hero-banner-control-anterior { left: 8px !important; }
+  .hero-banner-control-siguiente { right: 8px !important; }
+  .hero-banner-puntos { bottom: 6px !important; }
+  .hero-banner-punto { width: 7px !important; height: 7px !important; }
+}
+
+@media (max-width: 720px) {
+  /* Conserva la altura móvil aprobada; solo integra mejor las ilustraciones. */
+  .hero-banner-slide-activos .hero-banner-ilustracion::before,
+  .hero-banner-slide-agotados .hero-banner-ilustracion::before {
+    inset: -6% -15% !important;
+    -webkit-mask-image: radial-gradient(ellipse 82% 78% at 50% 52%, #000 62%, transparent 100%);
+    mask-image: radial-gradient(ellipse 82% 78% at 50% 52%, #000 62%, transparent 100%);
+  }
+}
