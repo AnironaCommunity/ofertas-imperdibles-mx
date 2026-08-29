@@ -1,0 +1,201 @@
+/* =========================================================
+   BANNER ESTADO DE CUPONES — COMPONENTE AISLADO v5.0
+   Dos slides del mismo tamaño. Sin WhatsApp. Sin reglas heredadas.
+   ========================================================= */
+#banner-estado-cupones{
+  --banner-h:160px;
+  --banner-radius:18px;
+  position:relative;
+  width:100%;
+  height:var(--banner-h);
+  margin:10px 0 14px;
+  border-radius:var(--banner-radius);
+  overflow:hidden;
+  isolation:isolate;
+  background:#f4f5f7;
+  box-shadow:0 8px 22px rgba(30,38,58,.10);
+}
+#banner-estado-cupones *{box-sizing:border-box}
+
+#banner-estado-cupones[data-banner-visible="0"]{background:#ffd64d}
+#banner-estado-cupones[data-banner-visible="1"]{background:#3430a4}
+#banner-estado-cupones .hero-banner-viewport{
+  width:100%;height:100%;overflow:hidden;border-radius:inherit;
+  touch-action:pan-y;cursor:grab;
+}
+#banner-estado-cupones .hero-banner-viewport.arrastrando{cursor:grabbing}
+#banner-estado-cupones .hero-banner-track{
+  display:flex;width:100%;height:100%;margin:0;padding:0;
+  will-change:transform;transform:translate3d(-100%,0,0);
+}
+#banner-estado-cupones .hero-banner-slide{
+  position:relative;flex:0 0 100%;width:100%;height:100%;min-width:100%;
+  overflow:hidden;display:grid;align-items:center;
+  grid-template-columns:minmax(180px,24%) minmax(0,1fr);grid-template-rows:1fr auto;
+  gap:5px 22px;padding:15px 54px 27px 34px;color:#172033;
+}
+#banner-estado-cupones .hero-banner-slide::before,
+#banner-estado-cupones .hero-banner-slide::after{
+  content:"";position:absolute;pointer-events:none;z-index:0;
+}
+#banner-estado-cupones .hero-banner-slide-activos{
+  background:
+    radial-gradient(circle at 6% 12%,rgba(255,255,255,.72),transparent 24%),
+    linear-gradient(115deg,#ffd95f 0%,#ffd64d 43%,#ffc61f 100%);
+}
+#banner-estado-cupones .hero-banner-slide-activos::before{
+  inset:-30px -10px auto auto;width:290px;height:150px;opacity:.22;
+  background:repeating-radial-gradient(circle at 20% 65%,transparent 0 15px,rgba(255,255,255,.8) 16px 18px,transparent 19px 36px);
+  transform:rotate(-10deg);
+}
+#banner-estado-cupones .hero-banner-slide-activos::after{
+  content:"%   %";left:12px;right:12px;bottom:8px;height:52px;
+  font:900 48px/1 Inter,system-ui,sans-serif;letter-spacing:90px;color:rgba(255,255,255,.14);
+  white-space:nowrap;overflow:hidden;
+}
+#banner-estado-cupones .hero-banner-slide-agotados{
+  color:#fff;
+  background:
+    radial-gradient(circle at 15% 30%,rgba(116,107,255,.36),transparent 30%),
+    radial-gradient(circle at 82% 38%,rgba(156,88,255,.22),transparent 32%),
+    linear-gradient(116deg,#242b91 0%,#3430a4 48%,#4b2ca0 100%);
+}
+#banner-estado-cupones .hero-banner-slide-agotados::before{
+  inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.55) 0 1.5px,transparent 2px);
+  background-size:58px 44px;background-position:17px 11px;opacity:.28;
+}
+#banner-estado-cupones .hero-banner-slide-agotados::after{
+  width:120px;height:120px;border:2px solid rgba(255,255,255,.14);border-radius:50%;right:6%;top:-58px;
+  box-shadow:-250px 118px 0 -34px rgba(255,255,255,.08),-520px 34px 0 -42px rgba(255,255,255,.10);
+}
+#banner-estado-cupones .hero-banner-ilustracion{
+  position:relative;z-index:2;grid-column:1;grid-row:1 / 3;width:100%;height:132px;min-width:0;align-self:center;
+  background-repeat:no-repeat;background-position:center;background-size:contain;
+  filter:drop-shadow(0 8px 10px rgba(46,34,15,.18));
+}
+#banner-estado-cupones .hero-banner-slide-activos .hero-banner-ilustracion{
+  background-image:url('../img/banner-cesta-activos-transparente.png');
+}
+#banner-estado-cupones .hero-banner-slide-agotados .hero-banner-ilustracion{
+  background-image:url('../img/banner-cesta-agotados-transparente.png');
+  filter:drop-shadow(0 8px 12px rgba(8,10,55,.28));
+}
+#banner-estado-cupones .hero-banner-copy{
+  position:relative;z-index:2;grid-column:2;grid-row:1;align-self:center;min-width:0;padding:0;
+}
+#banner-estado-cupones .hero-banner-superior{
+  margin:0 0 2px;font:800 clamp(17px,1.6vw,24px)/1.05 Inter,system-ui,sans-serif;
+  letter-spacing:-.025em;color:inherit;white-space:normal;
+}
+#banner-estado-cupones .hero-banner-titulo{
+  margin:0;display:flex;align-items:baseline;flex-wrap:wrap;gap:0 6px;
+  font:800 clamp(25px,2.3vw,36px)/.98 Inter,system-ui,sans-serif;letter-spacing:-.045em;color:inherit;
+}
+#banner-estado-cupones .hero-banner-titulo strong{
+  font-size:clamp(35px,3.35vw,53px);font-weight:900;letter-spacing:-.06em;
+}
+#banner-estado-cupones .hero-banner-slide-activos .hero-banner-titulo strong{color:#7f33ff}
+#banner-estado-cupones .hero-banner-slide-activos .hero-banner-titulo{color:#ff6a00}
+#banner-estado-cupones .hero-banner-slide-activos #banner-activos-prefijo{color:#20202a}
+#banner-estado-cupones .hero-banner-detalle{
+  margin:4px 0 0;font:650 clamp(12px,1vw,15px)/1.2 Inter,system-ui,sans-serif;color:inherit;opacity:.90;
+  max-width:620px;
+}
+#banner-estado-cupones .hero-banner-vigencia{
+  display:inline-flex;align-items:center;margin-top:6px;padding:4px 9px;border-radius:999px;
+  background:rgba(255,255,255,.54);font:700 11px/1 Inter,system-ui,sans-serif;color:#4f3d13;
+}
+#banner-estado-cupones .hero-banner-slide-agotados .hero-banner-titulo-agotados{
+  gap:0 8px;color:#fff;font-size:clamp(22px,2.1vw,34px)
+}
+#banner-estado-cupones .hero-banner-slide-agotados .hero-banner-titulo-agotados strong{
+  display:inline-flex;align-items:center;justify-content:center;min-width:90px;padding:2px 10px 3px;border-radius:12px;
+  background:#ffb400;color:#24185c;font-size:clamp(29px,2.9vw,45px);line-height:1;
+  box-shadow:0 5px 12px rgba(15,10,63,.18);
+}
+#banner-estado-cupones .hero-banner-conector{font-weight:800}
+#banner-estado-cupones .hero-banner-rayo{font-size:30px;filter:drop-shadow(0 2px 1px rgba(0,0,0,.12))}
+#banner-estado-cupones .hero-banner-resumen{
+  position:relative;z-index:2;grid-column:2;grid-row:2;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;align-self:end;min-width:0;max-width:620px;
+}
+#banner-estado-cupones .hero-banner-resumen-item{
+  min-height:45px;padding:7px 12px;display:flex;align-items:center;gap:9px;border-radius:13px;
+  background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.70);
+  box-shadow:0 5px 13px rgba(58,47,19,.07);backdrop-filter:blur(2px);overflow:hidden;
+}
+#banner-estado-cupones .hero-banner-slide-agotados .hero-banner-resumen-item{
+  background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.18);box-shadow:none;
+}
+#banner-estado-cupones .hero-banner-resumen-icono{
+  flex:0 0 27px;width:27px;height:27px;border-radius:9px;display:grid;place-items:center;
+  background:rgba(255,255,255,.63);font-size:16px;
+}
+#banner-estado-cupones .hero-banner-slide-agotados .hero-banner-resumen-icono{background:rgba(255,255,255,.16)}
+#banner-estado-cupones .hero-banner-resumen-item>span:last-child{display:flex;flex-direction:column;min-width:0}
+#banner-estado-cupones .hero-banner-resumen-item strong{
+  font:800 12px/1.1 Inter,system-ui,sans-serif;color:inherit;white-space:normal;overflow-wrap:anywhere;
+}
+#banner-estado-cupones .hero-banner-resumen-item small{
+  margin-top:2px;font:600 10px/1.1 Inter,system-ui,sans-serif;color:inherit;opacity:.72;white-space:normal;
+}
+#banner-estado-cupones .hero-banner-control{
+  position:absolute;z-index:8;top:50%;transform:translateY(-50%);width:31px;height:31px;padding:0;border:0;border-radius:50%;
+  display:grid;place-items:center;background:rgba(255,255,255,.90);color:#293044;font:700 29px/27px Arial,sans-serif;
+  box-shadow:0 4px 13px rgba(20,27,48,.18);cursor:pointer;transition:transform .16s ease,background .16s ease;
+}
+#banner-estado-cupones .hero-banner-control:hover{background:#fff;transform:translateY(-50%) scale(1.06)}
+#banner-estado-cupones .hero-banner-control-anterior{left:10px}
+#banner-estado-cupones .hero-banner-control-siguiente{right:10px}
+#banner-estado-cupones .hero-banner-puntos{
+  position:absolute;z-index:9;left:50%;bottom:9px;transform:translateX(-50%);display:flex;align-items:center;gap:6px;
+}
+#banner-estado-cupones .hero-banner-punto{
+  width:7px;height:7px;margin:0;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.58);box-shadow:0 1px 4px rgba(0,0,0,.16);cursor:pointer;
+}
+#banner-estado-cupones .hero-banner-punto.activo{width:18px;border-radius:999px;background:#fff}
+
+@media (max-width:900px){
+  #banner-estado-cupones .hero-banner-slide{
+    grid-template-columns:145px minmax(0,1fr);gap:4px 14px;padding:12px 43px 25px 26px;
+  }
+  #banner-estado-cupones .hero-banner-ilustracion{height:118px}
+  #banner-estado-cupones .hero-banner-resumen-item{padding:6px 9px}
+}
+@media (max-width:680px){
+  #banner-estado-cupones{--banner-h:118px;border-radius:15px;margin:8px 0 10px}
+  #banner-estado-cupones .hero-banner-slide{
+    grid-template-columns:88px minmax(0,1fr);grid-template-rows:1fr auto;gap:4px 9px;
+    padding:9px 30px 22px 13px;
+  }
+  #banner-estado-cupones .hero-banner-ilustracion{grid-row:1 / 3;height:87px;align-self:center}
+  #banner-estado-cupones .hero-banner-copy{align-self:center}
+  #banner-estado-cupones .hero-banner-superior{font-size:13px;margin-bottom:1px}
+  #banner-estado-cupones .hero-banner-titulo{font-size:18px;gap:0 3px}
+  #banner-estado-cupones .hero-banner-titulo strong{font-size:25px}
+  #banner-estado-cupones .hero-banner-detalle{font-size:9.5px;margin-top:2px;line-height:1.1}
+  #banner-estado-cupones .hero-banner-vigencia{font-size:8.5px;padding:3px 6px;margin-top:3px}
+  #banner-estado-cupones .hero-banner-resumen{
+    grid-column:2;grid-row:2;grid-template-columns:1fr 1fr;gap:5px;align-self:end;
+  }
+  #banner-estado-cupones .hero-banner-resumen-item{min-height:26px;padding:3px 6px;gap:4px;border-radius:8px}
+  #banner-estado-cupones .hero-banner-resumen-icono{display:none}
+  #banner-estado-cupones .hero-banner-resumen-item strong{font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #banner-estado-cupones .hero-banner-resumen-item small{display:none}
+  #banner-estado-cupones .hero-banner-slide-agotados .hero-banner-titulo-agotados{font-size:15px;gap:0 4px}
+  #banner-estado-cupones .hero-banner-slide-agotados .hero-banner-titulo-agotados strong{font-size:22px;min-width:58px;padding:1px 6px;border-radius:8px}
+  #banner-estado-cupones .hero-banner-rayo{font-size:18px}
+  #banner-estado-cupones .hero-banner-control{width:24px;height:24px;font-size:22px;line-height:20px}
+  #banner-estado-cupones .hero-banner-control-anterior{left:4px}
+  #banner-estado-cupones .hero-banner-control-siguiente{right:4px}
+  #banner-estado-cupones .hero-banner-puntos{bottom:6px;gap:4px}
+  #banner-estado-cupones .hero-banner-punto{width:5px;height:5px}
+  #banner-estado-cupones .hero-banner-punto.activo{width:14px}
+}
+@media (max-width:390px){
+  #banner-estado-cupones{--banner-h:112px}
+  #banner-estado-cupones .hero-banner-slide{grid-template-columns:78px minmax(0,1fr);padding-left:10px;padding-right:27px}
+  #banner-estado-cupones .hero-banner-ilustracion{height:80px}
+  #banner-estado-cupones .hero-banner-superior{font-size:12px}
+  #banner-estado-cupones .hero-banner-titulo{font-size:16px}
+  #banner-estado-cupones .hero-banner-titulo strong{font-size:22px}
+}
