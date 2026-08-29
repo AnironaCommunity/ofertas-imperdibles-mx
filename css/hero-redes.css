@@ -5018,3 +5018,185 @@
  .hero-banner-resumen-item strong{font-size:6.7px !important;}
  .hero-banner-slide-activos::before,.hero-banner-slide-agotados::before{font-size:20px !important;letter-spacing:7px !important;bottom:22% !important;}
 }
+
+/* ============================================================
+   PAQUETE 4.5 — Ajuste fiel a la propuesta visual aprobada
+   - Misma caja/altura para ambos banners.
+   - Ilustraciones completas, grandes y sin recorte.
+   - Jerarquía: ilustración | mensaje | cápsulas inferiores.
+   - Sin WhatsApp dentro del banner.
+   ============================================================ */
+.hero-banner-slide-activos,
+.hero-banner-slide-agotados{
+  grid-template-areas:"art copy" !important;
+  grid-template-columns:34% minmax(0,66%) !important;
+  grid-template-rows:1fr !important;
+  column-gap:16px !important;
+  padding:8px 50px 12px !important;
+  overflow:hidden !important;
+  box-sizing:border-box !important;
+}
+.hero-banner-ilustracion{
+  grid-area:art !important;
+  position:relative !important;
+  width:100% !important;
+  height:100% !important;
+  min-width:0 !important;
+  min-height:0 !important;
+  overflow:visible !important;
+  background:none !important;
+  align-self:stretch !important;
+}
+.hero-banner-slide-activos .hero-banner-ilustracion::before,
+.hero-banner-slide-agotados .hero-banner-ilustracion::before{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  background-repeat:no-repeat !important;
+  background-position:center center !important;
+  background-size:contain !important;
+  transform:none !important;
+  opacity:1 !important;
+  filter:drop-shadow(0 8px 8px rgba(35,32,50,.16)) !important;
+}
+.hero-banner-slide-activos .hero-banner-ilustracion::before{background-image:url("../img/banner-cesta-activos-transparente.png?v=4.5") !important;}
+.hero-banner-slide-agotados .hero-banner-ilustracion::before{background-image:url("../img/banner-cesta-agotados-transparente.png?v=4.5") !important;}
+
+.hero-banner-copy{
+  grid-area:copy !important;
+  position:relative !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:center !important;
+  align-items:flex-start !important;
+  min-width:0 !important;
+  padding:0 0 38px !important;
+  z-index:3 !important;
+}
+.hero-banner-superior{
+  margin:0 0 1px !important;
+  padding:0 !important;
+  font-weight:850 !important;
+  line-height:1.05 !important;
+  white-space:nowrap !important;
+}
+.hero-banner-titulo,
+.hero-banner-slide-agotados .hero-banner-titulo{
+  display:flex !important;
+  align-items:baseline !important;
+  flex-wrap:wrap !important;
+  gap:0 .14em !important;
+  margin:0 !important;
+  max-width:100% !important;
+  line-height:.94 !important;
+  font-weight:900 !important;
+}
+.hero-banner-slide-activos .hero-banner-titulo strong{color:#2455e6 !important;font-size:1.18em !important;}
+.hero-banner-slide-agotados .hero-banner-titulo strong{color:#ffd42b !important;}
+.hero-banner-detalle{margin:4px 0 0 !important;line-height:1.08 !important;opacity:.88 !important;}
+.hero-banner-vigencia{display:none !important;}
+
+.hero-banner-resumen{
+  position:absolute !important;
+  left:34% !important;
+  right:7.5% !important;
+  bottom:10px !important;
+  display:grid !important;
+  grid-template-columns:1fr 1.08fr !important;
+  gap:10px !important;
+  z-index:5 !important;
+}
+.hero-banner-resumen-item{
+  display:grid !important;
+  grid-template-columns:26px minmax(0,1fr) !important;
+  align-items:center !important;
+  gap:7px !important;
+  height:32px !important;
+  min-height:32px !important;
+  padding:3px 10px !important;
+  border-radius:12px !important;
+  overflow:hidden !important;
+  box-sizing:border-box !important;
+  background:rgba(255,255,255,.72) !important;
+  border:1px solid rgba(255,255,255,.55) !important;
+  backdrop-filter:blur(3px) !important;
+}
+.hero-banner-slide-agotados .hero-banner-resumen-item{
+  background:linear-gradient(135deg,rgba(73,68,190,.88),rgba(84,52,199,.78)) !important;
+  border-color:rgba(255,255,255,.15) !important;
+}
+.hero-banner-resumen-icono{
+  width:26px !important;height:26px !important;min-width:26px !important;min-height:26px !important;
+  border-radius:8px !important;font-size:15px !important;
+}
+.hero-banner-resumen-item strong{font-size:11.5px !important;line-height:1 !important;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;}
+.hero-banner-resumen-item small{display:none !important;}
+
+.hero-banner-slide-activos{
+  background:
+    radial-gradient(circle at 8% 22%,rgba(255,255,255,.42) 0 3px,transparent 4px),
+    radial-gradient(circle at 92% 20%,rgba(255,255,255,.58) 0 25px,transparent 26px),
+    radial-gradient(circle at 76% 94%,rgba(255,200,32,.28) 0 48px,transparent 49px),
+    linear-gradient(112deg,#ffd75a 0%,#fff0ad 50%,#ffd45a 100%) !important;
+}
+.hero-banner-slide-agotados{
+  background:
+    radial-gradient(circle at 88% 18%,rgba(109,84,229,.32) 0 31px,transparent 32px),
+    radial-gradient(circle at 76% 96%,rgba(75,52,196,.38) 0 58px,transparent 59px),
+    linear-gradient(115deg,#081867 0%,#14247e 54%,#27106e 100%) !important;
+}
+/* decoraciones ligeras, sin invadir texto/arte */
+.hero-banner-slide-activos::before,
+.hero-banner-slide-agotados::before{
+  content:"✦   %   ✦" !important;
+  position:absolute !important;
+  right:4% !important;
+  top:10% !important;
+  font-size:24px !important;
+  letter-spacing:18px !important;
+  opacity:.12 !important;
+  transform:rotate(-7deg) !important;
+  pointer-events:none !important;
+  z-index:1 !important;
+}
+.hero-banner-slide-activos::before{color:#d99400 !important;}
+.hero-banner-slide-agotados::before{color:#c8bcff !important;}
+
+.hero-banner-control{z-index:8 !important;width:34px !important;height:34px !important;border-radius:50% !important;font-size:28px !important;}
+.hero-banner-control-anterior{left:8px !important;}.hero-banner-control-siguiente{right:8px !important;}
+.hero-banner-puntos{z-index:8 !important;bottom:4px !important;}
+
+@media (min-width:721px){
+  .hero-redes.hero-redes-lista .hero-banner-estado,
+  .hero-banner-viewport,.hero-banner-track,.hero-banner-slide,.hero-banner-slide-principal{
+    height:160px !important;min-height:160px !important;max-height:160px !important;
+  }
+  .hero-banner-ilustracion{height:140px !important;align-self:center !important;}
+  .hero-banner-superior{font-size:clamp(13px,1.15vw,17px) !important;}
+  .hero-banner-titulo,.hero-banner-slide-agotados .hero-banner-titulo{font-size:clamp(28px,2.55vw,39px) !important;letter-spacing:-1.15px !important;}
+  .hero-banner-detalle{font-size:clamp(11px,.95vw,14px) !important;}
+}
+
+@media (max-width:720px){
+  .hero-banner-slide-activos,.hero-banner-slide-agotados{
+    grid-template-areas:"art copy" !important;
+    grid-template-columns:31% minmax(0,69%) !important;
+    grid-template-rows:1fr !important;
+    gap:5px !important;
+    padding:5px 28px 25px !important;
+  }
+  .hero-banner-ilustracion{height:100% !important;align-self:center !important;}
+  .hero-banner-copy{padding:0 !important;justify-content:center !important;}
+  .hero-banner-superior{font-size:8px !important;white-space:normal !important;margin-bottom:1px !important;}
+  .hero-banner-titulo,.hero-banner-slide-agotados .hero-banner-titulo{font-size:clamp(15px,5vw,21px) !important;line-height:.94 !important;letter-spacing:-.55px !important;}
+  .hero-banner-detalle{font-size:7.5px !important;line-height:1.05 !important;margin-top:2px !important;}
+  .hero-banner-resumen{left:29px !important;right:29px !important;bottom:4px !important;gap:4px !important;grid-template-columns:1fr 1fr !important;}
+  .hero-banner-resumen-item{height:20px !important;min-height:20px !important;padding:2px 5px !important;grid-template-columns:16px minmax(0,1fr) !important;gap:3px !important;border-radius:7px !important;}
+  .hero-banner-resumen-icono{width:16px !important;height:16px !important;min-width:16px !important;min-height:16px !important;font-size:9px !important;border-radius:5px !important;}
+  .hero-banner-resumen-item strong{font-size:6.6px !important;}
+  .hero-banner-control{width:24px !important;height:24px !important;font-size:19px !important;}
+  .hero-banner-control-anterior{left:3px !important;}.hero-banner-control-siguiente{right:3px !important;}
+  .hero-banner-puntos{bottom:1px !important;}
+}
