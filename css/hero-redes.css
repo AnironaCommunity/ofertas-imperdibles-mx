@@ -3455,3 +3455,282 @@
   .hero-banner-track,
   .hero-banner-whatsapp { transition: none !important; }
 }
+
+
+/* ============================================================
+   PAQUETE 3.7 — Banner superior compacto / móvil panorámico
+   Conserva la altura del banner anterior y evita superposición.
+   ============================================================ */
+@media (max-width: 720px) {
+  .hero-redes.hero-redes-lista .hero-banner-estado {
+    height: 118px !important;
+    min-height: 118px !important;
+    max-height: 118px !important;
+    margin-bottom: 4px !important;
+    overflow: hidden !important;
+    border-radius: 11px !important;
+  }
+
+  .hero-banner-viewport,
+  .hero-banner-track,
+  .hero-banner-slide {
+    height: 118px !important;
+    min-height: 118px !important;
+    max-height: 118px !important;
+    border-radius: 11px !important;
+  }
+
+  .hero-banner-track {
+    align-items: stretch !important;
+  }
+
+  .hero-banner-slide-principal {
+    grid-template-columns: 23% minmax(0, 47%) minmax(0, 30%) !important;
+    grid-template-areas: "art copy cta" !important;
+    align-items: center !important;
+    gap: 4px !important;
+    height: 118px !important;
+    min-height: 118px !important;
+    max-height: 118px !important;
+    padding: 7px 26px 11px 24px !important;
+  }
+
+  .hero-banner-ilustracion {
+    grid-area: art !important;
+    align-self: center !important;
+    width: 100% !important;
+    height: 94px !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+  }
+
+  .hero-banner-ilustracion-img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 94px !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    border-radius: 0 !important;
+  }
+
+  .hero-banner-copy {
+    grid-area: copy !important;
+    align-self: center !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+  }
+
+  .hero-banner-superior {
+    margin: 0 0 2px !important;
+    font-size: clamp(7px, 2.35vw, 11px) !important;
+    line-height: 1.05 !important;
+    white-space: nowrap !important;
+  }
+
+  .hero-banner-titulo,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-titulo {
+    display: block !important;
+    max-width: none !important;
+    margin: 0 !important;
+    font-size: clamp(14px, 4.45vw, 21px) !important;
+    line-height: .98 !important;
+    letter-spacing: -.5px !important;
+  }
+
+  .hero-banner-titulo #banner-estado-prefijo,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-titulo #banner-estado-prefijo {
+    display: inline !important;
+  }
+
+  .hero-banner-titulo strong,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-titulo strong {
+    display: inline !important;
+    font-size: 1em !important;
+  }
+
+  .hero-banner-detalle {
+    margin-top: 3px !important;
+    font-size: clamp(6.5px, 1.85vw, 8.5px) !important;
+    line-height: 1.12 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+  .hero-banner-vigencia {
+    margin-top: 4px !important;
+    padding: 3px 6px !important;
+    font-size: clamp(6px, 1.7vw, 8px) !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+  }
+
+  .hero-banner-whatsapp {
+    grid-area: cta !important;
+    align-self: center !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 6px 6px !important;
+    grid-template-columns: 27px minmax(0,1fr) 12px !important;
+    gap: 4px !important;
+    border-radius: 10px !important;
+  }
+
+  .hero-banner-whatsapp-icono {
+    width: 27px !important;
+    height: 27px !important;
+    border-width: 1.5px !important;
+    font-size: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .hero-banner-whatsapp-icono img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+  }
+
+  .hero-banner-whatsapp strong {
+    font-size: clamp(6.5px, 1.9vw, 9px) !important;
+    line-height: 1.05 !important;
+  }
+
+  .hero-banner-whatsapp small {
+    margin-top: 1px !important;
+    font-size: clamp(5.5px, 1.5vw, 7px) !important;
+    line-height: 1.05 !important;
+  }
+
+  .hero-banner-whatsapp-flecha {
+    font-size: 13px !important;
+  }
+
+  .hero-banner-decoracion {
+    width: 72px !important;
+    height: 42px !important;
+    right: 3% !important;
+    opacity: .20 !important;
+  }
+
+  .hero-banner-slide-alerta {
+    grid-template-columns: 18% minmax(0, 50%) minmax(0, 32%) !important;
+    grid-template-areas: "icon copy button" !important;
+    align-items: center !important;
+    gap: 5px !important;
+    height: 118px !important;
+    min-height: 118px !important;
+    max-height: 118px !important;
+    padding: 9px 28px 12px 27px !important;
+  }
+
+  .hero-banner-alerta-icono {
+    grid-area: icon !important;
+    width: 46px !important;
+    height: 46px !important;
+    border-radius: 12px !important;
+    font-size: 24px !important;
+    justify-self: center !important;
+  }
+
+  .hero-banner-alerta-copy {
+    grid-area: copy !important;
+    min-width: 0 !important;
+  }
+
+  .hero-banner-alerta-copy span {
+    margin-bottom: 2px !important;
+    font-size: 6.5px !important;
+  }
+
+  .hero-banner-alerta-copy strong {
+    font-size: clamp(13px, 3.8vw, 18px) !important;
+    line-height: 1 !important;
+  }
+
+  .hero-banner-alerta-copy p {
+    margin-top: 3px !important;
+    font-size: 7.5px !important;
+    line-height: 1.1 !important;
+  }
+
+  .hero-banner-alerta-boton {
+    grid-area: button !important;
+    min-width: 0 !important;
+    grid-template-columns: 25px minmax(0,1fr) 11px !important;
+    gap: 4px !important;
+    padding: 6px !important;
+    border-radius: 10px !important;
+  }
+
+  .hero-banner-alerta-boton > span:first-child {
+    width: 25px !important;
+    height: 25px !important;
+    font-size: 12px !important;
+  }
+
+  .hero-banner-alerta-boton strong {
+    font-size: 7.5px !important;
+    line-height: 1.05 !important;
+  }
+
+  .hero-banner-alerta-boton > span:last-child {
+    font-size: 13px !important;
+  }
+
+  .hero-banner-control {
+    width: 22px !important;
+    height: 22px !important;
+    padding-bottom: 2px !important;
+    font-size: 18px !important;
+    box-shadow: 0 3px 10px rgba(21,24,38,.12) !important;
+  }
+
+  .hero-banner-control-anterior { left: 4px !important; }
+  .hero-banner-control-siguiente { right: 4px !important; }
+
+  .hero-banner-puntos {
+    bottom: 4px !important;
+    gap: 4px !important;
+  }
+
+  .hero-banner-punto {
+    width: 5px !important;
+    height: 5px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .hero-redes.hero-redes-lista .hero-banner-estado,
+  .hero-banner-viewport,
+  .hero-banner-track,
+  .hero-banner-slide,
+  .hero-banner-slide-principal,
+  .hero-banner-slide-alerta {
+    height: 112px !important;
+    min-height: 112px !important;
+    max-height: 112px !important;
+  }
+
+  .hero-banner-slide-principal {
+    grid-template-columns: 22% minmax(0, 48%) minmax(0, 30%) !important;
+    padding: 6px 24px 10px 22px !important;
+  }
+
+  .hero-banner-ilustracion,
+  .hero-banner-ilustracion-img { height: 86px !important; }
+
+  .hero-banner-superior { font-size: 7.5px !important; }
+  .hero-banner-titulo,
+  .hero-redes.hero-redes-lista .hero-banner-estado[data-estado="agotados"] .hero-banner-titulo { font-size: 15px !important; }
+  .hero-banner-detalle { font-size: 6.5px !important; }
+  .hero-banner-vigencia { font-size: 6px !important; }
+  .hero-banner-whatsapp { grid-template-columns: 24px minmax(0,1fr) 10px !important; padding: 5px !important; }
+  .hero-banner-whatsapp-icono { width: 24px !important; height: 24px !important; }
+  .hero-banner-whatsapp strong { font-size: 6.5px !important; }
+  .hero-banner-whatsapp small { font-size: 5.5px !important; }
+  .hero-banner-slide-alerta { padding: 8px 25px 11px !important; }
+}

@@ -2293,7 +2293,7 @@ function actualizarBannerEstadoCupones() {
     }
     if (whatsappTitulo) whatsappTitulo.textContent = "No te pierdas nada";
     if (whatsappSubtitulo) whatsappSubtitulo.textContent = "Únete a nuestro canal";
-    if (ilustracion) ilustracion.src = "img/banner-dinamico-cesta-activos.png?v=3.6";
+    if (ilustracion) ilustracion.src = "img/banner-dinamico-cesta-activos.png?v=3.7";
     if (alertaTitulo) alertaTitulo.textContent = "No te pierdas nuevos cupones";
     if (alertaTexto) alertaTexto.textContent = "Te avisamos cuando aparezcan nuevas promociones y cupones.";
   } else {
@@ -2309,7 +2309,7 @@ function actualizarBannerEstadoCupones() {
     }
     if (whatsappTitulo) whatsappTitulo.textContent = "Aquí te avisamos";
     if (whatsappSubtitulo) whatsappSubtitulo.textContent = "cuando salgan nuevos";
-    if (ilustracion) ilustracion.src = "img/banner-dinamico-cesta-agotados.png?v=3.6";
+    if (ilustracion) ilustracion.src = "img/banner-dinamico-cesta-agotados.png?v=3.7";
     if (alertaTitulo) alertaTitulo.textContent = "Aquí te avisamos cuando salgan";
     if (alertaTexto) alertaTexto.textContent = "Únete al canal para enterarte cuando aparezcan nuevos cupones.";
   }
