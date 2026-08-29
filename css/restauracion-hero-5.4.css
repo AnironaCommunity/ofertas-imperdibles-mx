@@ -1,0 +1,54 @@
+/* Paquete 5.4 — ajuste aislado de la franja informativa bajo el banner.
+   No altera tarjetas, cupones, Anirona, Ofertazo ni navegación. */
+
+.hero-redes.hero-redes-lista {
+  overflow: hidden !important;
+}
+
+.hero-redes.hero-redes-lista .hero-redes-contenido {
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  gap: 2px !important;
+}
+
+.hero-redes.hero-redes-lista #nombre-sitio,
+.hero-redes.hero-redes-lista #hero-texto-descriptivo {
+  position: static !important;
+  inset: auto !important;
+  transform: none !important;
+  float: none !important;
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+  white-space: normal !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  box-sizing: border-box !important;
+}
+
+.hero-redes.hero-redes-lista #nombre-sitio {
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+}
+
+.hero-redes.hero-redes-lista #hero-texto-descriptivo {
+  font-size: 12px !important;
+  line-height: 1.25 !important;
+  color: #7b8190 !important;
+}
+
+@media (max-width: 600px) {
+  .hero-redes.hero-redes-lista #hero-texto-descriptivo {
+    font-size: 10.5px !important;
+  }
+}
