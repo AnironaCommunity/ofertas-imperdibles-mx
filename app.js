@@ -2358,9 +2358,6 @@ function actualizarBannerEstadoCupones() {
   const sufijoActivos = document.querySelector("#banner-activos-sufijo");
   const vigenciaActivos = document.querySelector("#banner-activos-vigencia");
   const tiempoAgotados = document.querySelector("#banner-agotados-tiempo");
-  const resumenDisponibles = document.querySelector("#banner-resumen-disponibles");
-  const resumenAhorro = document.querySelector("#banner-resumen-ahorro");
-  const resumenProxima = document.querySelector("#banner-resumen-proxima");
 
   const disponibles = todosLosCupones.filter(cuponDisponibleParaBanner);
   const total = disponibles.length;
@@ -2391,12 +2388,15 @@ function actualizarBannerEstadoCupones() {
     if (vigenciaActivos) vigenciaActivos.hidden = true;
   }
 
-  if (resumenDisponibles) resumenDisponibles.textContent = total === 1 ? "1 cupón disponible" : `${total} cupones disponibles`;
-  if (resumenAhorro) resumenAhorro.textContent = ahorroMaximo > 0 ? `Hasta ${monedaBuscador(ahorroMaximo)} de ahorro` : "Mejor ahorro disponible";
+  const resumenDisponibles = document.querySelector("#banner-resumen-disponibles");
+  const resumenAhorro = document.querySelector("#banner-resumen-ahorro");
+  const resumenProxima = document.querySelector("#banner-resumen-proxima");
+  if (resumenDisponibles) resumenDisponibles.textContent = total > 0 ? `${total} ${total === 1 ? "cupón disponible" : "cupones disponibles"}` : "Sin cupones activos";
+  if (resumenAhorro) resumenAhorro.textContent = ahorroMaximo > 0 ? `Hasta ${monedaBuscador(ahorroMaximo)} de ahorro` : "Nuevos cupones próximamente";
 
   // El banner azul siempre conserva el diseño de cupones agotados.
   const cuentaBanner = textoCuentaRegresivaBanner();
-  if (tiempoAgotados) tiempoAgotados.textContent = ` dentro de ${cuentaBanner}`;
+  if (tiempoAgotados) tiempoAgotados.textContent = cuentaBanner;
   if (resumenProxima) resumenProxima.textContent = `Próxima revisión en ${cuentaBanner}`;
 
   banner.dataset.estado = estadoNuevo;

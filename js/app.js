@@ -2396,7 +2396,7 @@ function actualizarBannerEstadoCupones() {
 
   // El banner azul siempre conserva el diseño de cupones agotados.
   const cuentaBanner = textoCuentaRegresivaBanner();
-  if (tiempoAgotados) tiempoAgotados.textContent = ` dentro de ${cuentaBanner}`;
+  if (tiempoAgotados) tiempoAgotados.textContent = cuentaBanner;
   if (resumenProxima) resumenProxima.textContent = `Próxima revisión en ${cuentaBanner}`;
 
   banner.dataset.estado = estadoNuevo;
