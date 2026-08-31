@@ -3360,3 +3360,69 @@
   border-color: #d8b900 !important;
   box-shadow: 0 3px 7px rgba(80,65,0,.16) !important;
 }
+
+/* ================================================================
+   V83.5 — CORRECCIÓN VISIBILIDAD DETALLE CUPÓN BANCARIO
+   - Mantiene la tarjeta actual.
+   - Da prioridad al texto de tope/detalle bancario para que no quede
+     recortado en web ni móvil cuando existen etiquetas.
+   ================================================================ */
+#cupones > .cupon-bancario-unificado > .hc25-banco-info {
+  justify-content: flex-start !important;
+  padding-top: 10px !important;
+  padding-bottom: 8px !important;
+}
+#cupones > .cupon-bancario-unificado .hc16-categoria {
+  margin-bottom: 5px !important;
+}
+#cupones > .cupon-bancario-unificado .hc16-condiciones {
+  margin-bottom: 4px !important;
+}
+#cupones > .cupon-bancario-unificado .hc16-detalle,
+#cupones > .cupon-bancario-unificado .hc25-banco-detalle {
+  display: block !important;
+  flex: 0 0 auto !important;
+  width: 100% !important;
+  min-height: 1.15em !important;
+  margin: 0 0 4px !important;
+  padding: 0 !important;
+  color: #2f343b !important;
+  -webkit-text-fill-color: #2f343b !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  font-size: 10.5px !important;
+  line-height: 1.18 !important;
+  font-weight: 500 !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  position: relative !important;
+  z-index: 4 !important;
+}
+#cupones > .cupon-bancario-unificado .hc16-etiquetas {
+  flex: 0 0 auto !important;
+  margin-top: 1px !important;
+}
+
+@media (max-width: 680px) {
+  #cupones > .cupon-bancario-unificado > .hc25-banco-info {
+    justify-content: flex-start !important;
+    padding: 7px 6px 5px !important;
+  }
+  #cupones > .cupon-bancario-unificado .hc16-categoria {
+    margin-bottom: 3px !important;
+  }
+  #cupones > .cupon-bancario-unificado .hc16-condiciones {
+    margin-bottom: 2px !important;
+  }
+  #cupones > .cupon-bancario-unificado .hc16-detalle,
+  #cupones > .cupon-bancario-unificado .hc25-banco-detalle {
+    min-height: 1.12em !important;
+    margin-bottom: 2px !important;
+    font-size: 7.5px !important;
+    line-height: 1.12 !important;
+  }
+  #cupones > .cupon-bancario-unificado .hc16-etiquetas {
+    margin-top: 0 !important;
+  }
+}
