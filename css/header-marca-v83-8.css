@@ -1,0 +1,130 @@
+/* V83.8 — Encabezado compacto alineado a la izquierda. */
+.encabezado {
+  border-top: 3px solid #ffe600 !important;
+  background: #fff !important;
+}
+.encabezado::before,
+.encabezado::after,
+.enlace-logo-inicio::before {
+  display: none !important;
+  content: none !important;
+}
+
+.enlace-logo-inicio {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  width: 100% !important;
+  min-height: 70px !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 7px clamp(14px, 3vw, 34px) !important;
+  overflow: visible !important;
+  background: #fff !important;
+  box-sizing: border-box !important;
+}
+
+.marca-principal {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 11px !important;
+  width: auto !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* El logo conserva toda su proporción: no se recorta en círculo. */
+.marca-principal-icono.marca-principal-logo-completo {
+  display: block !important;
+  width: 58px !important;
+  height: 52px !important;
+  min-width: 58px !important;
+  min-height: 52px !important;
+  max-width: 58px !important;
+  max-height: 52px !important;
+  flex: 0 0 58px !important;
+  padding: 0 !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.marca-principal-textos,
+.marca-principal-textos[hidden] {
+  display: flex !important;
+  min-width: 0 !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+}
+.marca-principal-textos::before {
+  display: none !important;
+  content: none !important;
+}
+
+.marca-principal-nombre {
+  display: block !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+  white-space: nowrap !important;
+  font-family: "Nunito", Inter, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+  font-size: clamp(28px, 3vw, 42px) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.045em !important;
+  line-height: 1 !important;
+}
+.marca-principal-negro { color: #242424 !important; }
+.marca-principal-verde { color: #59c900 !important; }
+.marca-principal-destacado { color: inherit !important; }
+.marca-principal-eslogan { display: none !important; }
+
+@media (max-width: 700px) {
+  .encabezado { border-top-width: 2px !important; }
+  .enlace-logo-inicio {
+    min-height: 57px !important;
+    padding: 5px 9px !important;
+  }
+  .marca-principal {
+    gap: 7px !important;
+    width: auto !important;
+  }
+  .marca-principal-icono.marca-principal-logo-completo {
+    width: 47px !important;
+    height: 43px !important;
+    min-width: 47px !important;
+    min-height: 43px !important;
+    max-width: 47px !important;
+    max-height: 43px !important;
+    flex-basis: 47px !important;
+  }
+  .marca-principal-nombre {
+    font-size: clamp(19px, 6vw, 27px) !important;
+    letter-spacing: -0.045em !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .enlace-logo-inicio {
+    min-height: 53px !important;
+    padding: 4px 8px !important;
+  }
+  .marca-principal { gap: 6px !important; }
+  .marca-principal-icono.marca-principal-logo-completo {
+    width: 43px !important;
+    height: 39px !important;
+    min-width: 43px !important;
+    min-height: 39px !important;
+    max-width: 43px !important;
+    max-height: 39px !important;
+    flex-basis: 43px !important;
+  }
+  .marca-principal-nombre {
+    font-size: clamp(18px, 5.7vw, 22px) !important;
+  }
+}

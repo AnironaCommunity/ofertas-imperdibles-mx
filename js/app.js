@@ -2360,6 +2360,7 @@ function actualizarBannerEstadoCupones() {
 }
 
 function limpiarVista() {
+  detenerObservadorVistasCupones();
   cuponesContainer.replaceChildren();
   todosWrapper.hidden = true;
   sinCupones.hidden = true;
@@ -2376,7 +2377,7 @@ function renderizarCategoria() {
   // V81.85 — Prioridad temporal de cupones NUEVOS.
   // 1) Activos antes que agotados.
   // 2) Durante su primera hora, los cupones con estado Nuevo suben al inicio.
-  // 3) Al cumplir la hora vuelven automáticamente al orden habitual por popularidad (clics).
+  // 3) Al cumplir la hora vuelven automáticamente al orden habitual por popularidad (vistas).
   const ordenarCupones = (a, b) => {
     const agotadoA = a.agotado === true ? 1 : 0;
     const agotadoB = b.agotado === true ? 1 : 0;
@@ -2528,6 +2529,7 @@ function renderizarCategoria() {
   estadoCarga.textContent = "";
   startCouponTimers();
   programarSincronizacionAlturaTarjetas();
+  iniciarObservadorVistasCupones();
 }
 
 
@@ -2730,6 +2732,117 @@ async function registrarClic(id) {
   return respuesta.json();
 }
 
+/* V83.8 — El contador visible del cupón representa vistas reales, no copias.
+   Misma regla que Anirona: al menos 50% visible durante 900 ms y máximo
+   una vista por navegador/cupón cada 24 horas. */
+const DURACION_VISITA_CUPON_MS = 24 * 60 * 60 * 1000;
+const TIEMPO_MINIMO_VISTA_CUPON_MS = 900;
+let observadorVistasCupones = null;
+const temporizadoresVistasCupones = new Map();
+
+function claveVisitaCupon(id) {
+  return `visita-cupon-${id}`;
+}
+
+function visitaCuponVigente(id) {
+  const clave = claveVisitaCupon(id);
+  const registro = Number(localStorage.getItem(clave));
+  if (!Number.isFinite(registro) || registro <= 0) {
+    localStorage.removeItem(clave);
+    return false;
+  }
+  if (Date.now() - registro >= DURACION_VISITA_CUPON_MS) {
+    localStorage.removeItem(clave);
+    return false;
+  }
+  return true;
+}
+
+function actualizarVistasCuponEnPantalla(id, visitas) {
+  const total = Number(visitas) || 0;
+  document.querySelectorAll(`#cupones [data-id="${id}"] .numero-clics`).forEach((elemento) => {
+    elemento.textContent = String(total);
+  });
+}
+
+async function registrarVisitaCupon(cupon) {
+  const id = Number(cupon?.id);
+  if (!Number.isInteger(id) || id <= 0 || visitaCuponVigente(id)) return;
+
+  const clave = claveVisitaCupon(id);
+  localStorage.setItem(clave, String(Date.now()));
+
+  try {
+    const respuesta = await fetch("/api/cupon-visita", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ id }),
+      keepalive: true,
+    });
+    if (!respuesta.ok) throw new Error("No fue posible registrar la vista del cupón.");
+    const resultado = await respuesta.json();
+    const total = Number(resultado.visitas);
+    if (!Number.isFinite(total)) return;
+
+    cupon.clics = total;
+    const indice = todosLosCupones.findIndex((item) => Number(item.id) === id);
+    if (indice >= 0) todosLosCupones[indice].clics = total;
+    actualizarVistasCuponEnPantalla(id, total);
+  } catch (error) {
+    localStorage.removeItem(clave);
+    console.warn("No fue posible registrar la vista del cupón.", error);
+  }
+}
+
+function detenerObservadorVistasCupones() {
+  observadorVistasCupones?.disconnect();
+  observadorVistasCupones = null;
+  temporizadoresVistasCupones.forEach((temporizador) => clearTimeout(temporizador));
+  temporizadoresVistasCupones.clear();
+}
+
+function iniciarObservadorVistasCupones() {
+  detenerObservadorVistasCupones();
+  if (!cuponesContainer || typeof IntersectionObserver === "undefined") return;
+
+  observadorVistasCupones = new IntersectionObserver((entradas) => {
+    entradas.forEach((entrada) => {
+      const tarjeta = entrada.target;
+      const id = Number(tarjeta.dataset.id);
+      if (!Number.isInteger(id) || id <= 0) return;
+
+      const temporizadorActual = temporizadoresVistasCupones.get(id);
+      if (!entrada.isIntersecting || entrada.intersectionRatio < 0.5) {
+        if (temporizadorActual) clearTimeout(temporizadorActual);
+        temporizadoresVistasCupones.delete(id);
+        return;
+      }
+
+      if (visitaCuponVigente(id)) {
+        observadorVistasCupones?.unobserve(tarjeta);
+        return;
+      }
+      if (temporizadorActual) return;
+
+      const temporizador = setTimeout(() => {
+        temporizadoresVistasCupones.delete(id);
+        if (!tarjeta.isConnected || visitaCuponVigente(id)) return;
+        const cupon = todosLosCupones.find((item) => Number(item?.id) === id);
+        if (!cupon) return;
+        registrarVisitaCupon(cupon);
+        observadorVistasCupones?.unobserve(tarjeta);
+      }, TIEMPO_MINIMO_VISTA_CUPON_MS);
+
+      temporizadoresVistasCupones.set(id, temporizador);
+    });
+  }, { threshold: [0.5] });
+
+  cuponesContainer.querySelectorAll(".cupon[data-id]").forEach((tarjeta) => {
+    const id = Number(tarjeta.dataset.id);
+    if (!visitaCuponVigente(id)) observadorVistasCupones.observe(tarjeta);
+  });
+}
+
 async function registrarLike(id, accion) {
   const respuesta = await fetch("/api/cupon-like", {
     method: "POST",
@@ -2890,7 +3003,6 @@ async function copiarYCanjear(cupon, tarjeta) {
 
   const boton = tarjeta.querySelector(".boton-canjear, .banco-canjear");
   const mensaje = tarjeta.querySelector(".mensaje");
-  const numeroClics = tarjeta.querySelector(".numero-clics");
   const usado = tarjeta.querySelector(".cupon-copiado-mini");
 
   boton.disabled = true;
@@ -2918,24 +3030,6 @@ async function copiarYCanjear(cupon, tarjeta) {
     if (usado) {
       usado.hidden = false;
     }
-
-    registrarClic(cupon.id)
-      .then((resultado) => {
-        if (Number.isFinite(Number(resultado.clics))) {
-          if (numeroClics) numeroClics.textContent = String(resultado.clics);
-
-          const couponIndex = todosLosCupones.findIndex(
-            (item) => Number(item.id) === Number(cupon.id)
-          );
-
-          if (couponIndex >= 0) {
-            todosLosCupones[couponIndex].clics = Number(resultado.clics);
-          }
-        }
-      })
-      .catch((error) => {
-        console.warn("El contador no pudo actualizarse:", error);
-      });
 
     // El usuario puede salir de inmediato con el botón del modal.
     // Si no interactúa, se redirige automáticamente al terminar la cuenta regresiva.
@@ -3788,7 +3882,10 @@ function renderizarModuloOfertas(categoria, contenedor, seccion) {
     items.forEach((item) => {
       contenedor.appendChild(crearTarjetaOferta(item, categoria));
     });
-    if (categoria === "ofertas_mercado_libre") actualizarTemporizadoresOfertazo();
+    if (categoria === "ofertas_mercado_libre") {
+      actualizarTemporizadoresOfertazo();
+      iniciarObservadorVistasAnirona();
+    }
   }
 
 }
@@ -3874,7 +3971,7 @@ function detenerObservadorVistasAnirona() {
 
 function iniciarObservadorVistasAnirona() {
   detenerObservadorVistasAnirona();
-  if (!ofertasComunidadAnirona || typeof IntersectionObserver === "undefined") return;
+  if ((!ofertasComunidadAnirona && !ofertasMercadoLibre) || typeof IntersectionObserver === "undefined") return;
 
   observadorVistasAnirona = new IntersectionObserver((entradas) => {
     entradas.forEach((entrada) => {
@@ -3908,9 +4005,11 @@ function iniciarObservadorVistasAnirona() {
     });
   }, { threshold: [0.5] });
 
-  ofertasComunidadAnirona.querySelectorAll(".tarjeta-oferta-anirona[data-publicidad-id]").forEach((tarjeta) => {
-    const id = Number(tarjeta.dataset.publicidadId);
-    if (!visitaPublicidadVigente(id, "general")) observadorVistasAnirona.observe(tarjeta);
+  [ofertasComunidadAnirona, ofertasMercadoLibre].filter(Boolean).forEach((contenedor) => {
+    contenedor.querySelectorAll(".tarjeta-oferta-anirona[data-publicidad-id], .tarjeta-oferta-ofertazo[data-publicidad-id]").forEach((tarjeta) => {
+      const id = Number(tarjeta.dataset.publicidadId);
+      if (!visitaPublicidadVigente(id, "general")) observadorVistasAnirona.observe(tarjeta);
+    });
   });
 }
 
@@ -4138,7 +4237,10 @@ async function abrirPublicidad(publicidad, { copiarCuponAsignado = true } = {}) 
   const precioCupon = String(publicidad.precio_cupon || "").trim();
   try {
     if (copiarCuponAsignado && codigo) await copiarTexto(codigo);
-    if (!publicidadPerteneceASeccion(publicidad, "comunidad_anirona")) {
+    if (
+      !publicidadPerteneceASeccion(publicidad, "comunidad_anirona") &&
+      !publicidadPerteneceASeccion(publicidad, "ofertas_mercado_libre")
+    ) {
       registrarVisitaPublicidad(publicidad, publicidad.plataforma);
     }
     registrarClicPublicidad(publicidad.id);

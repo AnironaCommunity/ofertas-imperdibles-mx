@@ -91,16 +91,16 @@
 
   aplicarConfiguracionCacheada();
 
-  function renderMainSiteName(element, value) {
+  function renderMainSiteName(element) {
     if (!element) return;
-    const words = String(value || "Ofertas Imperdibles").trim().split(/\s+/).filter(Boolean);
-    const highlighted = words.pop() || "Imperdibles";
     element.replaceChildren();
-    if (words.length) element.append(document.createTextNode(`${words.join(" ")} `));
-    const span = document.createElement("span");
-    span.className = "marca-principal-destacado";
-    span.textContent = highlighted;
-    element.append(span);
+    const negro = document.createElement("span");
+    negro.className = "marca-principal-negro";
+    negro.textContent = "Ofertas Imper";
+    const verde = document.createElement("span");
+    verde.className = "marca-principal-verde";
+    verde.textContent = "dibles";
+    element.append(negro, verde);
   }
 
   async function cargarConfiguracion() {
