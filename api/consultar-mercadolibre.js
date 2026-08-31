@@ -199,10 +199,15 @@ export default async function handler(req, res) {
   try {
     const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : (req.body || {});
     const enlace = String(body.enlace || "").trim();
-    if (!enlace) return json(res, 400, { error: "Falta el enlace de Mercado Libre." });
+    const itemIdDirecto = normalizeItemId(body.item_id || "");
+    if (!enlace && !itemIdDirecto) {
+      return json(res, 400, { error: "Falta la URL o el ITEM_ID de Mercado Libre." });
+    }
 
-    const resolvedUrl = await resolveUrl(enlace);
-    const itemId = normalizeItemId(resolvedUrl) || normalizeItemId(enlace);
+    const resolvedUrl = enlace
+      ? await resolveUrl(enlace)
+      : `https://articulo.mercadolibre.com.mx/${itemIdDirecto}`;
+    const itemId = itemIdDirecto || normalizeItemId(resolvedUrl) || normalizeItemId(enlace);
     if (!itemId) {
       return json(res, 400, { error: "No fue posible identificar el código MLM de la publicación." });
     }

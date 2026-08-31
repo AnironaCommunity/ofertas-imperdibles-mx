@@ -10356,3 +10356,78 @@ body.hay-cupones-visibles #separador-fin-cupones {
     gap: 12px !important;
   }
 }
+
+
+/* ============================================================
+   V83.1 — Precios y selector de descuentos · Comunidad Anirona
+   Se agrega sin alterar imagen, título, descripción, disponibilidad ni botones.
+   ============================================================ */
+.tarjeta-oferta-anirona .anirona-precios {
+  display:grid;
+  gap:5px;
+  margin:2px 0 8px;
+  padding:8px 9px;
+  border:1px solid #e3e9e5;
+  border-radius:10px;
+  background:#fafcfb;
+}
+.tarjeta-oferta-anirona .anirona-precio-fila {
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:8px;
+  font-size:11px;
+  line-height:1.25;
+}
+.tarjeta-oferta-anirona .anirona-precio-fila span { color:#68736d; }
+.tarjeta-oferta-anirona .anirona-precio-fila strong { color:#26322b; font-size:12px; white-space:nowrap; }
+.tarjeta-oferta-anirona .anirona-precio-cupon strong { color:#087a35; font-size:13px; }
+.tarjeta-oferta-anirona .anirona-ver-descuentos {
+  width:100%;
+  min-height:30px;
+  margin-top:2px;
+  padding:5px 9px;
+  border:1px solid #cdd8d1;
+  border-radius:8px;
+  background:#fff;
+  color:#26322b;
+  font:inherit;
+  font-size:10.5px;
+  font-weight:700;
+  cursor:pointer;
+}
+.tarjeta-oferta-anirona .anirona-descuentos-panel {
+  display:grid;
+  gap:6px;
+  padding-top:3px;
+}
+.tarjeta-oferta-anirona .anirona-descuentos-panel[hidden] { display:none !important; }
+.tarjeta-oferta-anirona .anirona-descuentos-titulo { font-size:10.5px; color:#26322b; }
+.tarjeta-oferta-anirona .anirona-descuentos-ayuda,
+.tarjeta-oferta-anirona .anirona-sin-descuento { font-size:9.5px; line-height:1.3; color:#6d7771; }
+.tarjeta-oferta-anirona .anirona-descuentos-lista { display:grid; gap:5px; }
+.tarjeta-oferta-anirona .anirona-descuento-opcion {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:6px;
+  align-items:center;
+  width:100%;
+  padding:6px 7px;
+  border:1px solid #dce4df;
+  border-radius:8px;
+  background:#fff;
+  color:#334039;
+  text-align:left;
+  font:inherit;
+  font-size:9.5px;
+  cursor:pointer;
+}
+.tarjeta-oferta-anirona .anirona-descuento-opcion.seleccionado { border-color:#7eb38f; background:#f2faf4; }
+.tarjeta-oferta-anirona .anirona-descuento-opcion em { font-style:normal; font-size:8px; font-weight:800; color:#087a35; white-space:nowrap; }
+@media (max-width:520px) {
+  .tarjeta-oferta-anirona .anirona-precios { padding:7px; gap:4px; }
+  .tarjeta-oferta-anirona .anirona-precio-fila { font-size:9.5px; }
+  .tarjeta-oferta-anirona .anirona-precio-fila strong { font-size:10.5px; }
+  .tarjeta-oferta-anirona .anirona-precio-cupon strong { font-size:11.5px; }
+  .tarjeta-oferta-anirona .anirona-ver-descuentos { min-height:28px; font-size:9px; }
+}

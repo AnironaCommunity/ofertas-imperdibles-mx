@@ -2655,6 +2655,16 @@ async function cargarCupones() {
     actualizarFiltrosBuscadorCupones();
     actualizarBannerEstadoCupones();
 
+    // Comunidad Anirona calcula sus descuentos con los cupones vigentes.
+    // Si la publicidad llegó antes que los cupones, se vuelve a dibujar aquí.
+    if (todasLasPublicidades.length && contenidoCambio) {
+      renderizarModuloOfertas(
+        "comunidad_anirona",
+        ofertasComunidadAnirona,
+        seccionComunidadAnirona
+      );
+    }
+
     if (buscadorCuponesResultado && !buscadorCuponesResultado.hidden && Number(buscadorCuponesMonto?.value || 0) > 0) {
       ejecutarBuscadorCupones();
     }
@@ -3126,6 +3136,30 @@ function actualizarTemporizadoresOfertazo() {
   });
 }
 
+function cuponDisponibleParaAnirona(cupon) {
+  if (!cupon || cupon.activo === false || cupon.agotado === true) return false;
+  if (!couponTimeState(cupon).enabled || !String(cupon.codigo || "").trim()) return false;
+  const categoria = normalizarCategoria(cupon);
+  return categoria === "tienda" || (categoria === "exclusivo" && cupon.considerar_compartir === true);
+}
+
+function descuentosAplicablesAnirona(precio) {
+  const monto = numeroDineroCupon(precio);
+  if (!(monto > 0)) return [];
+  return todosLosCupones
+    .filter(cuponDisponibleParaAnirona)
+    .map((cupon) => calcularBeneficioCupon(cupon, monto))
+    .filter(Boolean)
+    .sort((a, b) => {
+      if (b.ahorro !== a.ahorro) return b.ahorro - a.ahorro;
+      return b.minimo - a.minimo;
+    });
+}
+
+function textoOpcionDescuentoAnirona(resultado) {
+  return `Ahorra ${monedaBuscador(resultado.ahorro)} · paga ${monedaBuscador(resultado.totalFinal)}`;
+}
+
 function crearTarjetaOferta(publicidad, categoria) {
   const articulo = document.createElement("article");
   articulo.className = "tarjeta-oferta";
@@ -3134,8 +3168,16 @@ function crearTarjetaOferta(publicidad, categoria) {
   const plataforma = datosPlataformaPublicidad(publicidad);
   const esComunidadAnirona = categoria === "comunidad_anirona";
   const precioPublicado = String(publicidad.precio_publicado || "").trim();
-  const precioCupon = String(publicidad.precio_cupon || "").trim();
-  const codigo = String(publicidad.codigo_cupon || "").trim();
+  const precioCuponGuardado = String(publicidad.precio_cupon || "").trim();
+  const codigoGuardado = String(publicidad.codigo_cupon || "").trim();
+  const descuentosAnirona = esComunidadAnirona ? descuentosAplicablesAnirona(precioPublicado) : [];
+  const mejorDescuentoAnirona = descuentosAnirona[0] || null;
+  const precioCupon = esComunidadAnirona && mejorDescuentoAnirona
+    ? monedaBuscador(mejorDescuentoAnirona.totalFinal)
+    : precioCuponGuardado;
+  const codigo = esComunidadAnirona && mejorDescuentoAnirona
+    ? String(mejorDescuentoAnirona.cupon.codigo || "").trim()
+    : codigoGuardado;
   const enlacePrincipal = String(publicidad.enlace || "").trim();
   const enlaceMercadoLibreGuardado = String(publicidad.enlace_mercado_libre || "").trim();
   const enlaceAmazonGuardado = String(publicidad.enlace_amazon || "").trim();
@@ -3245,6 +3287,29 @@ function crearTarjetaOferta(publicidad, categoria) {
         </div>
       ` : ""}
 
+      ${esComunidadAnirona && precioPublicado ? `
+        <div class="anirona-precios" data-anirona-precios>
+          <div class="anirona-precio-fila">
+            <span>Precio publicado:</span>
+            <strong>${escaparHtml(precioPublicado)}</strong>
+          </div>
+          <div class="anirona-precio-fila anirona-precio-cupon">
+            <span>Precio con cupón:</span>
+            <strong data-anirona-precio-cupon>${precioCupon ? escaparHtml(precioCupon) : "No disponible"}</strong>
+          </div>
+          ${descuentosAnirona.length ? `
+            <button class="anirona-ver-descuentos" type="button" aria-expanded="false">
+              Ver descuentos${descuentosAnirona.length > 1 ? ` (${descuentosAnirona.length})` : ""}
+            </button>
+            <div class="anirona-descuentos-panel" hidden>
+              <strong class="anirona-descuentos-titulo">Elige el descuento que prefieras</strong>
+              <span class="anirona-descuentos-ayuda">No mostramos el código. Al abrir Mercado Libre se copiará automáticamente.</span>
+              <div class="anirona-descuentos-lista"></div>
+            </div>
+          ` : `<span class="anirona-sin-descuento">Por ahora no hay un cupón aplicable a este precio.</span>`}
+        </div>
+      ` : ""}
+
       ${!esComunidadAnirona ? `
         <div class="oferta-precios ${precioCupon ? "con-cupon" : ""}">
           ${precioPublicado ? `<div><span>Precio publicado</span><strong>${escaparHtml(precioPublicado)}</strong></div>` : ""}
@@ -3270,6 +3335,39 @@ function crearTarjetaOferta(publicidad, categoria) {
 
   const mensaje = articulo.querySelector(".oferta-mensaje");
   const botonImagen = articulo.querySelector(".oferta-imagen-contenedor");
+  let codigoAnironaSeleccionado = codigo;
+
+  if (esComunidadAnirona && descuentosAnirona.length) {
+    const botonDescuentos = articulo.querySelector(".anirona-ver-descuentos");
+    const panelDescuentos = articulo.querySelector(".anirona-descuentos-panel");
+    const listaDescuentos = articulo.querySelector(".anirona-descuentos-lista");
+    const precioCuponElemento = articulo.querySelector("[data-anirona-precio-cupon]");
+
+    descuentosAnirona.forEach((resultado, indice) => {
+      const opcion = document.createElement("button");
+      opcion.type = "button";
+      opcion.className = `anirona-descuento-opcion${indice === 0 ? " seleccionado" : ""}`;
+      opcion.innerHTML = `
+        <span>${escaparHtml(textoOpcionDescuentoAnirona(resultado))}</span>
+        ${indice === 0 ? '<em>Mejor descuento</em>' : ''}
+      `;
+      opcion.addEventListener("click", () => {
+        codigoAnironaSeleccionado = String(resultado.cupon.codigo || "").trim();
+        if (precioCuponElemento) precioCuponElemento.textContent = monedaBuscador(resultado.totalFinal);
+        listaDescuentos.querySelectorAll(".anirona-descuento-opcion").forEach((item) => item.classList.remove("seleccionado"));
+        opcion.classList.add("seleccionado");
+        panelDescuentos.hidden = true;
+        botonDescuentos.setAttribute("aria-expanded", "false");
+      });
+      listaDescuentos.appendChild(opcion);
+    });
+
+    botonDescuentos?.addEventListener("click", () => {
+      const abrir = panelDescuentos.hidden;
+      panelDescuentos.hidden = !abrir;
+      botonDescuentos.setAttribute("aria-expanded", String(abrir));
+    });
+  }
 
   const abrirEnlace = (enlace, plataformaDestino) => {
     if (!enlace) return;
@@ -3277,8 +3375,10 @@ function crearTarjetaOferta(publicidad, categoria) {
       ...publicidad,
       enlace,
       plataforma: plataformaDestino,
-      codigo_cupon: esComunidadAnirona ? "" : publicidad.codigo_cupon,
-    });
+      codigo_cupon: esComunidadAnirona && plataformaDestino === "mercadolibre"
+        ? codigoAnironaSeleccionado
+        : (esComunidadAnirona ? "" : publicidad.codigo_cupon),
+    }, { copiarCuponAsignado: plataformaDestino === "mercadolibre" });
   };
 
   if (esComunidadAnirona) {
