@@ -1,9 +1,33 @@
 {
+  "id": "/",
   "name": "Ofertas Imperdibles MX",
   "short_name": "Ofertas MX",
   "description": "Cupones, promociones y ofertas de Mercado Libre, Amazon y más.",
   "lang": "es-MX",
-  "display": "browser",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#ffffff",
-  "theme_color": "#FFE600"
+  "theme_color": "#FFE600",
+  "icons": [
+    {
+      "src": "/img/pwa-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/pwa-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/pwa-icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
 }
