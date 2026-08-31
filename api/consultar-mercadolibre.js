@@ -8,6 +8,7 @@ const ALLOWED_HOSTS = new Set([
 
 function json(res, status, body) {
   res.status(status).setHeader("Content-Type", "application/json; charset=utf-8");
+  res.setHeader("Cache-Control", "no-store");
   res.end(JSON.stringify(body));
 }
 
@@ -43,154 +44,62 @@ async function resolveUrl(inputUrl) {
   return finalUrl;
 }
 
-function getAttribute(item, id) {
-  return item?.attributes?.find((attribute) => attribute.id === id)?.value_name || "";
-}
+async function fetchMl(path, token) {
+  const response = await fetch(`https://api.mercadolibre.com${path}`, {
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    cache: "no-store",
+  });
 
-async function fetchMl(path, token = "") {
-  const headers = { Accept: "application/json" };
-  if (token) headers.Authorization = `Bearer ${token}`;
-
-  const response = await fetch(`https://api.mercadolibre.com${path}`, { headers });
   const data = await response.json().catch(() => ({}));
-
   if (!response.ok) {
     const detail = data?.message || data?.error || `Error ${response.status}`;
-    const error = new Error(`Mercado Libre respondió: ${detail}`);
+    const error = new Error(detail);
     error.status = response.status;
     error.detail = detail;
     throw error;
   }
-
   return data;
 }
 
-function isUnauthorizedError(error) {
-  const detail = String(error?.detail || error?.message || "").toUpperCase();
-  return error?.status === 401 || error?.status === 403 || detail.includes("UNAUTHORIZED");
+function getAttribute(item, id) {
+  return item?.attributes?.find((attribute) => attribute.id === id)?.value_name || "";
 }
 
-function decodeHtml(value = "") {
-  return String(value)
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;|&#x27;/g, "'")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)));
-}
-
-function metaContent(html, key, attribute = "property") {
-  const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const patterns = [
-    new RegExp(`<meta[^>]+${attribute}=["']${escaped}["'][^>]+content=["']([^"']+)["'][^>]*>`, "i"),
-    new RegExp(`<meta[^>]+content=["']([^"']+)["'][^>]+${attribute}=["']${escaped}["'][^>]*>`, "i"),
-  ];
-  for (const pattern of patterns) {
-    const match = html.match(pattern);
-    if (match) return decodeHtml(match[1]).trim();
+function elegirPrecioPublicado(pricesResponse, salePriceResponse) {
+  // sale_price es el valor exacto que Mercado Libre publica en marketplace.
+  if (Number.isFinite(Number(salePriceResponse?.amount))) {
+    return {
+      actual: Number(salePriceResponse.amount),
+      anterior: Number.isFinite(Number(salePriceResponse.regular_amount))
+        ? Number(salePriceResponse.regular_amount)
+        : null,
+      moneda: salePriceResponse.currency_id || "MXN",
+      fuentePrecio: "sale_price",
+    };
   }
-  return "";
-}
 
-function readJsonLdProducts(html) {
-  const scripts = [...html.matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
-  const products = [];
-  for (const script of scripts) {
-    try {
-      const parsed = JSON.parse(decodeHtml(script[1]).trim());
-      const entries = Array.isArray(parsed) ? parsed : [parsed];
-      for (const entry of entries) {
-        if (entry?.["@graph"] && Array.isArray(entry["@graph"])) entries.push(...entry["@graph"]);
-        if (String(entry?.["@type"] || "").toLowerCase() === "product") products.push(entry);
-      }
-    } catch {
-      // Algunos scripts JSON-LD de terceros no contienen JSON válido.
-    }
-  }
-  return products;
-}
-
-function numberOrNull(value) {
-  if (value === null || value === undefined || value === "") return null;
-  const normalized = String(value).replace(/[^0-9.,-]/g, "").replace(/,/g, "");
-  const number = Number(normalized);
-  return Number.isFinite(number) ? number : null;
-}
-
-async function fetchPageFallback(url, itemId) {
-  const response = await fetch(url, {
-    method: "GET",
-    redirect: "follow",
-    headers: {
-      Accept: "text/html,application/xhtml+xml",
-      "Accept-Language": "es-MX,es;q=0.9",
-      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124 Safari/537.36",
-    },
+  const prices = Array.isArray(pricesResponse?.prices) ? pricesResponse.prices : [];
+  const marketplace = prices.filter((price) => {
+    const restrictions = price?.conditions?.context_restrictions;
+    return !Array.isArray(restrictions) || restrictions.length === 0 || restrictions.includes("channel_marketplace");
   });
 
-  if (!response.ok) throw new Error(`No fue posible abrir la publicación (${response.status}).`);
-  const html = await response.text();
-  const product = readJsonLdProducts(html)[0] || {};
-  const offer = Array.isArray(product.offers) ? product.offers[0] : (product.offers || {});
-
-  const title = product.name || metaContent(html, "og:title") || metaContent(html, "twitter:title", "name");
-  const imageValue = product.image || metaContent(html, "og:image") || metaContent(html, "twitter:image", "name");
-  const images = Array.isArray(imageValue) ? imageValue.filter(Boolean) : (imageValue ? [imageValue] : []);
-  const price = numberOrNull(offer.price ?? offer.lowPrice ?? metaContent(html, "product:price:amount"));
-  const currency = offer.priceCurrency || metaContent(html, "product:price:currency") || "MXN";
-  const brand = typeof product.brand === "string" ? product.brand : (product.brand?.name || "");
-  const availabilityText = String(offer.availability || "").toLowerCase();
-
-  if (!title && !images.length) {
-    throw new Error("Mercado Libre bloqueó la consulta y la página pública no expuso datos del producto.");
-  }
+  const promotion = marketplace.find((price) => price?.type === "promotion" && Number.isFinite(Number(price?.amount)));
+  const standard = marketplace.find((price) => price?.type === "standard" && Number.isFinite(Number(price?.amount)));
+  const selected = promotion || standard;
+  if (!selected) return null;
 
   return {
-    id: itemId,
-    title: title || "",
-    permalink: response.url || url,
-    pictures: images.map((secure_url) => ({ secure_url })),
-    price,
-    original_price: null,
-    currency_id: currency,
-    attributes: [
-      ...(brand ? [{ id: "BRAND", value_name: brand }] : []),
-      ...(product.model ? [{ id: "MODEL", value_name: product.model }] : []),
-    ],
-    sold_quantity: null,
-    status: availabilityText.includes("instock") || availabilityText.includes("instoreonly") ? "active" : "",
-    __fallback: true,
+    actual: Number(selected.amount),
+    anterior: Number.isFinite(Number(selected.regular_amount))
+      ? Number(selected.regular_amount)
+      : (promotion && Number.isFinite(Number(standard?.amount)) ? Number(standard.amount) : null),
+    moneda: selected.currency_id || "MXN",
+    fuentePrecio: "prices",
   };
-}
-
-async function fetchItemWithFallback(itemId, token, resolvedUrl) {
-  let lastError = null;
-
-  if (token) {
-    try {
-      return await fetchMl(`/items/${itemId}`, token);
-    } catch (error) {
-      lastError = error;
-      if (!isUnauthorizedError(error)) throw error;
-    }
-  }
-
-  try {
-    return await fetchMl(`/items/${itemId}`);
-  } catch (error) {
-    lastError = error;
-    if (!isUnauthorizedError(error)) throw error;
-  }
-
-  try {
-    return await fetchPageFallback(resolvedUrl, itemId);
-  } catch (fallbackError) {
-    const message = fallbackError?.message || lastError?.message || "No fue posible consultar Mercado Libre.";
-    const error = new Error(message);
-    error.status = fallbackError?.status || lastError?.status || 500;
-    throw error;
-  }
 }
 
 export default async function handler(req, res) {
@@ -200,6 +109,7 @@ export default async function handler(req, res) {
     const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : (req.body || {});
     const enlace = String(body.enlace || "").trim();
     const itemIdDirecto = normalizeItemId(body.item_id || "");
+
     if (!enlace && !itemIdDirecto) {
       return json(res, 400, { error: "Falta la URL o el ITEM_ID de Mercado Libre." });
     }
@@ -208,31 +118,48 @@ export default async function handler(req, res) {
       ? await resolveUrl(enlace)
       : `https://articulo.mercadolibre.com.mx/${itemIdDirecto}`;
     const itemId = itemIdDirecto || normalizeItemId(resolvedUrl) || normalizeItemId(enlace);
+
     if (!itemId) {
       return json(res, 400, { error: "No fue posible identificar el código MLM de la publicación." });
     }
 
     const token = process.env.MERCADOLIBRE_ACCESS_TOKEN || process.env.ML_ACCESS_TOKEN || "";
-    const item = await fetchItemWithFallback(itemId, token, resolvedUrl);
-
-    let salePrice = null;
-    let priceWarning = "";
-    if (token && !item.__fallback) {
-      try {
-        salePrice = await fetchMl(`/items/${itemId}/sale_price?context=channel_marketplace`, token);
-      } catch (error) {
-        priceWarning = isUnauthorizedError(error)
-          ? "Producto encontrado. Mercado Libre no autorizó consultar el precio detallado con el token configurado."
-          : error.message;
-      }
-    } else if (item.__fallback) {
-      priceWarning = "Datos recuperados desde la página pública porque la API de Mercado Libre rechazó el acceso.";
-    } else {
-      priceWarning = "Para consultar siempre el precio actual configura MERCADOLIBRE_ACCESS_TOKEN en Vercel.";
+    if (!token) {
+      return json(res, 503, {
+        error: "La consulta de precio aún no está conectada a Mercado Libre. Configura MERCADOLIBRE_ACCESS_TOKEN en Vercel y vuelve a consultar.",
+        code: "ML_TOKEN_MISSING",
+        item_id: itemId,
+      });
     }
 
-    const currentPrice = salePrice?.amount ?? item?.price ?? null;
-    const regularPrice = salePrice?.regular_amount ?? item?.original_price ?? null;
+    // 1) Precios: endpoint oficial vigente de Mercado Libre.
+    // 2) sale_price: precio exacto mostrado en marketplace cuando está disponible.
+    const [pricesResult, salePriceResult, itemResult] = await Promise.allSettled([
+      fetchMl(`/items/${itemId}/prices`, token),
+      fetchMl(`/items/${itemId}/sale_price?context=channel_marketplace`, token),
+      fetchMl(`/items/${itemId}`, token),
+    ]);
+
+    const prices = pricesResult.status === "fulfilled" ? pricesResult.value : null;
+    const salePrice = salePriceResult.status === "fulfilled" ? salePriceResult.value : null;
+    const item = itemResult.status === "fulfilled" ? itemResult.value : null;
+    const precio = elegirPrecioPublicado(prices, salePrice);
+
+    if (!precio) {
+      const possibleErrors = [salePriceResult, pricesResult, itemResult]
+        .filter((result) => result.status === "rejected")
+        .map((result) => result.reason);
+      const authError = possibleErrors.find((error) => error?.status === 401 || error?.status === 403);
+      if (authError) {
+        return json(res, 401, {
+          error: "Mercado Libre rechazó el token. Genera un ACCESS_TOKEN vigente y actualiza MERCADOLIBRE_ACCESS_TOKEN en Vercel.",
+          code: "ML_TOKEN_INVALID",
+          item_id: itemId,
+        });
+      }
+      throw possibleErrors[0] || new Error("Mercado Libre no devolvió un precio vigente para esta publicación.");
+    }
+
     const image = item?.pictures?.[0]?.secure_url || item?.secure_thumbnail || item?.thumbnail || "";
 
     return json(res, 200, {
@@ -240,20 +167,27 @@ export default async function handler(req, res) {
       titulo: item?.title || "",
       enlace: item?.permalink || resolvedUrl,
       imagen: image,
-      imagenes: Array.isArray(item?.pictures) ? item.pictures.map((picture) => picture.secure_url || picture.url).filter(Boolean) : [],
-      precio_actual: currentPrice,
-      precio_anterior: regularPrice,
-      moneda: salePrice?.currency_id || item?.currency_id || "MXN",
+      imagenes: Array.isArray(item?.pictures)
+        ? item.pictures.map((picture) => picture.secure_url || picture.url).filter(Boolean)
+        : [],
+      precio_actual: precio.actual,
+      precio_anterior: precio.anterior,
+      moneda: precio.moneda,
       marca: getAttribute(item, "BRAND"),
       modelo: getAttribute(item, "MODEL"),
       vendidos: item?.sold_quantity ?? null,
-      disponible: item?.status === "active",
+      disponible: item ? item.status === "active" : null,
       estado: item?.status || "",
-      advertencia: priceWarning,
-      fuente: item.__fallback ? "pagina_publica" : "api",
+      advertencia: "Precio actualizado directamente desde la API de Mercado Libre.",
+      fuente: "api",
+      fuente_precio: precio.fuentePrecio,
+      consultado_en: new Date().toISOString(),
     });
   } catch (error) {
     const status = Number(error?.status) >= 400 && Number(error?.status) < 500 ? Number(error.status) : 500;
-    return json(res, status, { error: error.message || "No fue posible consultar Mercado Libre." });
+    return json(res, status, {
+      error: error?.message ? `No se pudo actualizar el precio: ${error.message}` : "No se pudo actualizar el precio desde Mercado Libre.",
+      code: "ML_QUERY_FAILED",
+    });
   }
 }
