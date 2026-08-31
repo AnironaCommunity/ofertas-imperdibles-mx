@@ -2775,7 +2775,7 @@ async function consultarDatosMercadoLibreAdmin() {
 
   adConsultarMl.disabled = true;
   if (adConsultaMlMensaje) {
-    adConsultaMlMensaje.textContent = "Consultando precio actual en Mercado Libre…";
+    adConsultaMlMensaje.textContent = "Buscando precio público en Mercado Libre…";
     adConsultaMlMensaje.className = "consulta-ml-mensaje";
   }
 
@@ -2801,7 +2801,7 @@ async function consultarDatosMercadoLibreAdmin() {
     if (adConsultaMlMensaje) {
       const partes = [resultado.item_id || "Producto encontrado"];
       if (resultado.precio_actual !== null && resultado.precio_actual !== undefined) partes.push(formatMoney(resultado.precio_actual));
-      adConsultaMlMensaje.textContent = `✓ Precio actualizado desde Mercado Libre · ${partes.join(" · ")}`;
+      adConsultaMlMensaje.textContent = `✓ Precio leído · ${partes.join(" · ")} · ${resultado.fuente === "pagina_publica" ? "página pública" : "API pública"}`;
       adConsultaMlMensaje.className = "consulta-ml-mensaje ok";
     }
   } catch (error) {
