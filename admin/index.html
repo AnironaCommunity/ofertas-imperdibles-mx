@@ -8,7 +8,7 @@
   <title>Administrador | Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="../img/logo.png" />
-  <link rel="stylesheet" href="admin.css?v=83.1.0" />
+  <link rel="stylesheet" href="admin.css?v=82.34.0" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -718,21 +718,6 @@ Descuento máximo: $180"
                 <small>Mostrará el botón amarillo en Comunidad Anirona.</small>
               </div>
 
-              <div class="campo campo-ad-consulta-ml">
-                <label for="ad-ml-source">Consultar datos de Mercado Libre</label>
-                <div class="consulta-ml-fila">
-                  <input
-                    id="ad-ml-source"
-                    type="text"
-                    placeholder="URL completa o MLM3610829156"
-                    autocomplete="off"
-                  />
-                  <button id="ad-consultar-ml" class="boton-secundario" type="button">Consultar</button>
-                </div>
-                <small>Prueba experimental sin conectar tu cuenta: intenta leer el precio público de Mercado Libre. Para mayor probabilidad de éxito usa la URL completa con MLM-...; tu enlace de afiliado se conserva para el botón de compra.</small>
-                <small id="ad-consulta-ml-mensaje" class="consulta-ml-mensaje" aria-live="polite"></small>
-              </div>
-
               <div class="campo campo-ad-enlace-amazon">
                 <label for="ad-link-amazon">Enlace de Amazon</label>
                 <input
@@ -773,7 +758,7 @@ Descuento máximo: $180"
                 <input id="ad-es-otra-recomendacion" type="checkbox" />
                 <span>Mostrar al final como <strong>Otra recomendación</strong></span>
               </label>
-<div class="campo campo-ad-precio">
+<div class="campo campo-ad-precio" hidden>
                 <label for="ad-price-published">Precio publicado</label>
                 <input
                   id="ad-price-published"
@@ -782,18 +767,17 @@ Descuento máximo: $180"
                 />
               </div>
 
-              <div class="campo campo-ad-precio">
+              <div class="campo campo-ad-precio" hidden>
                 <label for="ad-price-coupon">Precio con cupón</label>
                 <input
                   id="ad-price-coupon"
                   type="text"
-                  placeholder="Se calcula automáticamente"
-                  readonly
+                  placeholder="Ej. $4,007"
                 />
               </div>
               <!-- Campos técnicos conservados para compatibilidad con publicaciones existentes. -->
               <input id="ad-coupon-code" type="hidden" />
-              <div id="ad-coupon-recommendation" class="recomendacion-cupon campo-ad-recomendacion" aria-live="polite">Escribe el precio publicado para calcular el mejor cupón.</div>
+              <div id="ad-coupon-recommendation" hidden aria-live="polite"></div>
 
               <div class="campo campo-ad-imagen">
                 <label for="ad-image">Foto del producto</label>
@@ -1359,6 +1343,6 @@ Descuento máximo: $180"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=83.1.0"></script>
+  <script type="module" src="admin.js?v=82.82.0"></script>
 </body>
 </html>

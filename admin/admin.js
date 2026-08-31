@@ -164,9 +164,6 @@ const adPlatforms = [
   ...document.querySelectorAll('input[name="ad-platform"]'),
 ];
 const adLinkMercadoLibre = document.querySelector("#ad-link-mercado-libre");
-const adMlSource = document.querySelector("#ad-ml-source");
-const adConsultarMl = document.querySelector("#ad-consultar-ml");
-const adConsultaMlMensaje = document.querySelector("#ad-consulta-ml-mensaje");
 const adLinkAmazon = document.querySelector("#ad-link-amazon");
 const adDisponibleMercadoLibre = document.querySelector("#ad-disponible-mercado-libre");
 const adDisponibleAmazon = document.querySelector("#ad-disponible-amazon");
@@ -2763,64 +2760,11 @@ function productoNuevoVigente(ad) {
   return Number.isFinite(fecha) && Date.now() - fecha < DURACION_NUEVO_PRODUCTO_MS;
 }
 
-async function consultarDatosMercadoLibreAdmin() {
-  const entrada = String(adMlSource?.value || "").trim();
-  if (!entrada) {
-    if (adConsultaMlMensaje) {
-      adConsultaMlMensaje.textContent = "Escribe la URL completa o el ITEM_ID de Mercado Libre.";
-      adConsultaMlMensaje.className = "consulta-ml-mensaje error";
-    }
-    return;
-  }
-
-  adConsultarMl.disabled = true;
-  if (adConsultaMlMensaje) {
-    adConsultaMlMensaje.textContent = "Buscando precio público en Mercado Libre…";
-    adConsultaMlMensaje.className = "consulta-ml-mensaje";
-  }
-
-  try {
-    const esItemId = /^MLM[-_ ]?\d{6,}$/i.test(entrada);
-    const body = esItemId ? { item_id: entrada } : { enlace: entrada };
-    const resultado = await api("/api/consultar-mercadolibre", {
-      method: "POST",
-      body: JSON.stringify(body),
-    });
-
-    if (resultado.titulo && !adTitle.value.trim()) adTitle.value = resultado.titulo;
-    if (resultado.precio_actual !== null && resultado.precio_actual !== undefined) {
-      adPricePublished.value = formatMoney(resultado.precio_actual);
-      applyBestCouponToAdForm();
-    }
-    if (resultado.imagen) {
-      adImageUrl.value = resultado.imagen;
-      adPreview.src = resultado.imagen;
-      adPreviewWrapper.hidden = false;
-    }
-
-    if (adConsultaMlMensaje) {
-      const partes = [resultado.item_id || "Producto encontrado"];
-      if (resultado.precio_actual !== null && resultado.precio_actual !== undefined) partes.push(formatMoney(resultado.precio_actual));
-      adConsultaMlMensaje.textContent = `✓ Precio leído · ${partes.join(" · ")} · ${resultado.fuente === "pagina_publica" ? "página pública" : "API pública"}`;
-      adConsultaMlMensaje.className = "consulta-ml-mensaje ok";
-    }
-  } catch (error) {
-    if (adConsultaMlMensaje) {
-      adConsultaMlMensaje.textContent = error.message || "No fue posible consultar Mercado Libre.";
-      adConsultaMlMensaje.className = "consulta-ml-mensaje error";
-    }
-  } finally {
-    adConsultarMl.disabled = false;
-  }
-}
-
 function resetAdForm() {
   adForm.reset();
   adId.value = "";
   adImageUrl.value = "";
   adLinkMercadoLibre.value = "";
-  if (adMlSource) adMlSource.value = "";
-  if (adConsultaMlMensaje) { adConsultaMlMensaje.textContent = ""; adConsultaMlMensaje.className = "consulta-ml-mensaje"; }
   adLinkAmazon.value = "";
   adDisponibleMercadoLibre.checked = true;
   adDisponibleAmazon.checked = true;
@@ -2862,8 +2806,6 @@ function editAd(ad) {
 
   adLinkMercadoLibre.value = enlaceMercadoLibreGuardado ||
     (usaSoloEnlaceLegacy && ad.plataforma !== "amazon" ? enlaceLegacy : "");
-  if (adMlSource) adMlSource.value = /MLM[-_ ]?\d{6,}/i.test(adLinkMercadoLibre.value) ? adLinkMercadoLibre.value : "";
-  if (adConsultaMlMensaje) { adConsultaMlMensaje.textContent = ""; adConsultaMlMensaje.className = "consulta-ml-mensaje"; }
   adLinkAmazon.value = enlaceAmazonGuardado ||
     (usaSoloEnlaceLegacy && ad.plataforma === "amazon" ? enlaceLegacy : "");
   adDisponibleMercadoLibre.checked = ad.disponible_mercado_libre !== false;
@@ -4348,14 +4290,6 @@ for (const input of adPlatforms) {
     updateCouponValidationByPlatform();
   });
 }
-
-adConsultarMl?.addEventListener("click", consultarDatosMercadoLibreAdmin);
-adMlSource?.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-    event.preventDefault();
-    consultarDatosMercadoLibreAdmin();
-  }
-});
 
 adPricePublished.addEventListener("input", () => {
   window.clearTimeout(adPriceTimer);
