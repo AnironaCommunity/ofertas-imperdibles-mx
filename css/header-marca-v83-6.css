@@ -1,0 +1,174 @@
+/* V83.6 — Encabezado de marca compacto inspirado en la referencia aprobada.
+   Solo sustituye la presentación del logo principal grande por icono + nombre. */
+
+.encabezado {
+  border-top: 4px solid #ffe600 !important;
+  background: #fff !important;
+}
+
+.encabezado::before,
+.encabezado::after,
+.enlace-logo-inicio::before {
+  display: none !important;
+  content: none !important;
+}
+
+.enlace-logo-inicio {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  width: min(1180px, calc(100% - 48px)) !important;
+  height: auto !important;
+  min-height: 112px !important;
+  max-width: none !important;
+  margin: 0 auto !important;
+  padding: 18px 10px !important;
+  overflow: visible !important;
+  background: #fff !important;
+}
+
+.marca-principal {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  gap: 20px !important;
+  padding: 0 !important;
+}
+
+.marca-principal-icono.marca-principal-logo-completo {
+  display: block !important;
+  width: 78px !important;
+  height: 78px !important;
+  min-width: 78px !important;
+  max-width: 78px !important;
+  min-height: 78px !important;
+  max-height: 78px !important;
+  padding: 13px 8px !important;
+  flex: 0 0 78px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  border: 1px solid #e7e7e7 !important;
+  border-radius: 50% !important;
+  background: #fff !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .035) !important;
+}
+
+.marca-principal-textos,
+.marca-principal-textos[hidden] {
+  position: relative !important;
+  display: flex !important;
+  min-width: 0 !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  padding-left: 20px !important;
+  line-height: 1 !important;
+}
+
+.marca-principal-textos::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 5%;
+  width: 3px;
+  height: 90%;
+  border-radius: 999px;
+  background: #ffe000;
+}
+
+.marca-principal-nombre {
+  display: block !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  color: #171717 !important;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-size: clamp(30px, 3.2vw, 48px) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.035em !important;
+  line-height: 1.05 !important;
+  white-space: nowrap !important;
+}
+
+.marca-principal-eslogan {
+  display: none !important;
+}
+
+@media (max-width: 700px) {
+  .encabezado {
+    border-top-width: 3px !important;
+  }
+
+  .enlace-logo-inicio {
+    width: 100% !important;
+    min-height: 80px !important;
+    padding: 11px 14px !important;
+  }
+
+  .marca-principal {
+    width: 100% !important;
+    gap: 11px !important;
+  }
+
+  .marca-principal-icono.marca-principal-logo-completo {
+    width: 56px !important;
+    height: 56px !important;
+    min-width: 56px !important;
+    max-width: 56px !important;
+    min-height: 56px !important;
+    max-height: 56px !important;
+    flex-basis: 56px !important;
+    padding: 10px 6px !important;
+  }
+
+  .marca-principal-textos,
+  .marca-principal-textos[hidden] {
+    padding-left: 11px !important;
+  }
+
+  .marca-principal-textos::before {
+    width: 2px;
+  }
+
+  .marca-principal-nombre {
+    font-size: clamp(20px, 6.2vw, 28px) !important;
+    letter-spacing: -0.035em !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .enlace-logo-inicio {
+    min-height: 72px !important;
+    padding-inline: 10px !important;
+  }
+
+  .marca-principal {
+    gap: 9px !important;
+  }
+
+  .marca-principal-icono.marca-principal-logo-completo {
+    width: 50px !important;
+    height: 50px !important;
+    min-width: 50px !important;
+    max-width: 50px !important;
+    min-height: 50px !important;
+    max-height: 50px !important;
+    flex-basis: 50px !important;
+    padding: 9px 6px !important;
+  }
+
+  .marca-principal-textos,
+  .marca-principal-textos[hidden] {
+    padding-left: 9px !important;
+  }
+
+  .marca-principal-nombre {
+    font-size: clamp(18px, 5.7vw, 23px) !important;
+  }
+}
+
+.marca-principal-destacado {
+  color: #171717 !important;
+}
