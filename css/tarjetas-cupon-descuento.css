@@ -3426,3 +3426,16 @@
     margin-top: 0 !important;
   }
 }
+
+
+/* ================================================================
+   PAQUETE 7.3 — IMPORTE LARGO COMPLETO EN MÓVIL
+   Ajusta únicamente descuentos de 6+ caracteres (ej. $1,000) para
+   que no se recorten dentro de la columna izquierda del ticket.
+   ================================================================ */
+@media (max-width: 680px) {
+  #cupones .cupon-horizontal-v16 .hc16-descuento.hc16-descuento-largo {
+    font-size: clamp(24px, 6.7vw, 31px) !important;
+    letter-spacing: -0.055em !important;
+  }
+}

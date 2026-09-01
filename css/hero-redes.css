@@ -2604,3 +2604,21 @@
 .hero-redes.hero-redes-lista #nombre-sitio {
   font-family: Arial, Helvetica, sans-serif !important;
 }
+
+
+/* ============================================================
+   V83.10 — Corrección de título dinámico en móvil
+   Mantiene una sola línea y evita que la fecha salga del contenedor.
+   ============================================================ */
+@media (max-width: 600px) {
+  .hero-redes.hero-redes-lista #nombre-sitio {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: clamp(11.5px, 3.2vw, 13px) !important;
+    letter-spacing: -0.02em !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: clip !important;
+  }
+}

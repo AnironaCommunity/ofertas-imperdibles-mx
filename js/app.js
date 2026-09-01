@@ -1347,6 +1347,8 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   const esExclusivo = categoria === "exclusivo";
   const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
   const visualCategoria = configuracionVisualCupon(cupon);
+  const tituloCuponLimpio = String(cupon.titulo || "").replace(/\s*OFF\s*$/i, "").trim();
+  const claseDescuentoLargo = tituloCuponLimpio.length >= 6 ? " hc16-descuento-largo" : "";
 
   const estados = Array.isArray(estadosDestacados) ? estadosDestacados.filter(Boolean) : [estadosDestacados].filter(Boolean);
   const clasesEstado = estados.map((estado) => ` cupon-${estado}`).join("");
@@ -1362,7 +1364,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
     <span class="ticket-notch ticket-notch-bottom" aria-hidden="true"></span>
     <div class="hc16-valor">
       ${cupon.imagen_url ? `<img class="hc16-logo cupon-logo" src="${escaparHtml(cupon.imagen_url)}" alt="" loading="lazy" />` : ""}
-      <h2 class="hc16-descuento descuento">${escaparHtml(String(cupon.titulo || "").replace(/\s*OFF\s*$/i, "").trim())}<span class="hc19-off">OFF</span></h2>
+      <h2 class="hc16-descuento descuento${claseDescuentoLargo}">${escaparHtml(tituloCuponLimpio)}<span class="hc19-off">OFF</span></h2>
       <span class="hc19-porcentaje" aria-hidden="true">%</span>
     </div>
 
