@@ -3439,3 +3439,19 @@
     letter-spacing: -0.055em !important;
   }
 }
+
+
+/* ================================================================
+   PAQUETE 7.4 — $1,000 COMPLETO + CONTADOR POR INTERACCIÓN
+   El importe largo usa un tamaño seguro dentro del 25% izquierdo en móvil.
+   El cambio del contador se resuelve en JS: solo Copiar código / Ver ofertas.
+   ================================================================ */
+@media (max-width: 680px) {
+  #cupones .cupon-horizontal-v16 .hc16-descuento.hc16-descuento-largo {
+    font-size: clamp(20px, 5.7vw, 25px) !important;
+    letter-spacing: -0.065em !important;
+    gap: 1px !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+}

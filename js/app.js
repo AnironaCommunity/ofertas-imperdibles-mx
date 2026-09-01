@@ -488,7 +488,7 @@ barraInferiorCupones?.addEventListener("click", () => {
   });
 });
 
-function abrirMercadoLibreDesdeCuponAgotado(cupon, tarjeta) {
+async function abrirMercadoLibreDesdeCuponAgotado(cupon, tarjeta) {
   const enlaceDestino = enlaceWebSeguro(cupon?.enlace);
   if (!enlaceDestino) {
     const mensaje = tarjeta?.querySelector(".mensaje");
@@ -496,7 +496,21 @@ function abrirMercadoLibreDesdeCuponAgotado(cupon, tarjeta) {
     return;
   }
 
-  window.location.assign(enlaceDestino);
+  // PAQUETE 7.4: “Ver ofertas” cuenta igual que “Copiar código”.
+  try {
+    const resultado = await registrarClic(cupon.id);
+    if (Number.isFinite(Number(resultado?.clics))) {
+      const total = Number(resultado.clics);
+      const numeroClics = tarjeta?.querySelector(".numero-clics");
+      if (numeroClics) numeroClics.textContent = String(total);
+      const couponIndex = todosLosCupones.findIndex((item) => Number(item.id) === Number(cupon.id));
+      if (couponIndex >= 0) todosLosCupones[couponIndex].clics = total;
+    }
+  } catch (error) {
+    console.warn("El contador no pudo actualizarse:", error);
+  } finally {
+    window.location.assign(enlaceDestino);
+  }
 }
 
 function abrirOfertazoDesdeCupon() {
@@ -2531,7 +2545,8 @@ function renderizarCategoria() {
   estadoCarga.textContent = "";
   startCouponTimers();
   programarSincronizacionAlturaTarjetas();
-  iniciarObservadorVistasCupones();
+  // PAQUETE 7.4: el contador vuelve a medir interacciones (Copiar código / Ver ofertas), no vistas.
+  detenerObservadorVistasCupones();
 }
 
 
@@ -2725,6 +2740,7 @@ async function registrarClic(id) {
       Accept: "application/json",
     },
     body: JSON.stringify({ id }),
+    keepalive: true,
   });
 
   if (!respuesta.ok) {
