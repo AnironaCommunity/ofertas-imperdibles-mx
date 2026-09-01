@@ -3252,6 +3252,8 @@ function crearTarjetaOferta(publicidad, categoria) {
     const precioAnterior = monedaOferta(publicidad.precio_anterior);
     const categoriaProducto = String(publicidad.categoria_producto || "Oferta destacada").trim();
     const expira = publicidad.fecha_expiracion ? textoExpiracionOferta(publicidad.fecha_expiracion) : "";
+    const tituloOferta = String(publicidad.titulo || "Oferta destacada").trim();
+    const descripcionOferta = String(publicidad.descripcion || "").trim().slice(0, 150);
 
     articulo.innerHTML = `
       <div class="ofertazo-cabecera">
@@ -3266,8 +3268,8 @@ function crearTarjetaOferta(publicidad, categoria) {
       </button>
       <div class="oferta-contenido ofertazo-contenido">
         <strong class="ofertazo-categoria">${escaparHtml(categoriaProducto)}</strong>
-        <h3>${escaparHtml(publicidad.titulo || "Oferta destacada")}</h3>
-        ${publicidad.descripcion ? `<p class="oferta-descripcion">${escaparHtml(publicidad.descripcion)}</p>` : ""}
+        <h3>${escaparHtml(tituloOferta)}</h3>
+        ${descripcionOferta ? `<p class="oferta-descripcion">${escaparHtml(descripcionOferta)}</p>` : ""}
         <div class="ofertazo-precios">
           ${precioActual ? `<strong>${escaparHtml(precioActual)}</strong>` : ""}
           ${precioAnterior ? `<del>${escaparHtml(precioAnterior)}</del>` : ""}

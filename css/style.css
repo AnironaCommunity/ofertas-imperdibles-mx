@@ -10071,9 +10071,12 @@ body.hay-cupones-visibles #separador-fin-cupones {
 .tarjeta-oferta-ofertazo .ofertazo-categoria { display: block; margin-bottom: 7px; font-size: 15px; line-height: 1.15; font-weight: 900; }
 .tarjeta-oferta-ofertazo .ofertazo-contenido h3 {
   display: -webkit-box; min-height: 40px; margin: 0; overflow: hidden; color: #333; font-size: 14px;
-  line-height: 1.4; font-weight: 500; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+  line-height: 1.4; font-weight: 500; -webkit-box-orient: vertical; -webkit-line-clamp: unset;
 }
-.tarjeta-oferta-ofertazo .oferta-descripcion { margin-top: 5px; font-size: 10.5px; -webkit-line-clamp: 1; }
+.tarjeta-oferta-ofertazo .oferta-descripcion {
+  display: block; margin-top: 6px; overflow: visible; color: #5f6368; font-size: 10.5px; line-height: 1.4;
+  -webkit-line-clamp: unset;
+}
 .tarjeta-oferta-ofertazo .ofertazo-precios { display: flex; align-items: baseline; gap: 10px; margin-top: 10px; }
 .tarjeta-oferta-ofertazo .ofertazo-precios strong { font-size: 27px; line-height: 1; font-weight: 900; letter-spacing: -1px; }
 .tarjeta-oferta-ofertazo .ofertazo-precios del { color: #777; font-size: 14px; }
@@ -10106,8 +10109,8 @@ body.hay-cupones-visibles #separador-fin-cupones {
   .tarjeta-oferta-ofertazo .ofertazo-imagen-contenedor { min-height: 0; height: 130px; padding: 8px; }
   .tarjeta-oferta-ofertazo .ofertazo-contenido { padding: 8px; }
   .tarjeta-oferta-ofertazo .ofertazo-categoria { margin-bottom: 5px; font-size: 12px; }
-  .tarjeta-oferta-ofertazo .ofertazo-contenido h3 { min-height: 34px; font-size: 11px; line-height: 1.45; }
-  .tarjeta-oferta-ofertazo .oferta-descripcion { display: none; }
+  .tarjeta-oferta-ofertazo .ofertazo-contenido h3 { min-height: 0; font-size: 11px; line-height: 1.45; -webkit-line-clamp: unset; }
+  .tarjeta-oferta-ofertazo .oferta-descripcion { display: block; margin-top: 5px; font-size: 9.5px; line-height: 1.35; -webkit-line-clamp: unset; }
   .tarjeta-oferta-ofertazo .ofertazo-precios { gap: 6px; margin-top: 7px; }
   .tarjeta-oferta-ofertazo .ofertazo-precios strong { font-size: 20px; }
   .tarjeta-oferta-ofertazo .ofertazo-precios del { font-size: 10px; }
@@ -10203,15 +10206,18 @@ body.hay-cupones-visibles #separador-fin-cupones {
   }
 
   #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-contenido h3 {
-    min-height: 34px;
+    min-height: 0;
     font-size: 11.5px;
     line-height: 1.4;
+    -webkit-line-clamp: unset;
   }
 
   #ofertas-mercado-libre .tarjeta-oferta-ofertazo .oferta-descripcion {
-    min-height: 15px;
-    margin-top: 3px;
+    min-height: 0;
+    margin-top: 4px;
     font-size: 9.5px;
+    line-height: 1.35;
+    -webkit-line-clamp: unset;
   }
 
   #ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-precios {

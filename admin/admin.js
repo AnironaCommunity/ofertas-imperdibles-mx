@@ -3073,7 +3073,7 @@ async function guardarOfertazo(event) {
     if (!link) throw new Error("Ingresa el enlace de Mercado Libre.");
     const payload = {
       titulo: ofertazoTitulo.value.trim(),
-      descripcion: ofertazoDescripcion.value.trim(),
+      descripcion: ofertazoDescripcion.value.trim().slice(0, 150),
       categoria_producto: ofertazoCategoria.value.trim(),
       precio_publicado: ofertazoPrecioActual.value.trim(),
       precio_anterior: ofertazoPrecioAnterior.value.trim(),
