@@ -10362,3 +10362,27 @@ body.hay-cupones-visibles #separador-fin-cupones {
     gap: 12px !important;
   }
 }
+
+/* ============================================================
+   Paquete 7.7 — Ofertazo: pie fijo al fondo de cada tarjeta
+   La línea divisoria y el contador de vistas conservan siempre
+   la misma posición dentro de la fila, aunque título/descripcion
+   tengan diferente altura.
+   ============================================================ */
+#ofertas-mercado-libre .tarjeta-oferta-ofertazo {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100%;
+}
+
+#ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-contenido {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  flex-direction: column !important;
+  min-height: 0;
+}
+
+#ofertas-mercado-libre .tarjeta-oferta-ofertazo .ofertazo-pie {
+  flex: 0 0 auto;
+  margin-top: auto !important;
+}
