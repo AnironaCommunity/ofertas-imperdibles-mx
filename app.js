@@ -166,7 +166,7 @@ let segundosRestantes = SEGUNDOS_ACTUALIZACION;
 let cargando = false;
 let redireccionEnProceso = false;
 let temporizadorRedireccion = null;
-const SEGUNDOS_REDIRECCION_AUTOMATICA = 5;
+const SEGUNDOS_REDIRECCION_AUTOMATICA = 3;
 let categoriaActiva = "todos";
 let vistaActiva = "cupones";
 let todosLosCupones = [];
@@ -488,7 +488,7 @@ barraInferiorCupones?.addEventListener("click", () => {
   });
 });
 
-function abrirMercadoLibreDesdeCuponAgotado(cupon, tarjeta) {
+async function abrirMercadoLibreDesdeCuponAgotado(cupon, tarjeta) {
   const enlaceDestino = enlaceWebSeguro(cupon?.enlace);
   if (!enlaceDestino) {
     const mensaje = tarjeta?.querySelector(".mensaje");
@@ -496,7 +496,21 @@ function abrirMercadoLibreDesdeCuponAgotado(cupon, tarjeta) {
     return;
   }
 
-  window.location.assign(enlaceDestino);
+  // PAQUETE 7.4: “Ver ofertas” cuenta igual que “Copiar código”.
+  try {
+    const resultado = await registrarClic(cupon.id);
+    if (Number.isFinite(Number(resultado?.clics))) {
+      const total = Number(resultado.clics);
+      const numeroClics = tarjeta?.querySelector(".numero-clics");
+      if (numeroClics) numeroClics.textContent = String(total);
+      const couponIndex = todosLosCupones.findIndex((item) => Number(item.id) === Number(cupon.id));
+      if (couponIndex >= 0) todosLosCupones[couponIndex].clics = total;
+    }
+  } catch (error) {
+    console.warn("El contador no pudo actualizarse:", error);
+  } finally {
+    window.location.assign(enlaceDestino);
+  }
 }
 
 function abrirOfertazoDesdeCupon() {
@@ -1393,7 +1407,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
           <button class="boton-like hc16-icono ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
           <span class="numero-likes hc16-numero">${Number(cupon.likes || 0)}</span>
         </span>
-        <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas hc61-chip hc61-view-chip" aria-label="Vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
+        <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas hc61-chip hc61-view-chip" aria-label="Usos del cupón">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
       </div>
       <div class="estado-programacion hc16-tiempo" hidden></div>
     </div>
@@ -1507,7 +1521,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
           <button class="boton-like hc16-icono ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
           <span class="numero-likes hc16-numero">${Number(cupon.likes || 0)}</span>
         </span>
-        <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas hc61-chip hc61-view-chip" aria-label="Vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
+        <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas hc61-chip hc61-view-chip" aria-label="Usos del cupón">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
       </div>
       <div class="estado-programacion hc16-tiempo" hidden></div>
     </div>`;
@@ -2484,6 +2498,7 @@ async function registrarClic(id) {
       Accept: "application/json",
     },
     body: JSON.stringify({ id }),
+    keepalive: true,
   });
 
   if (!respuesta.ok) {

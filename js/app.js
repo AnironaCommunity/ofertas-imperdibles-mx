@@ -166,7 +166,7 @@ let segundosRestantes = SEGUNDOS_ACTUALIZACION;
 let cargando = false;
 let redireccionEnProceso = false;
 let temporizadorRedireccion = null;
-const SEGUNDOS_REDIRECCION_AUTOMATICA = 5;
+const SEGUNDOS_REDIRECCION_AUTOMATICA = 3;
 let categoriaActiva = "todos";
 let vistaActiva = "cupones";
 let todosLosCupones = [];
@@ -1409,7 +1409,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
           <button class="boton-like hc16-icono ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
           <span class="numero-likes hc16-numero">${Number(cupon.likes || 0)}</span>
         </span>
-        <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas hc61-chip hc61-view-chip" aria-label="Vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
+        <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas hc61-chip hc61-view-chip" aria-label="Usos del cupón">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
       </div>
       <div class="estado-programacion hc16-tiempo" hidden></div>
     </div>
@@ -1523,7 +1523,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
           <button class="boton-like hc16-icono ${yaLeGusta ? "activo" : ""}" type="button" aria-label="Me gusta" title="Me gusta">${iconoMeGusta()}</button>
           <span class="numero-likes hc16-numero">${Number(cupon.likes || 0)}</span>
         </span>
-        <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas hc61-chip hc61-view-chip" aria-label="Vistas">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
+        <span class="estadistica-item estadistica-usos hc16-usos hc16-vistas hc61-chip hc61-view-chip" aria-label="Usos del cupón">${iconoVista()} <span class="numero-clics">${Number(cupon.clics || 0)}</span></span>
       </div>
       <div class="estado-programacion hc16-tiempo" hidden></div>
     </div>`;
@@ -2393,7 +2393,7 @@ function renderizarCategoria() {
   // V81.85 — Prioridad temporal de cupones NUEVOS.
   // 1) Activos antes que agotados.
   // 2) Durante su primera hora, los cupones con estado Nuevo suben al inicio.
-  // 3) Al cumplir la hora vuelven automáticamente al orden habitual por popularidad (vistas).
+  // 3) Al cumplir la hora vuelven automáticamente al orden habitual por popularidad (usos).
   const ordenarCupones = (a, b) => {
     const agotadoA = a.agotado === true ? 1 : 0;
     const agotadoB = b.agotado === true ? 1 : 0;
@@ -2820,46 +2820,11 @@ function detenerObservadorVistasCupones() {
 }
 
 function iniciarObservadorVistasCupones() {
+  // PAQUETE 7.5: deshabilitado de forma definitiva.
+  // El contador del cupón representa usos: solo Copiar código / Ver ofertas.
   detenerObservadorVistasCupones();
-  if (!cuponesContainer || typeof IntersectionObserver === "undefined") return;
-
-  observadorVistasCupones = new IntersectionObserver((entradas) => {
-    entradas.forEach((entrada) => {
-      const tarjeta = entrada.target;
-      const id = Number(tarjeta.dataset.id);
-      if (!Number.isInteger(id) || id <= 0) return;
-
-      const temporizadorActual = temporizadoresVistasCupones.get(id);
-      if (!entrada.isIntersecting || entrada.intersectionRatio < 0.5) {
-        if (temporizadorActual) clearTimeout(temporizadorActual);
-        temporizadoresVistasCupones.delete(id);
-        return;
-      }
-
-      if (visitaCuponVigente(id)) {
-        observadorVistasCupones?.unobserve(tarjeta);
-        return;
-      }
-      if (temporizadorActual) return;
-
-      const temporizador = setTimeout(() => {
-        temporizadoresVistasCupones.delete(id);
-        if (!tarjeta.isConnected || visitaCuponVigente(id)) return;
-        const cupon = todosLosCupones.find((item) => Number(item?.id) === id);
-        if (!cupon) return;
-        registrarVisitaCupon(cupon);
-        observadorVistasCupones?.unobserve(tarjeta);
-      }, TIEMPO_MINIMO_VISTA_CUPON_MS);
-
-      temporizadoresVistasCupones.set(id, temporizador);
-    });
-  }, { threshold: [0.5] });
-
-  cuponesContainer.querySelectorAll(".cupon[data-id]").forEach((tarjeta) => {
-    const id = Number(tarjeta.dataset.id);
-    if (!visitaCuponVigente(id)) observadorVistasCupones.observe(tarjeta);
-  });
 }
+
 
 async function registrarLike(id, accion) {
   const respuesta = await fetch("/api/cupon-like", {
@@ -3021,6 +2986,7 @@ async function copiarYCanjear(cupon, tarjeta) {
 
   const boton = tarjeta.querySelector(".boton-canjear, .banco-canjear");
   const mensaje = tarjeta.querySelector(".mensaje");
+  const numeroClics = tarjeta.querySelector(".numero-clics");
   const usado = tarjeta.querySelector(".cupon-copiado-mini");
 
   boton.disabled = true;
@@ -3048,6 +3014,24 @@ async function copiarYCanjear(cupon, tarjeta) {
     if (usado) {
       usado.hidden = false;
     }
+
+    // PAQUETE 7.5: el contador aumenta exclusivamente por interacción.
+    // Un clic en "Copiar código" registra un uso; visualizar la tarjeta no cuenta.
+    registrarClic(cupon.id)
+      .then((resultado) => {
+        if (!Number.isFinite(Number(resultado?.clics))) return;
+
+        const total = Number(resultado.clics);
+        if (numeroClics) numeroClics.textContent = String(total);
+
+        const couponIndex = todosLosCupones.findIndex(
+          (item) => Number(item.id) === Number(cupon.id)
+        );
+        if (couponIndex >= 0) todosLosCupones[couponIndex].clics = total;
+      })
+      .catch((error) => {
+        console.warn("El contador no pudo actualizarse:", error);
+      });
 
     // El usuario puede salir de inmediato con el botón del modal.
     // Si no interactúa, se redirige automáticamente al terminar la cuenta regresiva.

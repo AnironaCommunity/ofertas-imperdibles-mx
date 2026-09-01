@@ -1,44 +1,66 @@
+/*
+ * PAQUETE 7.5
+ * Endpoint legado conservado únicamente para clientes que aún tengan en caché
+ * una versión antigua del frontend. Ya NO incrementa ningún contador.
+ *
+ * El contador visible de cada cupón vuelve a representar USOS y solo se
+ * incrementa mediante /api/clic al pulsar "Copiar código" o "Ver ofertas".
+ */
 export default async function handler(request, response) {
   if (request.method !== "POST") {
     response.setHeader("Allow", "POST");
     return response.status(405).json({ error: "Método no permitido." });
   }
 
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const secretKey = process.env.SUPABASE_SECRET_KEY;
+  const supabaseUrl = String(process.env.SUPABASE_URL || "")
+    .trim()
+    .replace(/^['"]|['"]$/g, "")
+    .replace(/\/rest\/v1\/?$/i, "")
+    .replace(/\/+$/, "");
+  const secretKey =
+    process.env.SUPABASE_SECRET_KEY ||
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.SUPABASE_ANON_KEY;
   const id = Number(request.body?.id);
 
+  response.setHeader("Cache-Control", "no-store, max-age=0, must-revalidate");
+
   if (!supabaseUrl || !secretKey) {
-    return response.status(500).json({ error: "Falta configurar Supabase en Vercel." });
+    // Importante: aunque falte configuración, nunca incrementamos una vista.
+    return response.status(200).json({ visitas: null, clics: null, legacy: true });
   }
+
   if (!Number.isInteger(id) || id <= 0) {
     return response.status(400).json({ error: "Identificador de cupón no válido." });
   }
 
   try {
-    // Se reutiliza el contador histórico existente para evitar cambios en la BD.
-    // Desde V83.8 este valor se incrementa por visualización, no al copiar el cupón.
-    const resultado = await fetch(`${supabaseUrl}/rest/v1/rpc/incrementar_clic_cupon`, {
-      method: "POST",
-      headers: {
-        apikey: secretKey,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({ p_id: id }),
-    });
+    // Solo consulta el valor actual. No ejecuta incrementar_clic_cupon.
+    const resultado = await fetch(
+      `${supabaseUrl}/rest/v1/cupones?select=clics&id=eq.${id}&limit=1`,
+      {
+        method: "GET",
+        headers: {
+          apikey: secretKey,
+          Authorization: `Bearer ${secretKey}`,
+          Accept: "application/json",
+        },
+      }
+    );
 
     if (!resultado.ok) {
-      const detalle = await resultado.text();
-      console.error("Error de Supabase registrando vista:", detalle);
-      return response.status(502).json({ error: "No fue posible registrar la vista." });
+      return response.status(200).json({ visitas: null, clics: null, legacy: true });
     }
 
-    const total = Number(await resultado.json());
-    response.setHeader("Cache-Control", "no-store, max-age=0, must-revalidate");
-    return response.status(200).json({ visitas: Number.isFinite(total) ? total : 0 });
+    const filas = await resultado.json();
+    const total = Number(filas?.[0]?.clics);
+    const valor = Number.isFinite(total) ? total : null;
+
+    // Se mantiene "visitas" solo para que clientes antiguos no fallen,
+    // pero el valor devuelto es el contador actual de usos y NO se incrementa.
+    return response.status(200).json({ visitas: valor, clics: valor, legacy: true });
   } catch (error) {
-    console.error("Error registrando vista de cupón:", error);
-    return response.status(500).json({ error: "Error interno del servidor." });
+    console.warn("Endpoint legado cupon-visita sin incremento:", error);
+    return response.status(200).json({ visitas: null, clics: null, legacy: true });
   }
 }
