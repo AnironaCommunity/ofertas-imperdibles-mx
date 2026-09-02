@@ -2,8 +2,8 @@ function normalizeBoolean(value, fallback = false) {
   if (value === true || value === 1) return true;
   if (value === false || value === 0 || value == null) return false;
   const text = String(value).trim().toLowerCase();
-  if (["true", "1", "on", "yes", "si", "sí"].includes(text)) return true;
-  if (["false", "0", "off", "no", ""].includes(text)) return false;
+  if (["true", "1", "t", "on", "yes", "si", "sí"].includes(text)) return true;
+  if (["false", "0", "f", "off", "no", ""].includes(text)) return false;
   return fallback;
 }
 

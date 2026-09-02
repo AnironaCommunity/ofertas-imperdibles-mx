@@ -174,8 +174,8 @@ function valorBooleanoAdmin(value, fallback = false) {
   if (value === true || value === 1) return true;
   if (value === false || value === 0 || value == null) return false;
   const text = String(value).trim().toLowerCase();
-  if (["true", "1", "on", "yes", "si", "sí"].includes(text)) return true;
-  if (["false", "0", "off", "no", ""].includes(text)) return false;
+  if (["true", "1", "t", "on", "yes", "si", "sí"].includes(text)) return true;
+  if (["false", "0", "f", "off", "no", ""].includes(text)) return false;
   return fallback;
 }
 
@@ -2819,7 +2819,9 @@ function editAd(ad) {
     (usaSoloEnlaceLegacy && ad.plataforma === "amazon" ? enlaceLegacy : "");
   adDisponibleMercadoLibre.checked = ad.disponible_mercado_libre !== false;
   adDisponibleAmazon.checked = ad.disponible_amazon !== false;
-  adEsNuevo.checked = productoNuevoVigente(ad);
+  // Al editar, las casillas deben reflejar exactamente lo que está guardado.
+  // La vigencia de 5 días sólo controla la etiqueta/orden público, no el estado del checkbox.
+  adEsNuevo.checked = valorBooleanoAdmin(ad.es_nuevo);
   adFechaNuevo.value = adEsNuevo.checked ? String(ad.fecha_nuevo || "") : "";
   adEsMasVendido.checked = valorBooleanoAdmin(ad.es_mas_vendido);
   adEsOtraRecomendacion.checked = valorBooleanoAdmin(ad.es_otra_recomendacion);
@@ -4101,6 +4103,18 @@ async function saveHeroConfig(event) {
     submit.disabled = false;
   }
 }
+
+/* Mantener fecha de inicio de NUEVO consistente con la casilla.
+adEsNuevo?.addEventListener("change", () => {
+  if (!adEsNuevo.checked) {
+    adFechaNuevo.value = "";
+    return;
+  }
+
+  if (!adFechaNuevo.value) {
+    adFechaNuevo.value = new Date().toISOString();
+  }
+});
 
 /* Eventos */
 loginButton.addEventListener("click", login);

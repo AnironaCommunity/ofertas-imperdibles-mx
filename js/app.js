@@ -3168,9 +3168,11 @@ function datosPlataformaPublicidad(publicidad) {
 const DURACION_NUEVO_CATALOGO_MS = 5 * 24 * 60 * 60 * 1000;
 
 function esProductoNuevoVigente(publicidad) {
-  if (!publicidad?.es_nuevo || !publicidad?.fecha_nuevo) return false;
+  if (!valorBooleanoPublicidad(publicidad?.es_nuevo) || !publicidad?.fecha_nuevo) return false;
   const fecha = new Date(publicidad.fecha_nuevo).getTime();
-  return Number.isFinite(fecha) && Date.now() - fecha < DURACION_NUEVO_CATALOGO_MS;
+  if (!Number.isFinite(fecha)) return false;
+  const edad = Date.now() - fecha;
+  return edad >= 0 && edad < DURACION_NUEVO_CATALOGO_MS;
 }
 
 function numeroPrecioOferta(valor) {
@@ -3226,8 +3228,8 @@ function valorBooleanoPublicidad(value, fallback = false) {
   if (value === true || value === 1) return true;
   if (value === false || value === 0 || value == null) return false;
   const text = String(value).trim().toLowerCase();
-  if (["true", "1", "on", "yes", "si", "sí"].includes(text)) return true;
-  if (["false", "0", "off", "no", ""].includes(text)) return false;
+  if (["true", "1", "t", "on", "yes", "si", "sí"].includes(text)) return true;
+  if (["false", "0", "f", "off", "no", ""].includes(text)) return false;
   return fallback;
 }
 
@@ -3827,10 +3829,10 @@ function renderizarCatalogoAnirona() {
   ].filter(Boolean).join(" ")).includes(consulta);
 
   const catalogoAnirona = ordenarCatalogoAnirona(
-    todos.filter((item) => item?.es_otra_recomendacion !== true && coincideBusqueda(item))
+    todos.filter((item) => !valorBooleanoPublicidad(item?.es_otra_recomendacion) && coincideBusqueda(item))
   );
   const otrasRecomendaciones = ordenarCatalogoAnirona(
-    todos.filter((item) => item?.es_otra_recomendacion === true && coincideBusqueda(item))
+    todos.filter((item) => valorBooleanoPublicidad(item?.es_otra_recomendacion) && coincideBusqueda(item))
   );
   const totalMostrados = catalogoAnirona.length + otrasRecomendaciones.length;
 

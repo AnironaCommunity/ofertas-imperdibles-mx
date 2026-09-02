@@ -48,8 +48,8 @@ function normalizeBoolean(value, fallback = false) {
   if (value === false || value === 0 || value == null) return false;
 
   const text = String(value).trim().toLowerCase();
-  if (["true", "1", "on", "yes", "si", "sí"].includes(text)) return true;
-  if (["false", "0", "off", "no", ""].includes(text)) return false;
+  if (["true", "1", "t", "on", "yes", "si", "sí"].includes(text)) return true;
+  if (["false", "0", "f", "off", "no", ""].includes(text)) return false;
   return fallback;
 }
 
@@ -107,7 +107,20 @@ export default async function handler(request, response) {
         "publicidades?select=id,titulo,descripcion,categoria_producto,imagen_url,enlace,enlace_mercado_libre,enlace_amazon,precio_publicado,precio_anterior,precio_cupon,codigo_cupon,plataforma,categoria,secciones,activo,orden,clics,visitas,visitas_mercado_libre,visitas_amazon,fecha_creacion,fecha_expiracion,disponible_mercado_libre,disponible_amazon,es_nuevo,fecha_nuevo,es_mas_vendido,es_otra_recomendacion&order=orden.asc,id.asc"
       );
 
-      return response.status(200).json(data);
+      const normalizados = Array.isArray(data)
+        ? data.map((item) => ({
+            ...item,
+            activo: normalizeBoolean(item?.activo, true),
+            disponible_mercado_libre: normalizeBoolean(item?.disponible_mercado_libre, true),
+            disponible_amazon: normalizeBoolean(item?.disponible_amazon, true),
+            es_nuevo: normalizeBoolean(item?.es_nuevo),
+            es_mas_vendido: normalizeBoolean(item?.es_mas_vendido),
+            es_otra_recomendacion: normalizeBoolean(item?.es_otra_recomendacion),
+          }))
+        : [];
+
+      response.setHeader("Cache-Control", "no-store");
+      return response.status(200).json(normalizados);
     }
 
     if (request.method === "POST") {
