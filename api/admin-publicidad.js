@@ -42,6 +42,17 @@ function normalizeSections(value, fallback = ["ofertas_dia"]) {
     : fallbackValues.filter((item) => ALLOWED_SECTIONS.includes(item));
 }
 
+
+function normalizeBoolean(value, fallback = false) {
+  if (value === true || value === 1) return true;
+  if (value === false || value === 0 || value == null) return false;
+
+  const text = String(value).trim().toLowerCase();
+  if (["true", "1", "on", "yes", "si", "sí"].includes(text)) return true;
+  if (["false", "0", "off", "no", ""].includes(text)) return false;
+  return fallback;
+}
+
 function authorized(request) {
   return Boolean(process.env.ADMIN_PASSWORD) &&
     String(request.headers["x-admin-password"] || "") ===
@@ -124,15 +135,15 @@ export default async function handler(request, response) {
         enlace_amazon: enlaceAmazon,
         disponible_mercado_libre: request.body?.disponible_mercado_libre !== false,
         disponible_amazon: request.body?.disponible_amazon !== false,
-        es_nuevo: request.body?.es_nuevo === true,
-        fecha_nuevo: request.body?.es_nuevo === true
+        es_nuevo: normalizeBoolean(request.body?.es_nuevo),
+        fecha_nuevo: normalizeBoolean(request.body?.es_nuevo)
           ? (String(request.body?.fecha_nuevo || "").trim() || new Date().toISOString())
           : null,
         fecha_expiracion: request.body?.fecha_expiracion
           ? String(request.body.fecha_expiracion).trim()
           : null,
-        es_mas_vendido: request.body?.es_mas_vendido === true,
-        es_otra_recomendacion: request.body?.es_otra_recomendacion === true,
+        es_mas_vendido: normalizeBoolean(request.body?.es_mas_vendido),
+        es_otra_recomendacion: normalizeBoolean(request.body?.es_otra_recomendacion),
         precio_publicado: String(request.body?.precio_publicado || "").trim(),
         precio_anterior: String(request.body?.precio_anterior || "").trim(),
         precio_cupon: String(request.body?.precio_cupon || "").trim(),
@@ -207,7 +218,7 @@ export default async function handler(request, response) {
         if (!Object.hasOwn(request.body || {}, field)) continue;
 
         if (["activo", "disponible_mercado_libre", "disponible_amazon", "es_nuevo", "es_mas_vendido", "es_otra_recomendacion"].includes(field)) {
-          payload[field] = Boolean(request.body[field]);
+          payload[field] = normalizeBoolean(request.body[field]);
         } else if (field === "fecha_nuevo" || field === "fecha_expiracion") {
           payload[field] = request.body[field]
             ? String(request.body[field]).trim()

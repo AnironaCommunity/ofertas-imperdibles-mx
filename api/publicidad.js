@@ -1,3 +1,12 @@
+function normalizeBoolean(value, fallback = false) {
+  if (value === true || value === 1) return true;
+  if (value === false || value === 0 || value == null) return false;
+  const text = String(value).trim().toLowerCase();
+  if (["true", "1", "on", "yes", "si", "sí"].includes(text)) return true;
+  if (["false", "0", "off", "no", ""].includes(text)) return false;
+  return fallback;
+}
+
 export default async function handler(request, response) {
   if (request.method !== "GET") {
     response.setHeader("Allow", "GET");
@@ -79,6 +88,11 @@ export default async function handler(request, response) {
                 ? "amazon"
                 : "mercadolibre",
             secciones,
+            disponible_mercado_libre: normalizeBoolean(item?.disponible_mercado_libre, true),
+            disponible_amazon: normalizeBoolean(item?.disponible_amazon, true),
+            es_nuevo: normalizeBoolean(item?.es_nuevo),
+            es_mas_vendido: normalizeBoolean(item?.es_mas_vendido),
+            es_otra_recomendacion: normalizeBoolean(item?.es_otra_recomendacion),
           };
         })
       : [];

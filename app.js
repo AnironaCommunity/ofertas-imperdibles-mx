@@ -2904,6 +2904,15 @@ function actualizarTemporizadoresOfertazo() {
   });
 }
 
+function valorBooleanoPublicidad(value, fallback = false) {
+  if (value === true || value === 1) return true;
+  if (value === false || value === 0 || value == null) return false;
+  const text = String(value).trim().toLowerCase();
+  if (["true", "1", "on", "yes", "si", "sí"].includes(text)) return true;
+  if (["false", "0", "off", "no", ""].includes(text)) return false;
+  return fallback;
+}
+
 function crearTarjetaOferta(publicidad, categoria) {
   const articulo = document.createElement("article");
   articulo.className = "tarjeta-oferta";
@@ -2925,7 +2934,7 @@ function crearTarjetaOferta(publicidad, categoria) {
   const disponibleMercadoLibre = publicidad.disponible_mercado_libre !== false;
   const disponibleAmazon = publicidad.disponible_amazon !== false;
   const productoNuevo = esProductoNuevoVigente(publicidad);
-  const productoMasVendido = publicidad.es_mas_vendido === true;
+  const productoMasVendido = valorBooleanoPublicidad(publicidad.es_mas_vendido);
 
   if (categoria === "ofertas_mercado_libre") {
     articulo.classList.add("tarjeta-oferta-ofertazo");

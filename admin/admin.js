@@ -170,6 +170,15 @@ const adDisponibleAmazon = document.querySelector("#ad-disponible-amazon");
 const adEsNuevo = document.querySelector("#ad-es-nuevo");
 const adFechaNuevo = document.querySelector("#ad-fecha-nuevo");
 const adEsMasVendido = document.querySelector("#ad-es-mas-vendido");
+function valorBooleanoAdmin(value, fallback = false) {
+  if (value === true || value === 1) return true;
+  if (value === false || value === 0 || value == null) return false;
+  const text = String(value).trim().toLowerCase();
+  if (["true", "1", "on", "yes", "si", "sí"].includes(text)) return true;
+  if (["false", "0", "off", "no", ""].includes(text)) return false;
+  return fallback;
+}
+
 const adEsOtraRecomendacion = document.querySelector("#ad-es-otra-recomendacion");
 const adEsBannerCupones = document.querySelector("#ad-es-banner-cupones");
 const adPricePublished = document.querySelector("#ad-price-published");
@@ -2812,8 +2821,8 @@ function editAd(ad) {
   adDisponibleAmazon.checked = ad.disponible_amazon !== false;
   adEsNuevo.checked = productoNuevoVigente(ad);
   adFechaNuevo.value = adEsNuevo.checked ? String(ad.fecha_nuevo || "") : "";
-  adEsMasVendido.checked = ad.es_mas_vendido === true;
-  adEsOtraRecomendacion.checked = ad.es_otra_recomendacion === true;
+  adEsMasVendido.checked = valorBooleanoAdmin(ad.es_mas_vendido);
+  adEsOtraRecomendacion.checked = valorBooleanoAdmin(ad.es_otra_recomendacion);
   adPricePublished.value = ad.precio_publicado || "";
   adPriceCoupon.value = ad.precio_cupon || "";
   adCouponCode.value = ad.codigo_cupon || "";
@@ -2857,8 +2866,8 @@ function updateAdsSummary() {
   const publicaciones = ads.filter((ad) => !esBannerCupones(ad));
   if (adsTotal) adsTotal.textContent = String(publicaciones.length);
   if (adsNew) adsNew.textContent = String(publicaciones.filter(productoNuevoVigente).length);
-  if (adsBestSellers) adsBestSellers.textContent = String(publicaciones.filter((ad) => ad.es_mas_vendido).length);
-  if (adsRecommendations) adsRecommendations.textContent = String(publicaciones.filter((ad) => ad.es_otra_recomendacion).length);
+  if (adsBestSellers) adsBestSellers.textContent = String(publicaciones.filter((ad) => valorBooleanoAdmin(ad.es_mas_vendido)).length);
+  if (adsRecommendations) adsRecommendations.textContent = String(publicaciones.filter((ad) => valorBooleanoAdmin(ad.es_otra_recomendacion)).length);
 }
 
 function filteredAds() {
@@ -2873,9 +2882,9 @@ function filteredAds() {
       descripcionVisibleAd(ad),
       links.mercadoLibre,
       links.amazon,
-      ad.es_mas_vendido ? "más vendido" : "",
+      valorBooleanoAdmin(ad.es_mas_vendido) ? "más vendido" : "",
       productoNuevoVigente(ad) ? "nuevo" : "",
-      ad.es_otra_recomendacion ? "otra recomendación" : "",
+      valorBooleanoAdmin(ad.es_otra_recomendacion) ? "otra recomendación" : "",
     ].some((value) => String(value || "").toLocaleLowerCase("es").includes(query));
   });
 }
@@ -2883,8 +2892,8 @@ function filteredAds() {
 function renderAdBadges(ad) {
   const badges = [];
   if (productoNuevoVigente(ad)) badges.push('<span class="publicacion-badge badge-nuevo">NUEVO</span>');
-  if (ad.es_mas_vendido) badges.push('<span class="publicacion-badge badge-mas-vendido">MÁS VENDIDO</span>');
-  if (ad.es_otra_recomendacion) badges.push('<span class="publicacion-badge badge-recomendacion">OTRA RECOMENDACIÓN</span>');
+  if (valorBooleanoAdmin(ad.es_mas_vendido)) badges.push('<span class="publicacion-badge badge-mas-vendido">MÁS VENDIDO</span>');
+  if (valorBooleanoAdmin(ad.es_otra_recomendacion)) badges.push('<span class="publicacion-badge badge-recomendacion">OTRA RECOMENDACIÓN</span>');
   if (esBannerCupones(ad)) badges.push('<span class="publicacion-badge badge-banner">BANNER CUPONES</span>');
   if (!ad.activo) badges.push('<span class="publicacion-badge badge-inactivo">INACTIVA</span>');
   return badges.join("");
