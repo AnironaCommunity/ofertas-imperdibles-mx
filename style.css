@@ -10236,3 +10236,25 @@ body.hay-cupones-visibles #separador-fin-cupones {
 .tarjeta-oferta-ofertazo .ofertazo-precios strong {
   color: #00a650;
 }
+
+
+/* V83.16 — Aviso previo exclusivo para cupones bancarios */
+.modal-aviso-bancario { z-index: 10000; }
+.modal-aviso-bancario-contenido { width: min(390px, 100%); padding: 28px 24px 24px; }
+.modal-aviso-bancario-icono {
+  width: 64px; height: 64px; display: grid; place-items: center;
+  margin: 0 auto 12px; border-radius: 50%; font-size: 32px; background: #eef0ff;
+}
+.modal-aviso-bancario-contenido h2 { color: #222a67; font-size: 23px; line-height: 1.15; }
+.modal-aviso-bancario-contenido p { font-size: 16px; line-height: 1.55; }
+.modal-aviso-bancario-cerrar {
+  width: 100%; min-height: 46px; border: 0; border-radius: 12px; color: #fff;
+  background: linear-gradient(135deg, #4652ef, #5862f5); font: inherit; font-weight: 800; cursor: pointer;
+  box-shadow: 0 7px 18px rgba(70,82,239,.22);
+}
+.modal-aviso-bancario-cerrar:active { transform: translateY(1px); }
+@media (max-width: 520px) {
+  .modal-aviso-bancario-contenido { padding: 24px 19px 20px; }
+  .modal-aviso-bancario-contenido h2 { font-size: 21px; }
+  .modal-aviso-bancario-contenido p { font-size: 15px; }
+}

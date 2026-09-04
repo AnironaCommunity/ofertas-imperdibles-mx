@@ -20,6 +20,9 @@ const modalCodigoBloque = document.querySelector("#modal-codigo-bloque");
 const modalCuponOculto = document.querySelector("#modal-cupon-oculto");
 const modalContinuar = document.querySelector("#modal-continuar");
 const modalCancelar = document.querySelector("#modal-cancelar");
+const modalAvisoBancario = document.querySelector("#modal-aviso-bancario");
+const modalAvisoBancarioCerrar = document.querySelector("#modal-aviso-bancario-cerrar");
+let cuponBancarioPendiente = null;
 
 
 const tabTodos = document.querySelector("#tab-todos");
@@ -2979,6 +2982,25 @@ modalContinuar?.addEventListener("click", irAMercadoLibreDesdeModal);
 
 modalCancelar?.addEventListener("click", finalizarInteraccionCupon);
 
+function mostrarAvisoBancario(codigo, enlace) {
+  cuponBancarioPendiente = { codigo, enlace };
+  if (modalAvisoBancario) modalAvisoBancario.hidden = false;
+  document.body.style.overflow = "hidden";
+}
+
+function cerrarAvisoBancarioYContinuar() {
+  if (modalAvisoBancario) modalAvisoBancario.hidden = true;
+  const pendiente = cuponBancarioPendiente;
+  cuponBancarioPendiente = null;
+  if (!pendiente) {
+    document.body.style.overflow = "";
+    return;
+  }
+  mostrarModal(pendiente.codigo, true, pendiente.enlace);
+}
+
+modalAvisoBancarioCerrar?.addEventListener("click", cerrarAvisoBancarioYContinuar);
+
 async function copiarYCanjear(cupon, tarjeta) {
   if (redireccionEnProceso || !couponTimeState(cupon).enabled) return;
 
@@ -3005,10 +3027,14 @@ async function copiarYCanjear(cupon, tarjeta) {
     return;
   }
 
-  mostrarModal(cupon.codigo, true, enlaceDestino);
-
   try {
     await copiarTexto(cupon.codigo);
+
+    if (normalizarCategoria(cupon) === "bancarios") {
+      mostrarAvisoBancario(cupon.codigo, enlaceDestino);
+    } else {
+      mostrarModal(cupon.codigo, true, enlaceDestino);
+    }
 
     localStorage.setItem(claveUsado(cupon.id), "1");
     if (usado) {
