@@ -3558,6 +3558,7 @@ function renderizarBannersCupones() {
 
   const botonesPunto = [];
   const slides = [];
+  let indiceFisico = items.length > 1 ? 1 : 0;
 
   items.forEach((item, indice) => {
     const enlace = document.createElement("a");
@@ -3576,13 +3577,6 @@ function renderizarBannersCupones() {
     enlace.appendChild(imagen);
     enlace.addEventListener("click", () => registrarClicPublicidad(item.id));
 
-    // Cada slide ocupa exactamente una fracción del track. El track mide
-    // N × 100% del viewport, por lo que cada desplazamiento corresponde
-    // de forma inequívoca a un banner completo.
-    enlace.style.flexBasis = `${100 / items.length}%`;
-    enlace.style.width = `${100 / items.length}%`;
-    enlace.style.minWidth = `${100 / items.length}%`;
-
     track.appendChild(enlace);
     slides.push(enlace);
 
@@ -3600,12 +3594,46 @@ function renderizarBannersCupones() {
     }
   });
 
-  track.style.width = `${items.length * 100}%`;
+  if (items.length > 1) {
+    const clonUltimo = slides[slides.length - 1].cloneNode(true);
+    const clonPrimero = slides[0].cloneNode(true);
+    clonUltimo.dataset.bannerClon = "true";
+    clonPrimero.dataset.bannerClon = "true";
+    clonUltimo.setAttribute("aria-hidden", "true");
+    clonPrimero.setAttribute("aria-hidden", "true");
+    clonUltimo.tabIndex = -1;
+    clonPrimero.tabIndex = -1;
+    clonUltimo.addEventListener("click", () => registrarClicPublicidad(items[items.length - 1].id));
+    clonPrimero.addEventListener("click", () => registrarClicPublicidad(items[0].id));
+    track.prepend(clonUltimo);
+    track.appendChild(clonPrimero);
+  }
 
-  function mostrarBanner(indice) {
+  const totalSlidesFisicos = items.length > 1 ? items.length + 2 : 1;
+  Array.from(track.children).forEach((slide) => {
+    slide.style.flexBasis = `${100 / totalSlidesFisicos}%`;
+    slide.style.width = `${100 / totalSlidesFisicos}%`;
+    slide.style.minWidth = `${100 / totalSlidesFisicos}%`;
+  });
+  track.style.width = `${totalSlidesFisicos * 100}%`;
+
+  function posicionarBanner(animar = true) {
+    track.style.transition = animar ? "" : "none";
+    const paso = 100 / totalSlidesFisicos;
+    track.style.transform = `translate3d(-${indiceFisico * paso}%, 0, 0)`;
+    if (!animar) requestAnimationFrame(() => { track.style.transition = ""; });
+  }
+
+  function mostrarBanner(indice, direccion = 0, animar = true) {
     bannersCuponesIndice = (indice + items.length) % items.length;
-    const paso = 100 / items.length;
-    track.style.transform = `translate3d(-${bannersCuponesIndice * paso}%, 0, 0)`;
+    if (items.length > 1 && direccion > 0 && indiceFisico === items.length) {
+      indiceFisico = items.length + 1;
+    } else if (items.length > 1 && direccion < 0 && indiceFisico === 1) {
+      indiceFisico = 0;
+    } else {
+      indiceFisico = items.length > 1 ? bannersCuponesIndice + 1 : 0;
+    }
+    posicionarBanner(animar);
     slides.forEach((slide, i) => {
       slide.setAttribute("aria-hidden", i === bannersCuponesIndice ? "false" : "true");
       slide.tabIndex = i === bannersCuponesIndice ? 0 : -1;
@@ -3617,11 +3645,22 @@ function renderizarBannersCupones() {
     });
   }
 
+  track.addEventListener("transitionend", (evento) => {
+    if (evento.propertyName !== "transform" || items.length <= 1) return;
+    if (indiceFisico === items.length + 1) {
+      indiceFisico = 1;
+      posicionarBanner(false);
+    } else if (indiceFisico === 0) {
+      indiceFisico = items.length;
+      posicionarBanner(false);
+    }
+  });
+
   function iniciarRotacion() {
     detenerCarruselBannersCupones();
     if (items.length <= 1) return;
     bannersCuponesIntervalo = setInterval(() => {
-      mostrarBanner(bannersCuponesIndice + 1);
+      mostrarBanner(bannersCuponesIndice + 1, 1);
     }, 5000);
   }
 
@@ -3632,12 +3671,12 @@ function renderizarBannersCupones() {
   bannersCuponesLista.appendChild(track);
   if (items.length > 1) bannersCuponesLista.appendChild(puntos);
   bannersCupones.hidden = false;
-  mostrarBanner(0);
+  mostrarBanner(0, 0, false);
   iniciarRotacion();
 
   // Recalcular la posición si cambia el viewport evita desalineaciones al
   // rotar el teléfono o redimensionar la ventana.
-  bannersCuponesResizeHandler = () => mostrarBanner(bannersCuponesIndice);
+  bannersCuponesResizeHandler = () => mostrarBanner(bannersCuponesIndice, 0, false);
   window.addEventListener("resize", bannersCuponesResizeHandler, { passive: true });
 
   // V82.45 — Deslizamiento táctil izquierda/derecha.
@@ -3688,8 +3727,8 @@ function renderizarBannersCupones() {
 
       deltaX = dx;
       const anchoViewport = bannersCuponesLista.clientWidth || 1;
-      const paso = 100 / items.length;
-      const desplazamientoBase = -(bannersCuponesIndice * paso);
+      const paso = 100 / totalSlidesFisicos;
+      const desplazamientoBase = -(indiceFisico * paso);
       const desplazamientoArrastre = (deltaX / anchoViewport) * paso;
       track.style.transform = `translate3d(${desplazamientoBase + desplazamientoArrastre}%, 0, 0)`;
       bloquearClick = Math.abs(deltaX) > 10;
@@ -3702,9 +3741,10 @@ function renderizarBannersCupones() {
       const mover = gestoHorizontal && Math.abs(deltaX) >= umbral;
 
       if (mover) {
-        mostrarBanner(bannersCuponesIndice + (deltaX < 0 ? 1 : -1));
+        const direccion = deltaX < 0 ? 1 : -1;
+        mostrarBanner(bannersCuponesIndice + direccion, direccion);
       } else {
-        mostrarBanner(bannersCuponesIndice);
+        mostrarBanner(bannersCuponesIndice, 0);
       }
 
       if (gestoHorizontal) {
