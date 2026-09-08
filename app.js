@@ -20,6 +20,9 @@ const modalCodigoBloque = document.querySelector("#modal-codigo-bloque");
 const modalCuponOculto = document.querySelector("#modal-cupon-oculto");
 const modalContinuar = document.querySelector("#modal-continuar");
 const modalCancelar = document.querySelector("#modal-cancelar");
+const modalAvisoBancario = document.querySelector("#modal-aviso-bancario");
+const modalAvisoBancarioCerrar = document.querySelector("#modal-aviso-bancario-cerrar");
+let cuponBancarioPendiente = null;
 
 
 const tabTodos = document.querySelector("#tab-todos");
@@ -1361,6 +1364,8 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   const esExclusivo = categoria === "exclusivo";
   const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
   const visualCategoria = configuracionVisualCupon(cupon);
+  const tituloCuponLimpio = String(cupon.titulo || "").replace(/\s*OFF\s*$/i, "").trim();
+  const claseDescuentoLargo = tituloCuponLimpio.length >= 6 ? " hc16-descuento-largo" : "";
 
   const estados = Array.isArray(estadosDestacados) ? estadosDestacados.filter(Boolean) : [estadosDestacados].filter(Boolean);
   const clasesEstado = estados.map((estado) => ` cupon-${estado}`).join("");
@@ -1376,7 +1381,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
     <span class="ticket-notch ticket-notch-bottom" aria-hidden="true"></span>
     <div class="hc16-valor">
       ${cupon.imagen_url ? `<img class="hc16-logo cupon-logo" src="${escaparHtml(cupon.imagen_url)}" alt="" loading="lazy" />` : ""}
-      <h2 class="hc16-descuento descuento">${escaparHtml(String(cupon.titulo || "").replace(/\s*OFF\s*$/i, "").trim())}<span class="hc19-off">OFF</span></h2>
+      <h2 class="hc16-descuento descuento${claseDescuentoLargo}">${escaparHtml(tituloCuponLimpio)}<span class="hc19-off">OFF</span></h2>
       <span class="hc19-porcentaje" aria-hidden="true">%</span>
     </div>
 
@@ -2137,7 +2142,244 @@ function cambiarCategoria(
   }
 }
 
+/* ============================================================
+   V82.96 — Banner superior dinámico según disponibilidad
+   Reemplaza únicamente la imagen promocional del encabezado.
+   ============================================================ */
+function cuponDisponibleParaBanner(cupon) {
+  if (!cupon || cupon.activo === false || cupon.agotado === true) return false;
+  const estado = couponTimeState(cupon);
+  return estado.state !== "finalizado" && estado.enabled === true;
+}
+
+function ahorroMaximoParaBanner(cupon) {
+  const ahorroCapturado = numeroDineroCupon(cupon?.ahorro_maximo);
+  if (ahorroCapturado > 0) return ahorroCapturado;
+
+  const titulo = String(cupon?.titulo || "");
+  const fijo = titulo.match(/^\s*\$\s*([\d.,]+)/)
+    || titulo.match(/\$\s*([\d.,]+)\s*(?:OFF|DE DESCUENTO)/i);
+  return fijo ? numeroDineroCupon(fijo[1]) : 0;
+}
+
+function textoCuentaRegresivaBanner() {
+  const ahora = new Date();
+  const siguiente = new Date(ahora);
+  siguiente.setHours(8, 30, 0, 0);
+  if (ahora.getTime() >= siguiente.getTime()) siguiente.setDate(siguiente.getDate() + 1);
+
+  const diferencia = Math.max(0, siguiente.getTime() - ahora.getTime());
+  const horas = Math.floor(diferencia / 3600000);
+  const minutos = Math.floor((diferencia % 3600000) / 60000);
+  if (horas >= 1) return `${horas} h${minutos >= 30 ? " 30 min" : ""}`;
+  return `${Math.max(1, minutos)} min`;
+}
+
+let bannerEstadoCarruselIndice = 0;
+let bannerEstadoCarruselFisico = 1;
+let bannerEstadoCarruselEnTransicion = false;
+
+function datosCarruselBanner() {
+  const banner = document.querySelector("#banner-estado-cupones");
+  const viewport = banner?.querySelector(".oi-banner__viewport");
+  const track = banner?.querySelector(".oi-banner__track");
+  const puntos = Array.from(banner?.querySelectorAll(".oi-banner__dot") || []);
+  if (!banner || !viewport || !track) return null;
+  const slidesReales = Array.from(track.querySelectorAll(".oi-banner__slide:not([data-banner-clon])"));
+  return { banner, viewport, track, puntos, slidesReales };
+}
+
+function anchoViewportBanner(datos = datosCarruselBanner()) {
+  return Math.max(1, Math.round(datos?.viewport?.getBoundingClientRect().width || datos?.viewport?.clientWidth || 1));
+}
+
+function actualizarAccesibilidadBanner(indiceLogico) {
+  const datos = datosCarruselBanner();
+  if (!datos) return;
+  const { banner, track, puntos, slidesReales } = datos;
+  banner.dataset.bannerVisible = String(indiceLogico);
+  slidesReales.forEach((slide, i) => slide.setAttribute("aria-hidden", i === indiceLogico ? "false" : "true"));
+  Array.from(track.querySelectorAll('[data-banner-clon="true"]')).forEach((slide) => slide.setAttribute("aria-hidden", "true"));
+  puntos.forEach((punto, i) => {
+    const activo = i === indiceLogico;
+    punto.classList.toggle("is-active", activo);
+    punto.setAttribute("aria-current", activo ? "true" : "false");
+  });
+}
+
+function posicionarTrackBanner(destinoFisico, animar = true) {
+  const datos = datosCarruselBanner();
+  if (!datos) return;
+  const ancho = anchoViewportBanner(datos);
+  datos.track.style.transition = animar ? "transform .36s cubic-bezier(.22,.61,.36,1)" : "none";
+  datos.track.style.transform = `translate3d(${-destinoFisico * ancho}px,0,0)`;
+}
+
+function asegurarClonesBanner() {
+  const datos = datosCarruselBanner();
+  if (!datos || datos.slidesReales.length < 2) return false;
+  const { banner, track, slidesReales } = datos;
+  if (banner.dataset.carruselClonado === "true") return true;
+
+  const clonUltimo = slidesReales[slidesReales.length - 1].cloneNode(true);
+  const clonPrimero = slidesReales[0].cloneNode(true);
+  [clonUltimo, clonPrimero].forEach((clon) => {
+    clon.dataset.bannerClon = "true";
+    clon.removeAttribute("aria-label");
+    clon.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
+  });
+  track.prepend(clonUltimo);
+  track.append(clonPrimero);
+  banner.dataset.carruselClonado = "true";
+  bannerEstadoCarruselFisico = bannerEstadoCarruselIndice + 1;
+  posicionarTrackBanner(bannerEstadoCarruselFisico, false);
+  actualizarAccesibilidadBanner(bannerEstadoCarruselIndice);
+  return true;
+}
+
+function moverCarruselBannerFisico(destinoFisico, indiceLogico, animar = true) {
+  const datos = datosCarruselBanner();
+  if (!datos) return;
+  const total = datos.slidesReales.length;
+  if (!total) return;
+  bannerEstadoCarruselIndice = (Number(indiceLogico) + total) % total;
+  bannerEstadoCarruselFisico = destinoFisico;
+  bannerEstadoCarruselEnTransicion = !!animar;
+  posicionarTrackBanner(destinoFisico, animar);
+  actualizarAccesibilidadBanner(bannerEstadoCarruselIndice);
+}
+
+function mostrarBannerEstadoCarrusel(indice = 0, animar = true, direccion = 0) {
+  const datos = datosCarruselBanner();
+  if (!datos || !datos.slidesReales.length) return;
+  asegurarClonesBanner();
+  const total = datos.slidesReales.length;
+  const destinoLogico = (Number(indice) + total) % total;
+  if (!animar || direccion === 0) {
+    moverCarruselBannerFisico(destinoLogico + 1, destinoLogico, animar);
+    return;
+  }
+  moverCarruselBannerFisico(bannerEstadoCarruselFisico + (direccion > 0 ? 1 : -1), destinoLogico, true);
+}
+
+function prepararBannerEstadoCarrusel() {
+  const datos = datosCarruselBanner();
+  if (!datos) return;
+  const { banner, viewport, track } = datos;
+  if (banner.dataset.carruselListo === "true") return;
+  banner.dataset.carruselListo = "true";
+  asegurarClonesBanner();
+
+  track.addEventListener("transitionend", (evento) => {
+    if (evento.propertyName !== "transform" || !bannerEstadoCarruselEnTransicion) return;
+    const actual = datosCarruselBanner();
+    if (!actual) return;
+    const total = actual.slidesReales.length;
+    bannerEstadoCarruselEnTransicion = false;
+    if (bannerEstadoCarruselFisico === total + 1) {
+      bannerEstadoCarruselFisico = 1;
+      posicionarTrackBanner(1, false);
+    } else if (bannerEstadoCarruselFisico === 0) {
+      bannerEstadoCarruselFisico = total;
+      posicionarTrackBanner(total, false);
+    }
+  });
+
+  banner.querySelector("#banner-estado-anterior")?.addEventListener("click", () => {
+    if (!bannerEstadoCarruselEnTransicion) mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice - 1, true, -1);
+  });
+  banner.querySelector("#banner-estado-siguiente")?.addEventListener("click", () => {
+    if (!bannerEstadoCarruselEnTransicion) mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice + 1, true, 1);
+  });
+  banner.querySelectorAll(".oi-banner__dot").forEach((punto) => {
+    punto.addEventListener("click", () => {
+      if (bannerEstadoCarruselEnTransicion) return;
+      const destino = Number(punto.dataset.bannerIndice) || 0;
+      if (destino === bannerEstadoCarruselIndice) return;
+      mostrarBannerEstadoCarrusel(destino, true, destino > bannerEstadoCarruselIndice ? 1 : -1);
+    });
+  });
+
+  let inicioX = 0, inicioY = 0, deltaX = 0, arrastrando = false, horizontal = false;
+  viewport.addEventListener("pointerdown", (evento) => {
+    if (bannerEstadoCarruselEnTransicion || (evento.pointerType === "mouse" && evento.button !== 0)) return;
+    inicioX = evento.clientX; inicioY = evento.clientY; deltaX = 0; arrastrando = true; horizontal = false;
+    track.style.transition = "none";
+  });
+  viewport.addEventListener("pointermove", (evento) => {
+    if (!arrastrando) return;
+    const dx = evento.clientX - inicioX, dy = evento.clientY - inicioY;
+    if (!horizontal) {
+      if (Math.abs(dx) < 7 && Math.abs(dy) < 7) return;
+      if (Math.abs(dy) > Math.abs(dx)) { arrastrando = false; posicionarTrackBanner(bannerEstadoCarruselFisico, true); return; }
+      horizontal = true; viewport.classList.add("is-dragging");
+      try { viewport.setPointerCapture(evento.pointerId); } catch {}
+    }
+    deltaX = dx;
+    const ancho = anchoViewportBanner();
+    track.style.transform = `translate3d(${(-bannerEstadoCarruselFisico * ancho) + deltaX}px,0,0)`;
+  });
+  const terminar = (evento) => {
+    if (!arrastrando) return;
+    const ancho = anchoViewportBanner();
+    const cambiar = horizontal && Math.abs(deltaX) >= Math.min(72, Math.max(36, ancho * .12));
+    if (cambiar) {
+      const direccion = deltaX < 0 ? 1 : -1;
+      mostrarBannerEstadoCarrusel(bannerEstadoCarruselIndice + direccion, true, direccion);
+    } else posicionarTrackBanner(bannerEstadoCarruselFisico, true);
+    viewport.classList.remove("is-dragging");
+    try { viewport.releasePointerCapture(evento.pointerId); } catch {}
+    arrastrando = false; horizontal = false; deltaX = 0;
+  };
+  viewport.addEventListener("pointerup", terminar);
+  viewport.addEventListener("pointercancel", terminar);
+  window.addEventListener("resize", () => posicionarTrackBanner(bannerEstadoCarruselFisico, false), { passive:true });
+  mostrarBannerEstadoCarrusel(0, false, 0);
+}
+
+function actualizarBannerEstadoCupones() {
+  const banner = document.querySelector("#banner-estado-cupones");
+  if (!banner) return;
+  prepararBannerEstadoCarrusel();
+
+  const superiorActivos = document.querySelector("#banner-activos-superior");
+  const prefijoActivos = document.querySelector("#banner-activos-prefijo");
+  const destacadoActivos = document.querySelector("#banner-activos-destacado");
+  const sufijoActivos = document.querySelector("#banner-activos-sufijo");
+  const tiempoAgotados = document.querySelector("#banner-agotados-tiempo");
+  const disponibles = todosLosCupones.filter(cuponDisponibleParaBanner);
+  const total = disponibles.length;
+  const estadoNuevo = total > 0 ? "activos" : "agotados";
+  const estadoAnterior = banner.dataset.estado;
+  const ahorroMaximo = disponibles.reduce((maximo, cupon) => Math.max(maximo, ahorroMaximoParaBanner(cupon)), 0);
+
+  if (total > 0) {
+    if (superiorActivos) superiorActivos.textContent = `¡Hay ${total} ${total === 1 ? "cupón activo" : "cupones activos"}!`;
+    if (prefijoActivos) prefijoActivos.textContent = ahorroMaximo > 0 ? "Hasta" : "Cupones";
+    if (destacadoActivos) destacadoActivos.textContent = ahorroMaximo > 0 ? monedaBuscador(ahorroMaximo) : "disponibles";
+    if (sufijoActivos) sufijoActivos.textContent = ahorroMaximo > 0 ? "OFF" : "";
+  } else {
+    if (superiorActivos) superiorActivos.textContent = "Cupones de Mercado Libre";
+    if (prefijoActivos) prefijoActivos.textContent = "Hoy no hay";
+    if (destacadoActivos) destacadoActivos.textContent = "cupones activos";
+    if (sufijoActivos) sufijoActivos.textContent = "";
+  }
+
+  const resumenDisponibles = document.querySelector("#banner-resumen-disponibles");
+  const resumenAhorro = document.querySelector("#banner-resumen-ahorro");
+  const resumenProxima = document.querySelector("#banner-resumen-proxima");
+  if (resumenDisponibles) resumenDisponibles.textContent = total > 0 ? `${total} ${total === 1 ? "cupón disponible" : "cupones disponibles"}` : "Sin cupones activos";
+  if (resumenAhorro) resumenAhorro.textContent = ahorroMaximo > 0 ? `Hasta ${monedaBuscador(ahorroMaximo)} de ahorro` : "Nuevos cupones próximamente";
+  const cuentaBanner = textoCuentaRegresivaBanner();
+  if (tiempoAgotados) tiempoAgotados.textContent = cuentaBanner;
+  if (resumenProxima) resumenProxima.textContent = `Próxima revisión en ${cuentaBanner}`;
+
+  banner.dataset.estado = estadoNuevo;
+  if (estadoAnterior !== estadoNuevo) mostrarBannerEstadoCarrusel(estadoNuevo === "activos" ? 0 : 1, false, 0);
+}
+
 function limpiarVista() {
+  detenerObservadorVistasCupones();
   cuponesContainer.replaceChildren();
   todosWrapper.hidden = true;
   sinCupones.hidden = true;
@@ -2154,7 +2396,7 @@ function renderizarCategoria() {
   // V81.85 — Prioridad temporal de cupones NUEVOS.
   // 1) Activos antes que agotados.
   // 2) Durante su primera hora, los cupones con estado Nuevo suben al inicio.
-  // 3) Al cumplir la hora vuelven automáticamente al orden habitual por popularidad (clics).
+  // 3) Al cumplir la hora vuelven automáticamente al orden habitual por popularidad (usos).
   const ordenarCupones = (a, b) => {
     const agotadoA = a.agotado === true ? 1 : 0;
     const agotadoB = b.agotado === true ? 1 : 0;
@@ -2306,6 +2548,8 @@ function renderizarCategoria() {
   estadoCarga.textContent = "";
   startCouponTimers();
   programarSincronizacionAlturaTarjetas();
+  // PAQUETE 7.4: el contador vuelve a medir interacciones (Copiar código / Ver ofertas), no vistas.
+  detenerObservadorVistasCupones();
 }
 
 
@@ -2431,6 +2675,7 @@ async function cargarCupones() {
 
     todosLosCupones = nuevosCupones;
     actualizarFiltrosBuscadorCupones();
+    actualizarBannerEstadoCupones();
 
     if (buscadorCuponesResultado && !buscadorCuponesResultado.hidden && Number(buscadorCuponesMonto?.value || 0) > 0) {
       ejecutarBuscadorCupones();
@@ -2507,6 +2752,82 @@ async function registrarClic(id) {
 
   return respuesta.json();
 }
+
+/* V83.8 — El contador visible del cupón representa vistas reales, no copias.
+   Misma regla que Anirona: al menos 50% visible durante 900 ms y máximo
+   una vista por navegador/cupón cada 24 horas. */
+const DURACION_VISITA_CUPON_MS = 24 * 60 * 60 * 1000;
+const TIEMPO_MINIMO_VISTA_CUPON_MS = 900;
+let observadorVistasCupones = null;
+const temporizadoresVistasCupones = new Map();
+
+function claveVisitaCupon(id) {
+  return `visita-cupon-${id}`;
+}
+
+function visitaCuponVigente(id) {
+  const clave = claveVisitaCupon(id);
+  const registro = Number(localStorage.getItem(clave));
+  if (!Number.isFinite(registro) || registro <= 0) {
+    localStorage.removeItem(clave);
+    return false;
+  }
+  if (Date.now() - registro >= DURACION_VISITA_CUPON_MS) {
+    localStorage.removeItem(clave);
+    return false;
+  }
+  return true;
+}
+
+function actualizarVistasCuponEnPantalla(id, visitas) {
+  const total = Number(visitas) || 0;
+  document.querySelectorAll(`#cupones [data-id="${id}"] .numero-clics`).forEach((elemento) => {
+    elemento.textContent = String(total);
+  });
+}
+
+async function registrarVisitaCupon(cupon) {
+  const id = Number(cupon?.id);
+  if (!Number.isInteger(id) || id <= 0 || visitaCuponVigente(id)) return;
+
+  const clave = claveVisitaCupon(id);
+  localStorage.setItem(clave, String(Date.now()));
+
+  try {
+    const respuesta = await fetch("/api/cupon-visita", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ id }),
+      keepalive: true,
+    });
+    if (!respuesta.ok) throw new Error("No fue posible registrar la vista del cupón.");
+    const resultado = await respuesta.json();
+    const total = Number(resultado.visitas);
+    if (!Number.isFinite(total)) return;
+
+    cupon.clics = total;
+    const indice = todosLosCupones.findIndex((item) => Number(item.id) === id);
+    if (indice >= 0) todosLosCupones[indice].clics = total;
+    actualizarVistasCuponEnPantalla(id, total);
+  } catch (error) {
+    localStorage.removeItem(clave);
+    console.warn("No fue posible registrar la vista del cupón.", error);
+  }
+}
+
+function detenerObservadorVistasCupones() {
+  observadorVistasCupones?.disconnect();
+  observadorVistasCupones = null;
+  temporizadoresVistasCupones.forEach((temporizador) => clearTimeout(temporizador));
+  temporizadoresVistasCupones.clear();
+}
+
+function iniciarObservadorVistasCupones() {
+  // PAQUETE 7.5: deshabilitado de forma definitiva.
+  // El contador del cupón representa usos: solo Copiar código / Ver ofertas.
+  detenerObservadorVistasCupones();
+}
+
 
 async function registrarLike(id, accion) {
   const respuesta = await fetch("/api/cupon-like", {
@@ -2661,6 +2982,25 @@ modalContinuar?.addEventListener("click", irAMercadoLibreDesdeModal);
 
 modalCancelar?.addEventListener("click", finalizarInteraccionCupon);
 
+function mostrarAvisoBancario(codigo, enlace) {
+  cuponBancarioPendiente = { codigo, enlace };
+  if (modalAvisoBancario) modalAvisoBancario.hidden = false;
+  document.body.style.overflow = "hidden";
+}
+
+function cerrarAvisoBancarioYContinuar() {
+  if (modalAvisoBancario) modalAvisoBancario.hidden = true;
+  const pendiente = cuponBancarioPendiente;
+  cuponBancarioPendiente = null;
+  if (!pendiente) {
+    document.body.style.overflow = "";
+    return;
+  }
+  mostrarModal(pendiente.codigo, true, pendiente.enlace);
+}
+
+modalAvisoBancarioCerrar?.addEventListener("click", cerrarAvisoBancarioYContinuar);
+
 async function copiarYCanjear(cupon, tarjeta) {
   if (redireccionEnProceso || !couponTimeState(cupon).enabled) return;
 
@@ -2687,29 +3027,33 @@ async function copiarYCanjear(cupon, tarjeta) {
     return;
   }
 
-  mostrarModal(cupon.codigo, true, enlaceDestino);
-
   try {
     await copiarTexto(cupon.codigo);
+
+    if (normalizarCategoria(cupon) === "bancarios") {
+      mostrarAvisoBancario(cupon.codigo, enlaceDestino);
+    } else {
+      mostrarModal(cupon.codigo, true, enlaceDestino);
+    }
 
     localStorage.setItem(claveUsado(cupon.id), "1");
     if (usado) {
       usado.hidden = false;
     }
 
+    // PAQUETE 7.5: el contador aumenta exclusivamente por interacción.
+    // Un clic en "Copiar código" registra un uso; visualizar la tarjeta no cuenta.
     registrarClic(cupon.id)
       .then((resultado) => {
-        if (Number.isFinite(Number(resultado.clics))) {
-          if (numeroClics) numeroClics.textContent = String(resultado.clics);
+        if (!Number.isFinite(Number(resultado?.clics))) return;
 
-          const couponIndex = todosLosCupones.findIndex(
-            (item) => Number(item.id) === Number(cupon.id)
-          );
+        const total = Number(resultado.clics);
+        if (numeroClics) numeroClics.textContent = String(total);
 
-          if (couponIndex >= 0) {
-            todosLosCupones[couponIndex].clics = Number(resultado.clics);
-          }
-        }
+        const couponIndex = todosLosCupones.findIndex(
+          (item) => Number(item.id) === Number(cupon.id)
+        );
+        if (couponIndex >= 0) todosLosCupones[couponIndex].clics = total;
       })
       .catch((error) => {
         console.warn("El contador no pudo actualizarse:", error);
@@ -2850,9 +3194,11 @@ function datosPlataformaPublicidad(publicidad) {
 const DURACION_NUEVO_CATALOGO_MS = 5 * 24 * 60 * 60 * 1000;
 
 function esProductoNuevoVigente(publicidad) {
-  if (!publicidad?.es_nuevo || !publicidad?.fecha_nuevo) return false;
+  if (!valorBooleanoPublicidad(publicidad?.es_nuevo) || !publicidad?.fecha_nuevo) return false;
   const fecha = new Date(publicidad.fecha_nuevo).getTime();
-  return Number.isFinite(fecha) && Date.now() - fecha < DURACION_NUEVO_CATALOGO_MS;
+  if (!Number.isFinite(fecha)) return false;
+  const edad = Date.now() - fecha;
+  return edad >= 0 && edad < DURACION_NUEVO_CATALOGO_MS;
 }
 
 function numeroPrecioOferta(valor) {
@@ -2908,8 +3254,8 @@ function valorBooleanoPublicidad(value, fallback = false) {
   if (value === true || value === 1) return true;
   if (value === false || value === 0 || value == null) return false;
   const text = String(value).trim().toLowerCase();
-  if (["true", "1", "on", "yes", "si", "sí"].includes(text)) return true;
-  if (["false", "0", "off", "no", ""].includes(text)) return false;
+  if (["true", "1", "t", "on", "yes", "si", "sí"].includes(text)) return true;
+  if (["false", "0", "f", "off", "no", ""].includes(text)) return false;
   return fallback;
 }
 
@@ -2943,6 +3289,8 @@ function crearTarjetaOferta(publicidad, categoria) {
     const precioAnterior = monedaOferta(publicidad.precio_anterior);
     const categoriaProducto = String(publicidad.categoria_producto || "Oferta destacada").trim();
     const expira = publicidad.fecha_expiracion ? textoExpiracionOferta(publicidad.fecha_expiracion) : "";
+    const tituloOferta = String(publicidad.titulo || "Oferta destacada").trim();
+    const descripcionOferta = String(publicidad.descripcion || "").trim().slice(0, 150);
 
     articulo.innerHTML = `
       <div class="ofertazo-cabecera">
@@ -2957,8 +3305,8 @@ function crearTarjetaOferta(publicidad, categoria) {
       </button>
       <div class="oferta-contenido ofertazo-contenido">
         <strong class="ofertazo-categoria">${escaparHtml(categoriaProducto)}</strong>
-        <h3>${escaparHtml(publicidad.titulo || "Oferta destacada")}</h3>
-        ${publicidad.descripcion ? `<p class="oferta-descripcion">${escaparHtml(publicidad.descripcion)}</p>` : ""}
+        <h3>${escaparHtml(tituloOferta)}</h3>
+        ${descripcionOferta ? `<p class="oferta-descripcion">${escaparHtml(descripcionOferta)}</p>` : ""}
         <div class="ofertazo-precios">
           ${precioActual ? `<strong>${escaparHtml(precioActual)}</strong>` : ""}
           ${precioAnterior ? `<del>${escaparHtml(precioAnterior)}</del>` : ""}
@@ -3210,6 +3558,7 @@ function renderizarBannersCupones() {
 
   const botonesPunto = [];
   const slides = [];
+  let indiceFisico = items.length > 1 ? 1 : 0;
 
   items.forEach((item, indice) => {
     const enlace = document.createElement("a");
@@ -3228,13 +3577,6 @@ function renderizarBannersCupones() {
     enlace.appendChild(imagen);
     enlace.addEventListener("click", () => registrarClicPublicidad(item.id));
 
-    // Cada slide ocupa exactamente una fracción del track. El track mide
-    // N × 100% del viewport, por lo que cada desplazamiento corresponde
-    // de forma inequívoca a un banner completo.
-    enlace.style.flexBasis = `${100 / items.length}%`;
-    enlace.style.width = `${100 / items.length}%`;
-    enlace.style.minWidth = `${100 / items.length}%`;
-
     track.appendChild(enlace);
     slides.push(enlace);
 
@@ -3252,12 +3594,51 @@ function renderizarBannersCupones() {
     }
   });
 
-  track.style.width = `${items.length * 100}%`;
+  if (items.length > 1) {
+    const clonUltimo = slides[slides.length - 1].cloneNode(true);
+    const clonPrimero = slides[0].cloneNode(true);
+    clonUltimo.dataset.bannerClon = "true";
+    clonPrimero.dataset.bannerClon = "true";
+    clonUltimo.setAttribute("aria-hidden", "true");
+    clonPrimero.setAttribute("aria-hidden", "true");
+    clonUltimo.tabIndex = -1;
+    clonPrimero.tabIndex = -1;
+    clonUltimo.addEventListener("click", () => registrarClicPublicidad(items[items.length - 1].id));
+    clonPrimero.addEventListener("click", () => registrarClicPublicidad(items[0].id));
+    track.prepend(clonUltimo);
+    track.appendChild(clonPrimero);
+  }
 
-  function mostrarBanner(indice) {
+  const totalSlidesFisicos = items.length > 1 ? items.length + 2 : 1;
+  Array.from(track.children).forEach((slide) => {
+    slide.style.flexBasis = `${100 / totalSlidesFisicos}%`;
+    slide.style.width = `${100 / totalSlidesFisicos}%`;
+    slide.style.minWidth = `${100 / totalSlidesFisicos}%`;
+  });
+  track.style.width = `${totalSlidesFisicos * 100}%`;
+
+  function posicionarBanner(animar = true) {
+    track.style.transition = animar ? "" : "none";
+    const paso = 100 / totalSlidesFisicos;
+    track.style.transform = `translate3d(-${indiceFisico * paso}%, 0, 0)`;
+    if (!animar) {
+      // Confirmar el salto invisible antes de reactivar la transición evita
+      // que el navegador anime el regreso desde el clon hasta el inicio.
+      void track.offsetWidth;
+      track.style.transition = "";
+    }
+  }
+
+  function mostrarBanner(indice, direccion = 0, animar = true) {
     bannersCuponesIndice = (indice + items.length) % items.length;
-    const paso = 100 / items.length;
-    track.style.transform = `translate3d(-${bannersCuponesIndice * paso}%, 0, 0)`;
+    if (items.length > 1 && direccion > 0 && indiceFisico === items.length) {
+      indiceFisico = items.length + 1;
+    } else if (items.length > 1 && direccion < 0 && indiceFisico === 1) {
+      indiceFisico = 0;
+    } else {
+      indiceFisico = items.length > 1 ? bannersCuponesIndice + 1 : 0;
+    }
+    posicionarBanner(animar);
     slides.forEach((slide, i) => {
       slide.setAttribute("aria-hidden", i === bannersCuponesIndice ? "false" : "true");
       slide.tabIndex = i === bannersCuponesIndice ? 0 : -1;
@@ -3269,11 +3650,22 @@ function renderizarBannersCupones() {
     });
   }
 
+  track.addEventListener("transitionend", (evento) => {
+    if (evento.propertyName !== "transform" || items.length <= 1) return;
+    if (indiceFisico === items.length + 1) {
+      indiceFisico = 1;
+      posicionarBanner(false);
+    } else if (indiceFisico === 0) {
+      indiceFisico = items.length;
+      posicionarBanner(false);
+    }
+  });
+
   function iniciarRotacion() {
     detenerCarruselBannersCupones();
     if (items.length <= 1) return;
     bannersCuponesIntervalo = setInterval(() => {
-      mostrarBanner(bannersCuponesIndice + 1);
+      mostrarBanner(bannersCuponesIndice + 1, 1);
     }, 5000);
   }
 
@@ -3284,12 +3676,12 @@ function renderizarBannersCupones() {
   bannersCuponesLista.appendChild(track);
   if (items.length > 1) bannersCuponesLista.appendChild(puntos);
   bannersCupones.hidden = false;
-  mostrarBanner(0);
+  mostrarBanner(0, 0, false);
   iniciarRotacion();
 
   // Recalcular la posición si cambia el viewport evita desalineaciones al
   // rotar el teléfono o redimensionar la ventana.
-  bannersCuponesResizeHandler = () => mostrarBanner(bannersCuponesIndice);
+  bannersCuponesResizeHandler = () => mostrarBanner(bannersCuponesIndice, 0, false);
   window.addEventListener("resize", bannersCuponesResizeHandler, { passive: true });
 
   // V82.45 — Deslizamiento táctil izquierda/derecha.
@@ -3340,8 +3732,8 @@ function renderizarBannersCupones() {
 
       deltaX = dx;
       const anchoViewport = bannersCuponesLista.clientWidth || 1;
-      const paso = 100 / items.length;
-      const desplazamientoBase = -(bannersCuponesIndice * paso);
+      const paso = 100 / totalSlidesFisicos;
+      const desplazamientoBase = -(indiceFisico * paso);
       const desplazamientoArrastre = (deltaX / anchoViewport) * paso;
       track.style.transform = `translate3d(${desplazamientoBase + desplazamientoArrastre}%, 0, 0)`;
       bloquearClick = Math.abs(deltaX) > 10;
@@ -3354,9 +3746,10 @@ function renderizarBannersCupones() {
       const mover = gestoHorizontal && Math.abs(deltaX) >= umbral;
 
       if (mover) {
-        mostrarBanner(bannersCuponesIndice + (deltaX < 0 ? 1 : -1));
+        const direccion = deltaX < 0 ? 1 : -1;
+        mostrarBanner(bannersCuponesIndice + direccion, direccion);
       } else {
-        mostrarBanner(bannersCuponesIndice);
+        mostrarBanner(bannersCuponesIndice, 0);
       }
 
       if (gestoHorizontal) {
@@ -3507,10 +3900,10 @@ function renderizarCatalogoAnirona() {
   ].filter(Boolean).join(" ")).includes(consulta);
 
   const catalogoAnirona = ordenarCatalogoAnirona(
-    todos.filter((item) => item?.es_otra_recomendacion !== true && coincideBusqueda(item))
+    todos.filter((item) => !valorBooleanoPublicidad(item?.es_otra_recomendacion) && coincideBusqueda(item))
   );
   const otrasRecomendaciones = ordenarCatalogoAnirona(
-    todos.filter((item) => item?.es_otra_recomendacion === true && coincideBusqueda(item))
+    todos.filter((item) => valorBooleanoPublicidad(item?.es_otra_recomendacion) && coincideBusqueda(item))
   );
   const totalMostrados = catalogoAnirona.length + otrasRecomendaciones.length;
 
@@ -3575,7 +3968,10 @@ function renderizarModuloOfertas(categoria, contenedor, seccion) {
     items.forEach((item) => {
       contenedor.appendChild(crearTarjetaOferta(item, categoria));
     });
-    if (categoria === "ofertas_mercado_libre") actualizarTemporizadoresOfertazo();
+    if (categoria === "ofertas_mercado_libre") {
+      actualizarTemporizadoresOfertazo();
+      iniciarObservadorVistasAnirona();
+    }
   }
 
 }
@@ -3661,7 +4057,7 @@ function detenerObservadorVistasAnirona() {
 
 function iniciarObservadorVistasAnirona() {
   detenerObservadorVistasAnirona();
-  if (!ofertasComunidadAnirona || typeof IntersectionObserver === "undefined") return;
+  if ((!ofertasComunidadAnirona && !ofertasMercadoLibre) || typeof IntersectionObserver === "undefined") return;
 
   observadorVistasAnirona = new IntersectionObserver((entradas) => {
     entradas.forEach((entrada) => {
@@ -3695,9 +4091,11 @@ function iniciarObservadorVistasAnirona() {
     });
   }, { threshold: [0.5] });
 
-  ofertasComunidadAnirona.querySelectorAll(".tarjeta-oferta-anirona[data-publicidad-id]").forEach((tarjeta) => {
-    const id = Number(tarjeta.dataset.publicidadId);
-    if (!visitaPublicidadVigente(id, "general")) observadorVistasAnirona.observe(tarjeta);
+  [ofertasComunidadAnirona, ofertasMercadoLibre].filter(Boolean).forEach((contenedor) => {
+    contenedor.querySelectorAll(".tarjeta-oferta-anirona[data-publicidad-id], .tarjeta-oferta-ofertazo[data-publicidad-id]").forEach((tarjeta) => {
+      const id = Number(tarjeta.dataset.publicidadId);
+      if (!visitaPublicidadVigente(id, "general")) observadorVistasAnirona.observe(tarjeta);
+    });
   });
 }
 
@@ -3925,7 +4323,10 @@ async function abrirPublicidad(publicidad, { copiarCuponAsignado = true } = {}) 
   const precioCupon = String(publicidad.precio_cupon || "").trim();
   try {
     if (copiarCuponAsignado && codigo) await copiarTexto(codigo);
-    if (!publicidadPerteneceASeccion(publicidad, "comunidad_anirona")) {
+    if (
+      !publicidadPerteneceASeccion(publicidad, "comunidad_anirona") &&
+      !publicidadPerteneceASeccion(publicidad, "ofertas_mercado_libre")
+    ) {
       registrarVisitaPublicidad(publicidad, publicidad.plataforma);
     }
     registrarClicPublicidad(publicidad.id);
@@ -5091,3 +5492,10 @@ document.addEventListener("visibilitychange", actualizarTextoAvisosMenuMas);
 
 
 window.setInterval(actualizarTemporizadoresOfertazo, 60 * 1000);
+
+
+// V82.96 — Mantiene vigencia y cuenta regresiva del banner sin recargar.
+window.setInterval(() => {
+  const banner = document.querySelector("#banner-estado-cupones");
+  if (banner && banner.dataset.estado !== "cargando") actualizarBannerEstadoCupones();
+}, 60 * 1000);
