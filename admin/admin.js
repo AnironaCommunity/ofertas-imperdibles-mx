@@ -83,6 +83,12 @@ const couponImagePreview = document.querySelector(
 const couponImageRemove = document.querySelector(
   "#coupon-image-remove"
 );
+const couponWatermarkWrapper = document.querySelector("#coupon-watermark-wrapper");
+const couponWatermark = document.querySelector("#coupon-watermark");
+const couponWatermarkUrl = document.querySelector("#coupon-watermark-url");
+const couponWatermarkPreviewWrapper = document.querySelector("#coupon-watermark-preview-wrapper");
+const couponWatermarkPreview = document.querySelector("#coupon-watermark-preview");
+const couponWatermarkRemove = document.querySelector("#coupon-watermark-remove");
 const couponActive = document.querySelector("#coupon-active");
 const couponSoldOut = document.querySelector("#coupon-sold-out");
 const couponPublishNew = document.querySelector("#coupon-publish-new");
@@ -539,6 +545,10 @@ function resetCouponForm() {
   couponActive.checked = true;
   if (couponSoldOut) couponSoldOut.checked = false;
   couponPublishNew.checked = true;
+  if (couponWatermark) couponWatermark.value = "";
+  if (couponWatermarkUrl) couponWatermarkUrl.value = "";
+  if (couponWatermarkPreview) couponWatermarkPreview.src = "";
+  if (couponWatermarkPreviewWrapper) couponWatermarkPreviewWrapper.hidden = true;
   couponFormTitle.textContent = "Agregar cupón";
   cancelCoupon.hidden = true;
   setMessage(couponFormMessage);
@@ -562,6 +572,10 @@ function editCoupon(coupon) {
   couponImageUrl.value = coupon.imagen_url || "";
   couponImagePreview.src = coupon.imagen_url || "";
   couponImagePreviewWrapper.hidden = !coupon.imagen_url;
+  if (couponWatermark) couponWatermark.value = "";
+  if (couponWatermarkUrl) couponWatermarkUrl.value = coupon.marca_agua_url || "";
+  if (couponWatermarkPreview) couponWatermarkPreview.src = coupon.marca_agua_url || "";
+  if (couponWatermarkPreviewWrapper) couponWatermarkPreviewWrapper.hidden = !coupon.marca_agua_url;
   if (couponBank && coupon.categoria === "bancarios") {
     const imagenBanco = String(coupon.imagen_url || "").replace(/\.png(?:\?.*)?$/i, ".jpg");
     const existe = [...couponBank.options].some(o => o.value === imagenBanco);
@@ -1292,7 +1306,7 @@ function printCouponCardHtml(coupon, activeList) {
   const categoryText = exclusive ? "EXCLUSIVO" : "CUPÓN TIENDA";
   const percent = /%|por\s*ciento/i.test(String(coupon?.titulo || ""));
   const image = coupon?.imagen_url ? `<img class="hc16-logo cupon-logo" src="${printEscape(new URL(coupon.imagen_url, location.href).href)}" alt="">` : "";
-  const watermark = exclusive && coupon?.imagen_url ? `<span class="hc16-marca-agua" aria-hidden="true"><img src="${printEscape(new URL(coupon.imagen_url, location.href).href)}" alt=""></span>` : "";
+  const watermark = exclusive && coupon?.marca_agua_url ? `<span class="hc16-marca-agua" aria-hidden="true"><img src="${printEscape(new URL(coupon.marca_agua_url, location.href).href)}" alt=""></span>` : "";
   return `<article class="cupon cupon-horizontal-v16${exclusive ? " cupon-exclusivo" : ""}" style="--categoria-cupon-color:${color};--categoria-cupon-texto:#fff;--ticket-cutout-bg:#fff"><span class="ticket-notch ticket-notch-top"></span><span class="ticket-notch ticket-notch-bottom"></span><div class="hc16-valor">${image}<h2 class="hc16-descuento descuento">${title}<span class="hc19-off">OFF</span></h2><span class="hc19-porcentaje">%</span></div><div class="hc16-info">${watermark}<div class="hc16-categoria">${categoryText}</div><div class="hc16-condiciones"><p class="hc16-condicion">En compras desde <strong>${printEscape(coupon?.compra_minima || "Consultar")}</strong></p></div>${(exclusive || category === "tienda") && coupon?.detalle_bancario ? `<p class="hc16-detalle">${printEscape(coupon.detalle_bancario)}</p>` : ""}${percent ? `<p class="hc16-ahorro-extra">Ahorra hasta <strong>${printEscape(coupon?.ahorro_maximo || "Consultar")}</strong></p>` : ""}<div class="hc16-etiquetas">${tags}</div></div><div class="hc16-acciones"><div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar" type="button">${copyButton}</button></div><p class="mensaje hc16-mensaje"></p>${social}<div class="estado-programacion hc16-tiempo">${printEscape(remaining)}</div></div></article>`;
 }
 
@@ -1685,7 +1699,7 @@ function printExactCouponCards() {
     return;
   }
 
-  const cssUrl = new URL("../css/tarjetas-cupon-descuento.css?v=83.14", location.href).href;
+  const cssUrl = new URL("../css/tarjetas-cupon-descuento.css?v=83.15", location.href).href;
   const rootCssUrl = new URL("../style.css?v=81.69.4", location.href).href;
   const cards = selected.map(c => printCouponCardHtml(c, selected)).join("");
   const win = window.open("", "_blank");
@@ -1819,6 +1833,26 @@ async function uploadCouponImage() {
   return result.imagen_url;
 }
 
+async function uploadCouponWatermark() {
+  const file = couponWatermark?.files?.[0];
+
+  if (!file) return couponWatermarkUrl?.value || "";
+  if (!file.type.startsWith("image/")) {
+    throw new Error("Selecciona una imagen válida para la marca de agua.");
+  }
+
+  const dataUrl = await optimizeImage(file);
+  const result = await api("/api/admin-publicidad-imagen", {
+    method: "POST",
+    body: JSON.stringify({
+      data_url: dataUrl,
+      nombre: `marca-agua-cupon-${file.name}`,
+    }),
+  });
+
+  return result.imagen_url;
+}
+
 async function saveCoupon(event) {
   event.preventDefault();
 
@@ -1832,6 +1866,9 @@ async function saveCoupon(event) {
     const imageUrl = couponCategory.value === "bancarios" && couponBank?.value
       ? couponBank.value
       : await uploadCouponImage();
+    const watermarkUrl = couponCategory.value === "exclusivo"
+      ? await uploadCouponWatermark()
+      : "";
 
     const payload = {
       titulo: couponTitle.value.trim(),
@@ -1849,6 +1886,7 @@ async function saveCoupon(event) {
       fecha_fin: mexicoLocalToIso(couponEnd.value),
       enlace: couponLink.value.trim(),
       imagen_url: imageUrl || "",
+      marca_agua_url: watermarkUrl || "",
       activo: couponActive.checked,
       agotado: Boolean(couponSoldOut?.checked),
       publicar_como_nuevo: couponPublishNew.checked,
@@ -4188,6 +4226,8 @@ function actualizarSelectorBanco() {
   if (couponBankWrapper) couponBankWrapper.hidden = !esBancario;
   if (couponBankDetailWrapper) couponBankDetailWrapper.hidden = !usaDetalle;
   if (couponShareEligibleWrapper) couponShareEligibleWrapper.hidden = !esExclusivo;
+  if (couponWatermarkWrapper) couponWatermarkWrapper.hidden = !esExclusivo;
+  if (couponWatermarkPreviewWrapper && !esExclusivo) couponWatermarkPreviewWrapper.hidden = true;
 
   if (couponBankDetailLabel) {
     couponBankDetailLabel.textContent = esBancario
@@ -4252,6 +4292,20 @@ couponImageRemove.addEventListener("click", () => {
   couponImageUrl.value = "";
   couponImagePreview.src = "";
   couponImagePreviewWrapper.hidden = true;
+});
+
+couponWatermark?.addEventListener("change", () => {
+  const file = couponWatermark.files[0];
+  if (!file) return;
+  couponWatermarkPreview.src = URL.createObjectURL(file);
+  couponWatermarkPreviewWrapper.hidden = false;
+});
+
+couponWatermarkRemove?.addEventListener("click", () => {
+  couponWatermark.value = "";
+  couponWatermarkUrl.value = "";
+  couponWatermarkPreview.src = "";
+  couponWatermarkPreviewWrapper.hidden = true;
 });
 
 showImporter.addEventListener("click", () => {

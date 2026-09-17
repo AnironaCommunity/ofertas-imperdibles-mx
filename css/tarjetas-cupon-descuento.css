@@ -3469,8 +3469,8 @@
   }
 }
 
-/* La imagen configurada en el cupón exclusivo también funciona como
-   marca de agua automática detrás de sus condiciones. */
+/* La imagen de marca de agua configurada por separado en el cupón
+   exclusivo aparece detrás de sus condiciones. */
 #cupones .cupon-horizontal-v16.cupon-exclusivo .hc16-info {
   position: relative !important;
   isolation: isolate !important;

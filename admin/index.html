@@ -445,6 +445,38 @@ Descuento máximo: $180"
                 </button>
               </div>
 
+              <div class="campo campo-completo" id="coupon-watermark-wrapper" hidden>
+                <label for="coupon-watermark">Imagen de marca de agua (opcional)</label>
+                <input
+                  id="coupon-watermark"
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                />
+                <input id="coupon-watermark-url" type="hidden" />
+                <small>
+                  Solo para cupones Exclusivos. Se mostrará con transparencia detrás de la información.
+                </small>
+              </div>
+
+              <div
+                id="coupon-watermark-preview-wrapper"
+                class="preview-wrapper preview-cupon"
+                hidden
+              >
+                <img
+                  id="coupon-watermark-preview"
+                  src=""
+                  alt="Vista previa de la marca de agua"
+                />
+                <button
+                  id="coupon-watermark-remove"
+                  class="boton-secundario boton-quitar-imagen"
+                  type="button"
+                >
+                  Quitar marca de agua
+                </button>
+              </div>
+
               <div class="opciones-formulario-compactas campo-completo">
                 <label class="switch-row switch-nuevo-cupon">
                   <input id="coupon-publish-new" type="checkbox" checked />
@@ -1343,6 +1375,6 @@ Descuento máximo: $180"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=82.85.1"></script>
+  <script type="module" src="admin.js?v=82.85.2"></script>
 </body>
 </html>

@@ -1386,7 +1386,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
     </div>
 
     <div class="hc16-info">
-      ${esExclusivo && cupon.imagen_url ? `<span class="hc16-marca-agua" aria-hidden="true"><img src="${escaparHtml(cupon.imagen_url)}" alt="" loading="lazy" /></span>` : ""}
+      ${esExclusivo && cupon.marca_agua_url ? `<span class="hc16-marca-agua" aria-hidden="true"><img src="${escaparHtml(cupon.marca_agua_url)}" alt="" loading="lazy" /></span>` : ""}
       <div class="hc16-categoria">${escaparHtml(visualCategoria.nombre)}</div>
       <div class="hc16-condiciones">
         <p class="hc16-condicion">En compras desde <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
