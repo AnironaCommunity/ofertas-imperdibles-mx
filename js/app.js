@@ -1379,6 +1379,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   articulo.innerHTML = `
     <span class="ticket-notch ticket-notch-top" aria-hidden="true"></span>
     <span class="ticket-notch ticket-notch-bottom" aria-hidden="true"></span>
+    ${esExclusivo && cupon.marca_agua_url ? `<span class="hc16-marca-agua" aria-hidden="true"><img src="${escaparHtml(cupon.marca_agua_url)}" alt="" loading="lazy" /></span>` : ""}
     <div class="hc16-valor">
       ${cupon.imagen_url ? `<img class="hc16-logo cupon-logo" src="${escaparHtml(cupon.imagen_url)}" alt="" loading="lazy" />` : ""}
       <h2 class="hc16-descuento descuento${claseDescuentoLargo}">${escaparHtml(tituloCuponLimpio)}<span class="hc19-off">OFF</span></h2>
@@ -1386,7 +1387,6 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
     </div>
 
     <div class="hc16-info">
-      ${esExclusivo && cupon.marca_agua_url ? `<span class="hc16-marca-agua" aria-hidden="true"><img src="${escaparHtml(cupon.marca_agua_url)}" alt="" loading="lazy" /></span>` : ""}
       <div class="hc16-categoria">${escaparHtml(visualCategoria.nombre)}</div>
       <div class="hc16-condiciones">
         <p class="hc16-condicion">En compras desde <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>

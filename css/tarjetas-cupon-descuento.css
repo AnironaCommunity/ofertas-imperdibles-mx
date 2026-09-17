@@ -3469,9 +3469,9 @@
   }
 }
 
-/* La imagen de marca de agua configurada por separado en el cupón
-   exclusivo aparece detrás de sus condiciones. */
-#cupones .cupon-horizontal-v16.cupon-exclusivo .hc16-info {
+/* La imagen de marca de agua configurada por separado cubre el cupón
+   exclusivo completo con una transparencia suave. */
+#cupones .cupon-horizontal-v16.cupon-exclusivo {
   position: relative !important;
   isolation: isolate !important;
   overflow: hidden !important;
@@ -3479,11 +3479,11 @@
 
 #cupones .cupon-horizontal-v16.cupon-exclusivo .hc16-marca-agua {
   position: absolute !important;
-  inset: 5px !important;
-  z-index: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  inset: 0 !important;
+  z-index: 5 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
   margin: 0 !important;
   padding: 0 !important;
   pointer-events: none !important;
@@ -3493,15 +3493,18 @@
 
 #cupones .cupon-horizontal-v16.cupon-exclusivo .hc16-marca-agua img {
   display: block !important;
-  width: 88% !important;
-  height: 88% !important;
+  width: 100% !important;
+  height: 100% !important;
   max-width: none !important;
   max-height: none !important;
-  object-fit: contain !important;
+  object-fit: cover !important;
+  object-position: center !important;
   filter: grayscale(100%) !important;
 }
 
-#cupones .cupon-horizontal-v16.cupon-exclusivo .hc16-info > :not(.hc16-marca-agua) {
+#cupones .cupon-horizontal-v16.cupon-exclusivo > .hc16-valor,
+#cupones .cupon-horizontal-v16.cupon-exclusivo > .hc16-info,
+#cupones .cupon-horizontal-v16.cupon-exclusivo > .hc16-acciones {
   position: relative !important;
   z-index: 1 !important;
 }
