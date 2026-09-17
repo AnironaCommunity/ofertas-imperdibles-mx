@@ -3442,6 +3442,31 @@
 
 
 /* ================================================================
+   PAQUETE 7.5 — LOGOTIPO VISIBLE EN CUPONES EXCLUSIVOS
+   Da mayor presencia a la marca configurada sin modificar los logos
+   de cupones de tienda o bancarios.
+   ================================================================ */
+#cupones .cupon-horizontal-v16.cupon-exclusivo .hc16-logo {
+  width: 100% !important;
+  max-width: 100px !important;
+  height: 40px !important;
+  max-height: 40px !important;
+  margin-bottom: 5px !important;
+  object-fit: contain !important;
+  object-position: left center !important;
+}
+
+@media (max-width: 680px) {
+  #cupones .cupon-horizontal-v16.cupon-exclusivo .hc16-logo {
+    max-width: 76px !important;
+    height: 32px !important;
+    max-height: 32px !important;
+    margin-bottom: 3px !important;
+  }
+}
+
+
+/* ================================================================
    PAQUETE 7.4 — $1,000 COMPLETO + CONTADOR POR INTERACCIÓN
    El importe largo usa un tamaño seguro dentro del 25% izquierdo en móvil.
    El cambio del contador se resuelve en JS: solo Copiar código / Ver ofertas.
