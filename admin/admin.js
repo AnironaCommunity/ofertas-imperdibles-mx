@@ -1699,7 +1699,7 @@ function printExactCouponCards() {
     return;
   }
 
-  const cssUrl = new URL("../css/tarjetas-cupon-descuento.css?v=83.16", location.href).href;
+  const cssUrl = new URL("../css/tarjetas-cupon-descuento.css?v=83.17", location.href).href;
   const rootCssUrl = new URL("../style.css?v=81.69.4", location.href).href;
   const cards = selected.map(c => printCouponCardHtml(c, selected)).join("");
   const win = window.open("", "_blank");

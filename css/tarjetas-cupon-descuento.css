@@ -3442,6 +3442,71 @@
 
 
 /* ================================================================
+   PAQUETE 8.0 — CÁPSULAS DEGRADADAS (MUESTRA 8)
+   Cambio exclusivamente visual; conserva textos, estados y funciones.
+   ================================================================ */
+#cupones .cupon-horizontal-v16 .hc16-etiquetas .etiqueta-cupon,
+#cupones .cupon-horizontal-v16 .hc16-etiquetas .etiqueta-popular-integrada {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 24px !important;
+  margin: 0 !important;
+  padding: 5px 10px !important;
+  border: 1px solid rgba(255,255,255,.35) !important;
+  border-radius: 999px !important;
+  color: #fff !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  letter-spacing: -.01em !important;
+  white-space: nowrap !important;
+  box-shadow: 0 3px 8px rgba(15,23,42,.16), inset 0 1px 0 rgba(255,255,255,.25) !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,.18) !important;
+}
+
+#cupones .cupon-horizontal-v16 .etiqueta-ultima-oportunidad {
+  background: linear-gradient(135deg,#ef233c 0%,#ff6b35 100%) !important;
+}
+#cupones .cupon-horizontal-v16 .etiqueta-ultimas-horas {
+  background: linear-gradient(135deg,#f72585 0%,#ff7b38 100%) !important;
+}
+#cupones .cupon-horizontal-v16 .etiqueta-regreso {
+  background: linear-gradient(135deg,#00a896 0%,#34c7a1 100%) !important;
+}
+#cupones .cupon-horizontal-v16 .etiqueta-mas-usado {
+  background: linear-gradient(135deg,#0096c7 0%,#4361ee 100%) !important;
+}
+#cupones .cupon-horizontal-v16 .etiqueta-popular-integrada {
+  background: linear-gradient(135deg,#ff3366 0%,#ff8c42 100%) !important;
+}
+#cupones .cupon-horizontal-v16 .etiqueta-mayor-ahorro {
+  background: linear-gradient(135deg,#00a651 0%,#35c759 100%) !important;
+}
+#cupones .cupon-horizontal-v16 .etiqueta-top {
+  background: linear-gradient(135deg,#f59e0b 0%,#facc15 100%) !important;
+  color: #513300 !important;
+  text-shadow: 0 1px 1px rgba(255,255,255,.35) !important;
+}
+#cupones .cupon-horizontal-v16 .etiqueta-nuevo {
+  background: linear-gradient(135deg,#7b2ff7 0%,#3f72ff 100%) !important;
+}
+
+@media (max-width: 680px) {
+  #cupones .cupon-horizontal-v16 .hc16-etiquetas {
+    gap: 4px !important;
+  }
+  #cupones .cupon-horizontal-v16 .hc16-etiquetas .etiqueta-cupon,
+  #cupones .cupon-horizontal-v16 .hc16-etiquetas .etiqueta-popular-integrada {
+    min-height: 19px !important;
+    padding: 4px 7px !important;
+    font-size: 7.2px !important;
+    box-shadow: 0 2px 6px rgba(15,23,42,.14), inset 0 1px 0 rgba(255,255,255,.22) !important;
+  }
+}
+
+
+/* ================================================================
    PAQUETE 7.5 — LOGOTIPO VISIBLE EN CUPONES EXCLUSIVOS
    Da mayor presencia a la marca configurada sin modificar los logos
    de cupones de tienda o bancarios.
