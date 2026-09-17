@@ -1292,7 +1292,8 @@ function printCouponCardHtml(coupon, activeList) {
   const categoryText = exclusive ? "EXCLUSIVO" : "CUPÓN TIENDA";
   const percent = /%|por\s*ciento/i.test(String(coupon?.titulo || ""));
   const image = coupon?.imagen_url ? `<img class="hc16-logo cupon-logo" src="${printEscape(new URL(coupon.imagen_url, location.href).href)}" alt="">` : "";
-  return `<article class="cupon cupon-horizontal-v16${exclusive ? " cupon-exclusivo" : ""}" style="--categoria-cupon-color:${color};--categoria-cupon-texto:#fff;--ticket-cutout-bg:#fff"><span class="ticket-notch ticket-notch-top"></span><span class="ticket-notch ticket-notch-bottom"></span><div class="hc16-valor">${image}<h2 class="hc16-descuento descuento">${title}<span class="hc19-off">OFF</span></h2><span class="hc19-porcentaje">%</span></div><div class="hc16-info"><div class="hc16-categoria">${categoryText}</div><div class="hc16-condiciones"><p class="hc16-condicion">En compras desde <strong>${printEscape(coupon?.compra_minima || "Consultar")}</strong></p></div>${(exclusive || category === "tienda") && coupon?.detalle_bancario ? `<p class="hc16-detalle">${printEscape(coupon.detalle_bancario)}</p>` : ""}${percent ? `<p class="hc16-ahorro-extra">Ahorra hasta <strong>${printEscape(coupon?.ahorro_maximo || "Consultar")}</strong></p>` : ""}<div class="hc16-etiquetas">${tags}</div></div><div class="hc16-acciones"><div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar" type="button">${copyButton}</button></div><p class="mensaje hc16-mensaje"></p>${social}<div class="estado-programacion hc16-tiempo">${printEscape(remaining)}</div></div></article>`;
+  const watermark = exclusive && coupon?.imagen_url ? `<span class="hc16-marca-agua" aria-hidden="true"><img src="${printEscape(new URL(coupon.imagen_url, location.href).href)}" alt=""></span>` : "";
+  return `<article class="cupon cupon-horizontal-v16${exclusive ? " cupon-exclusivo" : ""}" style="--categoria-cupon-color:${color};--categoria-cupon-texto:#fff;--ticket-cutout-bg:#fff"><span class="ticket-notch ticket-notch-top"></span><span class="ticket-notch ticket-notch-bottom"></span><div class="hc16-valor">${image}<h2 class="hc16-descuento descuento">${title}<span class="hc19-off">OFF</span></h2><span class="hc19-porcentaje">%</span></div><div class="hc16-info">${watermark}<div class="hc16-categoria">${categoryText}</div><div class="hc16-condiciones"><p class="hc16-condicion">En compras desde <strong>${printEscape(coupon?.compra_minima || "Consultar")}</strong></p></div>${(exclusive || category === "tienda") && coupon?.detalle_bancario ? `<p class="hc16-detalle">${printEscape(coupon.detalle_bancario)}</p>` : ""}${percent ? `<p class="hc16-ahorro-extra">Ahorra hasta <strong>${printEscape(coupon?.ahorro_maximo || "Consultar")}</strong></p>` : ""}<div class="hc16-etiquetas">${tags}</div></div><div class="hc16-acciones"><div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar" type="button">${copyButton}</button></div><p class="mensaje hc16-mensaje"></p>${social}<div class="estado-programacion hc16-tiempo">${printEscape(remaining)}</div></div></article>`;
 }
 
 
@@ -1684,7 +1685,7 @@ function printExactCouponCards() {
     return;
   }
 
-  const cssUrl = new URL("../css/tarjetas-cupon-descuento.css?v=82.80.0", location.href).href;
+  const cssUrl = new URL("../css/tarjetas-cupon-descuento.css?v=83.14", location.href).href;
   const rootCssUrl = new URL("../style.css?v=81.69.4", location.href).href;
   const cards = selected.map(c => printCouponCardHtml(c, selected)).join("");
   const win = window.open("", "_blank");

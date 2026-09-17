@@ -3469,6 +3469,43 @@
   }
 }
 
+/* La imagen configurada en el cupón exclusivo también funciona como
+   marca de agua automática detrás de sus condiciones. */
+#cupones .cupon-horizontal-v16.cupon-exclusivo .hc16-info {
+  position: relative !important;
+  isolation: isolate !important;
+  overflow: hidden !important;
+}
+
+#cupones .cupon-horizontal-v16.cupon-exclusivo .hc16-marca-agua {
+  position: absolute !important;
+  inset: 5px !important;
+  z-index: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  pointer-events: none !important;
+  user-select: none !important;
+  opacity: .09 !important;
+}
+
+#cupones .cupon-horizontal-v16.cupon-exclusivo .hc16-marca-agua img {
+  display: block !important;
+  width: 88% !important;
+  height: 88% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: contain !important;
+  filter: grayscale(100%) !important;
+}
+
+#cupones .cupon-horizontal-v16.cupon-exclusivo .hc16-info > :not(.hc16-marca-agua) {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
 
 /* ================================================================
    PAQUETE 7.4 — $1,000 COMPLETO + CONTADOR POR INTERACCIÓN
