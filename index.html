@@ -66,7 +66,7 @@
   <link rel="stylesheet" href="css/tarjetas-cupon-descuento.css?v=83.17" />
   <link rel="stylesheet" href="css/pwa-install.css?v=83.0" />
   <link rel="stylesheet" href="css/header-marca-v83-9.css?v=83.9" />
-  <link rel="stylesheet" href="css/guia-etiquetas-v35.css?v=3.5" />
+  <link rel="stylesheet" href="css/guia-etiquetas-v36.css?v=3.6" />
   <script>
     try {
       const temaGuardado = JSON.parse(localStorage.getItem("ofertas_imperdibles_tema") || "null");
@@ -277,16 +277,16 @@
 
       <div class="guia-etiquetas-contenido">
         <div class="guia-etiqueta guia-etiqueta-tienda">
-          <span class="guia-etiqueta-icono" aria-hidden="true">♙</span>
-          <p><strong>TIENDA:</strong> Aplica en la mayoría de los productos.</p>
+          <span class="guia-etiqueta-icono tab-icono tab-icono-tienda" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="icon-outline" d="M17 22h30l3 32H14l3-32Z"/><path class="icon-line" d="M24 24v-6a8 8 0 0 1 16 0v6"/></svg></span>
+          <p><strong>CUPÓN TIENDA:</strong> Aplica en la mayoría de los productos.</p>
         </div>
         <div class="guia-etiqueta guia-etiqueta-exclusivo">
-          <span class="guia-etiqueta-icono" aria-hidden="true">%</span>
+          <span class="guia-etiqueta-icono tab-icono tab-icono-exclusivo" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="icon-outline" d="M12 15h40v10a7 7 0 0 0 0 14v10H12V39a7 7 0 0 0 0-14V15Z"/><circle class="icon-dot" cx="25" cy="27" r="3.5"/><circle class="icon-dot" cx="39" cy="37" r="3.5"/><path class="icon-line" d="M40 24 24 41"/></svg></span>
           <p><strong>EXCLUSIVO:</strong> Solo en productos seleccionados.</p>
         </div>
         <div class="guia-etiqueta guia-etiqueta-bancario">
-          <span class="guia-etiqueta-icono guia-etiqueta-tarjeta" aria-hidden="true"></span>
-          <p><strong>BANCARIO:</strong> Requiere tarjeta o método participante.</p>
+          <span class="guia-etiqueta-icono tab-icono tab-icono-tarjeta" aria-hidden="true"><svg viewBox="0 0 64 64"><rect class="icon-outline" x="8" y="15" width="48" height="34" rx="7"/><path class="card-band" d="M9 25h46"/><path class="icon-line" d="M18 39h9M40 39h7"/></svg></span>
+          <p><strong>CUPÓN BANCARIO:</strong> Requiere tarjeta o método participante.</p>
         </div>
         <div class="guia-etiqueta guia-etiqueta-anirona">
           <span class="guia-etiqueta-icono guia-etiqueta-cocodrilo" aria-hidden="true">🐊</span>
