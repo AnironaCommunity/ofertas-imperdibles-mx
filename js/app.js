@@ -1386,10 +1386,21 @@ function aplicarEstructuraEditorialV41(articulo) {
 
   const categoria = info.querySelector(":scope > .hc16-categoria");
   const condiciones = info.querySelector(":scope > .hc16-condiciones");
-  const detalles = [...info.querySelectorAll(":scope > .hc16-detalle, :scope > .hc16-ahorro-extra")];
+  let detalles = [...info.querySelectorAll(":scope > .hc16-detalle, :scope > .hc16-ahorro-extra")];
   const etiquetas = info.querySelector(":scope > .hc16-etiquetas");
   const esBancario = articulo.classList.contains("cupon-bancario-unificado") || articulo.classList.contains("cupon-bancario");
   const esExclusivo = articulo.classList.contains("cupon-exclusivo");
+
+  if (!info.querySelector(":scope > .hc16-detalle")) {
+    const detalle = document.createElement("p");
+    detalle.className = "hc16-detalle v43-detalle-aplicacion";
+    detalle.textContent = esBancario
+      ? "Requiere tarjeta o método participante."
+      : esExclusivo
+        ? "Solo en productos seleccionados."
+        : "Aplica en la mayoría de los productos.";
+    detalles.push(detalle);
+  }
 
   if (categoria) {
     const icono = esBancario

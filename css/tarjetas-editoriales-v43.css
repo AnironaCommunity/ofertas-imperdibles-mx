@@ -1,0 +1,107 @@
+/* v4.3: limpieza definitiva de la geometría horizontal heredada. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 {
+  display: flex !important;
+  grid-template-columns: none !important;
+  grid-template-rows: none !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  align-items: stretch !important;
+}
+
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-valor,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-condiciones,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-detalle,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-ahorro-extra,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-etiquetas,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-acciones {
+  position: relative !important;
+  inset: auto !important;
+  flex: 0 0 auto !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+  transform: none !important;
+}
+
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-descuento,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-descuento.hc16-descuento-largo {
+  position: static !important;
+  inset: auto !important;
+  flex: 0 0 auto !important;
+  width: auto !important;
+  max-width: 78% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: #101012 !important;
+  -webkit-text-fill-color: #101012 !important;
+  font-size: clamp(2.15rem, 9.8vw, 4.75rem) !important;
+  font-weight: 950 !important;
+  line-height: .84 !important;
+  letter-spacing: -.07em !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+  overflow: visible !important;
+}
+
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc19-off {
+  color: #101012 !important;
+  -webkit-text-fill-color: #101012 !important;
+}
+
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-condiciones {
+  margin: 10px 0 0 !important;
+  padding: 0 !important;
+}
+
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-detalle,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-ahorro-extra {
+  margin: 7px 0 0 !important;
+  padding: 0 !important;
+}
+
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-etiquetas {
+  margin: 11px 0 10px !important;
+  padding: 0 !important;
+}
+
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-acciones {
+  margin: auto 0 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-acciones::before,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-acciones::after {
+  display: none !important;
+  content: none !important;
+}
+
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-social {
+  width: auto !important;
+  margin: 0 !important;
+  justify-content: flex-end !important;
+}
+
+@media (min-width: 720px) {
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 {
+    min-height: 0 !important;
+  }
+}
+
+@media (max-width: 719px) {
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41,
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41.cupon-bancario-unificado {
+    min-height: 0 !important;
+  }
+
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-descuento,
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-descuento.hc16-descuento-largo {
+    font-size: clamp(2.05rem, 9.5vw, 3rem) !important;
+  }
+}
