@@ -1377,6 +1377,33 @@ function codigoEnmascarado(codigo) {
   return `${limpio.slice(0, 5)}******`;
 }
 
+function aplicarEstructuraEditorialV41(articulo) {
+  articulo.classList.add("cupon-editorial-v41");
+  const valor = articulo.querySelector(":scope > .hc16-valor");
+  const info = articulo.querySelector(":scope > .hc16-info");
+  const acciones = articulo.querySelector(":scope > .hc16-acciones");
+  if (!valor || !info || !acciones) return;
+
+  const categoria = info.querySelector(":scope > .hc16-categoria");
+  const condiciones = info.querySelector(":scope > .hc16-condiciones");
+  const detalles = [...info.querySelectorAll(":scope > .hc16-detalle, :scope > .hc16-ahorro-extra")];
+  const etiquetas = info.querySelector(":scope > .hc16-etiquetas");
+  const esBancario = articulo.classList.contains("cupon-bancario-unificado") || articulo.classList.contains("cupon-bancario");
+  const esExclusivo = articulo.classList.contains("cupon-exclusivo");
+
+  if (categoria) {
+    const icono = esBancario
+      ? '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18M7 15h4"/></svg>'
+      : esExclusivo
+        ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v10H4zM8 7c0 2-1 3-3 3M16 7c0 2 1 3 3 3M8 17c0-2-1-3-3-3M16 17c0-2 1-3 3-3"/></svg>'
+        : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l1 12H5L6 8zM9 8V6a3 3 0 0 1 6 0v2"/></svg>';
+    categoria.insertAdjacentHTML("afterbegin", icono);
+  }
+
+  [categoria, valor, condiciones, ...detalles, etiquetas, acciones].filter(Boolean).forEach((nodo) => articulo.append(nodo));
+  info.remove();
+}
+
 function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   const articulo = document.createElement("article");
   const categoria = normalizarCategoria(cupon);
@@ -1442,6 +1469,8 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
       <div class="estado-programacion hc16-tiempo" hidden></div>
     </div>
   `;
+
+  aplicarEstructuraEditorialV41(articulo);
 
   const initialTimeState = couponTimeState(cupon);
   const redeemButton = articulo.querySelector(".boton-canjear");
@@ -1559,6 +1588,8 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
       </div>
       <div class="estado-programacion hc16-tiempo" hidden></div>
     </div>`;
+
+  aplicarEstructuraEditorialV41(articulo);
 
   const boton = articulo.querySelector(".boton-canjear");
   const estadoInicial = couponTimeState(cupon);
