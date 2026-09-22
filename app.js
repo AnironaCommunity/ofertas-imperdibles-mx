@@ -1402,6 +1402,16 @@ function aplicarEstructuraEditorialV41(articulo) {
 
   [categoria, valor, condiciones, ...detalles, etiquetas, acciones].filter(Boolean).forEach((nodo) => articulo.append(nodo));
   info.remove();
+
+  const tiempo = acciones.querySelector(":scope > .hc16-tiempo");
+  const social = acciones.querySelector(":scope > .hc16-social");
+  if (tiempo || social) {
+    const pie = document.createElement("div");
+    pie.className = "v42-pie-tarjeta";
+    if (tiempo) pie.append(tiempo);
+    if (social) pie.append(social);
+    acciones.append(pie);
+  }
 }
 
 function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
