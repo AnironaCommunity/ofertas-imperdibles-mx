@@ -38,6 +38,9 @@ const barraInferiorMas = document.querySelector("#barra-inferior-mas");
 const botonesMenuOfertas = document.querySelectorAll(".menu-ofertas [data-vista]");
 const botonComunidadAnirona = document.querySelector("#boton-anirona-hero[data-vista]");
 const menuOfertas = document.querySelector(".menu-ofertas");
+const contadorCuponesTodos = document.querySelector(
+  "#contador-cupones-todos"
+);
 const contadorCuponesTienda = document.querySelector(
   "#contador-cupones-tienda"
 );
@@ -225,7 +228,7 @@ function mostrarCantidadSeccion(elemento, cantidad, tipo) {
   const plural = tipo === "cupón" ? "cupones" : "productos";
 
   elemento.textContent = total > 99 ? "99+" : String(total);
-  elemento.hidden = false;
+  elemento.hidden = total <= 0;
   elemento.setAttribute(
     "aria-label",
     `${total} ${total === 1 ? singular : plural}`
@@ -255,6 +258,12 @@ async function cargarVisitasResumen() {
 
 function actualizarContadoresSecciones() {
   actualizarResumenCupones();
+  const cantidadTodos = todosLosCupones.filter(
+    (cupon) =>
+      cupon.activo !== false &&
+      couponTimeState(cupon).state !== "finalizado"
+  ).length;
+
   const cantidadTienda = todosLosCupones.filter(
     (cupon) =>
       cupon.activo !== false &&
@@ -310,6 +319,11 @@ function actualizarContadoresSecciones() {
       couponTimeState(cupon).state !== "finalizado"
   ).length;
 
+  mostrarCantidadSeccion(
+    contadorCuponesTodos,
+    cantidadTodos,
+    "cupón"
+  );
   mostrarCantidadSeccion(
     contadorCuponesTienda,
     cantidadTienda,
