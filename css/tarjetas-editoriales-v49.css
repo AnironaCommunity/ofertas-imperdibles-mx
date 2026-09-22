@@ -1,0 +1,55 @@
+/* v4.9: opción 28 — símbolo de Mercado Libre como marca de agua. */
+
+/* Sustituye completamente los óvalos y figuras de versiones anteriores. */
+#cupones > article.cupon.cupon-editorial-v41::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  z-index: 0 !important;
+  top: 96px !important;
+  right: -48px !important;
+  bottom: auto !important;
+  width: 150px !important;
+  height: 150px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  background-image: url("../img/mercado-libre-icono-v766.png") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+  filter: saturate(.72) contrast(.92) !important;
+  opacity: .11 !important;
+  transform: rotate(-8deg) !important;
+  pointer-events: none !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  border: 0 !important;
+  opacity: 0 !important;
+}
+
+/* En móvil se recorta más por el borde para no competir con el texto. */
+@media (max-width: 759px) {
+  #cupones > article.cupon.cupon-editorial-v41::before {
+    top: 108px !important;
+    right: -55px !important;
+    width: 142px !important;
+    height: 142px !important;
+    opacity: .095 !important;
+  }
+}
+
+/* En web conserva presencia sin convertirse en el elemento principal. */
+@media (min-width: 760px) {
+  #cupones > article.cupon.cupon-editorial-v41::before {
+    top: 88px !important;
+    right: -58px !important;
+    width: 166px !important;
+    height: 166px !important;
+    opacity: .10 !important;
+  }
+}
