@@ -928,9 +928,8 @@ function formatRemainingCompact(milliseconds) {
   const hours = Math.floor((totalMinutes % 1440) / 60);
   const minutes = totalMinutes % 60;
 
-  if (days > 0) return `${days}d ${hours}h`;
-  if (hours > 0) return `${hours}h ${minutes}m`;
-  return `${minutes}m`;
+  if (days > 0) return `<span>${days}d</span><span>${hours}h</span>`;
+  return `<span>${hours}h</span><span>${minutes}m</span>`;
 }
 
 function couponProgress(timeState) {
