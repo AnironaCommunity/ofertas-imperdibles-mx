@@ -970,7 +970,7 @@ function updateCouponTimes() {
     const redeemButton = card.querySelector(".boton-canjear, .banco-canjear");
 
     status.className =
-      `estado-programacion ${timeState.state}`;
+      `estado-programacion hc16-tiempo ${timeState.state}`;
 
     if (timeState.state === "programado") {
       status.hidden = false;
@@ -993,7 +993,7 @@ function updateCouponTimes() {
 
     if (timeState.state === "agotado") {
       status.hidden = false;
-      status.className = "estado-programacion agotado";
+      status.className = "estado-programacion hc16-tiempo agotado";
       status.innerHTML = `<div class="estado-linea"><span class="estado-agotado-mensaje"><span class="estado-agotado-icono" aria-hidden="true">!</span><span>El cupón se agotó.</span></span></div>`;
       card.classList.add("cupon-agotado");
       redeemButton.disabled = false;
@@ -1042,7 +1042,7 @@ function updateCouponTimes() {
         pero no se muestra ningún texto.
       */
       status.hidden = false;
-      status.className = "estado-programacion vacio";
+      status.className = "estado-programacion hc16-tiempo vacio";
       status.replaceChildren();
     }
   });
