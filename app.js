@@ -922,6 +922,17 @@ function formatRemaining(milliseconds) {
   );
 }
 
+function formatRemainingCompact(milliseconds) {
+  const totalMinutes = Math.max(0, Math.floor(milliseconds / 60000));
+  const days = Math.floor(totalMinutes / 1440);
+  const hours = Math.floor((totalMinutes % 1440) / 60);
+  const minutes = totalMinutes % 60;
+
+  if (days > 0) return `${days}d ${hours}h`;
+  if (hours > 0) return `${hours}h ${minutes}m`;
+  return `${minutes}m`;
+}
+
 function couponProgress(timeState) {
   const now = Date.now();
 
@@ -967,7 +978,9 @@ function updateCouponTimes() {
         <div class="estado-linea">
           <span>${timeState.label}</span>
           <span class="estado-tiempo">
-            ${formatRemaining(timeState.target - Date.now())}
+            ${card.classList.contains("cupon-editorial-v41")
+              ? formatRemainingCompact(timeState.target - Date.now())
+              : formatRemaining(timeState.target - Date.now())}
           </span>
         </div>
       `;
@@ -1016,7 +1029,9 @@ function updateCouponTimes() {
         <div class="estado-linea">
           <span>${timeState.label}</span>
           <span class="estado-tiempo">
-            ${formatRemaining(timeState.target - Date.now())}
+            ${card.classList.contains("cupon-editorial-v41")
+              ? formatRemainingCompact(timeState.target - Date.now())
+              : formatRemaining(timeState.target - Date.now())}
           </span>
         </div>
       `;
@@ -1416,11 +1431,11 @@ function aplicarEstructuraEditorialV41(articulo) {
 
   const tiempo = acciones.querySelector(":scope > .hc16-tiempo");
   const social = acciones.querySelector(":scope > .hc16-social");
-  if (tiempo || social) {
+  if (tiempo) articulo.append(tiempo);
+  if (social) {
     const pie = document.createElement("div");
     pie.className = "v42-pie-tarjeta";
-    if (tiempo) pie.append(tiempo);
-    if (social) pie.append(social);
+    pie.append(social);
     acciones.append(pie);
   }
 }
