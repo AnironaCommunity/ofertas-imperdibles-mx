@@ -1,0 +1,45 @@
+/* V3.8 — Contadores dinámicos sobre los iconos de filtros de cupones. */
+.selector-cupones-menu.selector-cupones-oscuro > .tab-inferior {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.selector-cupones-menu.selector-cupones-oscuro .contador-seccion-inferior {
+  position: absolute !important;
+  z-index: 4 !important;
+  top: -4px !important;
+  left: calc(50% + 7px) !important;
+  display: inline-flex !important;
+  min-width: 17px !important;
+  height: 17px !important;
+  padding: 0 4px !important;
+  margin: 0 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 2px solid #fff !important;
+  border-radius: 999px !important;
+  color: #fff !important;
+  background: #ef4444 !important;
+  box-shadow: 0 2px 6px rgba(153, 27, 27, 0.25) !important;
+  font-family: 'Inter', Arial, Helvetica, sans-serif !important;
+  font-size: 8px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  pointer-events: none !important;
+}
+
+.selector-cupones-menu.selector-cupones-oscuro .contador-seccion-inferior[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 600px) {
+  .selector-cupones-menu.selector-cupones-oscuro .contador-seccion-inferior {
+    top: -3px !important;
+    left: calc(50% + 6px) !important;
+    min-width: 16px !important;
+    height: 16px !important;
+    padding: 0 3px !important;
+    border-width: 1.5px !important;
+    font-size: 7.5px !important;
+  }
+}

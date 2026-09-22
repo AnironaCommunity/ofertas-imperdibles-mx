@@ -67,6 +67,7 @@
   <link rel="stylesheet" href="css/pwa-install.css?v=83.0" />
   <link rel="stylesheet" href="css/header-marca-v83-9.css?v=83.9" />
   <link rel="stylesheet" href="css/guia-etiquetas-v37.css?v=3.7" />
+  <link rel="stylesheet" href="css/contadores-filtros-v38.css?v=3.8" />
   <script>
     try {
       const temaGuardado = JSON.parse(localStorage.getItem("ofertas_imperdibles_tema") || "null");
@@ -243,6 +244,7 @@
       <button id="tab-todos" class="tab-inferior activo" type="button" data-categoria="todos" aria-pressed="true" aria-label="Mostrar todos los cupones">
         <span class="tab-icono tab-icono-todos" aria-hidden="true"><svg viewBox="0 0 64 64"><rect class="icon-outline" x="14" y="10" width="36" height="44" rx="8"/><circle class="icon-dot" cx="25" cy="25" r="4"/><circle class="icon-dot" cx="39" cy="39" r="4"/><path class="icon-line" d="M41 22 23 42"/></svg></span>
         <span class="tab-textos"><strong id="nombre-boton-todos" class="tab-etiqueta-principal">Todos</strong></span>
+        <span id="contador-cupones-todos" class="contador-seccion contador-seccion-inferior" hidden>0</span>
       </button>
       <button id="tab-tienda" class="tab-inferior" type="button" data-categoria="tienda" aria-pressed="false" aria-label="Mostrar cupones de tienda">
         <span class="tab-icono tab-icono-tienda" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="icon-outline" d="M17 22h30l3 32H14l3-32Z"/><path class="icon-line" d="M24 24v-6a8 8 0 0 1 16 0v6"/></svg></span>
@@ -647,7 +649,7 @@
 
 
   <script src="js/pwa-install.js?v=83.0"></script>
-  <script type="module" src="js/app.js?v=83.16.4"></script>
+  <script type="module" src="js/app.js?v=83.16.5"></script>
   <script src="js/hero-redes.js?v=82.39" defer></script>
   <script src="js/header-dinamico-v68-3.js?v=70.0.0" defer></script>
   <script src="js/cabecera-inteligente.js?v=77.15.7" defer></script>
