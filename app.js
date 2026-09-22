@@ -1371,6 +1371,12 @@ function sincronizarFondoMuescas() {
   });
 }
 
+function codigoEnmascarado(codigo) {
+  const limpio = String(codigo || "").trim().toUpperCase();
+  if (!limpio) return "CÓDIGO DISPONIBLE";
+  return `${limpio.slice(0, 5)}******`;
+}
+
 function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   const articulo = document.createElement("article");
   const categoria = normalizarCategoria(cupon);
@@ -1415,6 +1421,10 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
     </div>
 
     <div class="hc16-acciones">
+      <div class="v40-codigo" aria-label="Vista previa del código">
+        <span>${escaparHtml(codigoEnmascarado(cupon.codigo))}</span>
+        <span class="v40-codigo-icono" aria-hidden="true">${iconoCopias()}</span>
+      </div>
       <div class="hc16-cta acciones-cupon">
         <button class="boton-canjear hc16-copiar${cupon.agotado === true ? " boton-ofertazo-agotado" : ""}" type="button">
           ${cupon.agotado === true ? contenidoBotonOfertazo() : contenidoBotonCopiar()}
@@ -1533,6 +1543,10 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
       <div class="hc16-etiquetas">${htmlEtiquetasCupon(estados)}</div>
     </div>
     <div class="hc16-acciones">
+      <div class="v40-codigo" aria-label="Vista previa del código">
+        <span>${escaparHtml(codigoEnmascarado(cupon.codigo))}</span>
+        <span class="v40-codigo-icono" aria-hidden="true">${iconoCopias()}</span>
+      </div>
       <div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar${cupon.agotado === true ? " boton-ofertazo-agotado" : ""}" type="button">${cupon.agotado === true ? contenidoBotonOfertazo() : contenidoBotonCopiar()}</button></div>
       <p class="mensaje hc16-mensaje" aria-live="polite"></p>
       <div class="hc16-social acciones-secundarias hc61-social" aria-label="Actividad del cupón">
@@ -3645,17 +3659,6 @@ function renderizarBannersCupones() {
   }
 
   function mostrarBanner(indice, direccion = 0, animar = true) {
-    // Protección adicional: si el navegador no emitió transitionend después
-    // de mostrar un clon, normalizar la posición antes del siguiente avance.
-    // Así la rotación automática nunca recorre los banners hacia atrás.
-    if (items.length > 1 && indiceFisico === items.length + 1) {
-      indiceFisico = 1;
-      posicionarBanner(false);
-    } else if (items.length > 1 && indiceFisico === 0) {
-      indiceFisico = items.length;
-      posicionarBanner(false);
-    }
-
     bannersCuponesIndice = (indice + items.length) % items.length;
     if (items.length > 1 && direccion > 0 && indiceFisico === items.length) {
       indiceFisico = items.length + 1;
