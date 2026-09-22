@@ -1,0 +1,276 @@
+/* Tarjetas editoriales v4.0 */
+#cupones.cupones-grid-compacta {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+  align-items: stretch;
+}
+
+#cupones > .cupon.cupon-horizontal-v16 {
+  --v40-accent: #ffe12f;
+  position: relative !important;
+  isolation: isolate;
+  display: flex !important;
+  flex-direction: column !important;
+  min-width: 0 !important;
+  min-height: 470px !important;
+  padding: 18px 16px 14px !important;
+  overflow: hidden !important;
+  border: 1px solid #ececf1 !important;
+  border-radius: 22px !important;
+  background: #fff !important;
+  box-shadow: 0 10px 28px rgba(25, 29, 42, .08) !important;
+  color: #111 !important;
+}
+
+#cupones > .cupon.cupon-horizontal-v16::before,
+#cupones > .cupon.cupon-horizontal-v16::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  border-radius: 48% 52% 60% 40%;
+  pointer-events: none;
+}
+
+#cupones > .cupon.cupon-horizontal-v16::before {
+  width: 170px;
+  height: 210px;
+  top: 55px;
+  right: -92px;
+  background: color-mix(in srgb, var(--v40-accent) 44%, transparent);
+  transform: rotate(24deg);
+}
+
+#cupones > .cupon.cupon-horizontal-v16::after {
+  width: 110px;
+  height: 150px;
+  top: 105px;
+  right: -52px;
+  border: 22px solid color-mix(in srgb, var(--v40-accent) 70%, white);
+  background: transparent;
+  transform: rotate(-15deg);
+}
+
+#cupones > .cupon.cupon-exclusivo { --v40-accent: #d9bfff; }
+#cupones > .cupon.cupon-bancario,
+#cupones > .cupon.cupon-bancario-unificado {
+  --v40-accent: #86dcff;
+  grid-column: 1 / -1;
+  min-height: 420px !important;
+}
+
+#cupones .ticket-notch,
+#cupones .hc16-marca-agua,
+#cupones .hc19-porcentaje { display: none !important; }
+
+#cupones .hc16-info { display: contents !important; }
+
+#cupones .hc16-categoria {
+  order: 1;
+  align-self: flex-start;
+  width: auto !important;
+  max-width: 100%;
+  margin: 0 0 12px !important;
+  padding: 8px 12px !important;
+  border: 0 !important;
+  border-radius: 11px !important;
+  background: color-mix(in srgb, var(--v40-accent) 72%, white) !important;
+  color: color-mix(in srgb, var(--v40-accent) 34%, #121212) !important;
+  font-size: clamp(.72rem, 2.7vw, .92rem) !important;
+  font-weight: 900 !important;
+  line-height: 1.1 !important;
+  letter-spacing: .01em !important;
+  white-space: nowrap;
+}
+
+#cupones .hc16-valor {
+  order: 2;
+  position: relative !important;
+  z-index: 1;
+  display: block !important;
+  width: 100% !important;
+  min-height: 88px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+}
+
+#cupones .hc16-descuento {
+  display: flex !important;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0 !important;
+  color: #0d0d0f !important;
+  font-size: clamp(2.35rem, 8.8vw, 4.9rem) !important;
+  font-weight: 950 !important;
+  line-height: .84 !important;
+  letter-spacing: -.065em !important;
+  text-align: left !important;
+  text-shadow: none !important;
+}
+
+#cupones .hc16-descuento .hc19-off {
+  display: block !important;
+  margin: 7px 0 0 2px !important;
+  color: inherit !important;
+  font-size: .52em !important;
+  line-height: 1 !important;
+  letter-spacing: -.045em !important;
+}
+
+#cupones .hc16-logo,
+#cupones .hc25-banco-logo {
+  display: block !important;
+  width: auto !important;
+  max-width: 100px !important;
+  height: 30px !important;
+  margin: 0 0 9px !important;
+  object-fit: contain !important;
+  object-position: left center !important;
+  border: 0 !important;
+  border-radius: 6px !important;
+  background: #fff !important;
+}
+
+#cupones .hc16-condiciones {
+  order: 3;
+  z-index: 1;
+  margin: 8px 0 0 !important;
+}
+
+#cupones .hc16-condicion {
+  margin: 0 !important;
+  color: #17171a !important;
+  font-size: clamp(.91rem, 3.2vw, 1.15rem) !important;
+  font-weight: 800 !important;
+  line-height: 1.12 !important;
+}
+
+#cupones .hc16-condicion strong { display: block; font-weight: 950 !important; }
+
+#cupones .hc16-detalle,
+#cupones .hc16-ahorro-extra {
+  order: 4;
+  z-index: 1;
+  margin: 8px 0 0 !important;
+  color: #6d7489 !important;
+  font-size: clamp(.78rem, 2.8vw, 1rem) !important;
+  line-height: 1.2 !important;
+}
+
+#cupones .hc16-etiquetas {
+  order: 5;
+  z-index: 1;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  margin: 12px 0 10px !important;
+}
+
+#cupones .hc16-acciones {
+  order: 6;
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  margin-top: auto !important;
+  padding: 0 !important;
+  gap: 10px !important;
+  background: transparent !important;
+}
+
+#cupones .v40-codigo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 50px;
+  padding: 0 13px;
+  border-radius: 14px;
+  background: #f4f6fa;
+  color: #3e475d;
+  font-size: clamp(.78rem, 3vw, 1rem);
+  font-weight: 900;
+  letter-spacing: .025em;
+}
+
+#cupones .v40-codigo-icono,
+#cupones .v40-codigo-icono svg { width: 21px; height: 21px; }
+#cupones .v40-codigo-icono svg { fill: currentColor; }
+
+#cupones .hc16-cta { width: 100% !important; margin: 0 !important; }
+#cupones .hc16-copiar {
+  width: 100% !important;
+  min-height: 58px !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 15px !important;
+  background: #ffe000 !important;
+  color: #111 !important;
+  box-shadow: none !important;
+  font-size: clamp(.9rem, 3.3vw, 1.12rem) !important;
+  font-weight: 950 !important;
+}
+
+#cupones > .cupon:not(.cupon-exclusivo):not(.cupon-bancario):not(.cupon-bancario-unificado) .hc16-copiar {
+  background: #111 !important;
+  color: #fff !important;
+}
+
+#cupones .hc16-copiar svg { width: 24px !important; height: 24px !important; fill: currentColor !important; }
+#cupones .hc16-mensaje:empty { display: none !important; }
+
+#cupones .hc16-tiempo {
+  order: 3;
+  margin: 1px 0 0 !important;
+  color: #30343f !important;
+  font-size: .74rem !important;
+  text-align: left !important;
+}
+
+#cupones .hc16-social {
+  order: 4;
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 5px !important;
+  margin: -30px 0 0 auto !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+#cupones .hc61-chip {
+  min-width: 0 !important;
+  min-height: 28px !important;
+  padding: 3px 5px !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #657087 !important;
+  font-size: .75rem !important;
+}
+
+#cupones .hc16-icono { width: 26px !important; height: 26px !important; min-width: 26px !important; padding: 4px !important; }
+#cupones .hc61-chip svg { width: 18px !important; height: 18px !important; }
+
+@media (min-width: 760px) {
+  #cupones.cupones-grid-compacta { gap: 20px !important; }
+  #cupones > .cupon.cupon-horizontal-v16 { min-height: 540px !important; padding: 24px 22px 18px !important; }
+  #cupones > .cupon.cupon-bancario-unificado { min-height: 430px !important; }
+}
+
+@media (max-width: 430px) {
+  #cupones.cupones-grid-compacta { gap: 9px !important; }
+  #cupones > .cupon.cupon-horizontal-v16 {
+    min-height: 440px !important;
+    padding: 14px 11px 12px !important;
+    border-radius: 18px !important;
+  }
+  #cupones .hc16-categoria { padding: 7px 8px !important; }
+  #cupones .v40-codigo { min-height: 44px; padding: 0 9px; }
+  #cupones .hc16-copiar { min-height: 52px !important; }
+  #cupones .hc16-social { margin-top: 0 !important; justify-content: flex-start !important; }
+}
+
+@media (max-width: 350px) {
+  #cupones.cupones-grid-compacta { grid-template-columns: 1fr !important; }
+  #cupones > .cupon.cupon-horizontal-v16 { min-height: 430px !important; }
+}

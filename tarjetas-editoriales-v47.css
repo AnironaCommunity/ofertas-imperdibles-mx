@@ -1,0 +1,137 @@
+/* v4.7: reloj único, texto legible, óvalos sutiles y métricas web visibles. */
+
+/* Una sola referencia visual de tiempo: reloj minimalista + horas + minutos. */
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo {
+  min-height: 45px !important;
+  padding: 5px 3px 4px !important;
+  gap: 1px !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo::before {
+  content: "◷" !important;
+  margin: 0 0 1px !important;
+  color: #3d4657 !important;
+  font-family: Arial, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo .estado-linea > span:first-child:not(.estado-tiempo) {
+  display: none !important;
+}
+
+/* Texto de aplicación con peso regular y mejor contraste. */
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-detalle,
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-ahorro-extra {
+  color: #626b7d !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.3 !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-detalle strong,
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-ahorro-extra strong {
+  font-weight: 600 !important;
+}
+
+/* Óvalos limpios, transparentes y recortados por el borde derecho. */
+#cupones > article.cupon.cupon-editorial-v41::before,
+#cupones > article.cupon.cupon-editorial-v41::after {
+  clip-path: none !important;
+  border-radius: 50% !important;
+  filter: none !important;
+  content: "" !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41::before {
+  top: 96px !important;
+  right: -54px !important;
+  width: 112px !important;
+  height: 166px !important;
+  border: 1px solid color-mix(in srgb, var(--v41-accent) 42%, white) !important;
+  background: color-mix(in srgb, var(--v41-accent) 24%, transparent) !important;
+  opacity: .62 !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41::after {
+  top: 125px !important;
+  right: -69px !important;
+  width: 102px !important;
+  height: 132px !important;
+  border: 9px solid color-mix(in srgb, var(--v41-accent) 22%, transparent) !important;
+  background: transparent !important;
+  opacity: .48 !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41:nth-child(4n + 1)::before {
+  transform: rotate(22deg) !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41:nth-child(4n + 2)::before {
+  top: 105px !important;
+  right: -49px !important;
+  width: 106px !important;
+  height: 148px !important;
+  transform: rotate(-17deg) !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41:nth-child(4n + 3)::before {
+  top: 111px !important;
+  right: -58px !important;
+  width: 121px !important;
+  height: 143px !important;
+  transform: rotate(31deg) !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41:nth-child(4n)::before {
+  top: 100px !important;
+  right: -51px !important;
+  width: 108px !important;
+  height: 158px !important;
+  transform: rotate(-28deg) !important;
+}
+
+/* Visitas sin recuadro en cualquier tamaño. */
+#cupones > article.cupon.cupon-editorial-v41 .hc61-view-chip,
+#cupones > article.cupon.cupon-editorial-v41 .hc16-vistas {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* En web, las tres acciones recuperan tamaño y separación cómodos. */
+@media (min-width: 760px) {
+  #cupones > article.cupon.cupon-editorial-v41::before {
+    top: 88px !important;
+    right: -60px !important;
+    width: 124px !important;
+    height: 172px !important;
+  }
+
+  #cupones > article.cupon.cupon-editorial-v41::after {
+    top: 119px !important;
+    right: -74px !important;
+    width: 110px !important;
+    height: 140px !important;
+  }
+
+  #cupones > article.cupon.cupon-editorial-v41 .v42-pie-tarjeta > .hc16-social {
+    gap: 9px !important;
+  }
+
+  #cupones > article.cupon.cupon-editorial-v41 .hc61-chip,
+  #cupones > article.cupon.cupon-editorial-v41 .hc16-icono {
+    min-width: 31px !important;
+    min-height: 31px !important;
+    padding: 4px !important;
+    font-size: .82rem !important;
+  }
+
+  #cupones > article.cupon.cupon-editorial-v41 .hc61-chip svg,
+  #cupones > article.cupon.cupon-editorial-v41 .hc16-icono svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}

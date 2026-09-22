@@ -1,0 +1,188 @@
+/* v4.6: descuentos web proporcionados, figuras definidas y reloj vertical. */
+
+/* Sustituye los óvalos por composiciones geométricas con bordes definidos. */
+#cupones > article.cupon.cupon-editorial-v41::before,
+#cupones > article.cupon.cupon-editorial-v41::after {
+  border-radius: 0 !important;
+  filter: none !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41:nth-child(4n + 1)::before {
+  top: 82px !important;
+  right: -24px !important;
+  width: 86px !important;
+  height: 124px !important;
+  clip-path: polygon(40% 0, 100% 18%, 82% 100%, 5% 82%, 18% 24%) !important;
+  background: linear-gradient(145deg, rgba(255, 231, 74, .72), rgba(255, 185, 37, .34)) !important;
+  transform: rotate(13deg) !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41:nth-child(4n + 1)::after {
+  content: "" !important;
+  top: 105px !important;
+  right: -2px !important;
+  width: 47px !important;
+  height: 91px !important;
+  clip-path: polygon(50% 0, 100% 32%, 72% 100%, 0 72%, 18% 16%) !important;
+  background: rgba(255, 157, 23, .30) !important;
+  transform: rotate(-22deg) !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41:nth-child(4n + 2)::before {
+  top: 88px !important;
+  right: -20px !important;
+  width: 82px !important;
+  height: 112px !important;
+  clip-path: polygon(38% 0, 100% 8%, 100% 92%, 28% 100%, 0 58%) !important;
+  background: linear-gradient(145deg, rgba(255, 171, 177, .66), rgba(255, 97, 111, .24)) !important;
+  transform: rotate(-7deg) !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41:nth-child(4n + 2)::after {
+  content: "%" !important;
+  top: 121px !important;
+  right: 9px !important;
+  width: auto !important;
+  height: auto !important;
+  clip-path: none !important;
+  background: transparent !important;
+  color: rgba(116, 19, 30, .88) !important;
+  font-size: 35px !important;
+  font-weight: 950 !important;
+  transform: rotate(7deg) !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41:nth-child(4n + 3)::before {
+  top: 86px !important;
+  right: -24px !important;
+  width: 90px !important;
+  height: 105px !important;
+  clip-path: polygon(50% 0, 100% 30%, 86% 100%, 16% 88%, 0 26%) !important;
+  background: linear-gradient(145deg, rgba(59, 225, 151, .58), rgba(0, 151, 88, .24)) !important;
+  transform: rotate(16deg) !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41:nth-child(4n + 3)::after {
+  content: "" !important;
+  top: 119px !important;
+  right: 5px !important;
+  width: 50px !important;
+  height: 62px !important;
+  clip-path: polygon(50% 0, 100% 38%, 78% 100%, 0 72%, 15% 18%) !important;
+  background: rgba(0, 126, 75, .32) !important;
+  transform: rotate(-18deg) !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41:nth-child(4n)::before {
+  top: 84px !important;
+  right: -23px !important;
+  width: 88px !important;
+  height: 118px !important;
+  clip-path: polygon(44% 0, 100% 20%, 84% 100%, 10% 84%, 0 30%) !important;
+  background: linear-gradient(145deg, rgba(211, 169, 255, .60), rgba(139, 82, 224, .22)) !important;
+  transform: rotate(18deg) !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41:nth-child(4n)::after {
+  content: "" !important;
+  top: 111px !important;
+  right: 2px !important;
+  width: 49px !important;
+  height: 78px !important;
+  clip-path: polygon(55% 0, 100% 38%, 70% 100%, 0 67%, 22% 14%) !important;
+  background: rgba(112, 52, 200, .26) !important;
+  transform: rotate(-24deg) !important;
+}
+
+/* Reloj vertical en la esquina superior derecha. */
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo {
+  top: 8px !important;
+  right: 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 1px !important;
+  width: 39px !important;
+  min-width: 39px !important;
+  height: auto !important;
+  min-height: 48px !important;
+  padding: 4px 3px !important;
+  border-radius: 11px !important;
+  background: rgba(255, 255, 255, .92) !important;
+  font-size: 9px !important;
+  line-height: 1.05 !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo::before {
+  content: "⏱️" !important;
+  display: block !important;
+  margin: 0 0 1px !important;
+  font-size: 13px !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo .estado-linea {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  width: 100% !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo .estado-tiempo {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 0 !important;
+  width: 100% !important;
+  white-space: normal !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-categoria {
+  max-width: calc(100% - 47px) !important;
+}
+
+/* Móvil: la etiqueta cabe junto al reloj y el descuento inicia debajo. */
+@media (max-width: 759px) {
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-categoria {
+    gap: 4px !important;
+    padding: 6px 7px !important;
+    font-size: clamp(8px, 2.35vw, 10px) !important;
+  }
+
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-categoria::before {
+    flex-basis: 1em !important;
+    width: 1em !important;
+    height: 1em !important;
+  }
+}
+
+/* Web: importes proporcionados para tres o más tarjetas por hilera. */
+@media (min-width: 760px) {
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-descuento,
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-descuento.hc16-descuento-largo,
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41.cupon-bancario-unificado .hc16-descuento {
+    max-width: calc(100% - 52px) !important;
+    font-size: clamp(2.25rem, 3.35vw, 3rem) !important;
+    line-height: .86 !important;
+  }
+
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo {
+    top: 10px !important;
+    right: 10px !important;
+    width: 42px !important;
+    min-width: 42px !important;
+    font-size: 9px !important;
+  }
+
+  #cupones > article.cupon.cupon-editorial-v41::before {
+    right: -18px !important;
+    width: 76px !important;
+    height: 105px !important;
+  }
+
+  #cupones > article.cupon.cupon-editorial-v41::after {
+    right: 5px !important;
+  }
+}

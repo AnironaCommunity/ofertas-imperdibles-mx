@@ -922,6 +922,16 @@ function formatRemaining(milliseconds) {
   );
 }
 
+function formatRemainingCompact(milliseconds) {
+  const totalMinutes = Math.max(0, Math.floor(milliseconds / 60000));
+  const days = Math.floor(totalMinutes / 1440);
+  const hours = Math.floor((totalMinutes % 1440) / 60);
+  const minutes = totalMinutes % 60;
+
+  if (days > 0) return `<span>${days}d</span><span>${hours}h</span>`;
+  return `<span>${hours}h</span><span>${minutes}m</span>`;
+}
+
 function couponProgress(timeState) {
   const now = Date.now();
 
@@ -959,7 +969,7 @@ function updateCouponTimes() {
     const redeemButton = card.querySelector(".boton-canjear, .banco-canjear");
 
     status.className =
-      `estado-programacion ${timeState.state}`;
+      `estado-programacion hc16-tiempo ${timeState.state}`;
 
     if (timeState.state === "programado") {
       status.hidden = false;
@@ -967,7 +977,9 @@ function updateCouponTimes() {
         <div class="estado-linea">
           <span>${timeState.label}</span>
           <span class="estado-tiempo">
-            ${formatRemaining(timeState.target - Date.now())}
+            ${card.classList.contains("cupon-editorial-v41")
+              ? formatRemainingCompact(timeState.target - Date.now())
+              : formatRemaining(timeState.target - Date.now())}
           </span>
         </div>
       `;
@@ -980,7 +992,7 @@ function updateCouponTimes() {
 
     if (timeState.state === "agotado") {
       status.hidden = false;
-      status.className = "estado-programacion agotado";
+      status.className = "estado-programacion hc16-tiempo agotado";
       status.innerHTML = `<div class="estado-linea"><span class="estado-agotado-mensaje"><span class="estado-agotado-icono" aria-hidden="true">!</span><span>El cupón se agotó.</span></span></div>`;
       card.classList.add("cupon-agotado");
       redeemButton.disabled = false;
@@ -1016,7 +1028,9 @@ function updateCouponTimes() {
         <div class="estado-linea">
           <span>${timeState.label}</span>
           <span class="estado-tiempo">
-            ${formatRemaining(timeState.target - Date.now())}
+            ${card.classList.contains("cupon-editorial-v41")
+              ? formatRemainingCompact(timeState.target - Date.now())
+              : formatRemaining(timeState.target - Date.now())}
           </span>
         </div>
       `;
@@ -1027,7 +1041,7 @@ function updateCouponTimes() {
         pero no se muestra ningún texto.
       */
       status.hidden = false;
-      status.className = "estado-programacion vacio";
+      status.className = "estado-programacion hc16-tiempo vacio";
       status.replaceChildren();
     }
   });
@@ -1371,6 +1385,60 @@ function sincronizarFondoMuescas() {
   });
 }
 
+function codigoEnmascarado(codigo) {
+  const limpio = String(codigo || "").trim().toUpperCase();
+  if (!limpio) return "CÓDIGO DISPONIBLE";
+  return `${limpio.slice(0, 5)}******`;
+}
+
+function aplicarEstructuraEditorialV41(articulo) {
+  articulo.classList.add("cupon-editorial-v41");
+  const valor = articulo.querySelector(":scope > .hc16-valor");
+  const info = articulo.querySelector(":scope > .hc16-info");
+  const acciones = articulo.querySelector(":scope > .hc16-acciones");
+  if (!valor || !info || !acciones) return;
+
+  const categoria = info.querySelector(":scope > .hc16-categoria");
+  const condiciones = info.querySelector(":scope > .hc16-condiciones");
+  let detalles = [...info.querySelectorAll(":scope > .hc16-detalle, :scope > .hc16-ahorro-extra")];
+  const etiquetas = info.querySelector(":scope > .hc16-etiquetas");
+  const esBancario = articulo.classList.contains("cupon-bancario-unificado") || articulo.classList.contains("cupon-bancario");
+  const esExclusivo = articulo.classList.contains("cupon-exclusivo");
+
+  if (!info.querySelector(":scope > .hc16-detalle")) {
+    const detalle = document.createElement("p");
+    detalle.className = "hc16-detalle v43-detalle-aplicacion";
+    detalle.textContent = esBancario
+      ? "Requiere tarjeta o método participante."
+      : esExclusivo
+        ? "Solo en productos seleccionados."
+        : "Aplica en la mayoría de los productos.";
+    detalles.push(detalle);
+  }
+
+  if (categoria) {
+    const icono = esBancario
+      ? '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18M7 15h4"/></svg>'
+      : esExclusivo
+        ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16v10H4zM8 7c0 2-1 3-3 3M16 7c0 2 1 3 3 3M8 17c0-2-1-3-3-3M16 17c0-2 1-3 3-3"/></svg>'
+        : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l1 12H5L6 8zM9 8V6a3 3 0 0 1 6 0v2"/></svg>';
+    categoria.insertAdjacentHTML("afterbegin", icono);
+  }
+
+  [categoria, valor, condiciones, ...detalles, etiquetas, acciones].filter(Boolean).forEach((nodo) => articulo.append(nodo));
+  info.remove();
+
+  const tiempo = acciones.querySelector(":scope > .hc16-tiempo");
+  const social = acciones.querySelector(":scope > .hc16-social");
+  if (tiempo) articulo.append(tiempo);
+  if (social) {
+    const pie = document.createElement("div");
+    pie.className = "v42-pie-tarjeta";
+    pie.append(social);
+    acciones.append(pie);
+  }
+}
+
 function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   const articulo = document.createElement("article");
   const categoria = normalizarCategoria(cupon);
@@ -1415,6 +1483,10 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
     </div>
 
     <div class="hc16-acciones">
+      <div class="v40-codigo" aria-label="Vista previa del código">
+        <span>${escaparHtml(codigoEnmascarado(cupon.codigo))}</span>
+        <span class="v40-codigo-icono" aria-hidden="true">${iconoCopias()}</span>
+      </div>
       <div class="hc16-cta acciones-cupon">
         <button class="boton-canjear hc16-copiar${cupon.agotado === true ? " boton-ofertazo-agotado" : ""}" type="button">
           ${cupon.agotado === true ? contenidoBotonOfertazo() : contenidoBotonCopiar()}
@@ -1432,6 +1504,8 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
       <div class="estado-programacion hc16-tiempo" hidden></div>
     </div>
   `;
+
+  aplicarEstructuraEditorialV41(articulo);
 
   const initialTimeState = couponTimeState(cupon);
   const redeemButton = articulo.querySelector(".boton-canjear");
@@ -1533,6 +1607,10 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
       <div class="hc16-etiquetas">${htmlEtiquetasCupon(estados)}</div>
     </div>
     <div class="hc16-acciones">
+      <div class="v40-codigo" aria-label="Vista previa del código">
+        <span>${escaparHtml(codigoEnmascarado(cupon.codigo))}</span>
+        <span class="v40-codigo-icono" aria-hidden="true">${iconoCopias()}</span>
+      </div>
       <div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar${cupon.agotado === true ? " boton-ofertazo-agotado" : ""}" type="button">${cupon.agotado === true ? contenidoBotonOfertazo() : contenidoBotonCopiar()}</button></div>
       <p class="mensaje hc16-mensaje" aria-live="polite"></p>
       <div class="hc16-social acciones-secundarias hc61-social" aria-label="Actividad del cupón">
@@ -1545,6 +1623,8 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
       </div>
       <div class="estado-programacion hc16-tiempo" hidden></div>
     </div>`;
+
+  aplicarEstructuraEditorialV41(articulo);
 
   const boton = articulo.querySelector(".boton-canjear");
   const estadoInicial = couponTimeState(cupon);

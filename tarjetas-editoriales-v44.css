@@ -1,0 +1,213 @@
+/* v4.4: depuración de elementos heredados y acabado final por categoría. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 {
+  -webkit-mask: none !important;
+  mask: none !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  -webkit-clip-path: none !important;
+  clip-path: none !important;
+  overflow: hidden !important;
+  border: 1px solid #e8e9ef !important;
+  border-radius: 20px !important;
+}
+
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .ticket-notch,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .ticket-notch::before,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .ticket-notch::after {
+  content: none !important;
+  display: none !important;
+}
+
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-acciones,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-cta {
+  border: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+}
+
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-acciones::before,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-acciones::after,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-cta::before,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-cta::after {
+  content: none !important;
+  display: none !important;
+  border: 0 !important;
+}
+
+/* Icono proporcionado al tamaño de cada etiqueta. */
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-categoria svg {
+  display: none !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-categoria::before {
+  content: "" !important;
+  display: inline-block !important;
+  flex: 0 0 1.18em !important;
+  width: 1.18em !important;
+  height: 1.18em !important;
+  background-color: currentColor !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+  -webkit-mask-position: center !important;
+  mask-position: center !important;
+  -webkit-mask-size: contain !important;
+  mask-size: contain !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-exclusivo):not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-categoria::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 8h12l1 12H5L6 8Zm3 0V6a3 3 0 0 1 6 0v2' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 8h12l1 12H5L6 8Zm3 0V6a3 3 0 0 1 6 0v2' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41.cupon-exclusivo > .hc16-categoria::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 7h16v10H4V7Zm4 0c0 2-1 3-3 3m11-3c0 2 1 3 3 3M8 17c0-2-1-3-3-3m11 3c0-2 1-3 3-3' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 7h16v10H4V7Zm4 0c0 2-1 3-3 3m11-3c0 2 1 3 3 3M8 17c0-2-1-3-3-3m11 3c0-2 1-3 3-3' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41.cupon-bancario > .hc16-categoria::before,
+#cupones > article.cupon.cupon-editorial-v41.cupon-bancario-unificado > .hc16-categoria::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='3' y='6' width='18' height='13' rx='3' fill='none' stroke='black' stroke-width='2'/%3E%3Cpath d='M3 10h18M7 15h4' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='3' y='6' width='18' height='13' rx='3' fill='none' stroke='black' stroke-width='2'/%3E%3Cpath d='M3 10h18M7 15h4' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+}
+
+/* El exclusivo no utiliza la imagen externa: evita logos rotos. */
+#cupones > article.cupon.cupon-editorial-v41.cupon-exclusivo .hc16-logo,
+#cupones > article.cupon.cupon-editorial-v41.cupon-exclusivo .cupon-logo,
+#cupones > article.cupon.cupon-editorial-v41.cupon-exclusivo .hc16-marca-agua {
+  display: none !important;
+}
+
+/* Botón único para Tienda, Exclusivo y Bancario. */
+#cupones > article.cupon.cupon-editorial-v41 .hc16-copiar,
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-exclusivo):not(.cupon-bancario):not(.cupon-bancario-unificado) .hc16-copiar {
+  width: 100% !important;
+  min-height: 50px !important;
+  padding: 10px 12px !important;
+  border: 1px solid #e0bd00 !important;
+  border-radius: 13px !important;
+  outline: 0 !important;
+  background: #ffe000 !important;
+  color: #151515 !important;
+  box-shadow: 0 4px 10px rgba(99, 78, 0, .16) !important;
+  font-size: clamp(.78rem, 3.25vw, 1rem) !important;
+  font-weight: 950 !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41 .hc16-copiar::before,
+#cupones > article.cupon.cupon-editorial-v41 .hc16-copiar::after {
+  content: none !important;
+  display: none !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41 .hc16-copiar svg {
+  color: currentColor !important;
+  fill: currentColor !important;
+  stroke: none !important;
+}
+
+/* Actividad centrada debajo del botón. */
+#cupones > article.cupon.cupon-editorial-v41 .v42-pie-tarjeta {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  min-height: 28px !important;
+  margin: 2px 0 0 !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41 .v42-pie-tarjeta > .hc16-social {
+  position: static !important;
+  align-self: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  margin: 0 auto !important;
+  gap: 5px !important;
+}
+
+/* Temporizador compacto, inspirado en la quinta referencia. */
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo {
+  position: absolute !important;
+  z-index: 4 !important;
+  top: 54px !important;
+  right: 12px !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  width: 43px !important;
+  min-width: 43px !important;
+  height: auto !important;
+  min-height: 42px !important;
+  margin: 0 !important;
+  padding: 20px 2px 2px !important;
+  border: 0 !important;
+  border-radius: 10px !important;
+  background: rgba(245, 247, 251, .92) !important;
+  color: #576174 !important;
+  font-size: 9px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  white-space: normal !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 3px !important;
+  left: 50% !important;
+  width: 15px !important;
+  height: 15px !important;
+  border: 2px solid currentColor !important;
+  border-radius: 50% !important;
+  transform: translateX(-50%) !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 7px !important;
+  left: 50% !important;
+  width: 4px !important;
+  height: 4px !important;
+  border-left: 1.5px solid currentColor !important;
+  border-bottom: 1.5px solid currentColor !important;
+  transform: translateX(-1px) !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo .estado-linea {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo .estado-linea > span:first-child {
+  display: none !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo .estado-tiempo {
+  display: block !important;
+  width: 100% !important;
+  color: inherit !important;
+  font: inherit !important;
+  white-space: normal !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo.vacio {
+  display: none !important;
+}
+
+@media (max-width: 400px) {
+  #cupones > article.cupon.cupon-editorial-v41 .v42-pie-tarjeta {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 0 !important;
+  }
+
+  #cupones > article.cupon.cupon-editorial-v41 .v42-pie-tarjeta > .hc16-social {
+    align-self: center !important;
+    margin: 0 auto !important;
+  }
+}

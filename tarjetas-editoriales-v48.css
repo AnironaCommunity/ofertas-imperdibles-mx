@@ -1,0 +1,37 @@
+/* v4.8: corrección puntual del reloj duplicado y el fondo de visitas. */
+
+/* El icono se dibuja únicamente en el contenedor principal del temporizador. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-tiempo .estado-tiempo::before {
+  content: none !important;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+}
+
+/* El contador de visitas queda como icono + número, sin cápsula ni recuadro. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-social.hc61-social > .hc61-view-chip.hc16-vistas,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-social.hc61-social > .hc61-view-chip.hc16-vistas:hover,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-social.hc61-social > .hc61-view-chip.hc16-vistas:focus {
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 4px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+}
+
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-social.hc61-social > .hc61-view-chip.hc16-vistas::before,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-social.hc61-social > .hc61-view-chip.hc16-vistas::after {
+  content: none !important;
+  display: none !important;
+}
