@@ -1969,3 +1969,26 @@
     padding: 7px 9px !important;
   }
 }
+
+/* v5.12.1: altura estrictamente igual en todos los CTA activos. */
+@media (max-width: 759px) {
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-cta {
+    flex: 0 0 58px !important;
+    min-height: 58px !important;
+    height: 58px !important;
+    max-height: 58px !important;
+  }
+
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-copiar:not(.boton-ofertazo-agotado) {
+    box-sizing: border-box !important;
+    flex: 0 0 58px !important;
+    min-block-size: 58px !important;
+    block-size: 58px !important;
+    max-block-size: 58px !important;
+    min-height: 58px !important;
+    height: 58px !important;
+    max-height: 58px !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+}
