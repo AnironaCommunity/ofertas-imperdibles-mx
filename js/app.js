@@ -803,7 +803,7 @@ function iconoVista() {
 }
 
 function contenidoBotonCopiar() {
-  return `${iconoCopias()}<span>Copiar código</span>`;
+  return `${iconoCopias()}<span>Copiar cupón e ir a Mercado Libre</span>`;
 }
 
 function iconoOfertazoBoton() {
