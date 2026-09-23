@@ -803,7 +803,7 @@ function iconoVista() {
 }
 
 function contenidoBotonCopiar() {
-  return `${iconoCopias()}<span>Copiar código</span>`;
+  return `${iconoCopias()}<span>Copiar cupón e ir a Mercado Libre</span>`;
 }
 
 function iconoOfertazoBoton() {
@@ -3773,6 +3773,17 @@ function renderizarBannersCupones() {
   }
 
   function mostrarBanner(indice, direccion = 0, animar = true) {
+    // Protección adicional: si el navegador no emitió transitionend después
+    // de mostrar un clon, normalizar la posición antes del siguiente avance.
+    // Así la rotación automática nunca recorre los banners hacia atrás.
+    if (items.length > 1 && indiceFisico === items.length + 1) {
+      indiceFisico = 1;
+      posicionarBanner(false);
+    } else if (items.length > 1 && indiceFisico === 0) {
+      indiceFisico = items.length;
+      posicionarBanner(false);
+    }
+
     bannersCuponesIndice = (indice + items.length) % items.length;
     if (items.length > 1 && direccion > 0 && indiceFisico === items.length) {
       indiceFisico = items.length + 1;

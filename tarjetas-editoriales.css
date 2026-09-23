@@ -1912,3 +1912,30 @@
   line-height: inherit !important;
   text-transform: inherit !important;
 }
+
+/* v5.11: CTA descriptivo y legible en tarjetas de dos columnas. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-copiar:not(.boton-ofertazo-agotado) {
+  font-synthesis: none !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-copiar:not(.boton-ofertazo-agotado) > span:last-child {
+  display: block !important;
+  max-width: 100% !important;
+  color: inherit !important;
+  text-align: center !important;
+  white-space: normal !important;
+}
+
+@media (max-width: 759px) {
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-copiar:not(.boton-ofertazo-agotado) {
+    min-height: 58px !important;
+    gap: 6px !important;
+    padding: 8px 7px !important;
+  }
+
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-copiar:not(.boton-ofertazo-agotado) > span:last-child {
+    font-size: .78rem !important;
+    line-height: 1.12 !important;
+  }
+}
