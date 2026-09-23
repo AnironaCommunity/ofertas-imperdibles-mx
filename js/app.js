@@ -803,7 +803,7 @@ function iconoVista() {
 }
 
 function contenidoBotonCopiar() {
-  return `${iconoCopias()}<span>Copiar cupón e ir a Mercado Libre</span>`;
+  return `<span>Copiar cupón e ir a Mercado Libre</span>`;
 }
 
 function iconoOfertazoBoton() {
@@ -1531,7 +1531,6 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
     <div class="hc16-acciones">
       <div class="v40-codigo" aria-label="Vista previa del código">
         <span>${escaparHtml(codigoEnmascarado(cupon.codigo))}</span>
-        <span class="v40-codigo-icono" aria-hidden="true">${iconoCopias()}</span>
       </div>
       <div class="hc16-cta acciones-cupon">
         <button class="boton-canjear hc16-copiar${esCuponAgotado(cupon) ? " boton-ofertazo-agotado" : ""}" type="button">
@@ -1656,7 +1655,6 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
     <div class="hc16-acciones">
       <div class="v40-codigo" aria-label="Vista previa del código">
         <span>${escaparHtml(codigoEnmascarado(cupon.codigo))}</span>
-        <span class="v40-codigo-icono" aria-hidden="true">${iconoCopias()}</span>
       </div>
       <div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar${esCuponAgotado(cupon) ? " boton-ofertazo-agotado" : ""}" type="button">${esCuponAgotado(cupon) ? contenidoBotonOfertazo() : contenidoBotonCopiar()}</button></div>
       <p class="mensaje hc16-mensaje" aria-live="polite"></p>

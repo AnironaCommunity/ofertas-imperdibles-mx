@@ -1939,3 +1939,33 @@
     line-height: 1.12 !important;
   }
 }
+
+/* v5.12: codigo compacto, CTA sin icono y peso uniforme. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .v40-codigo {
+  justify-content: flex-start !important;
+  min-height: 36px !important;
+  height: 36px !important;
+  padding: 0 10px !important;
+  border-radius: 10px !important;
+}
+
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .v40-codigo-icono {
+  display: none !important;
+}
+
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-copiar:not(.boton-ofertazo-agotado),
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-copiar:not(.boton-ofertazo-agotado) > span:last-child {
+  font-weight: 700 !important;
+}
+
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-copiar:not(.boton-ofertazo-agotado) > svg {
+  display: none !important;
+}
+
+@media (max-width: 759px) {
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-copiar:not(.boton-ofertazo-agotado) {
+    min-height: 58px !important;
+    height: 58px !important;
+    padding: 7px 9px !important;
+  }
+}
