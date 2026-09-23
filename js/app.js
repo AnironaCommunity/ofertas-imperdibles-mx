@@ -967,6 +967,7 @@ function updateCouponTimes() {
     const timeState = couponTimeState(coupon);
     const status = card.querySelector(".estado-programacion");
     const redeemButton = card.querySelector(".boton-canjear, .banco-canjear");
+    actualizarEtiquetaCategoriaAgotada(card, timeState.state === "agotado");
 
     status.className =
       `estado-programacion hc16-tiempo ${timeState.state}`;
@@ -1391,6 +1392,27 @@ function codigoEnmascarado(codigo) {
   return `${limpio.slice(0, 5)}******`;
 }
 
+function actualizarEtiquetaCategoriaAgotada(tarjeta, agotado, etiquetaOriginal = "") {
+  const etiqueta = tarjeta?.querySelector(":scope > .hc16-categoria, :scope > .hc16-info > .hc16-categoria");
+  if (!etiqueta) return;
+
+  const original = String(etiquetaOriginal || etiqueta.dataset.etiquetaOriginal || "").trim();
+  if (original && original !== "CUPÓN AGOTADO") {
+    etiqueta.dataset.etiquetaOriginal = original;
+  }
+
+  if (agotado) {
+    etiqueta.textContent = "CUPÓN AGOTADO";
+    etiqueta.setAttribute("aria-label", "Cupón agotado");
+    return;
+  }
+
+  if (etiqueta.dataset.etiquetaOriginal) {
+    etiqueta.textContent = etiqueta.dataset.etiquetaOriginal;
+  }
+  etiqueta.removeAttribute("aria-label");
+}
+
 function obtenerDetalleVisibleCupon(cupon) {
   return String(cupon?.detalle_bancario || "").trim();
 }
@@ -1501,6 +1523,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
 
   const initialTimeState = couponTimeState(cupon);
   const redeemButton = articulo.querySelector(".boton-canjear");
+  actualizarEtiquetaCategoriaAgotada(articulo, initialTimeState.state === "agotado", visualCategoria.nombre);
 
   if (!initialTimeState.enabled) {
     if (initialTimeState.state === "agotado") {
@@ -1620,6 +1643,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
 
   const boton = articulo.querySelector(".boton-canjear");
   const estadoInicial = couponTimeState(cupon);
+  actualizarEtiquetaCategoriaAgotada(articulo, estadoInicial.state === "agotado", "CUPÓN BANCARIO");
   if (!estadoInicial.enabled) {
     if (estadoInicial.state === "agotado") {
       articulo.classList.add("cupon-agotado");
