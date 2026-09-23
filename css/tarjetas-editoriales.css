@@ -2086,3 +2086,22 @@
     line-height: 1.16 !important;
   }
 }
+
+/* v5.15: los CTA activos adoptan exactamente el alto de Ver ofertas. */
+@media (max-width: 759px) {
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-copiar:not(.boton-ofertazo-agotado),
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41.cupon-bancario-unificado .hc16-copiar:not(.boton-ofertazo-agotado) {
+    box-sizing: border-box !important;
+    flex: 0 0 50px !important;
+    flex-basis: 50px !important;
+    min-block-size: 50px !important;
+    block-size: 50px !important;
+    max-block-size: 50px !important;
+    min-height: 50px !important;
+    height: 50px !important;
+    max-height: 50px !important;
+    margin: 0 !important;
+    padding: 5px 8px !important;
+    overflow: hidden !important;
+  }
+}
