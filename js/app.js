@@ -1463,7 +1463,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
     </div>
 
     <div class="hc16-info">
-      <div class="hc16-categoria">${escaparHtml(visualCategoria.nombre)}</div>
+      <div class="hc16-categoria">${cupon.agotado === true ? "CUPÓN AGOTADO" : escaparHtml(visualCategoria.nombre)}</div>
       <div class="hc16-condiciones">
         <p class="hc16-condicion">En compras desde <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
       </div>
@@ -1592,7 +1592,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
       <h2 class="hc16-descuento descuento">${escaparHtml(String(cupon.titulo || "Beneficio").replace(/\s*OFF\s*$/i, "").trim())}<span class="hc19-off">OFF</span></h2>
     </div>
     <div class="hc16-info hc25-banco-info">
-      <div class="hc16-categoria">CUPÓN BANCARIO</div>
+      <div class="hc16-categoria">${cupon.agotado === true ? "CUPÓN AGOTADO" : "CUPÓN BANCARIO"}</div>
       <div class="hc16-condiciones"><p class="hc16-condicion">Compra mínima <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p></div>
       ${cupon.ahorro_maximo ? `<p class="hc16-detalle">Tope de descuento <strong>${escaparHtml(cupon.ahorro_maximo)}</strong></p>` : ""}
       ${cupon.detalle_bancario ? `<p class="hc16-detalle hc25-banco-detalle">${escaparHtml(cupon.detalle_bancario)}</p>` : ""}
