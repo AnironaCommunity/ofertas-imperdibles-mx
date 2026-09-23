@@ -822,6 +822,11 @@ function claveLike(id) {
   return `cupon-like-${id}`;
 }
 
+function esCuponAgotado(cupon) {
+  const valor = cupon?.agotado;
+  return valor === true || valor === 1 || String(valor || "").trim().toLowerCase() === "true" || String(valor || "").trim() === "1";
+}
+
 function couponTimeState(coupon) {
   const now = Date.now();
   const start = coupon.fecha_inicio
@@ -853,7 +858,7 @@ function couponTimeState(coupon) {
     };
   }
 
-  if (coupon.agotado === true) {
+  if (esCuponAgotado(coupon)) {
     return {
       state: "agotado",
       target: end,
@@ -992,9 +997,9 @@ function updateCouponTimes() {
     }
 
     if (timeState.state === "agotado") {
-      status.hidden = false;
+      status.hidden = true;
       status.className = "estado-programacion hc16-tiempo agotado";
-      status.innerHTML = `<div class="estado-linea"><span class="estado-agotado-mensaje"><span class="estado-agotado-icono" aria-hidden="true">!</span><span>El cupón se agotó.</span></span></div>`;
+      status.innerHTML = "";
       card.classList.add("cupon-agotado");
       redeemButton.disabled = false;
       redeemButton.removeAttribute("aria-disabled");
@@ -1485,7 +1490,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
     </div>
 
     <div class="hc16-info">
-      <div class="hc16-categoria">${cupon.agotado === true ? "CUPÓN AGOTADO" : escaparHtml(visualCategoria.nombre)}</div>
+      <div class="hc16-categoria">${esCuponAgotado(cupon) ? "CUPÓN AGOTADO" : escaparHtml(visualCategoria.nombre)}</div>
       <div class="hc16-condiciones">
         <p class="hc16-condicion">En compras desde <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
       </div>
@@ -1502,8 +1507,8 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
         <span class="v40-codigo-icono" aria-hidden="true">${iconoCopias()}</span>
       </div>
       <div class="hc16-cta acciones-cupon">
-        <button class="boton-canjear hc16-copiar${cupon.agotado === true ? " boton-ofertazo-agotado" : ""}" type="button">
-          ${cupon.agotado === true ? contenidoBotonOfertazo() : contenidoBotonCopiar()}
+        <button class="boton-canjear hc16-copiar${esCuponAgotado(cupon) ? " boton-ofertazo-agotado" : ""}" type="button">
+          ${esCuponAgotado(cupon) ? contenidoBotonOfertazo() : contenidoBotonCopiar()}
         </button>
       </div>
       <p class="mensaje hc16-mensaje" aria-live="polite"></p>
@@ -1615,7 +1620,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
       <h2 class="hc16-descuento descuento">${escaparHtml(String(cupon.titulo || "Beneficio").replace(/\s*OFF\s*$/i, "").trim())}<span class="hc19-off">OFF</span></h2>
     </div>
     <div class="hc16-info hc25-banco-info">
-      <div class="hc16-categoria">${cupon.agotado === true ? "CUPÓN AGOTADO" : "CUPÓN BANCARIO"}</div>
+      <div class="hc16-categoria">${esCuponAgotado(cupon) ? "CUPÓN AGOTADO" : "CUPÓN BANCARIO"}</div>
       <div class="hc16-condiciones"><p class="hc16-condicion">Compra mínima <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p></div>
       ${cupon.ahorro_maximo ? `<p class="hc16-detalle">Tope de descuento <strong>${escaparHtml(cupon.ahorro_maximo)}</strong></p>` : ""}
       ${cupon.detalle_bancario ? `<p class="hc16-detalle hc25-banco-detalle">${escaparHtml(cupon.detalle_bancario)}</p>` : ""}
@@ -1626,7 +1631,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
         <span>${escaparHtml(codigoEnmascarado(cupon.codigo))}</span>
         <span class="v40-codigo-icono" aria-hidden="true">${iconoCopias()}</span>
       </div>
-      <div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar${cupon.agotado === true ? " boton-ofertazo-agotado" : ""}" type="button">${cupon.agotado === true ? contenidoBotonOfertazo() : contenidoBotonCopiar()}</button></div>
+      <div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar${esCuponAgotado(cupon) ? " boton-ofertazo-agotado" : ""}" type="button">${esCuponAgotado(cupon) ? contenidoBotonOfertazo() : contenidoBotonCopiar()}</button></div>
       <p class="mensaje hc16-mensaje" aria-live="polite"></p>
       <div class="hc16-social acciones-secundarias hc61-social" aria-label="Actividad del cupón">
         <button class="boton-compartir hc16-icono hc20-compartir hc61-chip hc61-share" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>

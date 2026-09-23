@@ -1839,3 +1839,32 @@
     font-size: clamp(1.65rem, 7.8vw, 2.4rem) !important;
   }
 }
+
+/* v5.8: etiquetas rectangulares semibold y agotados sin temporizador. */
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-categoria {
+  border-radius: 3px !important;
+  padding: 6px 15px 6px 8px !important;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 7px) 100%, 0 100%) !important;
+  font-family: "Proxima Nova", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important;
+  font-size: clamp(9px, 2.35vw, 11px) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.15 !important;
+}
+
+#cupones > article.cupon.cupon-agotado > .hc16-categoria {
+  max-width: 100% !important;
+}
+
+#cupones > article.cupon.cupon-agotado > .hc16-tiempo,
+#cupones > article.cupon.cupon-agotado .estado-programacion.hc16-tiempo {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
