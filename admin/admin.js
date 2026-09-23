@@ -1307,8 +1307,8 @@ function printCouponCardHtml(coupon, activeList) {
   const percent = /%|por\s*ciento/i.test(String(coupon?.titulo || ""));
   const image = coupon?.imagen_url ? `<img class="hc16-logo cupon-logo" src="${printEscape(new URL(coupon.imagen_url, location.href).href)}" alt="">` : "";
   const watermark = exclusive && coupon?.marca_agua_url ? `<span class="hc16-marca-agua" aria-hidden="true"><img src="${printEscape(new URL(coupon.marca_agua_url, location.href).href)}" alt=""></span>` : "";
-  const detail = String(coupon?.detalle_bancario || "").trim() || (exclusive ? "Solo en productos seleccionados." : "Aplica en la mayoría de los productos.");
-  return `<article class="cupon cupon-horizontal-v16${exclusive ? " cupon-exclusivo" : ""}" style="--categoria-cupon-color:${color};--categoria-cupon-texto:#fff;--ticket-cutout-bg:#fff"><span class="ticket-notch ticket-notch-top"></span><span class="ticket-notch ticket-notch-bottom"></span>${watermark}<div class="hc16-valor">${image}<h2 class="hc16-descuento descuento">${title}<span class="hc19-off">OFF</span></h2><span class="hc19-porcentaje">%</span></div><div class="hc16-info"><div class="hc16-categoria">${categoryText}</div><div class="hc16-condiciones"><p class="hc16-condicion">En compras desde <strong>${printEscape(coupon?.compra_minima || "Consultar")}</strong></p></div><p class="hc16-detalle">${printEscape(detail)}</p>${percent ? `<p class="hc16-ahorro-extra">Ahorra hasta <strong>${printEscape(coupon?.ahorro_maximo || "Consultar")}</strong></p>` : ""}<div class="hc16-etiquetas">${tags}</div></div><div class="hc16-acciones"><div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar" type="button">${copyButton}</button></div><p class="mensaje hc16-mensaje"></p>${social}<div class="estado-programacion hc16-tiempo">${printEscape(remaining)}</div></div></article>`;
+  const detail = String(coupon?.detalle_bancario || "").trim();
+  return `<article class="cupon cupon-horizontal-v16${exclusive ? " cupon-exclusivo" : ""}" style="--categoria-cupon-color:${color};--categoria-cupon-texto:#fff;--ticket-cutout-bg:#fff"><span class="ticket-notch ticket-notch-top"></span><span class="ticket-notch ticket-notch-bottom"></span>${watermark}<div class="hc16-valor">${image}<h2 class="hc16-descuento descuento">${title}<span class="hc19-off">OFF</span></h2><span class="hc19-porcentaje">%</span></div><div class="hc16-info"><div class="hc16-categoria">${categoryText}</div><div class="hc16-condiciones"><p class="hc16-condicion">En compras desde <strong>${printEscape(coupon?.compra_minima || "Consultar")}</strong></p></div>${detail ? `<p class="hc16-detalle">${printEscape(detail)}</p>` : ""}${percent ? `<p class="hc16-ahorro-extra">Ahorra hasta <strong>${printEscape(coupon?.ahorro_maximo || "Consultar")}</strong></p>` : ""}<div class="hc16-etiquetas">${tags}</div></div><div class="hc16-acciones"><div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar" type="button">${copyButton}</button></div><p class="mensaje hc16-mensaje"></p>${social}<div class="estado-programacion hc16-tiempo">${printEscape(remaining)}</div></div></article>`;
 }
 
 
@@ -4242,8 +4242,8 @@ function actualizarSelectorBanco() {
     couponBankDetailHelp.textContent = esBancario
       ? "Este texto aparecerá debajo del porcentaje en la tarjeta bancaria."
       : esTienda
-        ? "Este texto sustituye ‘Aplica en la mayoría de los productos’. Si queda vacío, se mostrará ese texto predeterminado."
-        : "Este texto sustituye ‘Solo en productos seleccionados’. Si queda vacío, se mostrará ese texto predeterminado.";
+        ? "Este texto aparecerá debajo del monto del cupón. Si queda vacío, no se mostrará ninguna leyenda."
+        : "Este texto aparecerá debajo del monto del cupón exclusivo. Si queda vacío, no se mostrará ninguna leyenda.";
   }
 
   if (couponBankDetail) {

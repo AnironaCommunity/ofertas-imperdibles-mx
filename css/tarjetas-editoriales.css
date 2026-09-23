@@ -1089,6 +1089,20 @@
   }
 }
 
+/* v5.4: detalle opcional más compacto y descuento principal en gris Oxford. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-descuento,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-descuento.hc16-descuento-largo,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41.cupon-bancario-unificado .hc16-descuento,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc19-off {
+  color: #3b3f46 !important;
+  -webkit-text-fill-color: #3b3f46 !important;
+}
+
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-detalle,
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-ahorro-extra {
+  font-size: clamp(.66rem, 2.6vw, .88rem) !important;
+}
+
 @media (min-width: 1500px) {
   #cupones.cupones-grid-compacta {
     grid-template-columns: repeat(auto-fit, minmax(285px, 1fr)) !important;
