@@ -2235,6 +2235,7 @@ function cambiarCategoria(
   {
     actualizarHistorial = false,
     desplazamiento = "smooth",
+    conservarPosicion = true,
   } = {}
 ) {
   const scrollAntesDeCambiarCategoria = window.scrollY;
@@ -2270,13 +2271,15 @@ function cambiarCategoria(
 
   // Mantiene exactamente la posición vertical del usuario al navegar entre
   // Todos / Tienda / Bancarios / Exclusivo. Se restaura tras el layout final.
-  requestAnimationFrame(() => {
-    window.scrollTo({
-      left: 0,
-      top: scrollAntesDeCambiarCategoria,
-      behavior: "auto",
+  if (conservarPosicion) {
+    requestAnimationFrame(() => {
+      window.scrollTo({
+        left: 0,
+        top: scrollAntesDeCambiarCategoria,
+        behavior: "auto",
+      });
     });
-  });
+  }
 
   if (actualizarHistorial) {
     actualizarUrlSeccion(categoria);
@@ -4711,6 +4714,7 @@ async function irANovedad(destino, { limpiarUrl = false } = {}) {
     cambiarCategoria(destino.categoria || "tienda", {
       actualizarHistorial: false,
       desplazamiento: "auto",
+      conservarPosicion: false,
     });
     selector = `.cupon[data-id="${CSS.escape(String(destino.id))}"]`;
   } else {
@@ -4726,6 +4730,8 @@ async function irANovedad(destino, { limpiarUrl = false } = {}) {
 
   const elemento = await esperarElementoNovedad(selector);
   if (!elemento) return false;
+
+  await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
   elemento.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
   window.setTimeout(() => {

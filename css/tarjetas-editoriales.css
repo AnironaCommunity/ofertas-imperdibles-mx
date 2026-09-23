@@ -1992,3 +1992,39 @@
     overflow: hidden !important;
   }
 }
+
+/* v5.13: botones compactos, cuatro columnas web y novedad visible. */
+@media (max-width: 759px) {
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-cta {
+    flex: 0 0 50px !important;
+    min-height: 50px !important;
+    height: 50px !important;
+    max-height: 50px !important;
+  }
+
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-copiar {
+    box-sizing: border-box !important;
+    flex: 0 0 50px !important;
+    min-block-size: 50px !important;
+    block-size: 50px !important;
+    max-block-size: 50px !important;
+    min-height: 50px !important;
+    height: 50px !important;
+    max-height: 50px !important;
+    padding: 5px 8px !important;
+  }
+}
+
+@media (min-width: 1000px) {
+  #cupones.cupones-grid-compacta {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+  }
+}
+
+#cupones > article.cupon.novedad-resaltada {
+  scroll-margin-top: 170px !important;
+  outline: 4px solid #20a84b !important;
+  outline-offset: 4px !important;
+  box-shadow: 0 0 0 9px rgba(32, 168, 75, .20), 0 14px 34px rgba(23, 95, 46, .28) !important;
+}
