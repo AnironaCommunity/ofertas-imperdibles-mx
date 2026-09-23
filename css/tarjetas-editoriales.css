@@ -2028,3 +2028,61 @@
   outline-offset: 4px !important;
   box-shadow: 0 0 0 9px rgba(32, 168, 75, .20), 0 14px 34px rgba(23, 95, 46, .28) !important;
 }
+
+/* v5.14: bancarios con la misma columna movil y logo visible bajo el descuento. */
+@media (max-width: 759px) {
+  #cupones.cupones-grid-compacta > article.cupon.cupon-bancario-grid,
+  #cupones.cupones-grid-compacta > article.cupon.cupon-bancario-unificado {
+    grid-column: auto !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    align-self: stretch !important;
+  }
+
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41.cupon-bancario-unificado > .hc25-banco-valor {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    gap: 7px !important;
+    width: 100% !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  #cupones > article.cupon.cupon-editorial-v41.cupon-bancario-unificado .hc25-banco-valor > .hc16-descuento {
+    order: 1 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+
+  #cupones > article.cupon.cupon-editorial-v41.cupon-bancario-unificado .hc25-banco-logo {
+    order: 2 !important;
+    position: static !important;
+    inset: auto !important;
+    display: block !important;
+    flex: 0 0 auto !important;
+    width: min(110px, 86%) !important;
+    height: 34px !important;
+    max-width: 86% !important;
+    max-height: 34px !important;
+    margin: 1px 0 3px !important;
+    padding: 0 !important;
+    object-fit: contain !important;
+    object-position: left center !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  #cupones > article.cupon.cupon-editorial-v41.cupon-bancario-unificado .hc25-banco-info {
+    padding: 0 !important;
+  }
+
+  #cupones > article.cupon.cupon-editorial-v41.cupon-bancario-unificado .hc16-detalle,
+  #cupones > article.cupon.cupon-editorial-v41.cupon-bancario-unificado .hc25-banco-detalle {
+    font-size: .66rem !important;
+    line-height: 1.16 !important;
+  }
+}
