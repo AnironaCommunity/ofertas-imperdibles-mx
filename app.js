@@ -1391,6 +1391,15 @@ function codigoEnmascarado(codigo) {
   return `${limpio.slice(0, 5)}******`;
 }
 
+function obtenerDetalleVisibleCupon(cupon, categoria) {
+  const detalleAdministrado = String(cupon?.detalle_bancario || "").trim();
+  if (detalleAdministrado) return detalleAdministrado;
+
+  return categoria === "exclusivo"
+    ? "Solo en productos seleccionados."
+    : "Aplica en la mayoría de los productos.";
+}
+
 function aplicarEstructuraEditorialV41(articulo) {
   articulo.classList.add("cupon-editorial-v41");
   const valor = articulo.querySelector(":scope > .hc16-valor");
@@ -1447,6 +1456,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
   const visualCategoria = configuracionVisualCupon(cupon);
   const tituloCuponLimpio = String(cupon.titulo || "").replace(/\s*OFF\s*$/i, "").trim();
+  const detalleCuponVisible = obtenerDetalleVisibleCupon(cupon, categoria);
   const claseDescuentoLargo = tituloCuponLimpio.length >= 6 ? " hc16-descuento-largo" : "";
 
   const estados = Array.isArray(estadosDestacados) ? estadosDestacados.filter(Boolean) : [estadosDestacados].filter(Boolean);
@@ -1473,9 +1483,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
       <div class="hc16-condiciones">
         <p class="hc16-condicion">En compras desde <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
       </div>
-      ${(esExclusivo || categoria === "tienda") && cupon.detalle_bancario
-        ? `<p class="hc16-detalle">${escaparHtml(cupon.detalle_bancario)}</p>`
-        : ""}
+      ${!esBancario ? `<p class="hc16-detalle">${escaparHtml(detalleCuponVisible)}</p>` : ""}
       ${esCuponPorcentaje(cupon) ? `<p class="hc16-ahorro-extra">Ahorra hasta <strong>${escaparHtml(cupon.ahorro_maximo || "Consultar")}</strong></p>` : ""}
       <div class="hc16-etiquetas">
         ${htmlEtiquetasCupon(esExclusivo ? estados.slice(0, 2) : estados)}
