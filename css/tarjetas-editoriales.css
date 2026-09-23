@@ -1794,3 +1794,48 @@
     font-size: clamp(1.97rem, 2.88vw, 2.64rem) !important;
   }
 }
+
+/* v5.7: etiqueta con mayor espacio y descuento inspirado en la referencia. */
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-categoria {
+  max-width: calc(100% - 40px) !important;
+  padding-left: 9px !important;
+  padding-right: 11px !important;
+  flex-shrink: 0 !important;
+  overflow: visible !important;
+}
+
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-descuento,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-descuento.hc16-descuento-largo,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41.cupon-bancario-unificado .hc16-descuento {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: flex-end !important;
+  gap: .09em !important;
+  max-width: 100% !important;
+  color: #596166 !important;
+  -webkit-text-fill-color: #596166 !important;
+  white-space: nowrap !important;
+}
+
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc19-off {
+  display: inline-block !important;
+  flex: 0 0 auto !important;
+  margin: 0 0 .08em !important;
+  color: #ff5b55 !important;
+  -webkit-text-fill-color: #ff5b55 !important;
+  font-size: .34em !important;
+  font-weight: 900 !important;
+  letter-spacing: -.02em !important;
+  line-height: 1 !important;
+}
+
+@media (max-width: 759px) {
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-categoria {
+    padding-left: 8px !important;
+    padding-right: 9px !important;
+  }
+
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-descuento.hc16-descuento-largo {
+    font-size: clamp(1.65rem, 7.8vw, 2.4rem) !important;
+  }
+}
