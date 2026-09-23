@@ -822,6 +822,11 @@ function claveLike(id) {
   return `cupon-like-${id}`;
 }
 
+function esCuponAgotado(cupon) {
+  const valor = cupon?.agotado;
+  return valor === true || valor === 1 || String(valor || "").trim().toLowerCase() === "true" || String(valor || "").trim() === "1";
+}
+
 function couponTimeState(coupon) {
   const now = Date.now();
   const start = coupon.fecha_inicio
@@ -853,7 +858,7 @@ function couponTimeState(coupon) {
     };
   }
 
-  if (coupon.agotado === true) {
+  if (esCuponAgotado(coupon)) {
     return {
       state: "agotado",
       target: end,
@@ -967,6 +972,7 @@ function updateCouponTimes() {
     const timeState = couponTimeState(coupon);
     const status = card.querySelector(".estado-programacion");
     const redeemButton = card.querySelector(".boton-canjear, .banco-canjear");
+    actualizarEtiquetaCategoriaAgotada(card, timeState.state === "agotado");
 
     status.className =
       `estado-programacion hc16-tiempo ${timeState.state}`;
@@ -991,9 +997,9 @@ function updateCouponTimes() {
     }
 
     if (timeState.state === "agotado") {
-      status.hidden = false;
+      status.hidden = true;
       status.className = "estado-programacion hc16-tiempo agotado";
-      status.innerHTML = `<div class="estado-linea"><span class="estado-agotado-mensaje"><span class="estado-agotado-icono" aria-hidden="true">!</span><span>El cupón se agotó.</span></span></div>`;
+      status.innerHTML = "";
       card.classList.add("cupon-agotado");
       redeemButton.disabled = false;
       redeemButton.removeAttribute("aria-disabled");
@@ -1391,6 +1397,31 @@ function codigoEnmascarado(codigo) {
   return `${limpio.slice(0, 5)}******`;
 }
 
+function actualizarEtiquetaCategoriaAgotada(tarjeta, agotado, etiquetaOriginal = "") {
+  const etiqueta = tarjeta?.querySelector(":scope > .hc16-categoria, :scope > .hc16-info > .hc16-categoria");
+  if (!etiqueta) return;
+
+  const original = String(etiquetaOriginal || etiqueta.dataset.etiquetaOriginal || "").trim();
+  if (original && original !== "CUPÓN AGOTADO") {
+    etiqueta.dataset.etiquetaOriginal = original;
+  }
+
+  if (agotado) {
+    etiqueta.textContent = "CUPÓN AGOTADO";
+    etiqueta.setAttribute("aria-label", "Cupón agotado");
+    return;
+  }
+
+  if (etiqueta.dataset.etiquetaOriginal) {
+    etiqueta.textContent = etiqueta.dataset.etiquetaOriginal;
+  }
+  etiqueta.removeAttribute("aria-label");
+}
+
+function obtenerDetalleVisibleCupon(cupon) {
+  return String(cupon?.detalle_bancario || "").trim();
+}
+
 function aplicarEstructuraEditorialV41(articulo) {
   articulo.classList.add("cupon-editorial-v41");
   const valor = articulo.querySelector(":scope > .hc16-valor");
@@ -1404,17 +1435,6 @@ function aplicarEstructuraEditorialV41(articulo) {
   const etiquetas = info.querySelector(":scope > .hc16-etiquetas");
   const esBancario = articulo.classList.contains("cupon-bancario-unificado") || articulo.classList.contains("cupon-bancario");
   const esExclusivo = articulo.classList.contains("cupon-exclusivo");
-
-  if (!info.querySelector(":scope > .hc16-detalle")) {
-    const detalle = document.createElement("p");
-    detalle.className = "hc16-detalle v43-detalle-aplicacion";
-    detalle.textContent = esBancario
-      ? "Requiere tarjeta o método participante."
-      : esExclusivo
-        ? "Solo en productos seleccionados."
-        : "Aplica en la mayoría de los productos.";
-    detalles.push(detalle);
-  }
 
   if (categoria) {
     const icono = esBancario
@@ -1447,6 +1467,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   const yaLeGusta = localStorage.getItem(claveLike(cupon.id)) === "1";
   const visualCategoria = configuracionVisualCupon(cupon);
   const tituloCuponLimpio = String(cupon.titulo || "").replace(/\s*OFF\s*$/i, "").trim();
+  const detalleCuponVisible = obtenerDetalleVisibleCupon(cupon);
   const claseDescuentoLargo = tituloCuponLimpio.length >= 6 ? " hc16-descuento-largo" : "";
 
   const estados = Array.isArray(estadosDestacados) ? estadosDestacados.filter(Boolean) : [estadosDestacados].filter(Boolean);
@@ -1469,13 +1490,11 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
     </div>
 
     <div class="hc16-info">
-      <div class="hc16-categoria">${escaparHtml(visualCategoria.nombre)}</div>
+      <div class="hc16-categoria">${esCuponAgotado(cupon) ? "CUPÓN AGOTADO" : escaparHtml(visualCategoria.nombre)}</div>
       <div class="hc16-condiciones">
         <p class="hc16-condicion">En compras desde <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
       </div>
-      ${(esExclusivo || categoria === "tienda") && cupon.detalle_bancario
-        ? `<p class="hc16-detalle">${escaparHtml(cupon.detalle_bancario)}</p>`
-        : ""}
+      ${!esBancario && detalleCuponVisible ? `<p class="hc16-detalle">${escaparHtml(detalleCuponVisible)}</p>` : ""}
       ${esCuponPorcentaje(cupon) ? `<p class="hc16-ahorro-extra">Ahorra hasta <strong>${escaparHtml(cupon.ahorro_maximo || "Consultar")}</strong></p>` : ""}
       <div class="hc16-etiquetas">
         ${htmlEtiquetasCupon(esExclusivo ? estados.slice(0, 2) : estados)}
@@ -1488,8 +1507,8 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
         <span class="v40-codigo-icono" aria-hidden="true">${iconoCopias()}</span>
       </div>
       <div class="hc16-cta acciones-cupon">
-        <button class="boton-canjear hc16-copiar${cupon.agotado === true ? " boton-ofertazo-agotado" : ""}" type="button">
-          ${cupon.agotado === true ? contenidoBotonOfertazo() : contenidoBotonCopiar()}
+        <button class="boton-canjear hc16-copiar${esCuponAgotado(cupon) ? " boton-ofertazo-agotado" : ""}" type="button">
+          ${esCuponAgotado(cupon) ? contenidoBotonOfertazo() : contenidoBotonCopiar()}
         </button>
       </div>
       <p class="mensaje hc16-mensaje" aria-live="polite"></p>
@@ -1509,6 +1528,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
 
   const initialTimeState = couponTimeState(cupon);
   const redeemButton = articulo.querySelector(".boton-canjear");
+  actualizarEtiquetaCategoriaAgotada(articulo, initialTimeState.state === "agotado", visualCategoria.nombre);
 
   if (!initialTimeState.enabled) {
     if (initialTimeState.state === "agotado") {
@@ -1600,7 +1620,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
       <h2 class="hc16-descuento descuento">${escaparHtml(String(cupon.titulo || "Beneficio").replace(/\s*OFF\s*$/i, "").trim())}<span class="hc19-off">OFF</span></h2>
     </div>
     <div class="hc16-info hc25-banco-info">
-      <div class="hc16-categoria">CUPÓN BANCARIO</div>
+      <div class="hc16-categoria">${esCuponAgotado(cupon) ? "CUPÓN AGOTADO" : "CUPÓN BANCARIO"}</div>
       <div class="hc16-condiciones"><p class="hc16-condicion">Compra mínima <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p></div>
       ${cupon.ahorro_maximo ? `<p class="hc16-detalle">Tope de descuento <strong>${escaparHtml(cupon.ahorro_maximo)}</strong></p>` : ""}
       ${cupon.detalle_bancario ? `<p class="hc16-detalle hc25-banco-detalle">${escaparHtml(cupon.detalle_bancario)}</p>` : ""}
@@ -1611,7 +1631,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
         <span>${escaparHtml(codigoEnmascarado(cupon.codigo))}</span>
         <span class="v40-codigo-icono" aria-hidden="true">${iconoCopias()}</span>
       </div>
-      <div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar${cupon.agotado === true ? " boton-ofertazo-agotado" : ""}" type="button">${cupon.agotado === true ? contenidoBotonOfertazo() : contenidoBotonCopiar()}</button></div>
+      <div class="hc16-cta acciones-cupon"><button class="boton-canjear hc16-copiar${esCuponAgotado(cupon) ? " boton-ofertazo-agotado" : ""}" type="button">${esCuponAgotado(cupon) ? contenidoBotonOfertazo() : contenidoBotonCopiar()}</button></div>
       <p class="mensaje hc16-mensaje" aria-live="polite"></p>
       <div class="hc16-social acciones-secundarias hc61-social" aria-label="Actividad del cupón">
         <button class="boton-compartir hc16-icono hc20-compartir hc61-chip hc61-share" type="button" aria-label="Compartir" title="Compartir">${iconoCompartir()}</button>
@@ -1628,6 +1648,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
 
   const boton = articulo.querySelector(".boton-canjear");
   const estadoInicial = couponTimeState(cupon);
+  actualizarEtiquetaCategoriaAgotada(articulo, estadoInicial.state === "agotado", "CUPÓN BANCARIO");
   if (!estadoInicial.enabled) {
     if (estadoInicial.state === "agotado") {
       articulo.classList.add("cupon-agotado");
