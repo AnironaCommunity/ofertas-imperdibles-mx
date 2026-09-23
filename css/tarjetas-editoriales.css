@@ -1868,3 +1868,26 @@
   border: 0 !important;
   box-shadow: none !important;
 }
+
+/* v5.9: semibold y tres estados temporales mutuamente excluyentes. */
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-condiciones,
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-condiciones .hc16-condicion,
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-detalle,
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-ahorro-extra,
+#cupones > article.cupon.cupon-editorial-v41 .v40-codigo,
+#cupones > article.cupon.cupon-editorial-v41 .v40-codigo > span:first-child,
+#cupones > article.cupon.cupon-editorial-v41 .hc16-copiar {
+  font-weight: 600 !important;
+}
+
+#cupones .cupon-horizontal-v16 .etiqueta-finaliza-pronto {
+  background: linear-gradient(135deg, #ff8a34 0%, #ffb11b 100%) !important;
+}
+
+#cupones .cupon-horizontal-v16 .etiqueta-ultima-oportunidad {
+  background: linear-gradient(135deg, #f04455 0%, #ff7043 100%) !important;
+}
+
+#cupones .cupon-horizontal-v16 .etiqueta-ultimos-minutos {
+  background: linear-gradient(135deg, #d7193f 0%, #f04455 100%) !important;
+}

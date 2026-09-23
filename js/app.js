@@ -877,6 +877,8 @@ function couponTimeState(coupon) {
     if (remaining <= 10 * 60 * 1000) {
       state = "ultimos-minutos";
     } else if (remaining <= 60 * 60 * 1000) {
+      state = "ultima-oportunidad";
+    } else if (remaining <= 2 * 60 * 60 * 1000) {
       state = "finaliza-pronto";
     }
 
@@ -888,8 +890,10 @@ function couponTimeState(coupon) {
       label:
         state === "ultimos-minutos"
           ? "🔥 ¡Últimos minutos!"
-          : state === "finaliza-pronto"
-            ? "🔥 Termina en"
+          : state === "ultima-oportunidad"
+            ? "⏰ Última oportunidad"
+            : state === "finaliza-pronto"
+              ? "⏰ Finaliza pronto"
             : "Termina en",
       enabled: true,
     };
@@ -973,6 +977,7 @@ function updateCouponTimes() {
     const status = card.querySelector(".estado-programacion");
     const redeemButton = card.querySelector(".boton-canjear, .banco-canjear");
     actualizarEtiquetaCategoriaAgotada(card, timeState.state === "agotado");
+    actualizarCapsulaTiempo(card, timeState.state);
 
     status.className =
       `estado-programacion hc16-tiempo ${timeState.state}`;
@@ -1214,15 +1219,11 @@ function etiquetasAutomaticasCupon(cupon, contexto, maximo = MAX_ETIQUETAS_CUPON
   if (!couponTimeState(cupon).enabled) return [];
 
   const etiquetas = [];
-  const ahora = Date.now();
-  const fin = cupon?.fecha_fin ? new Date(cupon.fecha_fin).getTime() : NaN;
-  const restante = Number.isFinite(fin) ? fin - ahora : Infinity;
+  const estadoTiempo = couponTimeState(cupon).state;
 
-  // Prioridad 1 y 2: son mutuamente excluyentes.
-  if (restante > 0 && restante <= DOS_HORAS_MS) {
-    etiquetas.push("ultima-oportunidad");
-  } else if (restante > DOS_HORAS_MS && restante <= VEINTICUATRO_HORAS_MS) {
-    etiquetas.push("ultimas-horas");
+  // Las tres cápsulas temporales son excluyentes y se reemplazan entre sí.
+  if (["finaliza-pronto", "ultima-oportunidad", "ultimos-minutos"].includes(estadoTiempo)) {
+    etiquetas.push(estadoTiempo);
   }
 
   if (cuponRegreso(cupon, contexto)) etiquetas.push("regreso");
@@ -1237,8 +1238,9 @@ function etiquetasAutomaticasCupon(cupon, contexto, maximo = MAX_ETIQUETAS_CUPON
 
 function htmlEtiquetaCupon(estado) {
   const etiquetas = {
-    "ultima-oportunidad": '<span class="etiqueta-cupon etiqueta-ultima-oportunidad">🔴 Última oportunidad</span>',
-    "ultimas-horas": '<span class="etiqueta-cupon etiqueta-ultimas-horas">⏰ Últimas horas</span>',
+    "finaliza-pronto": '<span class="etiqueta-cupon etiqueta-tiempo-vigencia etiqueta-finaliza-pronto">⏰ Finaliza pronto</span>',
+    "ultima-oportunidad": '<span class="etiqueta-cupon etiqueta-tiempo-vigencia etiqueta-ultima-oportunidad">⏰ Última oportunidad</span>',
+    "ultimos-minutos": '<span class="etiqueta-cupon etiqueta-tiempo-vigencia etiqueta-ultimos-minutos">⏰ Últimos minutos</span>',
     regreso: '<span class="etiqueta-cupon etiqueta-regreso">🔄 Regresó</span>',
     "mas-usado": '<span class="etiqueta-cupon etiqueta-mas-usado">⚡ Más usado</span>',
     popular: '<span class="etiqueta-cupon etiqueta-popular-integrada">🔥 Popular</span>',
@@ -1255,6 +1257,31 @@ function htmlEtiquetasCupon(estados) {
     .filter(Boolean)
     .map((estado) => htmlEtiquetaCupon(estado))
     .join("");
+}
+
+function actualizarCapsulaTiempo(tarjeta, estado) {
+  const contenedor = tarjeta?.querySelector(":scope > .hc16-etiquetas, :scope > .hc16-info > .hc16-etiquetas");
+  if (!contenedor) return;
+
+  const estadosTiempo = ["finaliza-pronto", "ultima-oportunidad", "ultimos-minutos"];
+  const estadoVisible = estadosTiempo.includes(estado) ? estado : "";
+  const actual = contenedor.querySelector(".etiqueta-tiempo-vigencia");
+
+  if (!estadoVisible) {
+    actual?.remove();
+    return;
+  }
+
+  if (actual?.classList.contains(`etiqueta-${estadoVisible}`)) return;
+
+  const html = htmlEtiquetaCupon(estadoVisible);
+  if (!html) return;
+  actual?.remove();
+  contenedor.insertAdjacentHTML("afterbegin", html);
+
+  while (contenedor.children.length > MAX_ETIQUETAS_CUPON) {
+    contenedor.lastElementChild?.remove();
+  }
 }
 
 
