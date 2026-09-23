@@ -1469,7 +1469,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
     </div>
 
     <div class="hc16-info">
-      <div class="hc16-categoria">${escaparHtml(visualCategoria.nombre)}<span class="hc16-categoria-descuento">${escaparHtml(tituloCuponLimpio)}</span></div>
+      <div class="hc16-categoria">${escaparHtml(visualCategoria.nombre)}</div>
       <div class="hc16-condiciones">
         <p class="hc16-condicion">En compras desde <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
       </div>
