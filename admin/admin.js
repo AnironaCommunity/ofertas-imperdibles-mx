@@ -2543,14 +2543,15 @@ function applyBestCouponToAdForm({ showMessage = true } = {}) {
 
 function renderBulkPrices() {
   bulkPricesList.replaceChildren();
+  const productos = ads.filter(esProductoPublicidad);
 
-  if (!ads.length) {
+  if (!productos.length) {
     bulkPricesList.innerHTML =
       '<tr><td colspan="5">No hay productos registrados.</td></tr>';
     return;
   }
 
-  for (const ad of ads) {
+  for (const ad of productos) {
     const currentPrice = parseMoney(ad.precio_publicado);
     const platform =
       String(ad.plataforma || "").toLowerCase() === "amazon"
@@ -2875,7 +2876,7 @@ function productWebUrl(ad) {
 }
 
 function updateAdsSummary() {
-  const publicaciones = ads.filter((ad) => !esBannerCupones(ad));
+  const publicaciones = ads.filter(esProductoPublicidad);
   if (adsTotal) adsTotal.textContent = String(publicaciones.length);
   if (adsNew) adsNew.textContent = String(publicaciones.filter(productoNuevoVigente).length);
   if (adsBestSellers) adsBestSellers.textContent = String(publicaciones.filter((ad) => valorBooleanoAdmin(ad.es_mas_vendido)).length);
@@ -2884,7 +2885,7 @@ function updateAdsSummary() {
 
 function filteredAds() {
   const query = String(adSearch?.value || "").trim().toLocaleLowerCase("es");
-  const publicaciones = ads.filter((ad) => !esBannerCupones(ad));
+  const publicaciones = ads.filter(esProductoPublicidad);
   if (!query) return publicaciones;
 
   return publicaciones.filter((ad) => {
@@ -2917,9 +2918,9 @@ function renderAds() {
 
   const visibleAds = filteredAds();
   if (!visibleAds.length) {
-    adList.innerHTML = ads.length
+    adList.innerHTML = ads.some(esProductoPublicidad)
       ? "<p>No se encontraron publicaciones con ese criterio.</p>"
-      : "<p>No hay publicidades registradas.</p>";
+      : "<p>No hay productos registrados en Publicidad.</p>";
     return;
   }
 
@@ -2980,6 +2981,10 @@ function renderAds() {
 function esRegistroOfertazo(ad) {
   const sections = normalizarSeccionesPublicidad(ad?.secciones, ad?.categoria);
   return sections.includes("ofertas_mercado_libre") || ad?.categoria === "ofertas_mercado_libre";
+}
+
+function esProductoPublicidad(ad) {
+  return !esBannerCupones(ad) && !esRegistroOfertazo(ad);
 }
 
 function ofertazoLocalDateTime(value) {
@@ -3118,7 +3123,7 @@ async function manejarListaOfertazo(event) {
   const button = event.target.closest("button[data-ofertazo-action]");
   if (!button) return;
   const id = Number(button.dataset.id);
-  const ad = ads.find((item) => Number(item.id) === id);
+  const ad = ads.find((item) => Number(item.id) === id && esRegistroOfertazo(item));
   if (!ad) return;
   const action = button.dataset.ofertazoAction;
   if (action === "edit") return editarOfertazo(ad);
@@ -3452,8 +3457,8 @@ async function loadAds() {
     renderBannersAdmin();
     renderBulkPrices();
     renderOfertazoAdmin();
-    const totalPublicidades = ads.filter((ad) => !esBannerCupones(ad)).length;
-    setMessage(adListMessage, `${totalPublicidades} publicidades registradas.`);
+    const totalPublicidades = ads.filter(esProductoPublicidad).length;
+    setMessage(adListMessage, `${totalPublicidades} productos registrados en Publicidad.`);
   } catch (error) {
     setMessage(adListMessage, error.message, true);
   } finally {
@@ -3571,7 +3576,7 @@ async function handleAdList(event) {
   if (!button) return;
 
   const id = Number(button.dataset.id);
-  const ad = ads.find((item) => Number(item.id) === id);
+  const ad = ads.find((item) => Number(item.id) === id && esProductoPublicidad(item));
 
   if (!ad) return;
 
