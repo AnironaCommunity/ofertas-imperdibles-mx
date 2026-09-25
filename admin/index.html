@@ -8,7 +8,7 @@
   <title>Administrador | Ofertas Imperdibles MX</title>
 
   <link rel="icon" href="../img/logo.png" />
-  <link rel="stylesheet" href="admin.css?v=82.34.0" />
+  <link rel="stylesheet" href="admin.css?v=5.16.0" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -287,7 +287,7 @@ Descuento máximo: $180"
           </div>
         </section>
 
-        <section class="panel panel-formulario-compacto panel-cupon-compacto">
+        <section class="panel panel-formulario-compacto panel-cupon-compacto" id="editar-cupon">
           <h3 id="coupon-form-title">➕ Agregar cupón</h3>
 
           <form id="coupon-form" class="formulario-compacto">
@@ -523,6 +523,22 @@ Descuento máximo: $180"
             </button>
           </div>
 
+          <div class="herramientas-cupones">
+            <label for="coupon-status-filter">Estado
+              <select id="coupon-status-filter">
+                <option value="todos">Todos</option>
+                <option value="activo">Activos</option>
+                <option value="finalizado">Finalizados</option>
+                <option value="agotado">Agotados</option>
+                <option value="programado">Programados</option>
+                <option value="inactivo">Inactivos</option>
+              </select>
+            </label>
+            <button id="eliminar-cupones-filtrados" class="boton-eliminar-masivo" type="button" disabled>
+              Eliminar los cupones filtrados
+            </button>
+          </div>
+
           <p id="coupon-list-message" class="mensaje" aria-live="polite"></p>
 
           <div class="tabla-contenedor">
@@ -635,7 +651,7 @@ Descuento máximo: $180"
         <div class="cabecera-seccion">
           <div>
             <h2>📢 Publicidad rotativa</h2>
-            <p>Sube imágenes y controla el orden de los anuncios.</p>
+            <p>Productos para el catálogo Anirona en Mercado Libre.</p>
           </div>
 
           <button id="nueva-publicidad" class="boton-secundario" type="button">
@@ -643,8 +659,8 @@ Descuento máximo: $180"
           </button>
         </div>
 
-        <section class="panel panel-formulario-compacto panel-publicidad-compacta">
-          <h3 id="ad-form-title">📢 Agregar publicidad</h3>
+        <section class="panel panel-formulario-compacto panel-publicidad-compacta" id="editar-publicidad">
+          <h3 id="ad-form-title">📢 Agregar producto</h3>
 
           <form id="ad-form" class="formulario-compacto">
             <input id="ad-id" type="hidden" />
@@ -662,82 +678,14 @@ Descuento máximo: $180"
               </div>
 
 
-              <fieldset class="campo grupo-secciones campo-ad-secciones">
-                <legend>Secciones donde se mostrará</legend>
-                <p class="ayuda-secciones">
-                  Puedes seleccionar una o varias secciones para el mismo producto.
-                </p>
-
-                <div class="opciones-secciones">
-                  <label>
-                    <input
-                      class="ad-section"
-                      type="checkbox"
-                      value="ofertas_dia"
-                      checked
-                    />
-                    <span>Ofertas del día</span>
-                  </label>
-
-                  <label>
-                    <input
-                      class="ad-section"
-                      type="checkbox"
-                      value="comunidad_anirona"
-                    />
-                    <span>Comunidad Anirona</span>
-                  </label>
-                </div>
-              </fieldset>
-
-              <fieldset class="plataforma-publicidad campo-ad-plataforma">
-                <legend>Plataforma del producto</legend>
-                <p class="ayuda-secciones">
-                  Define el texto del botón en todas las secciones donde
-                  aparezca el producto.
-                </p>
-
-                <div class="opciones-plataforma">
-                  <label>
-                    <input
-                      name="ad-platform"
-                      type="radio"
-                      value="mercadolibre"
-                      checked
-                    />
-                    <span>Mercado Libre</span>
-                  </label>
-
-                  <label>
-                    <input
-                      name="ad-platform"
-                      type="radio"
-                      value="amazon"
-                    />
-                    <span>Amazon</span>
-                  </label>
-                </div>
-              </fieldset>
-
-              <div class="campo campo-ad-orden">
-                <label for="ad-order">Orden</label>
-                <input
-                  id="ad-order"
-                  type="number"
-                  min="0"
-                  value="0"
-                />
-              </div>
-
               <div class="campo campo-ad-descripcion">
                 <label for="ad-description">Descripción</label>
                 <textarea
                   id="ad-description"
-                  rows="5"
+                  rows="2"
                   maxlength="250"
                   placeholder="Descripción del producto (máximo 250 caracteres)"
                 ></textarea>
-                <small>Máximo 250 caracteres. En Comunidad Anirona se mostrará completa.</small>
               </div>
 
               <div class="campo campo-ad-enlace-ml">
@@ -746,34 +694,14 @@ Descuento máximo: $180"
                   id="ad-link-mercado-libre"
                   type="url"
                   placeholder="https://meli.la/..."
+                  required
                 />
-                <small>Mostrará el botón amarillo en Comunidad Anirona.</small>
               </div>
 
-              <div class="campo campo-ad-enlace-amazon">
-                <label for="ad-link-amazon">Enlace de Amazon</label>
-                <input
-                  id="ad-link-amazon"
-                  type="url"
-                  placeholder="https://amzn.to/... o https://amazon.com.mx/..."
-                />
-                <small>Mostrará el botón azul oscuro de Amazon en Comunidad Anirona.</small>
-              </div>
-
-              <fieldset class="campo campo-ad-disponibilidad">
-                <legend>Disponibilidad en el catálogo Anirona</legend>
-                <p class="ayuda-secciones">El punto será verde cuando esté disponible y rojo cuando no lo esté.</p>
-                <div class="opciones-disponibilidad">
-                  <label class="switch-row">
-                    <input id="ad-disponible-mercado-libre" type="checkbox" checked />
-                    <span>Disponible en Mercado Libre</span>
-                  </label>
-                  <label class="switch-row">
-                    <input id="ad-disponible-amazon" type="checkbox" checked />
-                    <span>Disponible en Amazon</span>
-                  </label>
-                </div>
-              </fieldset>
+              <label class="switch-row campo-ad-disponibilidad">
+                <input id="ad-disponible-mercado-libre" type="checkbox" checked />
+                <span>Disponible en Mercado Libre</span>
+              </label>
 
               <label class="switch-row campo-ad-nuevo">
                 <input id="ad-es-nuevo" type="checkbox" />
@@ -835,7 +763,7 @@ Descuento máximo: $180"
 
             <div class="acciones">
               <button class="boton-principal" type="submit">
-                Guardar publicidad
+                Guardar producto
               </button>
 
               <button
@@ -977,7 +905,7 @@ Descuento máximo: $180"
 
         <section class="panel">
           <div class="cabecera-panel">
-            <h3>Publicidades registradas</h3>
+            <h3>Productos registrados</h3>
 
             <button id="actualizar-publicidad" class="boton-secundario" type="button">
               ↻ Actualizar
@@ -1375,6 +1303,6 @@ Descuento máximo: $180"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=82.85.4"></script>
+  <script type="module" src="admin.js?v=5.16.0"></script>
 </body>
 </html>

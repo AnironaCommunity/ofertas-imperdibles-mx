@@ -76,6 +76,16 @@ function normalizeCategory(value) {
     : "tienda";
 }
 
+function couponStatusForAdmin(coupon, now = Date.now()) {
+  if (!coupon.activo) return "inactivo";
+  const start = coupon.fecha_inicio ? new Date(coupon.fecha_inicio).getTime() : null;
+  const end = coupon.fecha_fin ? new Date(coupon.fecha_fin).getTime() : null;
+  if (start !== null && start > now) return "programado";
+  if (end !== null && end <= now) return "finalizado";
+  if (coupon.agotado === true) return "agotado";
+  return "activo";
+}
+
 function eventAdminAuth(r){return Boolean(process.env.ADMIN_PASSWORD)&&String(r.headers['x-admin-password']||'')===process.env.ADMIN_PASSWORD;}
 function eventAdminConfig(){return {url:String(process.env.SUPABASE_URL||'').trim().replace(/^['"]|['"]$/g,'').replace(/\/rest\/v1\/?$/i,'').replace(/\/+$/,''),key:process.env.SUPABASE_SECRET_KEY||process.env.SUPABASE_SERVICE_ROLE_KEY};}
 async function eventAdminSb(path,options={}){const {url,key}=eventAdminConfig();if(!url||!key)throw new Error('Faltan variables de conexión con Supabase.');const r=await fetch(`${url}/rest/v1/${path}`,{...options,headers:{apikey:key,Authorization:`Bearer ${key}`,Accept:'application/json','Content-Type':'application/json',...(options.headers||{})}});const t=await r.text();let d=null;try{d=t?JSON.parse(t):null}catch{d=t}if(!r.ok)throw new Error(d?.message||d?.error||d?.details||'Supabase no pudo completar la operación.');return d;}
@@ -108,6 +118,31 @@ export default async function handler(request, response) {
   }
 
   try {
+    if (request.method === "POST" && request.query?.action === "eliminar-por-estado") {
+      const estado = String(request.body?.estado || "");
+      const ids = request.body?.ids;
+      const estados = ["activo", "finalizado", "agotado", "programado", "inactivo"];
+      if (!estados.includes(estado) || !Array.isArray(ids) || !ids.length || ids.length > 100 ||
+          ids.some((id) => !Number.isSafeInteger(id) || id <= 0) || new Set(ids).size !== ids.length) {
+        return response.status(400).json({ error: "Selecciona un estado y cupones válidos (máximo 100 por lote)." });
+      }
+
+      const idsQuery = ids.join(",");
+      const actuales = await requestSupabase(
+        `cupones?select=id,activo,agotado,fecha_inicio,fecha_fin&id=in.(${idsQuery})`
+      );
+      const now = Date.now();
+      if (actuales.length !== ids.length || actuales.some((coupon) => couponStatusForAdmin(coupon, now) !== estado)) {
+        return response.status(409).json({ error: "Algunos cupones cambiaron de estado. Actualiza la lista y vuelve a intentarlo." });
+      }
+
+      const eliminados = await requestSupabase(`cupones?id=in.(${idsQuery})&select=id`, {
+        method: "DELETE",
+        headers: { Prefer: "return=representation" },
+      });
+      return response.status(200).json({ eliminados: eliminados?.length || 0 });
+    }
+
     if (request.query?.action === "hero-config") {
       if (request.method === "GET") {
         const config = await requestSupabase(

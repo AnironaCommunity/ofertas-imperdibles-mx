@@ -99,6 +99,8 @@ const newCoupon = document.querySelector("#nuevo-cupon");
 const refreshCoupons = document.querySelector("#actualizar-cupones");
 const couponList = document.querySelector("#coupon-list");
 const couponListMessage = document.querySelector("#coupon-list-message");
+const couponStatusFilter = document.querySelector("#coupon-status-filter");
+const deleteFilteredCoupons = document.querySelector("#eliminar-cupones-filtrados");
 
 /* Resumen para compartir */
 const shareSummaryLink = document.querySelector("#resumen-liga");
@@ -165,14 +167,8 @@ const adId = document.querySelector("#ad-id");
 const adImageUrl = document.querySelector("#ad-image-url");
 const adTitle = document.querySelector("#ad-title");
 const adDescription = document.querySelector("#ad-description");
-const adSections = [...document.querySelectorAll(".ad-section")];
-const adPlatforms = [
-  ...document.querySelectorAll('input[name="ad-platform"]'),
-];
 const adLinkMercadoLibre = document.querySelector("#ad-link-mercado-libre");
-const adLinkAmazon = document.querySelector("#ad-link-amazon");
 const adDisponibleMercadoLibre = document.querySelector("#ad-disponible-mercado-libre");
-const adDisponibleAmazon = document.querySelector("#ad-disponible-amazon");
 const adEsNuevo = document.querySelector("#ad-es-nuevo");
 const adFechaNuevo = document.querySelector("#ad-fecha-nuevo");
 const adEsMasVendido = document.querySelector("#ad-es-mas-vendido");
@@ -200,7 +196,6 @@ const recalculateBulkPrices = document.querySelector(
 );
 const saveBulkPrices = document.querySelector("#guardar-precios-masivos");
 
-const adOrder = document.querySelector("#ad-order");
 const adActive = document.querySelector("#ad-active");
 const adImage = document.querySelector("#ad-image");
 const adPreviewWrapper = document.querySelector("#ad-preview-wrapper");
@@ -268,6 +263,7 @@ let adminPassword = sessionStorage.getItem("adminPassword") || "";
 let coupons = [];
 let ads = [];
 let detectedCoupons = [];
+let bulkDeleteRunning = false;
 
 function setMessage(element, text = "", isError = false) {
   element.textContent = text;
@@ -589,19 +585,38 @@ function editCoupon(coupon) {
   couponFormTitle.textContent = `Editar cupón: ${coupon.titulo}`;
   cancelCoupon.hidden = false;
 
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  couponFormTitle.scrollIntoView({ behavior: "smooth", block: "start" });
+  couponTitle.focus({ preventScroll: true });
+}
+
+const COUPON_STATUS_LABELS = {
+  activo: "Activos", finalizado: "Finalizados", agotado: "Agotados",
+  programado: "Programados", inactivo: "Inactivos",
+};
+
+function filteredCoupons() {
+  const status = couponStatusFilter.value;
+  return status === "todos"
+    ? coupons
+    : coupons.filter((coupon) => couponAutomaticStatus(coupon).key === status);
 }
 
 function renderCoupons() {
   couponList.replaceChildren();
+  const visibles = filteredCoupons();
+  const status = couponStatusFilter.value;
+  deleteFilteredCoupons.disabled = bulkDeleteRunning || status === "todos" || visibles.length === 0;
+  deleteFilteredCoupons.textContent = status === "todos"
+    ? "Selecciona un estado para eliminar"
+    : `Eliminar ${visibles.length} ${COUPON_STATUS_LABELS[status]?.toLowerCase() || "cupones"}`;
 
-  if (!coupons.length) {
+  if (!visibles.length) {
     couponList.innerHTML =
-      '<tr><td colspan="6">No hay cupones registrados.</td></tr>';
+      `<tr><td colspan="7">${coupons.length ? "No hay cupones en este estado." : "No hay cupones registrados."}</td></tr>`;
     return;
   }
 
-  for (const coupon of coupons) {
+  for (const coupon of visibles) {
     const row = document.createElement("tr");
 
     const automaticStatus = couponAutomaticStatus(coupon);
@@ -660,11 +675,50 @@ async function loadCoupons() {
   try {
     coupons = await api("/api/admin-cupones");
     renderCoupons();
-    setMessage(couponListMessage, `${coupons.length} cupones registrados.`);
+    setMessage(couponListMessage, `${filteredCoupons().length} de ${coupons.length} cupones mostrados.`);
   } catch (error) {
     setMessage(couponListMessage, error.message, true);
   } finally {
     refreshCoupons.disabled = false;
+  }
+}
+
+async function deleteCouponsByStatus() {
+  if (bulkDeleteRunning) return;
+  const status = couponStatusFilter.value;
+  const visibles = filteredCoupons();
+  if (!COUPON_STATUS_LABELS[status] || !visibles.length) return;
+
+  const count = visibles.length;
+  if (!confirm(`¿Eliminar definitivamente ${count} cupones ${COUPON_STATUS_LABELS[status].toLowerCase()}? Esta acción no se puede deshacer.`)) return;
+
+  bulkDeleteRunning = true;
+  deleteFilteredCoupons.disabled = true;
+  couponStatusFilter.disabled = true;
+  setMessage(couponListMessage, `Eliminando ${count} cupones...`);
+  let deleted = 0;
+  try {
+    for (let i = 0; i < visibles.length; i += 100) {
+      const ids = visibles.slice(i, i + 100).map((coupon) => Number(coupon.id));
+      const result = await api("/api/admin-cupones?action=eliminar-por-estado", {
+        method: "POST",
+        body: JSON.stringify({ estado: status, ids }),
+      });
+      deleted += result.eliminados;
+      if (result.eliminados !== ids.length) {
+        throw new Error("No se eliminaron todos los cupones del lote. Revisa la lista actualizada.");
+      }
+      setMessage(couponListMessage, `Eliminados ${deleted} de ${count} cupones...`);
+    }
+    await loadCoupons();
+    setMessage(couponListMessage, `Se eliminaron ${deleted} cupones ${COUPON_STATUS_LABELS[status].toLowerCase()}.`);
+  } catch (error) {
+    await loadCoupons();
+    setMessage(couponListMessage, `Se eliminaron ${deleted} cupones. ${error.message}`, true);
+  } finally {
+    bulkDeleteRunning = false;
+    couponStatusFilter.disabled = false;
+    renderCoupons();
   }
 }
 
@@ -1909,6 +1963,7 @@ async function saveCoupon(event) {
 }
 
 async function handleCouponList(event) {
+  if (bulkDeleteRunning) return;
   const button = event.target.closest("button[data-action]");
 
   if (!button) return;
@@ -2308,78 +2363,16 @@ function normalizarSeccionesPublicidad(valor, categoria = "ofertas_dia") {
 }
 
 
-function selectedAdPlatform() {
-  return (
-    adPlatforms.find((input) => input.checked)?.value ||
-    "mercadolibre"
-  );
-}
-
-function setSelectedAdPlatform(value, link = "") {
-  let platform = String(value || "").trim().toLowerCase();
-
-  if (!["mercadolibre", "amazon"].includes(platform)) {
-    const normalizedLink = String(link || "").toLowerCase();
-    platform =
-      normalizedLink.includes("amazon.") ||
-      normalizedLink.includes("a.co/")
-        ? "amazon"
-        : "mercadolibre";
-  }
-
-  for (const input of adPlatforms) {
-    input.checked = input.value === platform;
-  }
-}
-
 function updateCouponValidationByPlatform({
   recalculate = true,
   showMessage = true,
 } = {}) {
-  const isAmazon = selectedAdPlatform() === "amazon";
-
-  adPriceCoupon.disabled = isAmazon;
-  adCouponCode.disabled = isAmazon;
-
-  if (isAmazon) {
-    adPriceCoupon.value = "";
-    adCouponCode.value = "";
-
-    if (showMessage) {
-      adCouponRecommendation.textContent =
-        "Los productos de Amazon no utilizan la validación automática de cupones.";
-      adCouponRecommendation.className =
-        "recomendacion-cupon sin-cupon";
-    }
-
-    return null;
-  }
-
   adPriceCoupon.disabled = false;
   adCouponCode.disabled = false;
 
   return recalculate
     ? applyBestCouponToAdForm({ showMessage })
     : null;
-}
-
-function selectedAdSections() {
-  return adSections
-    .filter((input) => input.checked)
-    .map((input) => input.value);
-}
-
-function setSelectedAdSections(
-  values = ["ofertas_dia"],
-  categoria = "ofertas_dia"
-) {
-  const selected = new Set(
-    normalizarSeccionesPublicidad(values, categoria)
-  );
-
-  for (const input of adSections) {
-    input.checked = selected.has(input.value);
-  }
 }
 
 const AD_SECTION_LABELS = {
@@ -2504,20 +2497,6 @@ function findBestCoupon(productPrice) {
 }
 
 function applyBestCouponToAdForm({ showMessage = true } = {}) {
-  if (selectedAdPlatform() === "amazon") {
-    adPriceCoupon.value = "";
-    adCouponCode.value = "";
-
-    if (showMessage) {
-      adCouponRecommendation.textContent =
-        "Los productos de Amazon no utilizan la validación automática de cupones.";
-      adCouponRecommendation.className =
-        "recomendacion-cupon sin-cupon";
-    }
-
-    return null;
-  }
-
   const price = parseMoney(adPricePublished.value);
   const recommendation = findBestCoupon(price);
 
@@ -2815,9 +2794,7 @@ function resetAdForm() {
   adId.value = "";
   adImageUrl.value = "";
   adLinkMercadoLibre.value = "";
-  adLinkAmazon.value = "";
   adDisponibleMercadoLibre.checked = true;
-  adDisponibleAmazon.checked = true;
   adEsNuevo.checked = false;
   adFechaNuevo.value = "";
   adEsMasVendido.checked = false;
@@ -2826,17 +2803,14 @@ function resetAdForm() {
   adPricePublished.value = "";
   adPriceCoupon.value = "";
   adCouponCode.value = "";
-  setSelectedAdSections(["ofertas_dia"]);
-  setSelectedAdPlatform("mercadolibre");
   updateCouponValidationByPlatform({
     recalculate: false,
     showMessage: false,
   });
-  adOrder.value = "0";
   adActive.checked = true;
   adPreviewWrapper.hidden = true;
   adPreview.src = "";
-  adFormTitle.textContent = "Agregar publicidad";
+  adFormTitle.textContent = "Agregar producto";
   cancelAd.hidden = true;
   setMessage(adFormMessage);
   adCouponRecommendation.textContent =
@@ -2856,10 +2830,7 @@ function editAd(ad) {
 
   adLinkMercadoLibre.value = enlaceMercadoLibreGuardado ||
     (usaSoloEnlaceLegacy && ad.plataforma !== "amazon" ? enlaceLegacy : "");
-  adLinkAmazon.value = enlaceAmazonGuardado ||
-    (usaSoloEnlaceLegacy && ad.plataforma === "amazon" ? enlaceLegacy : "");
   adDisponibleMercadoLibre.checked = ad.disponible_mercado_libre !== false;
-  adDisponibleAmazon.checked = ad.disponible_amazon !== false;
   // Al editar, las casillas deben reflejar exactamente lo que está guardado.
   // La vigencia de 5 días sólo controla la etiqueta/orden público, no el estado del checkbox.
   adEsNuevo.checked = valorBooleanoAdmin(ad.es_nuevo);
@@ -2869,20 +2840,18 @@ function editAd(ad) {
   adPricePublished.value = ad.precio_publicado || "";
   adPriceCoupon.value = ad.precio_cupon || "";
   adCouponCode.value = ad.codigo_cupon || "";
-  setSelectedAdSections(ad.secciones, ad.categoria);
-  setSelectedAdPlatform(ad.plataforma, ad.enlace);
   updateCouponValidationByPlatform();
-  adOrder.value = ad.orden || 0;
   adActive.checked = Boolean(ad.activo);
   adImageUrl.value = ad.imagen_url || "";
 
-  adPreview.src = ad.imagen_url;
-  adPreviewWrapper.hidden = false;
+  adPreview.src = ad.imagen_url || "";
+  adPreviewWrapper.hidden = !ad.imagen_url;
 
   adFormTitle.textContent = `Editar: ${ad.titulo}`;
   cancelAd.hidden = false;
 
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  adFormTitle.scrollIntoView({ behavior: "smooth", block: "start" });
+  adTitle.focus({ preventScroll: true });
 }
 
 function adMarketplaceLinks(ad) {
@@ -2967,12 +2936,6 @@ function renderAds() {
       links.mercadoLibre
         ? `<button class="acceso-rapido acceso-copiar acceso-copiar-ml" data-action="copy-link-ml" data-id="${ad.id}" type="button">Copiar ML</button>`
         : "",
-      links.amazon
-        ? `<a class="acceso-rapido acceso-amz" href="${escapeHtml(links.amazon)}" target="_blank" rel="noopener noreferrer" aria-label="Abrir ${escapeHtml(ad.titulo)} en Amazon">AMZ</a>`
-        : "",
-      links.amazon
-        ? `<button class="acceso-rapido acceso-copiar acceso-copiar-amz" data-action="copy-link-amazon" data-id="${ad.id}" type="button">Copiar Amazon</button>`
-        : "",
       `<a class="acceso-rapido acceso-web" href="${escapeHtml(productWebUrl(ad))}" target="_blank" rel="noopener noreferrer" aria-label="Ver ${escapeHtml(ad.titulo)} en la página">WEB</a>`,
     ].join("");
 
@@ -2984,16 +2947,13 @@ function renderAds() {
           <h3>${escapeHtml(ad.titulo)}</h3>
           <div class="publicacion-badges">${renderAdBadges(ad)}</div>
         </div>
-        <p>${escapeHtml(descripcionVisibleAd(ad))}</p>
-
         <div class="accesos-rapidos" aria-label="Accesos rápidos">
           ${quickLinks}
         </div>
 
         <small>
-          Orden: ${Number(ad.orden || 0)} ·
           Clics: ${Number(ad.clics || 0)} ·
-          Visitas: ${Number(ad.visitas || 0)} (ML: ${Number(ad.visitas_mercado_libre || 0)} · Amazon: ${Number(ad.visitas_amazon || 0)})
+          Visitas: ${Number(ad.visitas || 0)}
         </small>
       </div>
 
@@ -3378,8 +3338,6 @@ function duplicateAd(ad) {
   adTitle.value = `${ad.titulo} (copia)`;
   cancelAd.hidden = false;
   setMessage(adFormMessage, "Copia preparada. Cambia lo necesario y guarda como una publicación nueva.");
-  window.scrollTo({ top: adsSection.offsetTop, behavior: "smooth" });
-  adTitle.focus({ preventScroll: true });
   adTitle.select();
 }
 
@@ -3393,17 +3351,9 @@ function communityProducts() {
 
       return Boolean(ad.activo) && sections.includes("comunidad_anirona");
     })
-    .sort((a, b) => {
-      const orderDifference = Number(a.orden || 0) - Number(b.orden || 0);
-
-      if (orderDifference !== 0) return orderDifference;
-
-      return String(a.titulo || "").localeCompare(
-        String(b.titulo || ""),
-        "es",
-        { sensitivity: "base" }
-      );
-    });
+    .sort((a, b) => Number(productoNuevoVigente(b)) - Number(productoNuevoVigente(a)) ||
+      (Number(b.visitas) || 0) - (Number(a.visitas) || 0) ||
+      new Date(b.fecha_creacion || 0).getTime() - new Date(a.fecha_creacion || 0).getTime());
 }
 
 function buildCommunityListText() {
@@ -3572,36 +3522,17 @@ async function saveAd(event) {
       throw new Error("Selecciona una foto del producto.");
     }
 
-    const secciones = selectedAdSections();
-
     const enlaceMercadoLibre = adLinkMercadoLibre.value.trim();
-    const enlaceAmazon = adLinkAmazon.value.trim();
-
-    if (!enlaceMercadoLibre && !enlaceAmazon) {
-      setMessage(adFormMessage, "Agrega al menos un enlace de Mercado Libre o Amazon.", true);
-      return;
-    }
-
-    if (!secciones.length) {
-      throw new Error("Selecciona por lo menos una sección.");
-    }
-
-    let plataforma = selectedAdPlatform();
-    if (enlaceAmazon && !enlaceMercadoLibre) plataforma = "amazon";
-    if (enlaceMercadoLibre && !enlaceAmazon) plataforma = "mercadolibre";
-
-    const enlaceCompatibilidad = plataforma === "amazon"
-      ? (enlaceAmazon || enlaceMercadoLibre)
-      : (enlaceMercadoLibre || enlaceAmazon);
+    if (!enlaceMercadoLibre) throw new Error("Agrega el enlace de Mercado Libre.");
 
     const payload = {
       titulo: adTitle.value.trim(),
       descripcion: descripcionParaGuardarAd(),
-      enlace: enlaceCompatibilidad,
+      enlace: enlaceMercadoLibre,
       enlace_mercado_libre: enlaceMercadoLibre,
-      enlace_amazon: enlaceAmazon,
+      enlace_amazon: "",
       disponible_mercado_libre: adDisponibleMercadoLibre.checked,
-      disponible_amazon: adDisponibleAmazon.checked,
+      disponible_amazon: false,
       es_nuevo: adEsNuevo.checked,
       fecha_nuevo: adEsNuevo.checked
         ? (adFechaNuevo.value || new Date().toISOString())
@@ -3611,11 +3542,10 @@ async function saveAd(event) {
       precio_publicado: adPricePublished.value.trim(),
       precio_cupon: adPriceCoupon.value.trim(),
       codigo_cupon: adCouponCode.value.trim(),
-      plataforma,
-      secciones: [...secciones],
-      categoria: secciones[0] || "ofertas_dia",
+      plataforma: "mercadolibre",
+      secciones: ["comunidad_anirona"],
+      categoria: "comunidad_anirona",
       imagen_url: imageUrl,
-      orden: Number(adOrder.value) || 0,
       activo: adActive.checked,
     };
 
@@ -3666,15 +3596,6 @@ async function handleAdList(event) {
     try {
       await copyTextSafely(links.mercadoLibre);
       setMessage(adListMessage, `✅ Link de Mercado Libre copiado: ${ad.titulo}`);
-    } catch (error) { setMessage(adListMessage, error.message, true); }
-    return;
-  }
-
-  if (button.dataset.action === "copy-link-amazon") {
-    const links = adMarketplaceLinks(ad);
-    try {
-      await copyTextSafely(links.amazon);
-      setMessage(adListMessage, `✅ Link de Amazon copiado: ${ad.titulo}`);
     } catch (error) { setMessage(adListMessage, error.message, true); }
     return;
   }
@@ -4279,6 +4200,11 @@ actualizarSelectorBanco();
 couponForm.addEventListener("submit", saveCoupon);
 couponList.addEventListener("click", handleCouponList);
 refreshCoupons.addEventListener("click", loadCoupons);
+couponStatusFilter.addEventListener("change", () => {
+  renderCoupons();
+  setMessage(couponListMessage, `${filteredCoupons().length} de ${coupons.length} cupones mostrados.`);
+});
+deleteFilteredCoupons.addEventListener("click", deleteCouponsByStatus);
 generateShareSummary?.addEventListener("click", createShareSummary);
 copyShareSummaryText?.addEventListener("click", copyGeneratedShareText);
 downloadShareSummaryImage?.addEventListener("click", downloadGeneratedShareImage);
@@ -4372,12 +4298,6 @@ adSearch?.addEventListener("input", renderAds);
 refreshAds.addEventListener("click", loadAds);
 newAd.addEventListener("click", resetAdForm);
 cancelAd.addEventListener("click", resetAdForm);
-
-for (const input of adPlatforms) {
-  input.addEventListener("change", () => {
-    updateCouponValidationByPlatform();
-  });
-}
 
 adPricePublished.addEventListener("input", () => {
   window.clearTimeout(adPriceTimer);
