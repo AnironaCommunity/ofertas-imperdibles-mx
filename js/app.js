@@ -1587,7 +1587,7 @@ function obtenerBancoVisual(cupon) {
   const codigo = String(cupon.codigo || "").toUpperCase().replace(/\s+/g, "");
   const titulo = String(cupon.titulo || "").toUpperCase();
   const detalle = String(cupon.detalle_bancario || "").toUpperCase();
-  const fuentes = [codigo, imagenOriginal.toUpperCase(), titulo, detalle];
+  const texto = `${codigo} ${titulo} ${detalle} ${imagenOriginal.toUpperCase()}`;
 
   // V81.5: cada banco usa exactamente el logo proporcionado por el usuario.
   // La franja y el botón toman el color principal de la marca. Mercado Pago usa amarillo ML.
@@ -1606,11 +1606,11 @@ function obtenerBancoVisual(cupon) {
     { patron: /FALA|FALABELLA/, banco: "falabella", logo: "/img/bancos/falabella.jpg", color: "#19b81f", texto: "#ffffff" },
     { patron: /DIDI/, banco: "didi-card", logo: "/img/bancos/didi-card.jpg", color: "#ff5a00", texto: "#ffffff" },
     { patron: /OPBA|OPENBANK/, banco: "openbank", logo: "/img/bancos/openbank.jpg", color: "#111111", texto: "#ffffff" },
-    { patron: /BNRTO|BANO|BANORTE/, banco: "banorte", logo: "/img/bancos/banorte.jpg", color: "#e30613", texto: "#ffffff" },
+    { patron: /BANO|BANORTE/, banco: "banorte", logo: "/img/bancos/banorte.jpg", color: "#e30613", texto: "#ffffff" },
     { patron: /SANT|SANTANDER/, banco: "santander", logo: "/img/bancos/santander.jpg", color: "#ec0000", texto: "#ffffff" },
   ];
 
-  const banco = fuentes.map((fuente) => bancos.find(({ patron }) => patron.test(fuente))).find(Boolean);
+  const banco = bancos.find(({ patron }) => patron.test(texto));
   if (banco) return banco;
 
   return {
