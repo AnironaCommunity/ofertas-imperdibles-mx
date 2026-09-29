@@ -1732,7 +1732,7 @@ async function renderShareCardListImage(selectedCoupons) {
   const footerY = top + selectedCoupons.length * cardHeight + Math.max(0, selectedCoupons.length - 1) * gap + 28;
   roundRectFill(side, footerY, cardWidth, 78, 16, "#ffffff");
   context.fillStyle = "#111827"; font(800, 18); context.textAlign = "left"; context.fillText("Consulta y canjea los cupones aquí:", side + 22, footerY + 31);
-  const link = validShareLink(shareSummaryLink?.value || "https://ofertasimperdiblesmx.vercel.app/");
+  const link = validShareLink(shareSummaryLink?.value || "https://ofertasimperdibles.store/");
   const cleanLink = link.replace(/^https?:\/\//i, "").replace(/\/$/, "");
   context.fillStyle = "#0f9f6e"; font(700, 17); context.fillText(cleanLink, side + 22, footerY + 57);
   context.fillStyle = "#64748b"; font(600, 15); context.textAlign = "right"; context.fillText(shareSummaryDate(), side + cardWidth - 22, footerY + 57);
@@ -2868,7 +2868,7 @@ function adMarketplaceLinks(ad) {
 }
 
 function productWebUrl(ad) {
-  const url = new URL("https://ofertasimperdiblesmx.vercel.app/");
+  const url = new URL("https://ofertasimperdibles.store/");
   url.searchParams.set("seccion", "anirona");
   url.searchParams.set("novedad_tipo", "producto");
   url.searchParams.set("novedad_id", String(ad.id));
@@ -3193,7 +3193,7 @@ function buildProductShareText(ad, productPrice, recommendation) {
     lines.push(`🎟️ Usa el cupón: ${recommendation.coupon.codigo} y paga solo *${formatMoney(recommendation.finalPrice)}*`);
   }
 
-  lines.push("", "Consulta y canjea más cupones aquí 👇", "https://ofertasimperdiblesmx.vercel.app/");
+  lines.push("", "Consulta y canjea más cupones aquí 👇", "https://ofertasimperdibles.store/");
   return lines.join("\n");
 }
 

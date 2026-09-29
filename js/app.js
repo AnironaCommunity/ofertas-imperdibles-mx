@@ -162,7 +162,7 @@ window.addEventListener("resize", () => {
 
 const SEGUNDOS_ACTUALIZACION = 5;
 const MILISEGUNDOS_PUBLICIDAD = 8000;
-const URL_PAGINA = "https://ofertasimperdiblesmx.vercel.app/";
+const URL_PAGINA = "https://ofertasimperdibles.store/";
 const COLORES = [
   "#10a85a", "#f57c00", "#7b3fc6", "#1976d2", "#10a9a0", "#e83e8c", "#ef5350", "#00a878",
   "#0077b6", "#8e44ad", "#f28c28", "#d81b60", "#4682a9", "#3949ab", "#c2185b", "#237a3b"
