@@ -506,7 +506,7 @@ barraInferiorCupones?.addEventListener("click", () => {
 });
 
 async function abrirMercadoLibreDesdeCuponAgotado(cupon, tarjeta) {
-  const enlaceDestino = enlaceWebSeguro(cupon?.enlace);
+  const enlaceDestino = enlaceMarketplaceSeguro(cupon?.enlace, "mercadolibre");
   if (!enlaceDestino) {
     const mensaje = tarjeta?.querySelector(".mensaje");
     if (mensaje) mensaje.textContent = "El enlace de Mercado Libre no es válido.";
@@ -3029,7 +3029,7 @@ function actualizarTextoBotonRedireccion(segundos) {
 }
 
 function irAMercadoLibreDesdeModal() {
-  const enlace = enlaceWebSeguro(modalContinuar?.dataset.enlace);
+  const enlace = enlaceMarketplaceSeguro(modalContinuar?.dataset.enlace, "mercadolibre");
   if (!enlace) {
     reiniciarInteraccion();
     return;
@@ -3103,6 +3103,19 @@ function reiniciarInteraccion() {
   });
 }
 
+function enlaceMarketplaceSeguro(enlace, plataforma = "") {
+  try {
+    const url = new URL(String(enlace || "").trim());
+    if (url.protocol !== "https:") return "";
+    const host = url.hostname.toLowerCase();
+    const mercado = host === "meli.la" || host === "mercadolibre.com.mx" || host.endsWith(".mercadolibre.com.mx");
+    const amazon = host === "amzn.to" || host === "amazon.com.mx" || host.endsWith(".amazon.com.mx");
+    if (plataforma === "mercadolibre" && !mercado) return "";
+    if (plataforma === "amazon" && !amazon) return "";
+    return mercado || amazon ? url.toString() : "";
+  } catch { return ""; }
+}
+
 function enlaceWebSeguro(enlace) {
   try {
     const destino = new URL(String(enlace || "").trim(), window.location.origin);
@@ -3162,7 +3175,7 @@ async function copiarYCanjear(cupon, tarjeta) {
   const modalTitulo = modalRedireccion?.querySelector("#modal-titulo");
   if (modalTitulo) modalTitulo.textContent = "¡Cupón copiado!";
 
-  const enlaceDestino = enlaceWebSeguro(cupon.enlace);
+  const enlaceDestino = enlaceMarketplaceSeguro(cupon.enlace, "mercadolibre");
   if (!enlaceDestino) {
     redireccionEnProceso = false;
     boton.disabled = false;
@@ -3414,13 +3427,13 @@ function crearTarjetaOferta(publicidad, categoria) {
   const precioCupon = String(publicidad.precio_cupon || "").trim();
   const codigo = String(publicidad.codigo_cupon || "").trim();
   const enlacePrincipal = String(publicidad.enlace || "").trim();
-  const enlaceMercadoLibreGuardado = String(publicidad.enlace_mercado_libre || "").trim();
-  const enlaceAmazonGuardado = String(publicidad.enlace_amazon || "").trim();
+  const enlaceMercadoLibreGuardado = enlaceMarketplaceSeguro(publicidad.enlace_mercado_libre, "mercadolibre");
+  const enlaceAmazonGuardado = enlaceMarketplaceSeguro(publicidad.enlace_amazon, "amazon");
   const usaSoloEnlaceLegacy = !enlaceMercadoLibreGuardado && !enlaceAmazonGuardado && enlacePrincipal;
   const enlaceMercadoLibre = enlaceMercadoLibreGuardado ||
-    (usaSoloEnlaceLegacy && obtenerPlataformaPublicidad(publicidad) === "mercadolibre" ? enlacePrincipal : "");
+    (usaSoloEnlaceLegacy && obtenerPlataformaPublicidad(publicidad) === "mercadolibre" ? enlaceMarketplaceSeguro(enlacePrincipal, "mercadolibre") : "");
   const enlaceAmazon = enlaceAmazonGuardado ||
-    (usaSoloEnlaceLegacy && obtenerPlataformaPublicidad(publicidad) === "amazon" ? enlacePrincipal : "");
+    (usaSoloEnlaceLegacy && obtenerPlataformaPublicidad(publicidad) === "amazon" ? enlaceMarketplaceSeguro(enlacePrincipal, "amazon") : "");
   const disponibleMercadoLibre = publicidad.disponible_mercado_libre !== false;
   const disponibleAmazon = publicidad.disponible_amazon !== false;
   const productoNuevo = esProductoNuevoVigente(publicidad);
@@ -3626,11 +3639,7 @@ function esBannerCupones(publicidad) {
 }
 
 function enlaceBannerCupones(publicidad) {
-  return String(
-    publicidad?.enlace_mercado_libre ||
-    publicidad?.enlace ||
-    ""
-  ).trim();
+  return enlaceMarketplaceSeguro(publicidad?.enlace_mercado_libre || publicidad?.enlace, "mercadolibre");
 }
 
 let bannersCuponesIntervalo = null;
@@ -4359,7 +4368,9 @@ function mostrarPublicidad(control) {
   control.imagen.alt = publicidad.titulo || "Oferta";
   control.titulo.textContent = publicidad.titulo || "Oferta destacada";
   control.descripcion.textContent = publicidad.descripcion || "";
-  control.enlace.href = publicidad.enlace;
+  const destinoSeguro = enlaceMarketplaceSeguro(publicidad.enlace);
+  control.enlace.href = destinoSeguro || "#";
+  control.enlace.hidden = !destinoSeguro;
 
   const plataforma = datosPlataformaPublicidad(publicidad);
 
@@ -4472,7 +4483,7 @@ async function compartirPublicidad(publicidad, control = {}) {
 }
 
 async function abrirPublicidad(publicidad, { copiarCuponAsignado = true } = {}) {
-  const enlace = String(publicidad.enlace || "").trim();
+  const enlace = enlaceMarketplaceSeguro(publicidad.enlace);
   if (!enlace) return;
   const codigo = String(publicidad.codigo_cupon || "").trim();
   const precioCupon = String(publicidad.precio_cupon || "").trim();

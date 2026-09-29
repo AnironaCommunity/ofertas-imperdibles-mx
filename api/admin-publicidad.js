@@ -53,6 +53,19 @@ function normalizeBoolean(value, fallback = false) {
   return fallback;
 }
 
+function marketplaceUrl(value, platform) {
+  const text = String(value || "").trim();
+  if (!text) return "";
+  try {
+    const url = new URL(text);
+    const host = url.hostname.toLowerCase();
+    const mercado = host === "meli.la" || host === "mercadolibre.com.mx" || host.endsWith(".mercadolibre.com.mx");
+    const amazon = host === "amzn.to" || host === "amazon.com.mx" || host.endsWith(".amazon.com.mx");
+    if (url.protocol !== "https:" || !(platform === "amazon" ? amazon : mercado)) return null;
+    return url.toString();
+  } catch { return null; }
+}
+
 function authorized(request) {
   return Boolean(process.env.ADMIN_PASSWORD) &&
     String(request.headers["x-admin-password"] || "") ===
@@ -129,8 +142,9 @@ export default async function handler(request, response) {
         [request.body?.categoria || "ofertas_dia"]
       );
 
-      const enlaceMercadoLibre = String(request.body?.enlace_mercado_libre || "").trim();
-      const enlaceAmazon = String(request.body?.enlace_amazon || "").trim();
+      const enlaceMercadoLibre = marketplaceUrl(request.body?.enlace_mercado_libre, "mercadolibre");
+      const enlaceAmazon = marketplaceUrl(request.body?.enlace_amazon, "amazon");
+      if (enlaceMercadoLibre === null || enlaceAmazon === null) return response.status(400).json({ error: "El enlace debe ser HTTPS de Mercado Libre o Amazon." });
       let plataforma = request.body?.plataforma === "amazon" ? "amazon" : "mercadolibre";
       if (enlaceAmazon && !enlaceMercadoLibre) plataforma = "amazon";
       if (enlaceMercadoLibre && !enlaceAmazon) plataforma = "mercadolibre";
@@ -261,8 +275,9 @@ export default async function handler(request, response) {
 
       if (Object.hasOwn(request.body || {}, "enlace_mercado_libre") ||
           Object.hasOwn(request.body || {}, "enlace_amazon")) {
-        const enlaceMercadoLibre = String(request.body?.enlace_mercado_libre || "").trim();
-        const enlaceAmazon = String(request.body?.enlace_amazon || "").trim();
+        const enlaceMercadoLibre = marketplaceUrl(request.body?.enlace_mercado_libre, "mercadolibre");
+        const enlaceAmazon = marketplaceUrl(request.body?.enlace_amazon, "amazon");
+        if (enlaceMercadoLibre === null || enlaceAmazon === null) return response.status(400).json({ error: "El enlace debe ser HTTPS de Mercado Libre o Amazon." });
         let plataforma = request.body?.plataforma === "amazon" ? "amazon" : "mercadolibre";
         if (enlaceAmazon && !enlaceMercadoLibre) plataforma = "amazon";
         if (enlaceMercadoLibre && !enlaceAmazon) plataforma = "mercadolibre";
