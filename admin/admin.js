@@ -762,7 +762,7 @@ const SHARE_BANKS = {
   "american-express": { label: "American Express", aliases: ["american-express", "american_express", "american express", "amex"] },
   afirme: { label: "Afirme", aliases: ["afirme", "afrm", "afrm88", "afrmgol"] },
   inbursa: { label: "Inbursa", aliases: ["inbursa", "inbr", "inbr88"] },
-  banorte: { label: "Banorte", aliases: ["banorte"] },
+  banorte: { label: "Banorte", aliases: ["banorte", "bnrto", "bano"] },
   scotiabank: { label: "Scotiabank", aliases: ["scotiabank", "scotia"] },
   openbank: { label: "Openbank", aliases: ["openbank", "open bank", "opba", "opba88"] },
   invex: { label: "Invex", aliases: ["invex", "inve", "inve88"] },
@@ -786,27 +786,21 @@ function normalizeBankSearchText(value) {
 }
 
 function shareBankKey(coupon) {
-  // Revisamos todos los campos disponibles porque algunos cupones guardan
-  // el banco en la imagen, otros en el detalle y otros solamente en el título.
-  const source = normalizeBankSearchText([
-    coupon?.imagen_url,
-    coupon?.detalle_bancario,
-    coupon?.titulo,
-    coupon?.codigo,
-    coupon?.enlace,
-  ].filter(Boolean).join(" "));
-
-  // Primero las variantes más específicas para evitar que Mercado Pago Visa
-  // sea detectado únicamente como Mercado Pago. Normalizamos guiones, espacios,
-  // guiones bajos, acentos y URLs codificadas para que la detección sea estable.
   const entries = Object.entries(SHARE_BANKS).sort((a, b) =>
     Math.max(...b[1].aliases.map((alias) => normalizeBankSearchText(alias).length)) -
     Math.max(...a[1].aliases.map((alias) => normalizeBankSearchText(alias).length))
   );
-
-  return entries.find(([, bank]) =>
-    bank.aliases.some((alias) => source.includes(normalizeBankSearchText(alias)))
-  )?.[0] || "";
+  // El código identifica al banco antes que las condiciones de pago del detalle.
+  const sources = [coupon?.codigo, coupon?.imagen_url, coupon?.titulo, coupon?.detalle_bancario, coupon?.enlace];
+  for (const value of sources) {
+    const source = normalizeBankSearchText(value);
+    if (!source) continue;
+    const match = entries.find(([, bank]) => bank.aliases.some((alias) =>
+      source.includes(normalizeBankSearchText(alias))
+    ));
+    if (match) return match[0];
+  }
+  return "";
 }
 
 function shareBankName(coupon) {
@@ -1256,7 +1250,7 @@ const PRINT_BANKS = [
   { patron: /FALA|FALABELLA/i, banco: "falabella", logo: "../img/bancos/falabella.jpg", color: "#19b81f" },
   { patron: /DIDI/i, banco: "didi-card", logo: "../img/bancos/didi-card.jpg", color: "#ff5a00" },
   { patron: /OPBA|OPENBANK/i, banco: "openbank", logo: "../img/bancos/openbank.jpg", color: "#111111" },
-  { patron: /BANO|BANORTE/i, banco: "banorte", logo: "../img/bancos/banorte.jpg", color: "#e30613" },
+  { patron: /BNRTO|BANO|BANORTE/i, banco: "banorte", logo: "../img/bancos/banorte.jpg", color: "#e30613" },
   { patron: /SANT|SANTANDER/i, banco: "santander", logo: "../img/bancos/santander.jpg", color: "#ec0000" },
 ];
 
@@ -1281,9 +1275,10 @@ function printCouponColor(coupon) {
 }
 
 function printBankVisual(coupon) {
-  const source = [coupon?.codigo, coupon?.titulo, coupon?.detalle_bancario, coupon?.imagen_url].filter(Boolean).join(" ");
-  return PRINT_BANKS.find((item) => item.patron.test(source)) || {
-    banco: "generico", logo: coupon?.imagen_url || "", color: "#17139d",
+  const selectedImage = String(coupon?.imagen_url || "");
+  const selectedFile = selectedImage.split(/[?#]/, 1)[0].split("/").pop().toLowerCase();
+  return PRINT_BANKS.find((item) => item.logo.split("/").pop().toLowerCase() === selectedFile) || {
+    banco: "generico", logo: selectedImage, color: "#17139d",
   };
 }
 

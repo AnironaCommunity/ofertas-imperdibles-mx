@@ -1584,10 +1584,9 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
 
 function obtenerBancoVisual(cupon) {
   const imagenOriginal = String(cupon.imagen_url || "");
-  const codigo = String(cupon.codigo || "").toUpperCase().replace(/\s+/g, "");
-  const titulo = String(cupon.titulo || "").toUpperCase();
-  const detalle = String(cupon.detalle_bancario || "").toUpperCase();
-  const texto = `${codigo} ${titulo} ${detalle} ${imagenOriginal.toUpperCase()}`;
+  // El selector Banco / método de pago se guarda en imagen_url.
+  // Ningún texto del cupón debe sustituir la marca elegida.
+  const imagenBanco = imagenOriginal.split(/[?#]/, 1)[0].split("/").pop().toUpperCase();
 
   // V81.5: cada banco usa exactamente el logo proporcionado por el usuario.
   // La franja y el botón toman el color principal de la marca. Mercado Pago usa amarillo ML.
@@ -1606,11 +1605,11 @@ function obtenerBancoVisual(cupon) {
     { patron: /FALA|FALABELLA/, banco: "falabella", logo: "/img/bancos/falabella.jpg", color: "#19b81f", texto: "#ffffff" },
     { patron: /DIDI/, banco: "didi-card", logo: "/img/bancos/didi-card.jpg", color: "#ff5a00", texto: "#ffffff" },
     { patron: /OPBA|OPENBANK/, banco: "openbank", logo: "/img/bancos/openbank.jpg", color: "#111111", texto: "#ffffff" },
-    { patron: /BANO|BANORTE/, banco: "banorte", logo: "/img/bancos/banorte.jpg", color: "#e30613", texto: "#ffffff" },
+    { patron: /BNRTO|BANO|BANORTE/, banco: "banorte", logo: "/img/bancos/banorte.jpg", color: "#e30613", texto: "#ffffff" },
     { patron: /SANT|SANTANDER/, banco: "santander", logo: "/img/bancos/santander.jpg", color: "#ec0000", texto: "#ffffff" },
   ];
 
-  const banco = bancos.find(({ patron }) => patron.test(texto));
+  const banco = bancos.find(({ logo }) => logo.split("/").pop().toUpperCase() === imagenBanco);
   if (banco) return banco;
 
   return {

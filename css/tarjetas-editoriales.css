@@ -2105,3 +2105,19 @@
     overflow: hidden !important;
   }
 }
+
+/* v5.16.3: logo bancario legible en las tarjetas de escritorio. */
+@media (min-width: 760px) {
+  #cupones > article.cupon.cupon-editorial-v41.cupon-bancario-unificado .hc25-banco-logo {
+    position: static !important;
+    display: block !important;
+    width: min(148px, 82%) !important;
+    max-width: 82% !important;
+    height: 48px !important;
+    max-height: 48px !important;
+    margin: 4px 0 8px !important;
+    object-fit: contain !important;
+    object-position: left center !important;
+    background: transparent !important;
+  }
+}
