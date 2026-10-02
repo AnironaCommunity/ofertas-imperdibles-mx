@@ -651,7 +651,7 @@ Descuento máximo: $180"
         <div class="cabecera-seccion">
           <div>
             <h2>📢 Publicidad rotativa</h2>
-            <p>Productos para el catálogo Anirona en Mercado Libre y Amazon.</p>
+            <p>Productos para el catálogo Anirona en Mercado Libre.</p>
           </div>
 
           <button id="nueva-publicidad" class="boton-secundario" type="button">
@@ -697,21 +697,17 @@ Descuento máximo: $180"
                 />
               </div>
 
-              <div class="campo campo-ad-enlace-amazon">
-                <label for="ad-link-amazon">Enlace de Amazon</label>
-                <input
-                  id="ad-link-amazon"
-                  type="url"
-                  placeholder="https://www.amazon.com.mx/... o https://amzn.to/..."
-                />
-              </div>
-
               <label class="switch-row campo-ad-disponibilidad">
                 <input id="ad-disponible-mercado-libre" type="checkbox" checked />
                 <span>Disponible en Mercado Libre</span>
               </label>
 
-              <label class="switch-row campo-ad-disponibilidad">
+              <div class="campo campo-ad-enlace-amazon">
+                <label for="ad-link-amazon">Enlace de Amazon</label>
+                <input id="ad-link-amazon" type="url" placeholder="https://www.amazon.com.mx/..." />
+              </div>
+
+              <label class="switch-row campo-ad-disponibilidad-amazon">
                 <input id="ad-disponible-amazon" type="checkbox" checked />
                 <span>Disponible en Amazon</span>
               </label>
@@ -1316,6 +1312,6 @@ Descuento máximo: $180"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=5.16.4"></script>
+  <script type="module" src="admin.js?v=5.16.3"></script>
 </body>
 </html>

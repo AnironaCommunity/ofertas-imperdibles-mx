@@ -2503,3 +2503,11 @@ table td {
   .herramientas-cupones select { width: 100%; }
   .boton-eliminar-masivo { flex: 1 1 160px; }
 }
+
+
+/* V5.16.5 — Accesos de marketplace en Publicidad/Anirona */
+#seccion-publicidad .accesos-rapidos { display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+#seccion-publicidad .acceso-marketplace-logo { display:inline-flex; align-items:center; justify-content:center; width:74px; height:30px; padding:3px 7px; border-radius:8px; background:#fff; border:1px solid #e2e6e4; text-decoration:none; overflow:hidden; }
+#seccion-publicidad .acceso-marketplace-logo img { display:block; width:100%; height:100%; object-fit:contain; }
+#seccion-publicidad .campo-ad-enlace-amazon { grid-column: span 3; }
+@media (max-width: 760px) { #seccion-publicidad .campo-ad-enlace-amazon { grid-column: 1 / -1; } #seccion-publicidad .acceso-marketplace-logo { width:68px; height:28px; } }
