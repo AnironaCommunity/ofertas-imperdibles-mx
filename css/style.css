@@ -10408,3 +10408,69 @@ body.hay-cupones-visibles #separador-fin-cupones {
   .modal-aviso-bancario-contenido h2 { font-size: 21px; }
   .modal-aviso-bancario-contenido p { font-size: 15px; }
 }
+
+
+/* v5.16.9 - Franja compacta de oferta por marketplace (Anirona) */
+.tarjeta-oferta-anirona .ofertas-marketplace-anirona {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 9px;
+  width: 100%;
+}
+.tarjeta-oferta-anirona .oferta-marketplace-precio {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  min-width: 0;
+  min-height: 42px;
+  padding: 6px 10px;
+  border: 1px solid #f5dadd;
+  border-radius: 10px;
+  background: #fff1f3;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.tarjeta-oferta-anirona .oferta-marketplace-precio span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding-right: 9px;
+  font-size: 11px;
+  line-height: 1.1;
+  color: #2f3437;
+  white-space: nowrap;
+}
+.tarjeta-oferta-anirona .oferta-marketplace-precio span strong {
+  font-size: inherit;
+  line-height: inherit;
+  white-space: nowrap;
+}
+.tarjeta-oferta-anirona .oferta-marketplace-precio > b {
+  display: flex;
+  align-items: center;
+  min-height: 26px;
+  padding-left: 10px;
+  border-left: 1px solid #e9aeb4;
+  font-size: 21px;
+  line-height: 1;
+  font-weight: 800;
+  color: #e51d2a;
+  letter-spacing: -0.45px;
+  white-space: nowrap;
+}
+.tarjeta-oferta-anirona .oferta-marketplace-ml,
+.tarjeta-oferta-anirona .oferta-marketplace-amazon {
+  border-color: #f5dadd;
+  background: #fff1f3;
+}
+@media (max-width: 560px) {
+  .tarjeta-oferta-anirona .ofertas-marketplace-anirona { gap: 5px; margin-bottom: 8px; }
+  .tarjeta-oferta-anirona .oferta-marketplace-precio { min-height: 38px; padding: 5px 8px; border-radius: 9px; }
+  .tarjeta-oferta-anirona .oferta-marketplace-precio span { font-size: 10px; padding-right: 6px; gap: 3px; }
+  .tarjeta-oferta-anirona .oferta-marketplace-precio > b { min-height: 24px; padding-left: 7px; font-size: 18px; letter-spacing: -0.3px; }
+}
+@media (max-width: 390px) {
+  .tarjeta-oferta-anirona .oferta-marketplace-precio span { font-size: 9px; }
+  .tarjeta-oferta-anirona .oferta-marketplace-precio > b { font-size: 17px; }
+}
