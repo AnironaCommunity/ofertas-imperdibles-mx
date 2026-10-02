@@ -168,7 +168,9 @@ const adImageUrl = document.querySelector("#ad-image-url");
 const adTitle = document.querySelector("#ad-title");
 const adDescription = document.querySelector("#ad-description");
 const adLinkMercadoLibre = document.querySelector("#ad-link-mercado-libre");
+const adLinkAmazon = document.querySelector("#ad-link-amazon");
 const adDisponibleMercadoLibre = document.querySelector("#ad-disponible-mercado-libre");
+const adDisponibleAmazon = document.querySelector("#ad-disponible-amazon");
 const adEsNuevo = document.querySelector("#ad-es-nuevo");
 const adFechaNuevo = document.querySelector("#ad-fecha-nuevo");
 const adEsMasVendido = document.querySelector("#ad-es-mas-vendido");
@@ -2790,7 +2792,9 @@ function resetAdForm() {
   adId.value = "";
   adImageUrl.value = "";
   adLinkMercadoLibre.value = "";
+  adLinkAmazon.value = "";
   adDisponibleMercadoLibre.checked = true;
+  adDisponibleAmazon.checked = true;
   adEsNuevo.checked = false;
   adFechaNuevo.value = "";
   adEsMasVendido.checked = false;
@@ -2826,7 +2830,10 @@ function editAd(ad) {
 
   adLinkMercadoLibre.value = enlaceMercadoLibreGuardado ||
     (usaSoloEnlaceLegacy && ad.plataforma !== "amazon" ? enlaceLegacy : "");
+  adLinkAmazon.value = enlaceAmazonGuardado ||
+    (usaSoloEnlaceLegacy && ad.plataforma === "amazon" ? enlaceLegacy : "");
   adDisponibleMercadoLibre.checked = ad.disponible_mercado_libre !== false;
+  adDisponibleAmazon.checked = ad.disponible_amazon !== false;
   // Al editar, las casillas deben reflejar exactamente lo que está guardado.
   // La vigencia de 5 días sólo controla la etiqueta/orden público, no el estado del checkbox.
   adEsNuevo.checked = valorBooleanoAdmin(ad.es_nuevo);
@@ -2931,6 +2938,9 @@ function renderAds() {
         : "",
       links.mercadoLibre
         ? `<button class="acceso-rapido acceso-copiar acceso-copiar-ml" data-action="copy-link-ml" data-id="${ad.id}" type="button">Copiar ML</button>`
+        : "",
+      links.amazon
+        ? `<a class="acceso-rapido acceso-amazon" href="${escapeHtml(links.amazon)}" target="_blank" rel="noopener noreferrer" aria-label="Abrir ${escapeHtml(ad.titulo)} en Amazon">Amazon</a>`
         : "",
       `<a class="acceso-rapido acceso-web" href="${escapeHtml(productWebUrl(ad))}" target="_blank" rel="noopener noreferrer" aria-label="Ver ${escapeHtml(ad.titulo)} en la página">WEB</a>`,
     ].join("");
@@ -3523,16 +3533,21 @@ async function saveAd(event) {
     }
 
     const enlaceMercadoLibre = adLinkMercadoLibre.value.trim();
-    if (!enlaceMercadoLibre) throw new Error("Agrega el enlace de Mercado Libre.");
+    const enlaceAmazon = adLinkAmazon.value.trim();
+    if (!enlaceMercadoLibre && !enlaceAmazon) {
+      throw new Error("Agrega al menos un enlace: Mercado Libre o Amazon.");
+    }
+    const plataformaPrincipal = enlaceMercadoLibre ? "mercadolibre" : "amazon";
+    const enlacePrincipal = enlaceMercadoLibre || enlaceAmazon;
 
     const payload = {
       titulo: adTitle.value.trim(),
       descripcion: descripcionParaGuardarAd(),
-      enlace: enlaceMercadoLibre,
+      enlace: enlacePrincipal,
       enlace_mercado_libre: enlaceMercadoLibre,
-      enlace_amazon: "",
+      enlace_amazon: enlaceAmazon,
       disponible_mercado_libre: adDisponibleMercadoLibre.checked,
-      disponible_amazon: false,
+      disponible_amazon: adDisponibleAmazon.checked,
       es_nuevo: adEsNuevo.checked,
       fecha_nuevo: adEsNuevo.checked
         ? (adFechaNuevo.value || new Date().toISOString())
@@ -3542,7 +3557,7 @@ async function saveAd(event) {
       precio_publicado: adPricePublished.value.trim(),
       precio_cupon: adPriceCoupon.value.trim(),
       codigo_cupon: adCouponCode.value.trim(),
-      plataforma: "mercadolibre",
+      plataforma: plataformaPrincipal,
       secciones: ["comunidad_anirona"],
       categoria: "comunidad_anirona",
       imagen_url: imageUrl,
