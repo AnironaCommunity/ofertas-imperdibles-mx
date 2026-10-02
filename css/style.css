@@ -10615,3 +10615,17 @@ body.hay-cupones-visibles #separador-fin-cupones {
   }
   .tarjeta-oferta-anirona .oferta-superior-flecha { font-size: 20px; }
 }
+
+
+/* ============================================================
+   V5.16.13 — Marketplace con y sin oferta se renderizan de forma independiente
+   ============================================================ */
+.tarjeta-oferta-anirona .oferta-acciones-anirona.un-marketplace-normal .oferta-ver {
+  grid-column: 1 / 3 !important;
+}
+.tarjeta-oferta-anirona .oferta-acciones-anirona.solo-compartir {
+  grid-template-columns: 1fr 1fr 42px !important;
+}
+.tarjeta-oferta-anirona .oferta-acciones-anirona.solo-compartir .oferta-compartir {
+  grid-column: 3 !important;
+}

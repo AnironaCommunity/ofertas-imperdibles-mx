@@ -3494,14 +3494,18 @@ function crearTarjetaOferta(publicidad, categoria) {
 
   if (esComunidadAnirona) articulo.classList.add("tarjeta-oferta-anirona");
 
+  const mostrarBotonNormalMercadoLibre = Boolean(enlaceMercadoLibre && !tieneOfertaMercadoLibre);
+  const mostrarBotonNormalAmazon = Boolean(enlaceAmazon && !tieneOfertaAmazon);
+  const cantidadBotonesNormalesAnirona = Number(mostrarBotonNormalMercadoLibre) + Number(mostrarBotonNormalAmazon);
+
   const accionesAnirona = `
-    ${enlaceMercadoLibre ? `
+    ${mostrarBotonNormalMercadoLibre ? `
       <button class="oferta-ver oferta-ver-mercado-libre" type="button" aria-label="Ver en Mercado Libre" title="Ver en Mercado Libre">
         <img class="oferta-logo-marketplace" src="img/mercado-libre-boton.png" alt="" aria-hidden="true" />
         <span class="texto-accesible">Ver en Mercado Libre</span>
       </button>
     ` : ""}
-    ${enlaceAmazon ? `
+    ${mostrarBotonNormalAmazon ? `
       <button class="oferta-ver oferta-ver-amazon" type="button" aria-label="Ver en Amazon" title="Ver en Amazon">
         <img class="oferta-logo-marketplace" src="img/amazon-boton.png" alt="" aria-hidden="true" />
         <span class="texto-accesible">Ver en Amazon</span>
@@ -3576,14 +3580,12 @@ function crearTarjetaOferta(publicidad, categoria) {
         <span class="oferta-visitas" data-visitas-id="${Number(publicidad.id) || 0}">👁️ ${Number(publicidad.visitas) || 0} ${esComunidadAnirona ? (Number(publicidad.visitas) === 1 ? "vista" : "vistas") : (Number(publicidad.visitas) === 1 ? "visita" : "visitas")}</span>
       </div>
 
-      ${esComunidadAnirona && tieneOfertaMarketplace ? "" : `
-      <div class="oferta-acciones ${esComunidadAnirona ? `oferta-acciones-anirona${enlaceMercadoLibre && enlaceAmazon ? " ambos-marketplaces" : ""}` : ""}">
+      <div class="oferta-acciones ${esComunidadAnirona ? `oferta-acciones-anirona${cantidadBotonesNormalesAnirona === 2 ? " ambos-marketplaces" : ""}${cantidadBotonesNormalesAnirona === 1 ? " un-marketplace-normal" : ""}${cantidadBotonesNormalesAnirona === 0 ? " solo-compartir" : ""}` : ""}">
         ${esComunidadAnirona ? accionesAnirona : `<button class="oferta-ver" type="button">${plataforma.textoBoton}</button>`}
         <button class="boton-compartir oferta-compartir" type="button" aria-label="Compartir oferta" title="Compartir">
           ${iconoCompartir()}
         </button>
       </div>
-      `}
       
     </div>
   `;
