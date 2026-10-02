@@ -10409,68 +10409,119 @@ body.hay-cupones-visibles #separador-fin-cupones {
   .modal-aviso-bancario-contenido p { font-size: 15px; }
 }
 
-
-/* v5.16.9 - Franja compacta de oferta por marketplace (Anirona) */
-.tarjeta-oferta-anirona .ofertas-marketplace-anirona {
+/* v5.16.10 — Ofertas Anirona como botones superiores por marketplace */
+.tarjeta-oferta-anirona .ofertas-superiores-anirona {
   display: grid;
-  gap: 6px;
-  margin: 0 0 9px;
+  gap: 7px;
   width: 100%;
-}
-.tarjeta-oferta-anirona .oferta-marketplace-precio {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  min-width: 0;
-  min-height: 42px;
-  padding: 6px 10px;
-  border: 1px solid #f5dadd;
-  border-radius: 10px;
-  background: #fff1f3;
+  padding: 8px 8px 0;
   box-sizing: border-box;
-  overflow: hidden;
 }
-.tarjeta-oferta-anirona .oferta-marketplace-precio span {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+.tarjeta-oferta-anirona .oferta-superior-marketplace {
+  width: 100%;
   min-width: 0;
-  padding-right: 9px;
-  font-size: 11px;
-  line-height: 1.1;
-  color: #2f3437;
-  white-space: nowrap;
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: minmax(88px, 36%) 1px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 11px;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: transform .15s ease, filter .15s ease;
 }
-.tarjeta-oferta-anirona .oferta-marketplace-precio span strong {
-  font-size: inherit;
-  line-height: inherit;
-  white-space: nowrap;
+.tarjeta-oferta-anirona .oferta-superior-marketplace::before {
+  content: "";
+  grid-column: 2;
+  grid-row: 1;
+  width: 1px;
+  height: 38px;
+  background: currentColor;
+  opacity: .32;
 }
-.tarjeta-oferta-anirona .oferta-marketplace-precio > b {
+.tarjeta-oferta-anirona .oferta-superior-marketplace:hover { filter: brightness(.98); transform: translateY(-1px); }
+.tarjeta-oferta-anirona .oferta-superior-marketplace:focus-visible { outline: 3px solid rgba(0, 166, 81, .28); outline-offset: 2px; }
+.tarjeta-oferta-anirona .oferta-superior-logo-wrap {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
-  min-height: 26px;
-  padding-left: 10px;
-  border-left: 1px solid #e9aeb4;
-  font-size: 21px;
+  justify-content: center;
+}
+.tarjeta-oferta-anirona .oferta-superior-logo-wrap img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: 31px;
+  max-height: 31px;
+  object-fit: contain;
+}
+.tarjeta-oferta-anirona .oferta-superior-info {
+  grid-column: 3;
+  grid-row: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.05;
+}
+.tarjeta-oferta-anirona .oferta-superior-info small {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 10px;
+  line-height: 1.1;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tarjeta-oferta-anirona .oferta-superior-info strong {
+  display: block;
+  font-size: 23px;
   line-height: 1;
-  font-weight: 800;
-  color: #e51d2a;
-  letter-spacing: -0.45px;
+  font-weight: 900;
+  letter-spacing: -.5px;
   white-space: nowrap;
 }
-.tarjeta-oferta-anirona .oferta-marketplace-ml,
-.tarjeta-oferta-anirona .oferta-marketplace-amazon {
-  border-color: #f5dadd;
-  background: #fff1f3;
+.tarjeta-oferta-anirona .oferta-superior-flecha {
+  grid-column: 4;
+  grid-row: 1;
+  justify-self: end;
+  font-size: 29px;
+  line-height: 1;
+  font-weight: 300;
 }
+.tarjeta-oferta-anirona .oferta-superior-ml {
+  background: #ffe600;
+  color: #1f2f46;
+}
+.tarjeta-oferta-anirona .oferta-superior-ml .oferta-superior-info strong { color: #e51d2a; }
+.tarjeta-oferta-anirona .oferta-superior-amazon {
+  background: #17283b;
+  color: #fff;
+}
+.tarjeta-oferta-anirona .oferta-superior-amazon .oferta-superior-info strong { color: #ffad22; }
+/* Los estilos viejos de franja de precio quedan anulados; el bloque ya no se renderiza. */
+.tarjeta-oferta-anirona .ofertas-marketplace-anirona { display: none !important; }
+
 @media (max-width: 560px) {
-  .tarjeta-oferta-anirona .ofertas-marketplace-anirona { gap: 5px; margin-bottom: 8px; }
-  .tarjeta-oferta-anirona .oferta-marketplace-precio { min-height: 38px; padding: 5px 8px; border-radius: 9px; }
-  .tarjeta-oferta-anirona .oferta-marketplace-precio span { font-size: 10px; padding-right: 6px; gap: 3px; }
-  .tarjeta-oferta-anirona .oferta-marketplace-precio > b { min-height: 24px; padding-left: 7px; font-size: 18px; letter-spacing: -0.3px; }
-}
-@media (max-width: 390px) {
-  .tarjeta-oferta-anirona .oferta-marketplace-precio span { font-size: 9px; }
-  .tarjeta-oferta-anirona .oferta-marketplace-precio > b { font-size: 17px; }
+  .tarjeta-oferta-anirona .ofertas-superiores-anirona { gap: 5px; padding: 6px 6px 0; }
+  .tarjeta-oferta-anirona .oferta-superior-marketplace {
+    min-height: 48px;
+    grid-template-columns: minmax(62px, 34%) 1px minmax(0, 1fr) 12px;
+    gap: 6px;
+    padding: 6px 7px;
+    border-radius: 9px;
+  }
+  .tarjeta-oferta-anirona .oferta-superior-marketplace::before { height: 31px; }
+  .tarjeta-oferta-anirona .oferta-superior-logo-wrap img { height: 23px; max-height: 23px; }
+  .tarjeta-oferta-anirona .oferta-superior-info small { font-size: 7.5px; margin-bottom: 2px; }
+  .tarjeta-oferta-anirona .oferta-superior-info strong { font-size: 17px; letter-spacing: -.3px; }
+  .tarjeta-oferta-anirona .oferta-superior-flecha { font-size: 22px; }
 }

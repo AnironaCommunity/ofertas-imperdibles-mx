@@ -3435,6 +3435,9 @@ function crearTarjetaOferta(publicidad, categoria) {
     (usaSoloEnlaceLegacy && obtenerPlataformaPublicidad(publicidad) === "mercadolibre" ? enlaceMarketplaceSeguro(enlacePrincipal, "mercadolibre") : "");
   const enlaceAmazon = enlaceAmazonGuardado ||
     (usaSoloEnlaceLegacy && obtenerPlataformaPublicidad(publicidad) === "amazon" ? enlaceMarketplaceSeguro(enlacePrincipal, "amazon") : "");
+  const tieneOfertaMercadoLibre = Boolean(enlaceMercadoLibre && precioOfertaMercadoLibre);
+  const tieneOfertaAmazon = Boolean(enlaceAmazon && precioOfertaAmazon);
+  const tieneOfertaMarketplace = esComunidadAnirona && (tieneOfertaMercadoLibre || tieneOfertaAmazon);
   const disponibleMercadoLibre = publicidad.disponible_mercado_libre !== false;
   const disponibleAmazon = publicidad.disponible_amazon !== false;
   const productoNuevo = esProductoNuevoVigente(publicidad);
@@ -3506,7 +3509,27 @@ function crearTarjetaOferta(publicidad, categoria) {
     ` : ""}
   `;
 
+  const ofertasSuperioresAnirona = tieneOfertaMarketplace ? `
+    <div class="ofertas-superiores-anirona" aria-label="Ofertas disponibles">
+      ${tieneOfertaMercadoLibre ? `
+        <button class="oferta-superior-marketplace oferta-superior-ml" type="button" data-oferta-marketplace="mercadolibre" aria-label="Ver oferta en Mercado Libre por ${escaparHtml(precioOfertaMercadoLibre)}">
+          <span class="oferta-superior-logo-wrap"><img src="img/mercado-libre-boton.png" alt="Mercado Libre" /></span>
+          <span class="oferta-superior-info"><small>Ver oferta en Mercado Libre</small><strong>${escaparHtml(precioOfertaMercadoLibre)}</strong></span>
+          <span class="oferta-superior-flecha" aria-hidden="true">›</span>
+        </button>
+      ` : ""}
+      ${tieneOfertaAmazon ? `
+        <button class="oferta-superior-marketplace oferta-superior-amazon" type="button" data-oferta-marketplace="amazon" aria-label="Ver oferta en Amazon por ${escaparHtml(precioOfertaAmazon)}">
+          <span class="oferta-superior-logo-wrap"><img src="img/amazon-boton.png" alt="Amazon" /></span>
+          <span class="oferta-superior-info"><small>Ver oferta en Amazon</small><strong>${escaparHtml(precioOfertaAmazon)}</strong></span>
+          <span class="oferta-superior-flecha" aria-hidden="true">›</span>
+        </button>
+      ` : ""}
+    </div>
+  ` : "";
+
   articulo.innerHTML = `
+    ${ofertasSuperioresAnirona}
     <button
       class="oferta-imagen-contenedor"
       type="button"
@@ -3529,12 +3552,6 @@ function crearTarjetaOferta(publicidad, categoria) {
         </div>
       ` : ""}
       <h3>${escaparHtml(publicidad.titulo || "Oferta destacada")}</h3>
-      ${esComunidadAnirona && ((enlaceMercadoLibre && precioOfertaMercadoLibre) || (enlaceAmazon && precioOfertaAmazon)) ? `
-        <div class="ofertas-marketplace-anirona" aria-label="Precios de oferta">
-          ${enlaceMercadoLibre && precioOfertaMercadoLibre ? `<div class="oferta-marketplace-precio oferta-marketplace-ml"><span>Oferta en <strong>Mercado Libre</strong></span><b>${escaparHtml(precioOfertaMercadoLibre)}</b></div>` : ""}
-          ${enlaceAmazon && precioOfertaAmazon ? `<div class="oferta-marketplace-precio oferta-marketplace-amazon"><span>Oferta en <strong>Amazon</strong></span><b>${escaparHtml(precioOfertaAmazon)}</b></div>` : ""}
-        </div>
-      ` : ""}
       ${publicidad.descripcion ? `<p class="oferta-descripcion">${escaparHtml(publicidad.descripcion)}</p>` : ""}
       ${esComunidadAnirona ? `
         <div class="disponibilidad-marketplaces" aria-label="Disponibilidad del producto">
@@ -3557,12 +3574,14 @@ function crearTarjetaOferta(publicidad, categoria) {
         <span class="oferta-visitas" data-visitas-id="${Number(publicidad.id) || 0}">👁️ ${Number(publicidad.visitas) || 0} ${esComunidadAnirona ? (Number(publicidad.visitas) === 1 ? "vista" : "vistas") : (Number(publicidad.visitas) === 1 ? "visita" : "visitas")}</span>
       </div>
 
+      ${esComunidadAnirona && tieneOfertaMarketplace ? "" : `
       <div class="oferta-acciones ${esComunidadAnirona ? `oferta-acciones-anirona${enlaceMercadoLibre && enlaceAmazon ? " ambos-marketplaces" : ""}` : ""}">
         ${esComunidadAnirona ? accionesAnirona : `<button class="oferta-ver" type="button">${plataforma.textoBoton}</button>`}
         <button class="boton-compartir oferta-compartir" type="button" aria-label="Compartir oferta" title="Compartir">
           ${iconoCompartir()}
         </button>
       </div>
+      `}
       
     </div>
   `;
@@ -3581,6 +3600,12 @@ function crearTarjetaOferta(publicidad, categoria) {
   };
 
   if (esComunidadAnirona) {
+    articulo.querySelector('[data-oferta-marketplace="mercadolibre"]')?.addEventListener("click", () => {
+      abrirEnlace(enlaceMercadoLibre, "mercadolibre");
+    });
+    articulo.querySelector('[data-oferta-marketplace="amazon"]')?.addEventListener("click", () => {
+      abrirEnlace(enlaceAmazon, "amazon");
+    });
     articulo.querySelector(".oferta-ver-mercado-libre")?.addEventListener("click", () => {
       abrirEnlace(enlaceMercadoLibre, "mercadolibre");
     });
@@ -3597,7 +3622,7 @@ function crearTarjetaOferta(publicidad, categoria) {
     botonImagen.addEventListener("click", abrirOferta);
   }
 
-  articulo.querySelector(".oferta-compartir").addEventListener("click", () => {
+  articulo.querySelector(".oferta-compartir")?.addEventListener("click", () => {
     compartirPublicidad(publicidad, { mensaje });
   });
 
@@ -4033,6 +4058,13 @@ function fechaPublicidad(publicidad) {
 
 function ordenarCatalogoAnirona(items) {
   return [...items].sort((a, b) => {
+    const tieneOferta = (item) => Boolean(
+      (String(item?.precio_mercado_libre || "").trim() && enlaceMarketplaceSeguro(item?.enlace_mercado_libre, "mercadolibre")) ||
+      (String(item?.precio_amazon || "").trim() && enlaceMarketplaceSeguro(item?.enlace_amazon, "amazon"))
+    );
+    const diferenciaOferta = Number(tieneOferta(b)) - Number(tieneOferta(a));
+    if (diferenciaOferta) return diferenciaOferta;
+
     const diferenciaNuevo = Number(esProductoNuevoVigente(b)) - Number(esProductoNuevoVigente(a));
     if (diferenciaNuevo) return diferenciaNuevo;
 
@@ -4053,7 +4085,7 @@ function actualizarResumenCatalogoAnirona(mostrados, total, consulta = "") {
   } else {
     resultadosCatalogoAnirona.textContent = total === 1
       ? "1 producto en el catálogo"
-      : `${total} productos en el catálogo · nuevos primero y después por popularidad`;
+      : `${total} productos en el catálogo · ofertas primero, después nuevos y popularidad`;
   }
 }
 
