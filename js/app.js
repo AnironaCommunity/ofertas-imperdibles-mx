@@ -3108,7 +3108,7 @@ function enlaceMarketplaceSeguro(enlace, plataforma = "") {
     if (url.protocol !== "https:") return "";
     const host = url.hostname.toLowerCase();
     const mercado = host === "meli.la" || host === "mercadolibre.com.mx" || host.endsWith(".mercadolibre.com.mx");
-    const amazon = host === "amzn.to" || host === "amazon.com.mx" || host.endsWith(".amazon.com.mx");
+    const amazon = host === "link.amazon" || host === "amzn.to" || host === "amazon.com.mx" || host.endsWith(".amazon.com.mx") || host === "amazon.com" || host.endsWith(".amazon.com");
     if (plataforma === "mercadolibre" && !mercado) return "";
     if (plataforma === "amazon" && !amazon) return "";
     return mercado || amazon ? url.toString() : "";
