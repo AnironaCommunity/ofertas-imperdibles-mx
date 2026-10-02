@@ -3108,7 +3108,7 @@ function enlaceMarketplaceSeguro(enlace, plataforma = "") {
     if (url.protocol !== "https:") return "";
     const host = url.hostname.toLowerCase();
     const mercado = host === "meli.la" || host === "mercadolibre.com.mx" || host.endsWith(".mercadolibre.com.mx");
-    const amazon = host === "link.amazon" || host === "amzn.to" || host === "amazon.com.mx" || host.endsWith(".amazon.com.mx") || host === "amazon.com" || host.endsWith(".amazon.com");
+    const amazon = host === "amzn.to" || host === "link.amazon" || host.endsWith(".link.amazon") || host === "amazon.com.mx" || host.endsWith(".amazon.com.mx") || host === "amazon.com" || host.endsWith(".amazon.com");
     if (plataforma === "mercadolibre" && !mercado) return "";
     if (plataforma === "amazon" && !amazon) return "";
     return mercado || amazon ? url.toString() : "";
@@ -3513,15 +3513,17 @@ function crearTarjetaOferta(publicidad, categoria) {
     <div class="ofertas-superiores-anirona" aria-label="Ofertas disponibles">
       ${tieneOfertaMercadoLibre ? `
         <button class="oferta-superior-marketplace oferta-superior-ml" type="button" data-oferta-marketplace="mercadolibre" aria-label="Ver oferta en Mercado Libre por ${escaparHtml(precioOfertaMercadoLibre)}">
+          <span class="oferta-superior-etiqueta" aria-hidden="true">OFERTA</span>
           <span class="oferta-superior-logo-wrap"><img src="img/mercado-libre-boton.png" alt="Mercado Libre" /></span>
-          <span class="oferta-superior-info"><small>Ver oferta en</small><strong>${escaparHtml(precioOfertaMercadoLibre)}</strong></span>
+          <span class="oferta-superior-info"><strong>${escaparHtml(precioOfertaMercadoLibre)}</strong></span>
           <span class="oferta-superior-flecha" aria-hidden="true">›</span>
         </button>
       ` : ""}
       ${tieneOfertaAmazon ? `
         <button class="oferta-superior-marketplace oferta-superior-amazon" type="button" data-oferta-marketplace="amazon" aria-label="Ver oferta en Amazon por ${escaparHtml(precioOfertaAmazon)}">
+          <span class="oferta-superior-etiqueta" aria-hidden="true">OFERTA</span>
           <span class="oferta-superior-logo-wrap"><img src="img/amazon-boton.png" alt="Amazon" /></span>
-          <span class="oferta-superior-info"><small>Ver oferta en</small><strong>${escaparHtml(precioOfertaAmazon)}</strong></span>
+          <span class="oferta-superior-info"><strong>${escaparHtml(precioOfertaAmazon)}</strong></span>
           <span class="oferta-superior-flecha" aria-hidden="true">›</span>
         </button>
       ` : ""}
