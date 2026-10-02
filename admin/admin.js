@@ -171,6 +171,8 @@ const adLinkMercadoLibre = document.querySelector("#ad-link-mercado-libre");
 const adDisponibleMercadoLibre = document.querySelector("#ad-disponible-mercado-libre");
 const adLinkAmazon = document.querySelector("#ad-link-amazon");
 const adDisponibleAmazon = document.querySelector("#ad-disponible-amazon");
+const adPrecioMercadoLibre = document.querySelector("#ad-precio-mercado-libre");
+const adPrecioAmazon = document.querySelector("#ad-precio-amazon");
 const adEsNuevo = document.querySelector("#ad-es-nuevo");
 const adFechaNuevo = document.querySelector("#ad-fecha-nuevo");
 const adEsMasVendido = document.querySelector("#ad-es-mas-vendido");
@@ -2795,6 +2797,8 @@ function resetAdForm() {
   adDisponibleMercadoLibre.checked = true;
   if (adLinkAmazon) adLinkAmazon.value = "";
   if (adDisponibleAmazon) adDisponibleAmazon.checked = true;
+  if (adPrecioMercadoLibre) adPrecioMercadoLibre.value = "";
+  if (adPrecioAmazon) adPrecioAmazon.value = "";
   adEsNuevo.checked = false;
   adFechaNuevo.value = "";
   adEsMasVendido.checked = false;
@@ -2834,6 +2838,8 @@ function editAd(ad) {
   if (adLinkAmazon) adLinkAmazon.value = enlaceAmazonGuardado ||
     (usaSoloEnlaceLegacy && ad.plataforma === "amazon" ? enlaceLegacy : "");
   if (adDisponibleAmazon) adDisponibleAmazon.checked = ad.disponible_amazon !== false;
+  if (adPrecioMercadoLibre) adPrecioMercadoLibre.value = ad.precio_mercado_libre || "";
+  if (adPrecioAmazon) adPrecioAmazon.value = ad.precio_amazon || "";
   // Al editar, las casillas deben reflejar exactamente lo que está guardado.
   // La vigencia de 5 días sólo controla la etiqueta/orden público, no el estado del checkbox.
   adEsNuevo.checked = valorBooleanoAdmin(ad.es_nuevo);
@@ -3544,6 +3550,8 @@ async function saveAd(event) {
       enlace_amazon: enlaceAmazon,
       disponible_mercado_libre: enlaceMercadoLibre ? adDisponibleMercadoLibre.checked : false,
       disponible_amazon: enlaceAmazon ? (adDisponibleAmazon ? adDisponibleAmazon.checked : true) : false,
+      precio_mercado_libre: enlaceMercadoLibre && adPrecioMercadoLibre ? adPrecioMercadoLibre.value.trim() : "",
+      precio_amazon: enlaceAmazon && adPrecioAmazon ? adPrecioAmazon.value.trim() : "",
       es_nuevo: adEsNuevo.checked,
       fecha_nuevo: adEsNuevo.checked
         ? (adFechaNuevo.value || new Date().toISOString())

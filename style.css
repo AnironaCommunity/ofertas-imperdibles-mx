@@ -10258,3 +10258,48 @@ body.hay-cupones-visibles #separador-fin-cupones {
   .modal-aviso-bancario-contenido h2 { font-size: 21px; }
   .modal-aviso-bancario-contenido p { font-size: 15px; }
 }
+
+
+/* v5.16.8 - Precio de oferta por marketplace en tarjetas Anirona */
+.tarjeta-oferta-anirona .ofertas-marketplace-anirona {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 8px;
+}
+.tarjeta-oferta-anirona .oferta-marketplace-precio {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  padding: 7px 9px;
+  border: 1px solid #f2d9dc;
+  border-radius: 10px;
+  background: #fff3f4;
+}
+.tarjeta-oferta-anirona .oferta-marketplace-precio span {
+  min-width: 0;
+  font-size: 11px;
+  line-height: 1.15;
+  color: #333;
+}
+.tarjeta-oferta-anirona .oferta-marketplace-precio b {
+  flex: 0 0 auto;
+  font-size: 22px;
+  line-height: 1;
+  color: #e51d2a;
+  letter-spacing: -0.4px;
+}
+.tarjeta-oferta-anirona .oferta-marketplace-ml {
+  border-color: #f3df74;
+  background: #fffbe7;
+}
+.tarjeta-oferta-anirona .oferta-marketplace-amazon {
+  border-color: #dfe5eb;
+  background: #f6f8fa;
+}
+@media (max-width: 560px) {
+  .tarjeta-oferta-anirona .oferta-marketplace-precio { padding: 6px 7px; gap: 5px; }
+  .tarjeta-oferta-anirona .oferta-marketplace-precio span { font-size: 9px; }
+  .tarjeta-oferta-anirona .oferta-marketplace-precio b { font-size: 17px; }
+}

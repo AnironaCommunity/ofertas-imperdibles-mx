@@ -3108,7 +3108,7 @@ function enlaceMarketplaceSeguro(enlace, plataforma = "") {
     if (url.protocol !== "https:") return "";
     const host = url.hostname.toLowerCase();
     const mercado = host === "meli.la" || host === "mercadolibre.com.mx" || host.endsWith(".mercadolibre.com.mx");
-    const amazon = host === "link.amazon" || host === "amzn.to" || host === "amazon.com.mx" || host.endsWith(".amazon.com.mx") || host === "amazon.com" || host.endsWith(".amazon.com");
+    const amazon = host === "amzn.to" || host === "amazon.com.mx" || host.endsWith(".amazon.com.mx");
     if (plataforma === "mercadolibre" && !mercado) return "";
     if (plataforma === "amazon" && !amazon) return "";
     return mercado || amazon ? url.toString() : "";
@@ -3423,6 +3423,8 @@ function crearTarjetaOferta(publicidad, categoria) {
   const plataforma = datosPlataformaPublicidad(publicidad);
   const esComunidadAnirona = categoria === "comunidad_anirona";
   const precioPublicado = String(publicidad.precio_publicado || "").trim();
+  const precioOfertaMercadoLibre = String(publicidad.precio_mercado_libre || "").trim();
+  const precioOfertaAmazon = String(publicidad.precio_amazon || "").trim();
   const precioCupon = String(publicidad.precio_cupon || "").trim();
   const codigo = String(publicidad.codigo_cupon || "").trim();
   const enlacePrincipal = String(publicidad.enlace || "").trim();
@@ -3527,6 +3529,12 @@ function crearTarjetaOferta(publicidad, categoria) {
         </div>
       ` : ""}
       <h3>${escaparHtml(publicidad.titulo || "Oferta destacada")}</h3>
+      ${esComunidadAnirona && ((enlaceMercadoLibre && precioOfertaMercadoLibre) || (enlaceAmazon && precioOfertaAmazon)) ? `
+        <div class="ofertas-marketplace-anirona" aria-label="Precios de oferta">
+          ${enlaceMercadoLibre && precioOfertaMercadoLibre ? `<div class="oferta-marketplace-precio oferta-marketplace-ml"><span>Oferta en <strong>Mercado Libre</strong></span><b>${escaparHtml(precioOfertaMercadoLibre)}</b></div>` : ""}
+          ${enlaceAmazon && precioOfertaAmazon ? `<div class="oferta-marketplace-precio oferta-marketplace-amazon"><span>Oferta en <strong>Amazon</strong></span><b>${escaparHtml(precioOfertaAmazon)}</b></div>` : ""}
+        </div>
+      ` : ""}
       ${publicidad.descripcion ? `<p class="oferta-descripcion">${escaparHtml(publicidad.descripcion)}</p>` : ""}
       ${esComunidadAnirona ? `
         <div class="disponibilidad-marketplaces" aria-label="Disponibilidad del producto">
