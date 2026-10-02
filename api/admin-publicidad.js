@@ -60,7 +60,7 @@ function marketplaceUrl(value, platform) {
     const url = new URL(text);
     const host = url.hostname.toLowerCase();
     const mercado = host === "meli.la" || host === "mercadolibre.com.mx" || host.endsWith(".mercadolibre.com.mx");
-    const amazon = host === "amzn.to" || host === "amazon.com.mx" || host.endsWith(".amazon.com.mx");
+    const amazon = host === "link.amazon" || host === "amzn.to" || host === "amazon.com.mx" || host.endsWith(".amazon.com.mx") || host === "amazon.com" || host.endsWith(".amazon.com");
     if (url.protocol !== "https:" || !(platform === "amazon" ? amazon : mercado)) return null;
     return url.toString();
   } catch { return null; }
