@@ -927,9 +927,7 @@
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='3' y='6' width='18' height='13' rx='3' fill='none' stroke='black' stroke-width='2'/%3E%3Cpath d='M3 10h18M7 15h4' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
 }
 
-/* El exclusivo no utiliza la imagen externa: evita logos rotos. */
-#cupones > article.cupon.cupon-editorial-v41.cupon-exclusivo .hc16-logo,
-#cupones > article.cupon.cupon-editorial-v41.cupon-exclusivo .cupon-logo,
+/* La marca de agua exclusiva sigue oculta; el logo del cupón sí es configurable. */
 #cupones > article.cupon.cupon-editorial-v41.cupon-exclusivo .hc16-marca-agua {
   display: none !important;
 }
@@ -2106,6 +2104,67 @@
   }
 }
 
+/* Información de cupón: orden, jerarquía y divisores. Se aplica a tarjetas reales
+   (el script mueve los campos fuera de .hc16-info). Los bancarios conservan su diseño. */
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-detalle {
+  order: 3 !important;
+  margin: 9px 0 0 !important;
+  padding: 0 0 9px !important;
+  border-bottom: 1px dashed #cbd2d9 !important;
+  color: #303740 !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+}
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-condiciones {
+  order: 4 !important;
+  margin: 0 !important;
+  padding: 9px 0 !important;
+  border-bottom: 1px dashed #cbd2d9 !important;
+}
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-detalle + .hc16-condiciones {
+  border-top: 0 !important;
+}
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-ahorro-extra {
+  order: 5 !important;
+  margin: 0 !important;
+  padding: 9px 0 0 !important;
+}
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-condiciones .hc16-condicion,
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-ahorro-extra {
+  color: #818994 !important;
+  font-size: clamp(.7rem, 2.7vw, .87rem) !important;
+  font-weight: 400 !important;
+  line-height: 1.25 !important;
+}
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-condiciones .hc16-condicion strong,
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-ahorro-extra strong {
+  display: inline !important;
+  color: inherit !important;
+  font-weight: 500 !important;
+}
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-etiquetas {
+  order: 6 !important;
+}
+/* Imagen opcional del administrador, alineada con el importe sin taparlo. */
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-valor:has(> .hc16-logo) {
+  display: flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+}
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-valor > .hc16-logo {
+  position: static !important;
+  flex: 0 0 42px !important;
+  width: 42px !important;
+  max-width: 42px !important;
+  height: 42px !important;
+  object-fit: contain !important;
+  order: 2 !important;
+}
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-valor:has(> .hc16-logo) > .hc16-descuento {
+  max-width: calc(100% - 51px) !important;
+  min-width: 0 !important;
+  order: 1 !important;
+}
 /* v5.16.3: logo bancario legible en las tarjetas de escritorio. */
 @media (min-width: 760px) {
   #cupones > article.cupon.cupon-editorial-v41.cupon-bancario-unificado .hc25-banco-logo {
@@ -2119,31 +2178,5 @@
     object-fit: contain !important;
     object-position: left center !important;
     background: transparent !important;
-  }
-}
-
-/* Separadores informativos — diseño opción 6.
-   Se integran en la hoja existente, sin archivos ni dependencias adicionales. */
-#cupones article.cupon.cupon-editorial-v41 .hc16-info > .hc16-condiciones,
-#cupones article.cupon.cupon-editorial-v41 .hc16-info > .hc16-detalle,
-#cupones article.cupon.cupon-editorial-v41 .hc16-info > .hc16-ahorro-extra {
-  width: 100%;
-  box-sizing: border-box;
-}
-#cupones article.cupon.cupon-editorial-v41 .hc16-info > .hc16-detalle,
-#cupones article.cupon.cupon-editorial-v41 .hc16-info > .hc16-ahorro-extra {
-  border-top: 2px dotted #cbd2d9 !important;
-  padding-top: 9px !important;
-  margin-top: 9px !important;
-}
-#cupones article.cupon.cupon-editorial-v41 .hc16-info > .hc16-condiciones {
-  border-top: 2px dotted #cbd2d9 !important;
-  padding-top: 9px !important;
-}
-@media (max-width: 700px) {
-  #cupones article.cupon.cupon-editorial-v41 .hc16-info > .hc16-detalle,
-  #cupones article.cupon.cupon-editorial-v41 .hc16-info > .hc16-ahorro-extra {
-    padding-top: 7px !important;
-    margin-top: 7px !important;
   }
 }

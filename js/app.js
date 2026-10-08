@@ -1472,7 +1472,9 @@ function aplicarEstructuraEditorialV41(articulo) {
     categoria.insertAdjacentHTML("afterbegin", icono);
   }
 
-  [categoria, valor, condiciones, ...detalles, etiquetas, acciones].filter(Boolean).forEach((nodo) => articulo.append(nodo));
+  // La información se muestra en el orden: detalle, compra mínima y ahorro.
+  const informacionOrdenada = esBancario ? [condiciones, ...detalles] : [...detalles.filter(n => n.classList.contains("hc16-detalle")), condiciones, ...detalles.filter(n => n.classList.contains("hc16-ahorro-extra"))];
+  [categoria, valor, ...informacionOrdenada, etiquetas, acciones].filter(Boolean).forEach((nodo) => articulo.append(nodo));
   info.remove();
 
   const tiempo = acciones.querySelector(":scope > .hc16-tiempo");
@@ -1519,7 +1521,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
     <div class="hc16-info">
       <div class="hc16-categoria">${esCuponAgotado(cupon) ? "CUPÓN AGOTADO" : escaparHtml(visualCategoria.nombre)}</div>
       <div class="hc16-condiciones">
-        <p class="hc16-condicion">En compras desde <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
+        <p class="hc16-condicion">Compra mínima <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
       </div>
       ${!esBancario && detalleCuponVisible ? `<p class="hc16-detalle">${escaparHtml(detalleCuponVisible)}</p>` : ""}
       ${esCuponPorcentaje(cupon) ? `<p class="hc16-ahorro-extra">Ahorra hasta <strong>${escaparHtml(cupon.ahorro_maximo || "Consultar")}</strong></p>` : ""}
