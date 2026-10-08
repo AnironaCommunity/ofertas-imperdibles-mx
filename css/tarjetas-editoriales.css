@@ -2121,3 +2121,29 @@
     background: transparent !important;
   }
 }
+
+/* Separadores informativos — diseño opción 6.
+   Se integran en la hoja existente, sin archivos ni dependencias adicionales. */
+#cupones article.cupon.cupon-editorial-v41 .hc16-info > .hc16-condiciones,
+#cupones article.cupon.cupon-editorial-v41 .hc16-info > .hc16-detalle,
+#cupones article.cupon.cupon-editorial-v41 .hc16-info > .hc16-ahorro-extra {
+  width: 100%;
+  box-sizing: border-box;
+}
+#cupones article.cupon.cupon-editorial-v41 .hc16-info > .hc16-detalle,
+#cupones article.cupon.cupon-editorial-v41 .hc16-info > .hc16-ahorro-extra {
+  border-top: 2px dotted #cbd2d9 !important;
+  padding-top: 9px !important;
+  margin-top: 9px !important;
+}
+#cupones article.cupon.cupon-editorial-v41 .hc16-info > .hc16-condiciones {
+  border-top: 2px dotted #cbd2d9 !important;
+  padding-top: 9px !important;
+}
+@media (max-width: 700px) {
+  #cupones article.cupon.cupon-editorial-v41 .hc16-info > .hc16-detalle,
+  #cupones article.cupon.cupon-editorial-v41 .hc16-info > .hc16-ahorro-extra {
+    padding-top: 7px !important;
+    margin-top: 7px !important;
+  }
+}
