@@ -2580,3 +2580,41 @@
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-acciones > .hc16-cta {
   margin-bottom: 0 !important;
 }
+
+/* v5.20.3 — Lectura mejorada en escritorio y contador más cercano al reloj. */
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-vistas-superiores {
+  top: 29px !important;
+}
+@media (min-width: 760px) {
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-detalle,
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-ahorro-extra:not(.hc16-panel-dato) {
+    font-size: 13px !important;
+    line-height: 18px !important;
+  }
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes .hc16-panel-rotulo,
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes strong,
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-condiciones .hc16-condicion,
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-condiciones .hc16-condicion strong {
+    font-size: 12px !important;
+    line-height: 16px !important;
+  }
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes strong,
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-condiciones .hc16-condicion strong {
+    font-weight: 600 !important;
+  }
+  #cupones > article.cupon.cupon-editorial-v41 .hc16-copiar:not(.boton-ofertazo-agotado) > .hc16-cta-ml-texto {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    line-height: 1.25 !important;
+  }
+  #cupones > article.cupon.cupon-editorial-v41 .hc16-copiar:not(.boton-ofertazo-agotado) {
+    grid-template-columns: 38px minmax(0, 1fr) 12px !important;
+  }
+  #cupones > article.cupon.cupon-editorial-v41 .hc16-copiar:not(.boton-ofertazo-agotado) .hc16-cta-ml-logo {
+    width: 38px !important;
+    height: 34px !important;
+  }
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-vistas-superiores {
+    font-size: 12px !important;
+  }
+}
