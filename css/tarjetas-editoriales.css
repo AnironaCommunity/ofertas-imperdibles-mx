@@ -2903,3 +2903,19 @@
     letter-spacing: 0 !important;
   }
 }
+
+
+/* v5.20.21 — Eliminar altura mínima artificial que crea huecos innecesarios.
+   La cuadrícula sigue igualando las tarjetas de cada fila por stretch.
+   El espacio compensatorio, si existe, queda únicamente antes del código. */
+#cupones.cupones-grid-compacta > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 {
+  min-height: 0 !important;
+  height: auto !important;
+  align-self: stretch !important;
+}
+#cupones.cupones-grid-compacta > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-acciones {
+  margin-top: auto !important;
+  padding-top: 8px !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
