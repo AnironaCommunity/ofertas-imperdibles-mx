@@ -2520,7 +2520,7 @@
   width: 34px !important; height: 30px !important; object-fit: contain !important;
 }
 #cupones > article.cupon.cupon-editorial-v41 .hc16-copiar:not(.boton-ofertazo-agotado) > .hc16-cta-ml-texto {
-  font-size: 11px !important; font-weight: 600 !important; line-height: 1.25 !important;
+  font-size: 13px !important; font-weight: 600 !important; line-height: 1.25 !important;
   white-space: nowrap !important;
 }
 @media (max-width: 759px) {
