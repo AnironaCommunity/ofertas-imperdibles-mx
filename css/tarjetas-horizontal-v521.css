@@ -1,13 +1,13 @@
 /* v5.21.0 — Tarjeta horizontal compacta, una por fila en móvil.
    Se reutilizan los botones y estados originales. */
-#cupones.cupones-grid-compacta { display:grid !important; grid-template-columns:1fr !important; gap:10px !important; align-items:stretch !important; }
+#cupones.cupones-grid-compacta { display:grid !important; grid-template-columns:1fr !important; gap:10px !important; align-items:start !important; }
 @media (min-width:760px) { #cupones.cupones-grid-compacta {grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:14px !important;} }
 @media (min-width:1250px) { #cupones.cupones-grid-compacta {grid-template-columns:repeat(3,minmax(0,1fr)) !important;} }
 #cupones > article.cupon.hc24-horizontal {
   display:flex !important; flex-direction:column !important; gap:8px !important;
   min-height:0 !important; height:auto !important; max-height:none !important;
   padding:12px 14px !important; margin:0 !important; border-radius:12px !important;
-  overflow:hidden !important; align-self:stretch !important; position:relative !important;
+  overflow:hidden !important; align-self:start !important; position:relative !important;
   background:#fff !important; box-shadow:0 2px 10px rgba(20,30,50,.09) !important;
 }
 #cupones > article.cupon.hc24-horizontal::before,
@@ -94,7 +94,7 @@
 #cupones > article.cupon.hc24-horizontal .hc24-textos > .hc16-etiquetas:empty {display:none !important;}
 #cupones > article.cupon.hc24-horizontal > .hc24-pie {
   display:flex !important; align-items:center !important; gap:8px !important;
-  padding:8px 0 0 !important; margin-top:auto !important; min-height:0 !important;
+  padding:5px 0 0 !important; margin-top:0 !important; min-height:0 !important;
   border-top:1px dashed #d7dce3 !important; position:relative !important;
 }
 #cupones > article.cupon.hc24-horizontal .hc24-pie > .hc16-tiempo,
@@ -698,4 +698,31 @@
   align-self:flex-start !important;
   margin-top:0 !important;
   margin-bottom:0 !important;
+}
+
+/* v5.21.9 — Pie sin espacio flexible ni estiramiento de tarjetas */
+#cupones.cupones-grid-compacta {
+  align-items:start !important;
+  grid-auto-rows:max-content !important;
+}
+#cupones > article.cupon.hc24-horizontal {
+  align-self:start !important;
+  justify-content:flex-start !important;
+  height:max-content !important;
+  min-height:0 !important;
+  padding-bottom:8px !important;
+}
+#cupones > article.cupon.hc24-horizontal > .hc24-pie {
+  flex:0 0 auto !important;
+  margin-top:0 !important;
+  margin-bottom:0 !important;
+  padding-top:5px !important;
+  padding-bottom:0 !important;
+  align-items:flex-start !important;
+  min-height:0 !important;
+}
+#cupones > article.cupon.hc24-horizontal > .hc24-pie .hc16-acciones,
+#cupones > article.cupon.hc24-horizontal > .hc24-pie .hc16-cta {
+  margin-bottom:0 !important;
+  padding-bottom:0 !important;
 }
