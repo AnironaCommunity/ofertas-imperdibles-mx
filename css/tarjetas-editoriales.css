@@ -2904,127 +2904,76 @@
   }
 }
 
-
-/* v5.20.22 — Flujo compacto: nunca reservar lugar a descripciones ausentes.
-   El ÚNICO espacio elástico pertenece al bloque de código/botón. */
+/* v5.20.24 — Dos columnas tradicionales, separación única de 8px.
+   Los elementos opcionales no reservan altura. Solo las acciones absorben
+   el espacio libre que queda al igualar las tarjetas de cada fila. */
+#cupones.cupones-grid-compacta {
+  display: grid !important;
+  grid-auto-flow: row !important;
+  align-items: stretch !important;
+}
 #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 {
   display: flex !important;
   flex-direction: column !important;
   justify-content: flex-start !important;
   align-items: stretch !important;
-  min-height: 0 !important;
+  gap: 8px !important;
   height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
   align-self: stretch !important;
+  padding-bottom: 8px !important;
 }
-#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-valor {
-  flex: 0 0 auto !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}
-#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-detalle:not(:empty),
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-valor,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-detalle,
 #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-panel-importes,
 #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-etiquetas:not(:empty) {
   flex: 0 0 auto !important;
-  margin: 8px 0 0 !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
+  margin: 0 !important;
+  min-height: 0 !important;
+}
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-detalle {
+  padding: 0 !important;
+  border: 0 !important;
+}
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-detalle:empty,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-etiquetas:empty {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-panel-importes {
   padding: 6px 12px !important;
 }
-#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-detalle:empty,
-#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-etiquetas:empty {
-  display: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  min-height: 0 !important;
-}
 #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-acciones,
 #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-etiquetas:not(:empty) + .hc16-acciones {
+  position: relative !important;
+  inset: auto !important;
   margin: auto 0 0 !important;
-  padding: 8px 0 0 !important;
+  padding: 0 !important;
   flex: 0 0 auto !important;
+  width: 100% !important;
   gap: 8px !important;
 }
-/* El banco puede tener logotipo y detalle, pero nunca un bloque fantasma. */
+/* El logotipo bancario forma parte del bloque del descuento;
+   ninguna altura fija puede simular una descripción ausente. */
 #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41.cupon-bancario-unificado > .hc25-banco-valor {
-  min-height: 0 !important;
-  height: auto !important;
-  flex: 0 0 auto !important;
-}
-@media (max-width: 759px) {
-  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41.cupon-bancario-unificado > .hc25-banco-valor {
-    gap: 8px !important;
-  }
-  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41.cupon-bancario-unificado > .hc25-banco-valor > .hc25-banco-logo {
-    margin: 0 !important;
-  }
-}
-
-
-/* v5.20.23 — MASONRY REAL, tarjetas con altura propia (sin filas compartidas).
-   CSS columns conserva las tarjetas como hijos directos y sus eventos intactos.
-   Los cupones se distribuyen verticalmente por columnas. */
-#cupones.cupones-grid-compacta {
-  display: block !important;
-  columns: 2 !important;
-  column-gap: 9px !important;
-  align-items: initial !important;
-}
-#cupones.cupones-grid-compacta > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 {
   display: flex !important;
   flex-direction: column !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  min-width: 0 !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  height: auto !important;
   min-height: 0 !important;
   max-height: none !important;
-  height: auto !important;
-  aspect-ratio: auto !important;
-  margin: 0 0 9px !important;
-  break-inside: avoid !important;
-  -webkit-column-break-inside: avoid !important;
-  page-break-inside: avoid !important;
-  align-self: auto !important;
-  grid-column: auto !important;
-  box-sizing: border-box !important;
+  padding: 0 !important;
 }
-/* Los elementos opcionales no reservan altura cuando faltan. */
-#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-detalle:empty,
-#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-etiquetas:empty {
-  display: none !important;
-  min-height: 0 !important;
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41.cupon-bancario-unificado > .hc25-banco-valor > .hc25-banco-logo {
   margin: 0 !important;
-  padding: 0 !important;
 }
-#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-detalle:not(:empty),
-#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-panel-importes,
-#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-etiquetas:not(:empty) {
-  margin-top: 8px !important;
-  margin-bottom: 0 !important;
-  flex: 0 0 auto !important;
-}
-/* El código y botón siguen juntos y con 8px entre ambos; sin espacio artificial. */
-#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-acciones {
-  margin: 8px 0 0 !important;
-  padding: 0 !important;
-  gap: 8px !important;
-  flex: 0 0 auto !important;
-}
-/* En tarjetas bancarias no reservar altura para logotipos o descripciones ausentes. */
-#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41.cupon-bancario-unificado > .hc25-banco-valor {
-  min-height: 0 !important;
-  height: auto !important;
-  flex: 0 0 auto !important;
-}
-/* Desktop: cuatro columnas, tres en pantallas medianas. */
-@media (min-width: 769px) {
-  #cupones.cupones-grid-compacta { columns: 3 !important; column-gap: 12px !important; }
-  #cupones.cupones-grid-compacta > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 { margin-bottom: 12px !important; }
-}
-@media (min-width: 1200px) {
-  #cupones.cupones-grid-compacta { columns: 4 !important; }
-}
-@media (max-width: 350px) {
-  #cupones.cupones-grid-compacta { columns: 2 !important; }
+/* v5.20.24: anular explícitamente el selector heredado más específico
+   que empujaba el panel hacia abajo cuando no había descripción. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41:not(:has(> .hc16-detalle)) > .hc16-panel-importes,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41:has(> .hc16-detalle) > .hc16-panel-importes {
+  margin-top: 0 !important;
 }
