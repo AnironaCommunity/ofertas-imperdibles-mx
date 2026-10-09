@@ -53,7 +53,7 @@
   <link rel="icon" type="image/png" sizes="48x48" href="img/favicon-48.png?v=81.73" />
   <link rel="icon" type="image/png" sizes="192x192" href="img/icon-192.png?v=81.72" />
   <link rel="apple-touch-icon" sizes="180x180" href="/img/pwa-apple-touch-icon.png?v=83.0" />
-  <link rel="stylesheet" href="css/style.css?v=82.47.4" />
+  <link rel="stylesheet" href="css/style.css?v=82.47.5" />
   <link rel="stylesheet" href="css/hero-redes.css?v=83.10" />
   <link rel="stylesheet" href="css/ajustes-visuales-v67-16.css?v=70.0.0" />
   <link rel="stylesheet" href="css/eventos-v68.css?v=70.0.0" />
@@ -68,7 +68,7 @@
   <link rel="stylesheet" href="css/header-marca-v83-9.css?v=83.9" />
   <link rel="stylesheet" href="css/guia-etiquetas-v39.css?v=3.9" />
   <link rel="stylesheet" href="css/contadores-filtros-v39.css?v=3.9" />
-  <link rel="stylesheet" href="css/tarjetas-editoriales.css?v=5.19.9" />
+  <link rel="stylesheet" href="css/tarjetas-editoriales.css?v=5.20.0" />
   <script>
     try {
       const temaGuardado = JSON.parse(localStorage.getItem("ofertas_imperdibles_tema") || "null");
@@ -625,32 +625,22 @@
     hidden
   >
     <div class="modal-contenido">
-      <div class="modal-icono" aria-hidden="true">✅</div>
-      <h2 id="modal-titulo">¡Cupón copiado!</h2>
-
-      <p>
-        Abre <strong>Mercado Libre</strong> y entra a <strong>Cupones → Ingresar código</strong>. Pega el cupón que acabamos de copiar.
-      </p>
-
-      <p id="modal-codigo-bloque" class="modal-codigo">
-        Código: <strong id="modal-codigo"></strong>
-      </p>
-
-      <p id="modal-cupon-oculto" class="modal-cupon-oculto" hidden>
-        El cupón se copió automáticamente.
-      </p>
-
+      <div class="modal-codigo-cabecera">
+        <span class="modal-icono" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg></span>
+        <p id="modal-codigo-bloque" class="modal-codigo"><strong id="modal-codigo"></strong></p>
+      </div>
+      <h2 id="modal-titulo" class="visualmente-oculto">¡Cupón copiado!</h2>
+      <p class="modal-instruccion">Pégalo en la sección de cupones de Mercado Libre</p>
+      <p id="modal-cupon-oculto" class="modal-cupon-oculto" hidden>El cupón se copió automáticamente.</p>
       <div class="modal-acciones">
-        <button id="modal-continuar" class="modal-continuar" type="button">
-          Ir a Mercado Libre
-        </button>
+        <button id="modal-continuar" class="modal-continuar" type="button">Ir a Mercado Libre</button>
       </div>
     </div>
   </div>
 
 
   <script src="js/pwa-install.js?v=83.0"></script>
-  <script type="module" src="js/app.js?v=5.19.9"></script>
+  <script type="module" src="js/app.js?v=5.20.0"></script>
   <script src="js/hero-redes.js?v=82.39" defer></script>
   <script src="js/header-dinamico-v68-3.js?v=70.0.0" defer></script>
   <script src="js/cabecera-inteligente.js?v=77.15.7" defer></script>
