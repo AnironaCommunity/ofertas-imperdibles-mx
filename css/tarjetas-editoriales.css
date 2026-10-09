@@ -2406,14 +2406,14 @@
   }
 }
 
-/* v5.19.6 — Tipografía solicitada para detalles, CTA y panel de importes.
+/* v5.19.7 — Tipografía solicitada para detalles, CTA y panel de importes.
    Proxima Nova se usa cuando está licenciada e instalada; Segoe UI es respaldo. */
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-detalle,
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-ahorro-extra:not(.hc16-panel-dato) {
   font-family: "Proxima Nova", "Segoe UI", Arial, sans-serif !important;
-  font-size: 14px !important;
+  font-size: 12px !important;
   font-weight: 400 !important;
-  line-height: 19px !important;
+  line-height: 17px !important;
   color: #222222 !important;
 }
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-detalle strong {
@@ -2424,9 +2424,9 @@
 #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-copiar:not(.boton-ofertazo-agotado),
 #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-copiar:not(.boton-ofertazo-agotado) > span:last-child {
   font-family: "Proxima Nova", "Segoe UI", Arial, sans-serif !important;
-  font-size: 14px !important;
+  font-size: 12px !important;
   font-weight: 400 !important;
-  line-height: 19px !important;
+  line-height: 17px !important;
   color: #222222 !important;
 }
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes .hc16-panel-rotulo,
@@ -2434,8 +2434,14 @@
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-condiciones .hc16-condicion,
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-condiciones .hc16-condicion strong {
   font-family: "Proxima Nova", "Segoe UI", Arial, sans-serif !important;
-  font-size: 12px !important;
+  font-size: 10px !important;
   font-weight: 400 !important;
-  line-height: 16px !important;
+  line-height: 14px !important;
   color: #222222 !important;
+}
+
+/* Resaltar únicamente los importes, sin poner en negritas las etiquetas. */
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes strong,
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-condiciones .hc16-condicion strong {
+  font-weight: 600 !important;
 }
