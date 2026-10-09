@@ -2841,8 +2841,7 @@
   fill: currentColor !important;
   stroke: currentColor !important;
 }
-#cupones .cupon-horizontal-v16 .hc61-like-chip .hc16-numero,
-#cupones .cupon-horizontal-v16 .hc61-view-chip .numero-clics {
+#cupones .cupon-horizontal-v16 .hc61-like-chip .hc16-numero {
   color: #3f4650 !important;
   font-size: 9px !important;
   font-weight: 700 !important;
@@ -3000,8 +2999,7 @@
   fill: #f04f91 !important;
   stroke: #f04f91 !important;
 }
-#cupones .cupon-horizontal-v16 .hc61-like-chip .hc16-numero,
-#cupones .cupon-horizontal-v16 .hc61-view-chip .numero-clics {
+#cupones .cupon-horizontal-v16 .hc61-like-chip .hc16-numero {
   color: #4d5663 !important;
   -webkit-text-fill-color: #4d5663 !important;
   min-width: 9px !important;
