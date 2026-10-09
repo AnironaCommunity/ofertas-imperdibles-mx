@@ -1539,25 +1539,47 @@
 
 /* Una sola referencia visual de tiempo: reloj minimalista + horas + minutos. */
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo {
-  min-height: 45px !important;
-  padding: 5px 3px 4px !important;
-  gap: 1px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  padding: 5px 7px !important;
+  white-space: nowrap !important;
+  font-size: clamp(9px, 2.1vw, 12px) !important;
 }
-
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo::before {
   content: "◷" !important;
-  margin: 0 0 1px !important;
+  display: inline-block !important;
+  flex: 0 0 auto !important;
+  margin: 0 !important;
   color: #3d4657 !important;
   font-family: Arial, sans-serif !important;
   font-size: 14px !important;
-  font-weight: 500 !important;
   line-height: 1 !important;
 }
-
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo .estado-linea,
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo .estado-tiempo {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  gap: 4px !important;
+  white-space: nowrap !important;
+}
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo .estado-tiempo > span + span::before {
+  content: "|";
+  margin-right: 4px;
+  color: #a2aab2;
+}
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo .estado-linea > span:first-child:not(.estado-tiempo) {
   display: none !important;
 }
-
 /* Texto de aplicación con peso regular y mejor contraste. */
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-detalle,
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-ahorro-extra {
@@ -2151,7 +2173,7 @@
   flex-direction: row !important;
   align-items: center !important;
   justify-content: flex-start !important;
-  gap: 10px !important;
+  gap: 8px !important;
   width: 100% !important;
   min-width: 0 !important;
 }
@@ -2161,9 +2183,9 @@
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  flex: 0 0 52px !important;
-  width: 52px !important;
-  height: 52px !important;
+  flex: 0 0 42px !important;
+  width: 42px !important;
+  height: 42px !important;
   border: 1px solid #e4e8ed !important;
   border-radius: 50% !important;
   background: #fff !important;
@@ -2174,10 +2196,10 @@
   inset: auto !important;
   display: block !important;
   flex: none !important;
-  width: 44px !important;
-  height: 44px !important;
-  max-width: 44px !important;
-  max-height: 44px !important;
+  width: 35px !important;
+  height: 35px !important;
+  max-width: 35px !important;
+  max-height: 35px !important;
   margin: 0 !important;
   padding: 0 !important;
   border: 0 !important;
@@ -2191,13 +2213,13 @@
   bottom: -3px !important;
   display: grid !important;
   place-items: center !important;
-  width: 17px !important;
-  height: 17px !important;
+  width: 14px !important;
+  height: 14px !important;
   border: 2px solid #fff !important;
   border-radius: 50% !important;
   background: #0eae54 !important;
   color: #fff !important;
-  font-size: 11px !important;
+  font-size: 10px !important;
   font-weight: 800 !important;
   line-height: 1 !important;
   box-sizing: content-box !important;
@@ -2206,8 +2228,15 @@
   position: static !important;
   flex: 0 1 auto !important;
   min-width: 0 !important;
-  max-width: calc(100% - 62px) !important;
+  max-width: calc(100% - 50px) !important;
   margin: 0 !important;
+}
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) .hc16-logo-descuento-fila > .hc16-descuento.hc16-descuento-con-logo-largo {
+  font-size: clamp(1.4rem, 6.2vw, 2.3rem) !important;
+}
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) .hc16-logo-descuento-fila > .hc16-descuento.hc16-descuento-muy-largo {
+  font-size: clamp(1.05rem, 4.8vw, 1.85rem) !important;
+  letter-spacing: -.045em !important;
 }
 /* Separación de la información y del recuadro de código, en todas las tarjetas. */
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-acciones {

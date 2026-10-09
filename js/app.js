@@ -938,7 +938,9 @@ function formatRemainingCompact(milliseconds) {
   const minutes = totalMinutes % 60;
 
   if (days > 0) return `<span>${days}d</span><span>${hours}h</span>`;
-  return `<span>${hours}h</span><span>${minutes}m</span>`;
+  if (hours > 0) return `<span>${hours}h</span><span>${minutes}m</span>`;
+  const seconds = Math.max(0, Math.floor(milliseconds / 1000) % 60);
+  return `<span>${minutes}m</span><span>${seconds}s</span>`;
 }
 
 function couponProgress(timeState) {
@@ -1498,6 +1500,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   const tituloCuponLimpio = String(cupon.titulo || "").replace(/\s*OFF\s*$/i, "").trim();
   const detalleCuponVisible = obtenerDetalleVisibleCupon(cupon);
   const claseDescuentoLargo = tituloCuponLimpio.length >= 6 ? " hc16-descuento-largo" : "";
+  const claseDescuentoConLogo = tituloCuponLimpio.length >= 8 ? " hc16-descuento-muy-largo" : tituloCuponLimpio.length >= 6 ? " hc16-descuento-con-logo-largo" : "";
 
   const estados = Array.isArray(estadosDestacados) ? estadosDestacados.filter(Boolean) : [estadosDestacados].filter(Boolean);
   const clasesEstado = estados.map((estado) => ` cupon-${estado}`).join("");
@@ -1513,7 +1516,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
     <span class="ticket-notch ticket-notch-bottom" aria-hidden="true"></span>
     ${esExclusivo && cupon.marca_agua_url ? `<span class="hc16-marca-agua" aria-hidden="true"><img src="${escaparHtml(cupon.marca_agua_url)}" alt="" loading="lazy" /></span>` : ""}
     <div class="hc16-valor">
-      ${!esBancario && cupon.imagen_url ? `<div class="hc16-logo-descuento-fila"><span class="hc16-logo-circular"><img class="hc16-logo cupon-logo" src="${escaparHtml(cupon.imagen_url)}" alt="" loading="lazy" /><span class="hc16-logo-check" aria-hidden="true">✓</span></span><h2 class="hc16-descuento descuento${claseDescuentoLargo}">${escaparHtml(tituloCuponLimpio)}<span class="hc19-off">OFF</span></h2></div>` : `${esBancario && cupon.imagen_url ? `<img class="hc16-logo cupon-logo" src="${escaparHtml(cupon.imagen_url)}" alt="" loading="lazy" />` : ""}<h2 class="hc16-descuento descuento${claseDescuentoLargo}">${escaparHtml(tituloCuponLimpio)}<span class="hc19-off">OFF</span></h2>`}
+      ${!esBancario && cupon.imagen_url ? `<div class="hc16-logo-descuento-fila"><span class="hc16-logo-circular"><img class="hc16-logo cupon-logo" src="${escaparHtml(cupon.imagen_url)}" alt="" loading="lazy" /><span class="hc16-logo-check" aria-hidden="true">✓</span></span><h2 class="hc16-descuento descuento${claseDescuentoLargo}${claseDescuentoConLogo}">${escaparHtml(tituloCuponLimpio)}<span class="hc19-off">OFF</span></h2></div>` : `${esBancario && cupon.imagen_url ? `<img class="hc16-logo cupon-logo" src="${escaparHtml(cupon.imagen_url)}" alt="" loading="lazy" />` : ""}<h2 class="hc16-descuento descuento${claseDescuentoLargo}">${escaparHtml(tituloCuponLimpio)}<span class="hc19-off">OFF</span></h2>`}
       <span class="hc19-porcentaje" aria-hidden="true">%</span>
     </div>
 
