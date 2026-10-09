@@ -2732,3 +2732,33 @@
 #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41:not(:has(> .hc16-panel-importes)) > .hc16-acciones {
   margin-top: auto !important;
 }
+
+/* v5.20.9 — Separaciones de 8 px sin colisiones.
+   El espacio flexible queda ANTES del grupo detalle/panel/etiquetas,
+   nunca dentro de ese grupo ni encima del código oculto. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-detalle {
+  margin-top: auto !important;
+  margin-bottom: 8px !important;
+  padding-bottom: 0 !important;
+  border-bottom: 0 !important;
+  flex: 0 0 auto !important;
+}
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41:has(> .hc16-detalle) > .hc16-panel-importes {
+  margin-top: 0 !important;
+}
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-panel-importes {
+  margin-bottom: 0 !important;
+}
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-etiquetas:not(:empty) {
+  margin-top: 8px !important;
+  margin-bottom: 0 !important;
+}
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-acciones,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-etiquetas:not(:empty) + .hc16-acciones {
+  margin-top: 8px !important;
+}
+/* Cuando no hay descripción, el panel absorbe el alto sobrante;
+   cuando sí la hay, lo absorbe la descripción. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41:not(:has(> .hc16-detalle)) > .hc16-panel-importes {
+  margin-top: auto !important;
+}
