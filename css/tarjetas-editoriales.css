@@ -2618,3 +2618,30 @@
     font-size: 12px !important;
   }
 }
+
+/* v5.20.4 — Tipografía uniforme en reloj y vistas, sin variar sus tamaños. */
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo,
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo .estado-linea,
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo .estado-tiempo,
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo .estado-tiempo span,
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-vistas-superiores,
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-vistas-superiores .numero-clics {
+  font-family: "Proxima Nova", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important;
+}
+/* Evitar que el logo invada el texto; conservar el diseño y los tamaños de letra. */
+#cupones > article.cupon.cupon-editorial-v41 .hc16-copiar:not(.boton-ofertazo-agotado) {
+  column-gap: 9px !important;
+}
+#cupones > article.cupon.cupon-editorial-v41 .hc16-copiar:not(.boton-ofertazo-agotado) > .hc16-cta-ml-logo {
+  justify-self: start !important;
+  max-width: 100% !important;
+}
+#cupones > article.cupon.cupon-editorial-v41 .hc16-copiar:not(.boton-ofertazo-agotado) > .hc16-cta-ml-texto {
+  padding-left: 2px !important;
+  box-sizing: border-box !important;
+}
+@media (max-width: 759px) {
+  #cupones > article.cupon.cupon-editorial-v41 .hc16-copiar:not(.boton-ofertazo-agotado) {
+    column-gap: 6px !important;
+  }
+}
