@@ -1379,6 +1379,17 @@ function esCuponPorcentaje(cupon) {
   return /%|por\s*ciento/i.test(titulo);
 }
 
+// Para cupones de importe fijo, el ahorro máximo es el descuento anunciado.
+// Si hay un máximo explícito configurado, siempre se respeta ese dato.
+function obtenerAhorroMaximoVisible(cupon) {
+  const configurado = String(cupon?.ahorro_maximo || "").trim();
+  if (configurado) return configurado;
+  if (esCuponPorcentaje(cupon)) return "Consultar";
+  const titulo = String(cupon?.titulo || "").replace(/\s*OFF\s*$/i, "").trim();
+  const importe = titulo.match(/^\$\s*([\d,.]+)$/);
+  return importe ? `$${importe[1]}` : "";
+}
+
 function htmlCondicionesCupon(cupon) {
   const compraMinima = escaparHtml(cupon.compra_minima || "Consultar");
   const ahorroMaximo = escaparHtml(cupon.ahorro_maximo || "Consultar");
@@ -1573,7 +1584,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
         <p class="hc16-condicion">Compra mínima <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
       </div>
       ${!esBancario && detalleCuponVisible ? `<p class="hc16-detalle">${escaparHtml(detalleCuponVisible)}</p>` : ""}
-      ${esCuponPorcentaje(cupon) ? `<p class="hc16-ahorro-extra">Ahorra hasta <strong>${escaparHtml(cupon.ahorro_maximo || "Consultar")}</strong></p>` : ""}
+      ${obtenerAhorroMaximoVisible(cupon) ? `<p class="hc16-ahorro-extra">Ahorra hasta <strong>${escaparHtml(obtenerAhorroMaximoVisible(cupon))}</strong></p>` : ""}
       <div class="hc16-etiquetas">
         ${htmlEtiquetasCupon(esExclusivo ? estados.slice(0, 2) : estados)}
       </div>

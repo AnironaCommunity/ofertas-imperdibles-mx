@@ -2868,3 +2868,38 @@
   -webkit-text-stroke-width: 0 !important;
   text-shadow: none !important;
 }
+
+
+/* v5.20.20: descuento móvil en una sola línea, adaptado al ancho real de cada tarjeta. */
+@media (max-width: 759px) {
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) .hc16-logo-descuento-fila {
+    gap: 5px !important;
+    flex-wrap: nowrap !important;
+  }
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) .hc16-logo-descuento-fila > .hc16-descuento {
+    display: inline-flex !important;
+    flex-flow: row nowrap !important;
+    align-items: baseline !important;
+    justify-content: flex-start !important;
+    gap: 2px !important;
+    white-space: nowrap !important;
+    max-width: calc(100% - 40px) !important;
+    min-width: 0 !important;
+    font-size: clamp(17px, 6.1vw, 30px) !important;
+    line-height: 1 !important;
+    letter-spacing: -.045em !important;
+  }
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) .hc16-logo-descuento-fila > .hc16-descuento.hc16-descuento-largo,
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) .hc16-logo-descuento-fila > .hc16-descuento.hc16-descuento-con-logo-largo,
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) .hc16-logo-descuento-fila > .hc16-descuento.hc16-descuento-muy-largo {
+    font-size: clamp(14px, 4.8vw, 23px) !important;
+  }
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 .hc16-descuento > .hc19-off {
+    display: inline !important;
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+    font-size: .33em !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+  }
+}
