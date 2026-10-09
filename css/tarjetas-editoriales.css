@@ -2569,9 +2569,9 @@
 #cupones > article.cupon.cupon-editorial-v41 .hc16-social {
   display: none !important;
 }
-/* El botón queda a 5px del borde inferior de la tarjeta. */
+/* Igualar el espacio inferior al gap de 8px entre código y botón. */
 #cupones > article.cupon.cupon-editorial-v41 {
-  padding-bottom: 5px !important;
+  padding-bottom: 8px !important;
 }
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-acciones {
   padding-bottom: 0 !important;
