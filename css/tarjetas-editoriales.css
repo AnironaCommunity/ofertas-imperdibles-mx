@@ -2645,3 +2645,16 @@
     column-gap: 6px !important;
   }
 }
+
+/* v5.20.5 — Vistas con la misma tipografía que el temporizador. */
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-vistas-superiores,
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-vistas-superiores .numero-clics {
+  font-family: "Proxima Nova", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important;
+  font-weight: 600 !important;
+  font-variant-numeric: tabular-nums !important;
+  letter-spacing: normal !important;
+}
+/* Aumentar solo el icono del reloj, no el tamaño de los números. */
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo::before {
+  font-size: 13px !important;
+}
