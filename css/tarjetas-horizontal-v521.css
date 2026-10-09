@@ -819,3 +819,114 @@
   margin-right:5px !important;
   vertical-align:middle !important;
 }
+
+
+/* v5.21.11: geometría única, tarjetas de altura natural y agotados atenuados. */
+#cupones.cupones-grid-compacta {
+  align-items:start !important;
+  grid-auto-rows:max-content !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal {
+  display:flex !important;
+  flex-direction:column !important;
+  align-self:start !important;
+  justify-content:flex-start !important;
+  height:max-content !important;
+  min-height:0 !important;
+  max-height:none !important;
+  margin:0 !important;
+  padding-bottom:9px !important; /* 8px visibles más borde inferior de 1px */
+  row-gap:5px !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie {
+  display:flex !important;
+  flex:0 0 32px !important;
+  height:37px !important;
+  min-height:37px !important;
+  max-height:37px !important;
+  box-sizing:border-box !important;
+  align-items:flex-start !important;
+  padding:5px 0 0 !important;
+  margin:0 !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie > .hc16-acciones,
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie .hc16-cta {
+  display:flex !important;
+  align-items:flex-start !important;
+  flex:0 0 auto !important;
+  height:32px !important;
+  min-height:32px !important;
+  max-height:32px !important;
+  margin-top:0 !important;
+  margin-bottom:0 !important;
+  padding:0 !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie > .hc16-acciones {
+  margin-left:auto !important;
+}
+/* Incluye expresamente el botón de agotados, sin excluirlo por clase. */
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie button.boton-canjear,
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie button.boton-canjear.boton-ofertazo-agotado {
+  box-sizing:border-box !important;
+  appearance:none !important;
+  display:inline-flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:5px !important;
+  width:148px !important;
+  min-width:148px !important;
+  max-width:148px !important;
+  height:32px !important;
+  min-height:32px !important;
+  max-height:32px !important;
+  margin:0 !important;
+  padding:0 9px !important;
+  border:1px solid #efc900 !important;
+  border-radius:12px !important;
+  background:#fff !important;
+  background-color:#fff !important;
+  background-image:none !important;
+  color:#202020 !important;
+  -webkit-text-fill-color:#202020 !important;
+  font-family:inherit !important;
+  font-size:12px !important;
+  font-weight:600 !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+  opacity:1 !important;
+  filter:none !important;
+  box-shadow:none !important;
+  transform:none !important;
+  cursor:pointer !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie button.boton-canjear :is(span,strong,b,small) {
+  font-size:12px !important;
+  font-weight:600 !important;
+  color:#202020 !important;
+  -webkit-text-fill-color:#202020 !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie button.boton-canjear :is(img,svg) {
+  display:block !important;
+  flex:0 0 20px !important;
+  width:20px !important;
+  height:20px !important;
+  min-width:20px !important;
+  max-width:20px !important;
+  max-height:20px !important;
+  object-fit:contain !important;
+}
+/* Solo los datos del cupón agotado se atenúan.
+   Ver ofertas sigue siendo un enlace funcional y plenamente visible. */
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal.cupon-agotado > .hc24-encabezado,
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal.cupon-agotado > .hc24-cuerpo {
+  opacity:.46 !important;
+  filter:grayscale(.35) !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal.cupon-agotado > .hc24-pie {
+  opacity:1 !important;
+  filter:none !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal.cupon-agotado > .hc24-pie button.boton-ofertazo-agotado {
+  pointer-events:auto !important;
+}
