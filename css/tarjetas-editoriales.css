@@ -2128,6 +2128,75 @@
   }
 }
 
+/* Panel único de importes: diseño 8, para tienda, exclusivos y bancarios. */
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes {
+  order: 4 !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+  gap: 0;
+  width: 100%;
+  min-width: 0;
+  margin: 12px 0 14px !important;
+  padding: 11px 8px !important;
+  border: 0 !important;
+  border-radius: 12px;
+  background: #eaf5fd;
+}
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes.hc16-panel-unico {
+  grid-template-columns: minmax(0, 1fr);
+}
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes > .hc16-panel-dato {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+  margin: 0 !important;
+  padding: 3px 5px !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #526473 !important;
+  font-size: clamp(9px, 1.8vw, 12px) !important;
+  font-weight: 400 !important;
+  line-height: 1.25 !important;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes > .hc16-panel-dato + .hc16-panel-dato {
+  border-left: 1px solid #c5d5e2 !important;
+}
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes .hc16-condicion {
+  display: contents !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  color: inherit !important;
+  font: inherit !important;
+}
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes strong {
+  display: block !important;
+  margin-top: 4px;
+  color: #243648 !important;
+  font-size: clamp(12px, 2.5vw, 18px) !important;
+  font-weight: 750 !important;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-detalle:has(+ .hc16-panel-importes) {
+  border-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+@media (max-width: 480px) {
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes {
+    padding: 8px 3px !important;
+    border-radius: 10px;
+  }
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes > .hc16-panel-dato {
+    padding: 2px 3px !important;
+  }
+}
+
 /* Información de cupón: orden, jerarquía y divisores. Se aplica a tarjetas reales
    (el script mueve los campos fuera de .hc16-info). Incluye también los cupones bancarios. */
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-detalle {

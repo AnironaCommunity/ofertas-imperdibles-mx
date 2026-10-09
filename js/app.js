@@ -1474,8 +1474,23 @@ function aplicarEstructuraEditorialV41(articulo) {
     categoria.insertAdjacentHTML("afterbegin", icono);
   }
 
-  // La información se muestra en el orden: detalle, compra mínima y ahorro.
-  const informacionOrdenada = [...detalles.filter(n => n.classList.contains("hc16-detalle")), condiciones, ...detalles.filter(n => n.classList.contains("hc16-ahorro-extra"))];
+  // Unificar los importes en un solo panel; el detalle permanece independiente.
+  const ahorro = detalles.find(n => n.classList.contains("hc16-ahorro-extra"));
+  const panelImportes = document.createElement("div");
+  panelImportes.className = "hc16-panel-importes";
+  if (condiciones?.textContent.trim()) {
+    condiciones.classList.add("hc16-panel-dato", "hc16-panel-compra");
+    panelImportes.append(condiciones);
+  }
+  if (ahorro?.textContent.trim()) {
+    ahorro.classList.add("hc16-panel-dato", "hc16-panel-ahorro");
+    panelImportes.append(ahorro);
+  }
+  if (panelImportes.children.length === 1) panelImportes.classList.add("hc16-panel-unico");
+  const informacionOrdenada = [
+    ...detalles.filter(n => n.classList.contains("hc16-detalle")),
+    ...(panelImportes.children.length ? [panelImportes] : [])
+  ];
   [categoria, valor, ...informacionOrdenada, etiquetas, acciones].filter(Boolean).forEach((nodo) => articulo.append(nodo));
   info.remove();
 
