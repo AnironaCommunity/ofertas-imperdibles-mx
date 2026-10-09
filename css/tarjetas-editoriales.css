@@ -2683,3 +2683,52 @@
 #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-acciones > .v42-pie-tarjeta {
   display: none !important;
 }
+
+/* v5.20.8 — Altura uniforme por fila, sin huecos por cápsulas ausentes.
+   El espacio sobrante se absorbe ANTES del panel, nunca entre panel/código/botón. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 {
+  display: flex !important;
+  flex-direction: column !important;
+  align-self: stretch !important;
+  height: auto !important;
+  padding-bottom: 8px !important;
+}
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-panel-importes {
+  margin-top: auto !important;
+  margin-bottom: 0 !important;
+  flex: 0 0 auto !important;
+}
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-etiquetas {
+  margin: 8px 0 0 !important;
+  padding: 0 !important;
+  flex: 0 0 auto !important;
+  min-height: 0 !important;
+}
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-etiquetas:empty {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-acciones {
+  position: relative !important;
+  inset: auto !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  flex: 0 0 auto !important;
+  align-self: stretch !important;
+  width: 100% !important;
+  height: auto !important;
+  margin: 8px 0 0 !important;
+  padding: 0 !important;
+  gap: 8px !important;
+  transform: none !important;
+}
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-acciones > .hc16-cta {
+  margin: 0 !important;
+}
+/* Si el cupón no tiene panel, mantener el bloque de código/botón abajo. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41:not(:has(> .hc16-panel-importes)) > .hc16-acciones {
+  margin-top: auto !important;
+}
