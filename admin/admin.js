@@ -1,3 +1,4 @@
+const LOGO_CUPON_TIENDA_PREDETERMINADO = "/img/logo-cupon-tienda-predeterminado.jpg";
 const loginPanel = document.querySelector("#login-panel");
 const adminPanel = document.querySelector("#admin-panel");
 const passwordInput = document.querySelector("#admin-password");
@@ -569,9 +570,9 @@ function editCoupon(coupon) {
   couponEnd.value = isoToMexicoLocal(coupon.fecha_fin);
   couponLink.value = coupon.enlace || "";
   couponImage.value = "";
-  couponImageUrl.value = coupon.imagen_url || "";
-  couponImagePreview.src = coupon.imagen_url || "";
-  couponImagePreviewWrapper.hidden = !coupon.imagen_url;
+  couponImageUrl.value = coupon.imagen_url || (coupon.categoria === "bancarios" ? "" : LOGO_CUPON_TIENDA_PREDETERMINADO);
+  couponImagePreview.src = coupon.imagen_url || (coupon.categoria === "bancarios" ? "" : LOGO_CUPON_TIENDA_PREDETERMINADO);
+  couponImagePreviewWrapper.hidden = !couponImagePreview.src;
   if (couponWatermark) couponWatermark.value = "";
   if (couponWatermarkUrl) couponWatermarkUrl.value = coupon.marca_agua_url || "";
   if (couponWatermarkPreview) couponWatermarkPreview.src = coupon.marca_agua_url || "";
@@ -1940,7 +1941,7 @@ async function saveCoupon(event) {
       fecha_inicio: mexicoLocalToIso(couponStart.value),
       fecha_fin: mexicoLocalToIso(couponEnd.value),
       enlace: couponLink.value.trim(),
-      imagen_url: imageUrl || "",
+      imagen_url: imageUrl || (couponCategory.value === "bancarios" ? "" : LOGO_CUPON_TIENDA_PREDETERMINADO),
       marca_agua_url: watermarkUrl || "",
       activo: couponActive.checked,
       agotado: Boolean(couponSoldOut?.checked),
@@ -2221,6 +2222,7 @@ function analyzeImport() {
         useGeneralLink: importUseGeneralLink.checked,
       }),
       categoria: importCategory.value,
+      imagen_url: importCategory.value === "bancarios" ? "" : LOGO_CUPON_TIENDA_PREDETERMINADO,
       fecha_fin: expirationIso,
     }))
     .filter((item) => item.titulo || item.codigo || item.enlace);
