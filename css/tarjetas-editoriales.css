@@ -2905,17 +2905,58 @@
 }
 
 
-/* v5.20.21 — Eliminar altura mínima artificial que crea huecos innecesarios.
-   La cuadrícula sigue igualando las tarjetas de cada fila por stretch.
-   El espacio compensatorio, si existe, queda únicamente antes del código. */
-#cupones.cupones-grid-compacta > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 {
+/* v5.20.22 — Flujo compacto: nunca reservar lugar a descripciones ausentes.
+   El ÚNICO espacio elástico pertenece al bloque de código/botón. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
   min-height: 0 !important;
   height: auto !important;
   align-self: stretch !important;
 }
-#cupones.cupones-grid-compacta > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-acciones {
-  margin-top: auto !important;
-  padding-top: 8px !important;
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-valor {
+  flex: 0 0 auto !important;
+  margin-top: 0 !important;
   margin-bottom: 0 !important;
+}
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-detalle:not(:empty),
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-panel-importes,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-etiquetas:not(:empty) {
+  flex: 0 0 auto !important;
+  margin: 8px 0 0 !important;
+  padding-top: 0 !important;
   padding-bottom: 0 !important;
+}
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-panel-importes {
+  padding: 6px 12px !important;
+}
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-detalle:empty,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-etiquetas:empty {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-acciones,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-etiquetas:not(:empty) + .hc16-acciones {
+  margin: auto 0 0 !important;
+  padding: 8px 0 0 !important;
+  flex: 0 0 auto !important;
+  gap: 8px !important;
+}
+/* El banco puede tener logotipo y detalle, pero nunca un bloque fantasma. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41.cupon-bancario-unificado > .hc25-banco-valor {
+  min-height: 0 !important;
+  height: auto !important;
+  flex: 0 0 auto !important;
+}
+@media (max-width: 759px) {
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41.cupon-bancario-unificado > .hc25-banco-valor {
+    gap: 8px !important;
+  }
+  #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41.cupon-bancario-unificado > .hc25-banco-valor > .hc25-banco-logo {
+    margin: 0 !important;
+  }
 }
