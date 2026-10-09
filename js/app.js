@@ -1438,7 +1438,7 @@ function codigoEnmascarado(codigo) {
 }
 
 function actualizarEtiquetaCategoriaAgotada(tarjeta, agotado, etiquetaOriginal = "") {
-  const etiqueta = tarjeta?.querySelector(":scope > .hc16-categoria, :scope > .hc16-info > .hc16-categoria");
+  const etiqueta = tarjeta?.querySelector(":scope > .hc24-encabezado > .hc16-categoria, :scope > .hc16-categoria, :scope > .hc16-info > .hc16-categoria");
   if (!etiqueta) return;
 
   const original = String(etiquetaOriginal || etiqueta.dataset.etiquetaOriginal || "").trim();
@@ -1545,6 +1545,31 @@ function aplicarEstructuraEditorialV41(articulo) {
     pie.append(social);
     acciones.append(pie);
   }
+  // Diseño horizontal: mover los nodos originales, preservando listeners y estados.
+  const cuerpo = document.createElement("div");
+  cuerpo.className = "hc24-cuerpo";
+  const textos = document.createElement("div");
+  textos.className = "hc24-textos";
+  const encabezado = document.createElement("div");
+  encabezado.className = "hc24-encabezado";
+  if (categoria) encabezado.append(categoria);
+  const descuento = valor.querySelector(".hc16-descuento");
+  const logoBanco = valor.querySelector(".hc25-banco-logo, .banco-logo-fallback");
+  const logoTienda = valor.querySelector(".hc16-logo-circular");
+  if (logoTienda) cuerpo.append(logoTienda);
+  else if (logoBanco) cuerpo.append(logoBanco);
+  if (descuento) textos.append(descuento);
+  for (const nodo of informacionOrdenada) textos.append(nodo);
+  if (etiquetas?.children.length) textos.append(etiquetas);
+  cuerpo.append(textos);
+  const pieCompacto = document.createElement("div");
+  pieCompacto.className = "hc24-pie";
+  if (tiempo) pieCompacto.append(tiempo);
+  if (vistas) pieCompacto.append(vistas);
+  pieCompacto.append(acciones);
+  articulo.append(encabezado, cuerpo, pieCompacto);
+  valor.remove();
+  articulo.classList.add("hc24-horizontal");
 }
 
 function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {

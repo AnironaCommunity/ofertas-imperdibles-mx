@@ -1,0 +1,135 @@
+/* v5.21.0 — Tarjeta horizontal compacta, una por fila en móvil.
+   Se reutilizan los botones y estados originales. */
+#cupones.cupones-grid-compacta { display:grid !important; grid-template-columns:1fr !important; gap:10px !important; align-items:stretch !important; }
+@media (min-width:760px) { #cupones.cupones-grid-compacta {grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:14px !important;} }
+@media (min-width:1250px) { #cupones.cupones-grid-compacta {grid-template-columns:repeat(3,minmax(0,1fr)) !important;} }
+#cupones > article.cupon.hc24-horizontal {
+  display:flex !important; flex-direction:column !important; gap:8px !important;
+  min-height:0 !important; height:auto !important; max-height:none !important;
+  padding:12px 14px !important; margin:0 !important; border-radius:12px !important;
+  overflow:hidden !important; align-self:stretch !important; position:relative !important;
+  background:#fff !important; box-shadow:0 2px 10px rgba(20,30,50,.09) !important;
+}
+#cupones > article.cupon.hc24-horizontal::before,
+#cupones > article.cupon.hc24-horizontal::after,
+#cupones > article.cupon.hc24-horizontal > .ticket-notch,
+#cupones > article.cupon.hc24-horizontal > .hc16-marca-agua {display:none !important;}
+#cupones > article.cupon.hc24-horizontal > .hc24-encabezado {
+  position:static !important; display:flex !important; min-height:0 !important; height:auto !important;
+  margin:0 !important; padding:0 !important; align-items:center !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-encabezado > .hc16-categoria {
+  position:static !important; transform:none !important; display:inline-flex !important;
+  width:auto !important; max-width:100% !important; min-width:0 !important;
+  height:auto !important; min-height:0 !important; padding:3px 8px !important;
+  margin:0 !important; font-size:10px !important; line-height:1.3 !important;
+  border-radius:5px !important; clip-path:none !important; letter-spacing:0 !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-encabezado > .hc16-categoria::before {display:none !important;}
+#cupones > article.cupon.hc24-horizontal .hc24-encabezado > .hc16-categoria svg {width:12px !important;height:12px !important;}
+#cupones > article.cupon.hc24-horizontal > .hc24-cuerpo {
+  display:flex !important; align-items:flex-start !important; gap:10px !important;
+  margin:0 !important; padding:0 !important; min-width:0 !important; height:auto !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-cuerpo > .hc16-logo-circular {
+  display:flex !important; position:relative !important; flex:0 0 38px !important;
+  width:38px !important; height:38px !important; min-width:38px !important;
+  margin:0 !important; padding:0 !important; border-radius:50% !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-cuerpo > .hc16-logo-circular .hc16-logo {width:100% !important;height:100% !important;object-fit:contain !important;}
+#cupones > article.cupon.hc24-horizontal .hc24-cuerpo > .hc16-logo-circular .hc16-logo-check {width:13px !important;height:13px !important;font-size:10px !important;}
+#cupones > article.cupon.hc24-horizontal .hc24-cuerpo > .hc25-banco-logo,
+#cupones > article.cupon.hc24-horizontal .hc24-cuerpo > .banco-logo-fallback {
+  display:block !important; position:static !important; width:62px !important; height:38px !important;
+  max-width:62px !important; min-width:62px !important; object-fit:contain !important;
+  margin:0 !important; padding:0 !important; transform:none !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-textos {
+  display:flex !important; flex-direction:column !important; align-items:stretch !important;
+  gap:8px !important; flex:1 1 auto !important; min-width:0 !important; width:auto !important;
+  margin:0 !important; padding:0 !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-textos > * {position:static !important; margin:0 !important; flex:0 0 auto !important; min-height:0 !important;}
+#cupones > article.cupon.hc24-horizontal .hc24-textos > .hc16-descuento,
+#cupones > article.cupon.hc24-horizontal .hc24-textos > .hc16-descuento.hc16-descuento-largo {
+  display:flex !important; flex-direction:row !important; align-items:baseline !important;
+  justify-content:flex-start !important; flex-wrap:nowrap !important; gap:4px !important;
+  width:100% !important; min-width:0 !important; max-width:100% !important;
+  font-size:clamp(18px,5vw,26px) !important; line-height:1.1 !important;
+  letter-spacing:-.035em !important; font-weight:800 !important;
+  white-space:nowrap !important; text-align:left !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-textos .hc16-descuento > .hc19-off {
+  display:inline !important; font-size:11px !important; line-height:1 !important;
+  font-weight:750 !important; color:#e64545 !important; -webkit-text-fill-color:#e64545 !important;
+  letter-spacing:0 !important; white-space:nowrap !important; flex:0 0 auto !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-textos > .hc16-detalle {
+  display:block !important; font-size:12px !important; line-height:1.3 !important;
+  height:auto !important; max-height:none !important; padding:0 !important; border:0 !important;
+  white-space:normal !important; overflow-wrap:anywhere !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-textos > .hc16-panel-importes {
+  display:flex !important; flex-direction:column !important; gap:4px !important;
+  border:0 !important; border-radius:0 !important; background:transparent !important;
+  box-shadow:none !important; padding:0 !important; min-height:0 !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-textos .hc16-panel-dato {
+  display:block !important; border:0 !important; min-height:0 !important;
+  padding:0 !important; margin:0 !important; background:none !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-textos .hc16-panel-icono {display:none !important;}
+#cupones > article.cupon.hc24-horizontal .hc24-textos .hc16-panel-textos {
+  display:flex !important; align-items:baseline !important; justify-content:flex-start !important;
+  gap:5px !important; width:100% !important; min-width:0 !important;
+  font-size:11px !important; line-height:1.25 !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-textos .hc16-panel-rotulo,
+#cupones > article.cupon.hc24-horizontal .hc24-textos .hc16-panel-textos strong {
+  font-size:11px !important; line-height:1.25 !important; width:auto !important;
+  margin:0 !important; padding:0 !important; white-space:normal !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-textos .hc16-panel-textos strong {font-weight:700 !important;white-space:nowrap !important;}
+#cupones > article.cupon.hc24-horizontal .hc24-textos > .hc16-etiquetas {display:flex !important;flex-wrap:wrap !important;gap:5px !important;}
+#cupones > article.cupon.hc24-horizontal .hc24-textos > .hc16-etiquetas:empty {display:none !important;}
+#cupones > article.cupon.hc24-horizontal > .hc24-pie {
+  display:flex !important; align-items:center !important; gap:8px !important;
+  padding:8px 0 0 !important; margin-top:auto !important; min-height:0 !important;
+  border-top:1px dashed #d7dce3 !important; position:relative !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-pie > .hc16-tiempo,
+#cupones > article.cupon.hc24-horizontal .hc24-pie > .hc16-vistas-superiores {
+  display:inline-flex !important; position:static !important; inset:auto !important;
+  transform:none !important; margin:0 !important; padding:0 !important;
+  font-size:10px !important; line-height:1.2 !important; font-weight:600 !important;
+  height:auto !important; width:auto !important; white-space:nowrap !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-pie > .hc16-tiempo[hidden] {display:none !important;}
+#cupones > article.cupon.hc24-horizontal .hc24-pie > .hc16-tiempo::before {font-size:12px !important;}
+#cupones > article.cupon.hc24-horizontal .hc24-pie > .hc16-vistas-superiores svg {width:12px !important;height:12px !important;}
+#cupones > article.cupon.hc24-horizontal .hc24-pie > .hc16-acciones {
+  display:block !important; position:static !important; inset:auto !important;
+  flex:0 0 auto !important; width:auto !important; min-width:0 !important;
+  margin:0 0 0 auto !important; padding:0 !important; height:auto !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-pie .v40-codigo,
+#cupones > article.cupon.hc24-horizontal .hc24-pie .v42-pie-tarjeta,
+#cupones > article.cupon.hc24-horizontal .hc24-pie .hc16-mensaje:empty {display:none !important;}
+#cupones > article.cupon.hc24-horizontal .hc24-pie .hc16-cta {display:block !important;width:auto !important;margin:0 !important;padding:0 !important;}
+#cupones > article.cupon.hc24-horizontal .hc24-pie .boton-canjear {
+  display:inline-flex !important; align-items:center !important; justify-content:center !important;
+  gap:5px !important; position:static !important; min-height:32px !important;
+  height:auto !important; width:auto !important; max-width:100% !important;
+  padding:7px 10px !important; margin:0 !important; border-radius:6px !important;
+  background:#ffe600 !important; color:#202020 !important; border:1px solid #efc900 !important;
+  font-size:11px !important; line-height:1.1 !important; font-weight:700 !important;
+  white-space:nowrap !important; box-shadow:none !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-pie .boton-canjear * {font-size:inherit !important;line-height:inherit !important;}
+#cupones > article.cupon.hc24-horizontal .hc24-pie .boton-canjear svg,
+#cupones > article.cupon.hc24-horizontal .hc24-pie .boton-canjear img {width:19px !important;height:19px !important;max-width:19px !important;object-fit:contain !important;}
+@media(max-width:380px){
+  #cupones > article.cupon.hc24-horizontal {padding:10px !important;}
+  #cupones > article.cupon.hc24-horizontal .hc24-pie {gap:5px !important;}
+  #cupones > article.cupon.hc24-horizontal .hc24-pie .boton-canjear {font-size:10px !important;padding:6px !important;}
+}
