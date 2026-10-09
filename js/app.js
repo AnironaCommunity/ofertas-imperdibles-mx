@@ -803,7 +803,7 @@ function iconoVista() {
 }
 
 function contenidoBotonCopiar() {
-  return `<span>Copiar cupón e ir a Mercado Libre</span>`;
+  return `<img class="hc16-cta-ml-logo" src="img/mercado-libre-icono-v766.png" alt="" aria-hidden="true"><span class="hc16-cta-ml-texto">Copiar cupón e ir a Mercado Libre</span><svg class="hc16-cta-ml-flecha" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }
 
 function iconoOfertazoBoton() {
