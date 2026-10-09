@@ -2960,3 +2960,71 @@
     margin: 0 !important;
   }
 }
+
+
+/* v5.20.23 — MASONRY REAL, tarjetas con altura propia (sin filas compartidas).
+   CSS columns conserva las tarjetas como hijos directos y sus eventos intactos.
+   Los cupones se distribuyen verticalmente por columnas. */
+#cupones.cupones-grid-compacta {
+  display: block !important;
+  columns: 2 !important;
+  column-gap: 9px !important;
+  align-items: initial !important;
+}
+#cupones.cupones-grid-compacta > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  height: auto !important;
+  aspect-ratio: auto !important;
+  margin: 0 0 9px !important;
+  break-inside: avoid !important;
+  -webkit-column-break-inside: avoid !important;
+  page-break-inside: avoid !important;
+  align-self: auto !important;
+  grid-column: auto !important;
+  box-sizing: border-box !important;
+}
+/* Los elementos opcionales no reservan altura cuando faltan. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-detalle:empty,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-etiquetas:empty {
+  display: none !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-detalle:not(:empty),
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-panel-importes,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-etiquetas:not(:empty) {
+  margin-top: 8px !important;
+  margin-bottom: 0 !important;
+  flex: 0 0 auto !important;
+}
+/* El código y botón siguen juntos y con 8px entre ambos; sin espacio artificial. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-acciones {
+  margin: 8px 0 0 !important;
+  padding: 0 !important;
+  gap: 8px !important;
+  flex: 0 0 auto !important;
+}
+/* En tarjetas bancarias no reservar altura para logotipos o descripciones ausentes. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41.cupon-bancario-unificado > .hc25-banco-valor {
+  min-height: 0 !important;
+  height: auto !important;
+  flex: 0 0 auto !important;
+}
+/* Desktop: cuatro columnas, tres en pantallas medianas. */
+@media (min-width: 769px) {
+  #cupones.cupones-grid-compacta { columns: 3 !important; column-gap: 12px !important; }
+  #cupones.cupones-grid-compacta > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 { margin-bottom: 12px !important; }
+}
+@media (min-width: 1200px) {
+  #cupones.cupones-grid-compacta { columns: 4 !important; }
+}
+@media (max-width: 350px) {
+  #cupones.cupones-grid-compacta { columns: 2 !important; }
+}
