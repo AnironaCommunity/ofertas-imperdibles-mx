@@ -750,7 +750,8 @@
 /* Fuente consolidada: css/tarjetas-editoriales-v43.css */
 /* v4.3: limpieza definitiva de la geometría horizontal heredada. */
 #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 {
-  align-self: start !important;
+  /* Igualar altura con las demás tarjetas de la misma fila. */
+  align-self: stretch !important;
   display: flex !important;
   grid-template-columns: none !important;
   grid-template-rows: none !important;
@@ -2344,17 +2345,18 @@
 }
 /* Separación de la información y del recuadro de código, en todas las tarjetas. */
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-acciones {
-  margin: 10px 0 0 !important;
+  /* El código, botón y pie permanecen juntos al final de cada tarjeta. */
+  margin: auto 0 0 !important;
 }
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-etiquetas {
-  margin: 10px 0 0 !important;
+  margin: 8px 0 0 !important;
 }
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-etiquetas:empty {
   display: none !important;
   margin: 0 !important;
 }
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-etiquetas:not(:empty) + .hc16-acciones {
-  margin-top: 10px !important;
+  margin-top: auto !important;
 }
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-ahorro-extra {
   padding-bottom: 4px !important;
