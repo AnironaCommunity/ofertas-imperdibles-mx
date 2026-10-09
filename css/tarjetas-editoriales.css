@@ -2800,10 +2800,9 @@
 }
 
 
-/* v5.20.14: corregir la regla de font-weight:700 y text-fill del contador
-   establecida en tarjetas-cupon-descuento.css. Solo tarjetas editoriales. */
-#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-tiempo,
-#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-vistas-superiores,
+/* v5.20.15: solo el contador adopta la tipografía del temporizador.
+   El temporizador y sus hijos quedan completamente intactos. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-vistas-superiores.hc61-view-chip,
 #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-vistas-superiores.hc61-view-chip > .numero-clics {
   font-family: "Proxima Nova", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important;
   font-size: 9px !important;
@@ -2812,23 +2811,8 @@
   line-height: 1 !important;
   letter-spacing: normal !important;
   font-variant-numeric: tabular-nums !important;
-  color: #4d5668 !important;
-  -webkit-text-fill-color: #4d5668 !important;
-}
-#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-vistas-superiores.hc61-view-chip > .numero-clics {
-  text-shadow: none !important;
+  color: #3d4657 !important;
+  -webkit-text-fill-color: #3d4657 !important;
   -webkit-text-stroke: 0 !important;
-}
-#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-tiempo .estado-linea,
-#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-tiempo .estado-tiempo,
-#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-tiempo .estado-tiempo span {
-  font-family: inherit !important;
-  font-size: inherit !important;
-  font-weight: inherit !important;
-  color: inherit !important;
-  -webkit-text-fill-color: inherit !important;
-}
-#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-tiempo::before {
-  font-size: 10px !important;
-  line-height: 1 !important;
+  text-shadow: none !important;
 }
