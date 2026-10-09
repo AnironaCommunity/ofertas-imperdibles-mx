@@ -612,3 +612,57 @@
   content:none !important;
   display:none !important;
 }
+
+
+/* v5.21.6 — Botón Copiar cupón: 32px de altura REAL, sin texto desbordado. */
+#cupones > article.cupon.hc24-horizontal .hc24-pie .hc16-cta > button.boton-canjear:not(.boton-ofertazo-agotado),
+#cupones > article.cupon.hc24-horizontal .hc24-pie button.boton-canjear:not(.boton-ofertazo-agotado) {
+  box-sizing:border-box !important;
+  display:inline-flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:center !important;
+  vertical-align:middle !important;
+  gap:5px !important;
+  height:32px !important;
+  min-height:32px !important;
+  max-height:32px !important;
+  width:auto !important;
+  padding:0 10px !important;
+  margin:0 !important;
+  border:1px solid #f2be00 !important;
+  border-radius:12px !important;
+  background:#fff !important;
+  background-image:none !important;
+  color:#202020 !important;
+  -webkit-text-fill-color:#202020 !important;
+  font-family:inherit !important;
+  font-size:12px !important;
+  font-weight:600 !important;
+  line-height:1 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  box-shadow:none !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-pie button.boton-canjear:not(.boton-ofertazo-agotado) :is(span,strong,b,small) {
+  font-size:12px !important;
+  line-height:1 !important;
+  font-weight:600 !important;
+  white-space:nowrap !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-pie button.boton-canjear:not(.boton-ofertazo-agotado) img {
+  display:block !important;
+  flex:0 0 20px !important;
+  width:20px !important;
+  height:20px !important;
+  max-width:20px !important;
+  max-height:20px !important;
+  object-fit:contain !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-pie button.boton-canjear:not(.boton-ofertazo-agotado) svg {
+  flex:0 0 auto !important;
+  width:14px !important;
+  height:14px !important;
+  max-width:14px !important;
+  max-height:14px !important;
+}
