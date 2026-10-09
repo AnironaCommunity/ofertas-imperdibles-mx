@@ -2105,8 +2105,8 @@
 }
 
 /* Información de cupón: orden, jerarquía y divisores. Se aplica a tarjetas reales
-   (el script mueve los campos fuera de .hc16-info). Los bancarios conservan su diseño. */
-#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-detalle {
+   (el script mueve los campos fuera de .hc16-info). Incluye también los cupones bancarios. */
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-detalle {
   order: 3 !important;
   margin: 9px 0 0 !important;
   padding: 0 0 9px !important;
@@ -2115,34 +2115,34 @@
   font-weight: 600 !important;
   line-height: 1.25 !important;
 }
-#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-condiciones {
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-condiciones {
   order: 4 !important;
   margin: 0 !important;
   padding: 9px 0 !important;
   border-bottom: 1px dashed #cbd2d9 !important;
 }
-#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-detalle + .hc16-condiciones {
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-detalle + .hc16-condiciones {
   border-top: 0 !important;
 }
-#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-ahorro-extra {
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-ahorro-extra {
   order: 5 !important;
   margin: 0 !important;
   padding: 9px 0 0 !important;
 }
-#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-condiciones .hc16-condicion,
-#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-ahorro-extra {
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-condiciones .hc16-condicion,
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-ahorro-extra {
   color: #818994 !important;
   font-size: clamp(.7rem, 2.7vw, .87rem) !important;
   font-weight: 400 !important;
   line-height: 1.25 !important;
 }
-#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-condiciones .hc16-condicion strong,
-#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-ahorro-extra strong {
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-condiciones .hc16-condicion strong,
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-ahorro-extra strong {
   display: inline !important;
   color: inherit !important;
   font-weight: 500 !important;
 }
-#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-etiquetas {
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-etiquetas {
   order: 6 !important;
 }
 /* Imagen opcional del administrador, alineada con el importe sin taparlo. */

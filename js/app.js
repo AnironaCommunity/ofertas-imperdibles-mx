@@ -1473,7 +1473,7 @@ function aplicarEstructuraEditorialV41(articulo) {
   }
 
   // La información se muestra en el orden: detalle, compra mínima y ahorro.
-  const informacionOrdenada = esBancario ? [condiciones, ...detalles] : [...detalles.filter(n => n.classList.contains("hc16-detalle")), condiciones, ...detalles.filter(n => n.classList.contains("hc16-ahorro-extra"))];
+  const informacionOrdenada = [...detalles.filter(n => n.classList.contains("hc16-detalle")), condiciones, ...detalles.filter(n => n.classList.contains("hc16-ahorro-extra"))];
   [categoria, valor, ...informacionOrdenada, etiquetas, acciones].filter(Boolean).forEach((nodo) => articulo.append(nodo));
   info.remove();
 
@@ -1649,8 +1649,8 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
     <div class="hc16-info hc25-banco-info">
       <div class="hc16-categoria">${esCuponAgotado(cupon) ? "CUPÓN AGOTADO" : "CUPÓN BANCARIO"}</div>
       <div class="hc16-condiciones"><p class="hc16-condicion">Compra mínima <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p></div>
-      ${cupon.ahorro_maximo ? `<p class="hc16-detalle">Tope de descuento <strong>${escaparHtml(cupon.ahorro_maximo)}</strong></p>` : ""}
       ${cupon.detalle_bancario ? `<p class="hc16-detalle hc25-banco-detalle">${escaparHtml(cupon.detalle_bancario)}</p>` : ""}
+      ${cupon.ahorro_maximo ? `<p class="hc16-ahorro-extra">Ahorra hasta <strong>${escaparHtml(cupon.ahorro_maximo)}</strong></p>` : ""}
       <div class="hc16-etiquetas">${htmlEtiquetasCupon(estados)}</div>
     </div>
     <div class="hc16-acciones">
