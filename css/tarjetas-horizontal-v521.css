@@ -217,3 +217,164 @@
     padding:0 7px !important;height:22px !important;min-height:22px !important;
   }
 }
+
+
+/* v5.21.2 — restauración precisa del logo circular y alineación bancaria. */
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-cuerpo {
+  display:flex !important;
+  flex-flow:row nowrap !important;
+  align-items:flex-start !important;
+  justify-content:flex-start !important;
+  gap:10px !important;
+  min-width:0 !important;
+}
+/* El diseño editorial previo posicionaba los logos con position:absolute.
+   Al moverlos a la tarjeta horizontal es indispensable anular esa posición. */
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-cuerpo > .hc16-logo-circular {
+  position:relative !important;
+  inset:auto !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  flex:0 0 42px !important;
+  width:42px !important;
+  min-width:42px !important;
+  height:42px !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:1px solid #e4e8ed !important;
+  border-radius:50% !important;
+  background:#fff !important;
+  box-sizing:border-box !important;
+  overflow:visible !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-cuerpo > .hc16-logo-circular > img.hc16-logo {
+  position:absolute !important;
+  inset:50% auto auto 50% !important;
+  transform:translate(-50%,-50%) !important;
+  display:block !important;
+  width:35px !important;
+  min-width:35px !important;
+  max-width:35px !important;
+  height:35px !important;
+  min-height:35px !important;
+  max-height:35px !important;
+  margin:0 !important;
+  padding:0 !important;
+  object-fit:contain !important;
+  border:0 !important;
+  border-radius:50% !important;
+  background:transparent !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-cuerpo > .hc16-logo-circular > .hc16-logo-check {
+  position:absolute !important;
+  inset:auto -3px -3px auto !important;
+  transform:none !important;
+  display:grid !important;
+  place-items:center !important;
+  width:14px !important;
+  height:14px !important;
+  min-width:14px !important;
+  min-height:14px !important;
+  padding:0 !important;
+  margin:0 !important;
+  border:2px solid #fff !important;
+  border-radius:50% !important;
+  background:#0eae54 !important;
+  color:#fff !important;
+  font-size:10px !important;
+  font-weight:800 !important;
+  line-height:1 !important;
+  z-index:5 !important;
+  box-sizing:content-box !important;
+}
+/* Ambos logotipos bancarios permanecen a la izquierda del descuento.
+   El logo bancario usa el espacio disponible sin empujar el porcentaje abajo. */
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal.cupon-bancario-unificado > .hc24-cuerpo > .hc24-logos-banco {
+  position:relative !important;
+  display:flex !important;
+  flex:0 0 clamp(78px,24vw,125px) !important;
+  width:clamp(78px,24vw,125px) !important;
+  min-width:0 !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:8px !important;
+  padding:0 !important;
+  margin:0 !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal.cupon-bancario-unificado > .hc24-cuerpo > .hc24-logos-banco > .hc25-banco-logo,
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal.cupon-bancario-unificado > .hc24-cuerpo > .hc24-logos-banco > .banco-logo-fallback {
+  position:static !important;
+  inset:auto !important;
+  display:block !important;
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  height:clamp(42px,13vw,74px) !important;
+  max-height:74px !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  object-fit:contain !important;
+  object-position:center center !important;
+  background:transparent !important;
+  transform:none !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal.cupon-bancario-unificado > .hc24-cuerpo > .hc24-logos-banco > .hc24-imagen-banco-extra {
+  position:relative !important;
+  inset:auto !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  flex:0 0 42px !important;
+  width:42px !important;
+  height:42px !important;
+  min-height:42px !important;
+  margin:0 !important;
+  border:1px solid #e4e8ed !important;
+  border-radius:50% !important;
+  background:#fff !important;
+  overflow:visible !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal.cupon-bancario-unificado > .hc24-cuerpo > .hc24-logos-banco > .hc24-imagen-banco-extra > img.hc16-logo {
+  position:absolute !important;
+  inset:50% auto auto 50% !important;
+  transform:translate(-50%,-50%) !important;
+  display:block !important;
+  width:35px !important;
+  max-width:35px !important;
+  height:35px !important;
+  max-height:35px !important;
+  margin:0 !important;
+  object-fit:contain !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal.cupon-bancario-unificado > .hc24-cuerpo > .hc24-logos-banco > .hc24-imagen-banco-extra > .hc16-logo-check {
+  position:absolute !important;
+  inset:auto -3px -3px auto !important;
+  transform:none !important;
+  display:grid !important;
+  place-items:center !important;
+  width:14px !important;
+  height:14px !important;
+  border:2px solid #fff !important;
+  border-radius:50% !important;
+  background:#0eae54 !important;
+  color:#fff !important;
+  font-size:10px !important;
+  line-height:1 !important;
+  z-index:5 !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal.cupon-bancario-unificado > .hc24-cuerpo > .hc24-textos {
+  flex:1 1 0 !important;
+  width:auto !important;
+  min-width:0 !important;
+  gap:8px !important;
+}
+@media (max-width:359px) {
+  #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal.cupon-bancario-unificado > .hc24-cuerpo > .hc24-logos-banco {
+    flex-basis:72px !important;
+    width:72px !important;
+  }
+}

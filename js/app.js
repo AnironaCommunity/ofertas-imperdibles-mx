@@ -1557,9 +1557,17 @@ function aplicarEstructuraEditorialV41(articulo) {
   const logoBanco = valor.querySelector(".hc25-banco-logo, .banco-logo-fallback");
   const logoTienda = valor.querySelector(".hc16-logo-circular");
   const imagenExtraBanco = articulo.querySelector(".hc24-imagen-banco-extra");
-  if (logoTienda) cuerpo.append(logoTienda);
-  else if (imagenExtraBanco) cuerpo.append(imagenExtraBanco);
-  if (logoBanco) cuerpo.append(logoBanco);
+  // Mantener ambos logotipos bancarios junto al descuento, sin trasladarlos
+  // debajo de la descripción o de las etiquetas.
+  if (logoTienda) {
+    cuerpo.append(logoTienda);
+  } else if (logoBanco || imagenExtraBanco) {
+    const logosBanco = document.createElement("div");
+    logosBanco.className = "hc24-logos-banco";
+    if (imagenExtraBanco) logosBanco.append(imagenExtraBanco);
+    if (logoBanco) logosBanco.append(logoBanco);
+    cuerpo.append(logosBanco);
+  }
   if (descuento) textos.append(descuento);
   // Orden visual definitivo: descuento, descripción, compra mínima, ahorro.
   for (const nodo of informacionOrdenada) textos.append(nodo);
