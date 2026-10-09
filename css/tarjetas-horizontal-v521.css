@@ -666,3 +666,36 @@
   max-width:14px !important;
   max-height:14px !important;
 }
+
+
+/* v5.21.8 — Pie compacto: el aviso empieza a 5px del separador,
+   alineado arriba con el botón. El botón termina a 8px del borde inferior. */
+#cupones > article.cupon.hc24-horizontal {
+  padding-bottom:8px !important;
+}
+#cupones > article.cupon.hc24-horizontal > .hc24-pie,
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie {
+  display:flex !important;
+  align-items:flex-start !important;
+  gap:5px !important;
+  padding:5px 0 0 !important;
+  margin-bottom:0 !important;
+  min-height:0 !important;
+}
+#cupones > article.cupon.hc24-horizontal > .hc24-pie > .hc16-tiempo {
+  display:inline-flex !important;
+  align-items:center !important;
+  align-self:flex-start !important;
+  margin:0 !important;
+  padding:0 !important;
+  line-height:1.2 !important;
+  min-height:0 !important;
+  height:auto !important;
+  transform:none !important;
+}
+#cupones > article.cupon.hc24-horizontal > .hc24-pie > .hc16-acciones,
+#cupones > article.cupon.hc24-horizontal .hc24-pie .hc16-cta {
+  align-self:flex-start !important;
+  margin-top:0 !important;
+  margin-bottom:0 !important;
+}
