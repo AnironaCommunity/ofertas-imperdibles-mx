@@ -2145,60 +2145,69 @@
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-etiquetas {
   order: 6 !important;
 }
-/* Logo opcional de tienda: círculo con indicador visual, junto al descuento.
-   No afecta la imagen ni la composición de los cupones bancarios. */
-#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-valor:has(> .hc16-logo-circular) {
+/* Logo de tienda y descuento en una sola fila estructural; los bancarios no cambian. */
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-valor > .hc16-logo-descuento-fila {
   display: flex !important;
+  flex-direction: row !important;
   align-items: center !important;
-  gap: 11px !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  width: 100% !important;
+  min-width: 0 !important;
 }
-#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-valor > .hc16-logo-circular {
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) .hc16-logo-descuento-fila > .hc16-logo-circular {
   position: relative !important;
+  inset: auto !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  flex: 0 0 44px !important;
-  width: 44px !important;
-  height: 44px !important;
+  flex: 0 0 52px !important;
+  width: 52px !important;
+  height: 52px !important;
   border: 1px solid #e4e8ed !important;
   border-radius: 50% !important;
   background: #fff !important;
   box-sizing: border-box !important;
-  order: 0 !important;
 }
-#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) .hc16-logo-circular > .hc16-logo {
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) .hc16-logo-descuento-fila .hc16-logo-circular > img.hc16-logo {
   position: static !important;
+  inset: auto !important;
   display: block !important;
-  width: 31px !important;
-  height: 31px !important;
-  max-width: 31px !important;
+  flex: none !important;
+  width: 44px !important;
+  height: 44px !important;
+  max-width: 44px !important;
+  max-height: 44px !important;
   margin: 0 !important;
+  padding: 0 !important;
   border: 0 !important;
-  border-radius: 0 !important;
+  border-radius: 50% !important;
   object-fit: contain !important;
   background: transparent !important;
 }
-#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) .hc16-logo-check {
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) .hc16-logo-descuento-fila .hc16-logo-check {
   position: absolute !important;
   right: -3px !important;
-  bottom: -2px !important;
+  bottom: -3px !important;
   display: grid !important;
   place-items: center !important;
-  width: 16px !important;
-  height: 16px !important;
+  width: 17px !important;
+  height: 17px !important;
   border: 2px solid #fff !important;
   border-radius: 50% !important;
   background: #0eae54 !important;
   color: #fff !important;
-  font-size: 10px !important;
+  font-size: 11px !important;
   font-weight: 800 !important;
   line-height: 1 !important;
   box-sizing: content-box !important;
 }
-#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) > .hc16-valor:has(> .hc16-logo-circular) > .hc16-descuento {
-  max-width: calc(100% - 55px) !important;
+#cupones > article.cupon.cupon-editorial-v41:not(.cupon-bancario):not(.cupon-bancario-unificado) .hc16-logo-descuento-fila > .hc16-descuento {
+  position: static !important;
+  flex: 0 1 auto !important;
   min-width: 0 !important;
-  order: 1 !important;
+  max-width: calc(100% - 62px) !important;
+  margin: 0 !important;
 }
 /* Separación de la información y del recuadro de código, en todas las tarjetas. */
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-acciones {
