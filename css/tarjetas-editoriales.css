@@ -750,6 +750,7 @@
 /* Fuente consolidada: css/tarjetas-editoriales-v43.css */
 /* v4.3: limpieza definitiva de la geometría horizontal heredada. */
 #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 {
+  align-self: start !important;
   display: flex !important;
   grid-template-columns: none !important;
   grid-template-rows: none !important;
@@ -2128,81 +2129,102 @@
   }
 }
 
-/* Panel de importes compacto: misma estructura para tienda, exclusivos y bancarios. */
+/* Panel informativo: ficha amarilla compacta, dos filas y divisor sutil. */
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes {
   order: 4 !important;
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
   width: 100%;
   min-width: 0;
-  gap: 0;
   margin: 10px 0 0 !important;
-  padding: 9px 6px !important;
-  border: 0 !important;
-  border-radius: 12px;
-  background: #eaf5fd;
-}
-#cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes.hc16-panel-unico {
-  grid-template-columns: minmax(0, 1fr);
+  padding: 6px 12px !important;
+  border: 1px dashed #edc540 !important;
+  border-radius: 12px !important;
+  background: #fff7d7 !important;
+  box-sizing: border-box !important;
 }
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes > .hc16-panel-dato {
-  display: flex !important;
-  flex-direction: row !important;
+  display: grid !important;
+  grid-template-columns: 26px minmax(0, 1fr) auto !important;
   align-items: center !important;
-  justify-content: center !important;
-  gap: 5px;
+  justify-content: stretch !important;
+  column-gap: 8px !important;
+  width: 100%;
   min-width: 0;
   margin: 0 !important;
-  padding: 3px 5px !important;
+  padding: 8px 0 !important;
   border: 0 !important;
+  border-radius: 0 !important;
   background: transparent !important;
+  box-sizing: border-box !important;
 }
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes > .hc16-panel-dato + .hc16-panel-dato {
-  border-left: 1px solid #c5d5e2 !important;
+  border-top: 1px solid #e9d898 !important;
+  border-left: 0 !important;
 }
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes .hc16-panel-icono {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 25px;
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 25px !important;
+  height: 25px !important;
+  min-width: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #293c50 !important;
 }
-#cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes .hc16-icono-compra { color: #087cce; background: #d7edff; }
-#cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes .hc16-icono-ahorro { color: #079d61; background: #d7f6e6; }
-#cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes .hc16-panel-icono svg { width: 16px; height: 16px; }
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes .hc16-panel-icono svg {
+  width: 22px !important;
+  height: 22px !important;
+}
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes .hc16-panel-textos {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  min-width: 0;
-  gap: 2px;
+  display: contents !important;
 }
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes .hc16-panel-rotulo {
-  color: #526473;
-  font-size: clamp(9px, 1.65vw, 12px);
-  line-height: 1.15;
-  font-weight: 450;
+  min-width: 0;
+  font-size: clamp(10px, 1.5vw, 13px) !important;
+  line-height: 1.25 !important;
+  font-weight: 500 !important;
+  color: #526473 !important;
 }
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes strong {
   display: block !important;
   margin: 0 !important;
   color: #243648 !important;
-  font-size: clamp(12px, 2.25vw, 18px) !important;
-  font-weight: 750 !important;
-  line-height: 1.15;
-  overflow-wrap: anywhere;
+  font-size: clamp(14px, 2.1vw, 20px) !important;
+  font-weight: 800 !important;
+  line-height: 1.15 !important;
+  text-align: right !important;
+  white-space: nowrap !important;
 }
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-detalle:has(+ .hc16-panel-importes) {
   border-bottom: 0 !important;
   padding-bottom: 0 !important;
 }
 @media (max-width: 480px) {
-  #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes { padding: 7px 3px !important; }
-  #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes > .hc16-panel-dato { padding: 3px 2px !important; gap: 3px; }
-  #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes .hc16-panel-icono { flex-basis: 21px; width: 21px; height: 21px; }
-  #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes .hc16-panel-icono svg { width: 14px; height: 14px; }
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes {
+    padding: 4px 7px !important;
+  }
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes > .hc16-panel-dato {
+    grid-template-columns: 19px minmax(0, 1fr) auto !important;
+    column-gap: 4px !important;
+    padding: 7px 0 !important;
+  }
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes .hc16-panel-icono {
+    width: 19px !important;
+    height: 19px !important;
+  }
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes .hc16-panel-icono svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes .hc16-panel-rotulo {
+    font-size: clamp(9px, 2.4vw, 11px) !important;
+  }
+  #cupones > article.cupon.cupon-editorial-v41 > .hc16-panel-importes strong {
+    font-size: clamp(12px, 3.2vw, 17px) !important;
+  }
 }
 
 /* Información de cupón: orden, jerarquía y divisores. Se aplica a tarjetas reales
@@ -2322,7 +2344,7 @@
 }
 /* Separación de la información y del recuadro de código, en todas las tarjetas. */
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-acciones {
-  margin: 12px 0 0 !important;
+  margin: 10px 0 0 !important;
 }
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-etiquetas {
   margin: 10px 0 0 !important;
