@@ -564,3 +564,51 @@
   font-size:11px !important;
   margin-right:4px !important;
 }
+
+
+/* v5.21.5 — Reglas verificables sobre el DOM real de las tarjetas. */
+#cupones > article.cupon.hc24-horizontal > .hc24-cuerpo {
+  gap:5px !important;
+  column-gap:5px !important;
+}
+#cupones > article.cupon.hc24-horizontal > .hc24-cuerpo > .hc24-logos-banco,
+#cupones > article.cupon.hc24-horizontal > .hc24-cuerpo > .hc16-logo-circular {
+  margin:0 !important;
+  margin-right:0 !important;
+}
+#cupones > article.cupon.hc24-horizontal > .hc24-cuerpo > .hc24-textos {
+  margin:0 !important;
+  margin-left:0 !important;
+  padding-left:0 !important;
+}
+/* La altura real se fija en el botón, no solo en el contenedor. */
+#cupones > article.cupon.hc24-horizontal .hc24-pie .hc16-cta > button.boton-canjear:not(.boton-ofertazo-agotado) {
+  box-sizing:border-box !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  height:17px !important;
+  min-height:17px !important;
+  max-height:17px !important;
+  padding:0 7px !important;
+  margin:0 !important;
+  line-height:15px !important;
+  overflow:visible !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-pie > .hc16-tiempo {
+  display:inline-flex !important;
+  align-items:center !important;
+  font-size:10px !important;
+  font-weight:400 !important;
+  color:#69717d !important;
+  -webkit-text-fill-color:#69717d !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-pie > .hc16-tiempo.vigencia-urgente {
+  font-weight:600 !important;
+  color:#ff583e !important;
+  -webkit-text-fill-color:#ff583e !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-pie > .hc16-tiempo.vigencia-urgente::before {
+  content:none !important;
+  display:none !important;
+}

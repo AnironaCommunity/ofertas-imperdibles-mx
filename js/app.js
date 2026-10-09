@@ -1005,10 +1005,8 @@ function updateCouponTimes() {
 
     if (timeState.state === "programado") {
       status.hidden = false;
-      const aviso = mensajeVigenciaCupon(timeState.target);
-      status.classList.toggle("vigencia-urgente", aviso.urgente);
-      status.classList.toggle("vigencia-normal", !aviso.urgente);
-      status.textContent = aviso.texto;
+      status.classList.remove("vigencia-urgente", "vigencia-normal");
+      status.textContent = `Disponible el ${new Intl.DateTimeFormat("es-MX", {day:"numeric", month:"long"}).format(new Date(timeState.target))}`;
 
       redeemButton.disabled = true;
       redeemButton.classList.add("boton-programado");
@@ -1050,16 +1048,10 @@ function updateCouponTimes() {
 
     if (timeState.target !== null) {
       status.hidden = false;
-      status.innerHTML = `
-        <div class="estado-linea">
-          <span>${timeState.label}</span>
-          <span class="estado-tiempo">
-            ${card.classList.contains("cupon-editorial-v41")
-              ? formatRemainingCompact(timeState.target - Date.now())
-              : formatRemaining(timeState.target - Date.now())}
-          </span>
-        </div>
-      `;
+      const aviso = mensajeVigenciaCupon(timeState.target);
+      status.classList.toggle("vigencia-urgente", aviso.urgente);
+      status.classList.toggle("vigencia-normal", !aviso.urgente);
+      status.textContent = aviso.texto;
     } else {
       /*
         Sin fecha de finalización:
