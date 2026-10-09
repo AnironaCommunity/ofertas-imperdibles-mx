@@ -2798,3 +2798,26 @@
   flex: 0 0 auto !important;
   gap: 8px !important;
 }
+
+/* v5.20.12 — Igualar exactamente el texto de clics al reloj. */
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-vistas-superiores {
+ font-family: "Proxima Nova", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important;
+ font-size: 9px !important;
+ font-weight: 600 !important;
+ font-style: normal !important;
+ line-height: 1 !important;
+ letter-spacing: normal !important;
+ font-variant-numeric: tabular-nums !important;
+ color: #3d4657 !important;
+}
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-vistas-superiores .numero-clics {
+ font: inherit !important;
+ font-variant-numeric: inherit !important;
+ letter-spacing: inherit !important;
+ color: inherit !important;
+}
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo::before {
+ font-size: 12px !important;
+ line-height: 1 !important;
+ vertical-align: middle !important;
+}
