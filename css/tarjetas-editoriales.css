@@ -2848,3 +2848,23 @@
   position: static !important;
   transform: none !important;
 }
+
+
+/* v5.20.19 — La tipografía de referencia es el contador de clics.
+   Únicamente se iguala el texto del temporizador; no se toca el contador. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-tiempo,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-tiempo .estado-linea,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-tiempo .estado-tiempo,
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-tiempo .estado-tiempo span {
+  font-family: "Proxima Nova", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
+  line-height: 1.05 !important;
+  letter-spacing: normal !important;
+  font-variant-numeric: tabular-nums !important;
+  color: #4d5663 !important;
+  -webkit-text-fill-color: #4d5663 !important;
+  -webkit-text-stroke-width: 0 !important;
+  text-shadow: none !important;
+}
