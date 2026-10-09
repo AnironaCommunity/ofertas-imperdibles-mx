@@ -2821,3 +2821,33 @@
  line-height: 1 !important;
  vertical-align: middle !important;
 }
+
+/* v5.20.13 — Unificar reloj y número de vistas con la misma regla. */
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo,
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-vistas-superiores,
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-vistas-superiores > span.numero-clics {
+  font-family: "Proxima Nova", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important;
+  font-size: 9px !important;
+  font-weight: 600 !important;
+  font-style: normal !important;
+  line-height: 1 !important;
+  letter-spacing: normal !important;
+  font-variant-numeric: tabular-nums !important;
+  color: #4d5668 !important;
+}
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo .estado-tiempo,
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo .estado-tiempo > span,
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-vistas-superiores > span.numero-clics {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  font-style: inherit !important;
+  line-height: inherit !important;
+  letter-spacing: inherit !important;
+  color: inherit !important;
+}
+/* El icono no debe superar la altura visual del texto. */
+#cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo::before {
+  font-size: 11px !important;
+  line-height: 1 !important;
+}
