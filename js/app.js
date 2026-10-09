@@ -811,7 +811,7 @@ function iconoOfertazoBoton() {
 }
 
 function contenidoBotonOfertazo() {
-  return `${iconoOfertazoBoton()}<span>Ver ofertas</span>`;
+  return `<span class="hc27-icono-agotado" aria-hidden="true">${iconoOfertazoBoton()}</span><span>Ver ofertas</span><svg class="hc16-cta-ml-flecha" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }
 
 function claveUsado(id) {
@@ -1582,6 +1582,13 @@ function aplicarEstructuraEditorialV41(articulo) {
   for (const nodo of informacionOrdenada) textos.append(nodo);
   if (etiquetas?.children.length) textos.append(etiquetas);
   cuerpo.append(textos);
+  // El botón real se mueve junto al descuento. Se conserva su listener,
+  // su estado agotado y la navegación original a Mercado Libre.
+  const cta = acciones.querySelector(":scope > .hc16-cta");
+  if (cta) {
+    cta.classList.add("hc27-cta-lateral");
+    cuerpo.append(cta);
+  }
   const pieCompacto = document.createElement("div");
   pieCompacto.className = "hc24-pie";
   if (tiempo) pieCompacto.append(tiempo);

@@ -666,3 +666,163 @@
   max-width:14px !important;
   max-height:14px !important;
 }
+
+
+/* v5.21.7: botón 10 oscuro, junto al descuento; agotado solo lectura
+   con CTA activa, mismo tamaño para todos los tipos de cupón. */
+#cupones > article.cupon.hc24-horizontal > .hc24-cuerpo {
+  position:relative !important;
+  padding-right:0 !important;
+  align-items:flex-start !important;
+  gap:5px !important;
+}
+#cupones > article.cupon.hc24-horizontal > .hc24-cuerpo > .hc24-textos {
+  gap:5px !important;
+}
+#cupones > article.cupon.hc24-horizontal > .hc24-cuerpo > .hc27-cta-lateral {
+  display:flex !important;
+  flex:0 0 auto !important;
+  width:auto !important;
+  margin:0 0 0 auto !important;
+  padding:0 !important;
+  align-self:flex-start !important;
+  position:relative !important;
+  z-index:3 !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc27-cta-lateral > button.boton-canjear,
+#cupones > article.cupon.hc24-horizontal .hc27-cta-lateral > button.boton-canjear.boton-ofertazo-agotado {
+  display:inline-flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:7px !important;
+  box-sizing:border-box !important;
+  width:184px !important;
+  min-width:184px !important;
+  max-width:184px !important;
+  height:38px !important;
+  min-height:38px !important;
+  max-height:38px !important;
+  padding:4px 11px !important;
+  border:1px solid #33373b !important;
+  border-radius:999px !important;
+  background:#30343a !important;
+  background-image:none !important;
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+  font:600 12px/1.1 inherit !important;
+  font-size:12px !important;
+  line-height:1.1 !important;
+  white-space:nowrap !important;
+  opacity:1 !important;
+  filter:none !important;
+  box-shadow:0 3px 9px rgba(0,0,0,.12) !important;
+  cursor:pointer !important;
+  pointer-events:auto !important;
+  text-decoration:none !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc27-cta-lateral > button.boton-canjear > span,
+#cupones > article.cupon.hc24-horizontal .hc27-cta-lateral > button.boton-canjear > .hc16-cta-ml-texto {
+  font-size:12px !important;
+  font-weight:600 !important;
+  line-height:1.1 !important;
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc27-cta-lateral > button.boton-canjear > img.hc16-cta-ml-logo,
+#cupones > article.cupon.hc24-horizontal .hc27-cta-lateral > button.boton-canjear > .hc27-icono-agotado {
+  flex:0 0 28px !important;
+  display:grid !important;
+  place-items:center !important;
+  box-sizing:border-box !important;
+  width:28px !important;
+  height:28px !important;
+  max-width:28px !important;
+  max-height:28px !important;
+  padding:3px !important;
+  border-radius:50% !important;
+  background:#ffe600 !important;
+  object-fit:contain !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc27-cta-lateral .hc27-icono-agotado .boton-ofertazo-icono {
+  width:21px !important;
+  height:21px !important;
+  display:block !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc27-cta-lateral .hc27-icono-agotado svg {
+  width:21px !important;
+  height:21px !important;
+  display:block !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc27-cta-lateral > button.boton-canjear > svg.hc16-cta-ml-flecha {
+  width:14px !important;
+  height:14px !important;
+  flex:0 0 14px !important;
+  color:#fff !important;
+  stroke:#fff !important;
+}
+#cupones > article.cupon.hc24-horizontal > .hc24-pie {
+  margin-top:5px !important;
+  padding-top:5px !important;
+  min-height:0 !important;
+  gap:5px !important;
+}
+#cupones > article.cupon.hc24-horizontal > .hc24-pie > .hc16-acciones:has(> .hc16-mensaje:empty) {
+  display:none !important;
+}
+/* Solo se atenúa el contenido del cupón agotado, no el botón funcional. */
+#cupones > article.cupon.hc24-horizontal.cupon-agotado {
+  opacity:1 !important;
+  filter:none !important;
+}
+#cupones > article.cupon.hc24-horizontal.cupon-agotado > .hc24-encabezado,
+#cupones > article.cupon.hc24-horizontal.cupon-agotado > .hc24-cuerpo > :not(.hc27-cta-lateral),
+#cupones > article.cupon.hc24-horizontal.cupon-agotado > .hc24-pie {
+  opacity:.48 !important;
+  filter:grayscale(.45) !important;
+}
+#cupones > article.cupon.hc24-horizontal.cupon-agotado > .hc24-cuerpo > :not(.hc27-cta-lateral),
+#cupones > article.cupon.hc24-horizontal.cupon-agotado > .hc24-encabezado {
+  pointer-events:none !important;
+}
+#cupones > article.cupon.hc24-horizontal.cupon-agotado .hc27-cta-lateral,
+#cupones > article.cupon.hc24-horizontal.cupon-agotado .hc27-cta-lateral > button {
+  opacity:1 !important;
+  filter:none !important;
+  cursor:pointer !important;
+  pointer-events:auto !important;
+}
+@media(max-width:550px) {
+  #cupones > article.cupon.hc24-horizontal > .hc24-cuerpo {
+    display:grid !important;
+    grid-template-columns:42px minmax(0,1fr) !important;
+    column-gap:5px !important;
+    row-gap:5px !important;
+  }
+  #cupones > article.cupon.hc24-horizontal > .hc24-cuerpo > .hc24-textos {
+    grid-column:2 !important;
+    grid-row:1 !important;
+    min-width:0 !important;
+  }
+  #cupones > article.cupon.hc24-horizontal > .hc24-cuerpo > .hc16-logo-circular,
+  #cupones > article.cupon.hc24-horizontal > .hc24-cuerpo > .hc24-logos-banco {
+    grid-column:1 !important;
+    grid-row:1 !important;
+  }
+  #cupones > article.cupon.hc24-horizontal > .hc24-cuerpo > .hc27-cta-lateral {
+    grid-column:2 !important;
+    grid-row:2 !important;
+    margin-left:0 !important;
+  }
+  #cupones > article.cupon.hc24-horizontal .hc27-cta-lateral > button.boton-canjear {
+    height:38px !important;
+  }
+}
+@media(min-width:551px) and (max-width:950px) {
+  #cupones > article.cupon.hc24-horizontal > .hc24-cuerpo {
+    flex-wrap:wrap !important;
+  }
+  #cupones > article.cupon.hc24-horizontal > .hc24-cuerpo > .hc27-cta-lateral {
+    margin-left:auto !important;
+  }
+}
