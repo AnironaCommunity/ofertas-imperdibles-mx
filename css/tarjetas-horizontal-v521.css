@@ -463,3 +463,104 @@
     font-size:28px !important;
   }
 }
+
+
+/* v5.21.4: círculos originales de 42px, escala individual por banco,
+   5px entre logo y contenido y avisos de vigencia en el pie. */
+#cupones > article.cupon.hc24-horizontal .hc24-cuerpo {
+  column-gap:5px !important;
+}
+#cupones > article.cupon.hc24-horizontal.cupon-bancario-unificado .hc24-logos-banco {
+  gap:5px !important;
+}
+#cupones > article.cupon.hc24-horizontal.cupon-bancario-unificado .hc24-logos-banco > .hc24-logo-banco-circulo {
+  position:relative !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:42px !important;
+  height:42px !important;
+  min-width:42px !important;
+  min-height:42px !important;
+  max-width:42px !important;
+  max-height:42px !important;
+  padding:0 !important;
+  margin:0 !important;
+  border:1px solid #e4e8ed !important;
+  border-radius:50% !important;
+  box-sizing:border-box !important;
+  background:#fff !important;
+  overflow:hidden !important;
+  --escala-logo-banco:1.55;
+}
+#cupones > article.cupon.hc24-horizontal.cupon-bancario-unificado .hc24-logos-banco > .hc24-logo-banco-circulo > .hc25-banco-logo,
+#cupones > article.cupon.hc24-horizontal.cupon-bancario-unificado .hc24-logos-banco > .hc24-logo-banco-circulo > .banco-logo-fallback {
+  position:static !important;
+  display:block !important;
+  flex:0 0 auto !important;
+  width:38px !important;
+  height:38px !important;
+  min-width:38px !important;
+  min-height:38px !important;
+  max-width:none !important;
+  max-height:none !important;
+  padding:0 !important;
+  margin:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  object-fit:contain !important;
+  object-position:center !important;
+  transform:scale(var(--escala-logo-banco)) !important;
+  background:transparent !important;
+}
+#cupones .hc24-logo-banco-circulo[data-banco="bbva"] {--escala-logo-banco:1.70;}
+#cupones .hc24-logo-banco-circulo[data-banco="santander"] {--escala-logo-banco:1.65;}
+#cupones .hc24-logo-banco-circulo[data-banco="mercado-pago"] {--escala-logo-banco:1.75;}
+#cupones .hc24-logo-banco-circulo[data-banco="mercado-pago-visa"] {--escala-logo-banco:1.40;}
+#cupones .hc24-logo-banco-circulo[data-banco="american-express"] {--escala-logo-banco:1.42;}
+#cupones .hc24-logo-banco-circulo[data-banco="hsbc"] {--escala-logo-banco:1.52;}
+#cupones .hc24-logo-banco-circulo[data-banco="invex"] {--escala-logo-banco:1.62;}
+#cupones .hc24-logo-banco-circulo[data-banco="banorte"] {--escala-logo-banco:1.62;}
+#cupones .hc24-logo-banco-circulo[data-banco="banamex"] {--escala-logo-banco:1.55;}
+#cupones .hc24-logo-banco-circulo[data-banco="didi-card"] {--escala-logo-banco:1.48;}
+#cupones .hc24-logo-banco-circulo[data-banco="inbursa"] {--escala-logo-banco:1.55;}
+#cupones .hc24-logo-banco-circulo[data-banco="afirme"] {--escala-logo-banco:1.55;}
+#cupones .hc24-logo-banco-circulo[data-banco="scotiabank"] {--escala-logo-banco:1.55;}
+#cupones .hc24-logo-banco-circulo[data-banco="mifel"] {--escala-logo-banco:1.55;}
+#cupones .hc24-logo-banco-circulo[data-banco="openbank"] {--escala-logo-banco:1.55;}
+#cupones .hc24-logo-banco-circulo[data-banco="falabella"] {--escala-logo-banco:1.55;}
+
+/* Menos 5px respecto de los 22px actuales. */
+#cupones > article.cupon.hc24-horizontal .hc24-pie .boton-canjear:not(.boton-ofertazo-agotado) {
+  height:17px !important;
+  min-height:17px !important;
+  padding:0 7px !important;
+  line-height:15px !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-pie .boton-canjear:not(.boton-ofertazo-agotado) img,
+#cupones > article.cupon.hc24-horizontal .hc24-pie .boton-canjear:not(.boton-ofertazo-agotado) svg {
+  width:14px !important;
+  height:14px !important;
+  max-width:14px !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-pie > .hc16-tiempo {
+  font-size:10px !important;
+  font-weight:400 !important;
+  color:#69717d !important;
+  -webkit-text-fill-color:#69717d !important;
+  white-space:nowrap !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-pie > .hc16-tiempo.vigencia-urgente {
+  color:#ff583e !important;
+  -webkit-text-fill-color:#ff583e !important;
+  font-weight:600 !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-pie > .hc16-tiempo.vigencia-urgente::before {
+  display:none !important;
+  content:none !important;
+}
+#cupones > article.cupon.hc24-horizontal .hc24-pie > .hc16-tiempo.vigencia-normal::before {
+  content:"◷" !important;
+  font-size:11px !important;
+  margin-right:4px !important;
+}

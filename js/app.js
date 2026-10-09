@@ -909,6 +909,25 @@ function couponTimeState(coupon) {
   };
 }
 
+// Mensajes de vigencia en hora local del visitante. Los estados urgentes
+// tienen prioridad sobre las fechas del calendario.
+function mensajeVigenciaCupon(fechaFin, ahora = new Date()) {
+  const fin = new Date(fechaFin);
+  if (!Number.isFinite(fin.getTime())) return { texto: "", urgente: false };
+  const restante = fin.getTime() - ahora.getTime();
+  if (restante <= 0) return { texto: "Finalizado", urgente: false };
+  if (restante <= 3 * 60 * 60 * 1000) return { texto: "¡Por agotarse!", urgente: true };
+  const inicioDia = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
+  const inicioFin = new Date(fin.getFullYear(), fin.getMonth(), fin.getDate());
+  const diferenciaDias = Math.round((Date.UTC(inicioFin.getFullYear(),inicioFin.getMonth(),inicioFin.getDate()) - Date.UTC(inicioDia.getFullYear(),inicioDia.getMonth(),inicioDia.getDate())) / 86400000);
+  if (diferenciaDias === 0) return { texto: "¡Vence hoy!", urgente: true };
+  if (diferenciaDias === 1) return { texto: "¡Vence mañana!", urgente: true };
+  if (diferenciaDias >= 2 && diferenciaDias <= 6) {
+    return { texto: `Vence el ${new Intl.DateTimeFormat("es-MX", {weekday:"long"}).format(fin)}`, urgente: false };
+  }
+  return { texto: `Vence el ${new Intl.DateTimeFormat("es-MX", {day:"numeric",month:"long"}).format(fin)}`, urgente: false };
+}
+
 function formatRemaining(milliseconds) {
   const totalSeconds = Math.max(
     0,
@@ -979,23 +998,17 @@ function updateCouponTimes() {
     const status = card.querySelector(".estado-programacion");
     const redeemButton = card.querySelector(".boton-canjear, .banco-canjear");
     actualizarEtiquetaCategoriaAgotada(card, timeState.state === "agotado");
-    actualizarCapsulaTiempo(card, timeState.state);
+    // Las cápsulas de vencimiento se sustituyen por el texto del pie.
 
     status.className =
       `estado-programacion hc16-tiempo ${timeState.state}`;
 
     if (timeState.state === "programado") {
       status.hidden = false;
-      status.innerHTML = `
-        <div class="estado-linea">
-          <span>${timeState.label}</span>
-          <span class="estado-tiempo">
-            ${card.classList.contains("cupon-editorial-v41")
-              ? formatRemainingCompact(timeState.target - Date.now())
-              : formatRemaining(timeState.target - Date.now())}
-          </span>
-        </div>
-      `;
+      const aviso = mensajeVigenciaCupon(timeState.target);
+      status.classList.toggle("vigencia-urgente", aviso.urgente);
+      status.classList.toggle("vigencia-normal", !aviso.urgente);
+      status.textContent = aviso.texto;
 
       redeemButton.disabled = true;
       redeemButton.classList.add("boton-programado");
@@ -1221,13 +1234,9 @@ function etiquetasAutomaticasCupon(cupon, contexto, maximo = MAX_ETIQUETAS_CUPON
   if (!couponTimeState(cupon).enabled) return [];
 
   const etiquetas = [];
-  const estadoTiempo = couponTimeState(cupon).state;
+  
 
-  // Las tres cápsulas temporales son excluyentes y se reemplazan entre sí.
-  if (["finaliza-pronto", "ultima-oportunidad", "ultimos-minutos"].includes(estadoTiempo)) {
-    etiquetas.push(estadoTiempo);
-  }
-
+  // Los avisos de vencimiento aparecen únicamente en el pie de tarjeta.
   if (cuponRegreso(cupon, contexto)) etiquetas.push("regreso");
   if (contexto.idsMasUsados.has(Number(cupon.id))) etiquetas.push("mas-usado");
   if (contexto.idsPopulares.has(Number(cupon.id))) etiquetas.push("popular");
@@ -1394,7 +1403,7 @@ function htmlCondicionesCupon(cupon) {
   const compraMinima = escaparHtml(cupon.compra_minima || "Consultar");
   const ahorroMaximo = escaparHtml(cupon.ahorro_maximo || "Consultar");
   const lineaAhorro = esCuponPorcentaje(cupon)
-    ? `<p class="condicion-cupon condicion-ahorro">Ahorra hasta <strong>${ahorroMaximo}</strong></p>`
+    ? `<p class="condicion-cupon condicion-ahorro">Descuento máximo <strong>${ahorroMaximo}</strong></p>`
     : "";
 
   return `
@@ -1504,7 +1513,7 @@ function aplicarEstructuraEditorialV41(articulo) {
   };
   for (const dato of panelImportes.children) {
     const esCompra = dato.classList.contains("hc16-panel-compra");
-    const etiqueta = esCompra ? "Compra mínima" : "Ahorra hasta";
+    const etiqueta = esCompra ? "Compra mínima" : "Descuento máximo";
     const importe = dato.querySelector("strong");
     const importeTexto = importe?.textContent?.trim() || "";
     dato.replaceChildren();
@@ -1565,7 +1574,15 @@ function aplicarEstructuraEditorialV41(articulo) {
     const logosBanco = document.createElement("div");
     logosBanco.className = "hc24-logos-banco";
     if (imagenExtraBanco) logosBanco.append(imagenExtraBanco);
-    if (logoBanco) logosBanco.append(logoBanco);
+    if (logoBanco) {
+      const circulo = document.createElement("span");
+      circulo.className = "hc24-logo-banco-circulo";
+      const archivoLogo = logoBanco.getAttribute("src") || "";
+      const claveBanco = archivoLogo.split("/").pop().split(".")[0].replace(/[^a-z0-9-]/gi, "").toLowerCase();
+      circulo.dataset.banco = claveBanco;
+      circulo.append(logoBanco);
+      logosBanco.append(circulo);
+    }
     cuerpo.append(logosBanco);
   }
   if (descuento) textos.append(descuento);
@@ -1620,7 +1637,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
         <p class="hc16-condicion">Compra mínima <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p>
       </div>
       ${!esBancario && detalleCuponVisible ? `<p class="hc16-detalle">${escaparHtml(detalleCuponVisible)}</p>` : ""}
-      ${obtenerAhorroMaximoVisible(cupon) ? `<p class="hc16-ahorro-extra">Ahorra hasta <strong>${escaparHtml(obtenerAhorroMaximoVisible(cupon))}</strong></p>` : ""}
+      ${obtenerAhorroMaximoVisible(cupon) ? `<p class="hc16-ahorro-extra">Descuento máximo <strong>${escaparHtml(obtenerAhorroMaximoVisible(cupon))}</strong></p>` : ""}
       <div class="hc16-etiquetas">
         ${htmlEtiquetasCupon(esExclusivo ? estados.slice(0, 2) : estados)}
       </div>
@@ -1747,7 +1764,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
       <div class="hc16-categoria">${esCuponAgotado(cupon) ? "CUPÓN AGOTADO" : "CUPÓN BANCARIO"}</div>
       <div class="hc16-condiciones"><p class="hc16-condicion">Compra mínima <strong>${escaparHtml(cupon.compra_minima || "Consultar")}</strong></p></div>
       ${cupon.detalle_bancario ? `<p class="hc16-detalle hc25-banco-detalle">${escaparHtml(cupon.detalle_bancario)}</p>` : ""}
-      ${cupon.ahorro_maximo ? `<p class="hc16-ahorro-extra">Ahorra hasta <strong>${escaparHtml(cupon.ahorro_maximo)}</strong></p>` : ""}
+      ${cupon.ahorro_maximo ? `<p class="hc16-ahorro-extra">Descuento máximo <strong>${escaparHtml(cupon.ahorro_maximo)}</strong></p>` : ""}
       <div class="hc16-etiquetas">${htmlEtiquetasCupon(estados)}</div>
     </div>
     <div class="hc16-acciones">
@@ -5246,7 +5263,7 @@ function crearCuponEjemploTutorial() {
       <div class="cupon-etiquetas"><span class="etiqueta-cupon etiqueta-nuevo">✨ Nuevo</span></div>
       <div class="condiciones-cupon">
         <p class="condicion-cupon condicion-compra">En compras desde <strong>$1,000</strong></p>
-        <p class="condicion-cupon condicion-ahorro">Ahorra hasta <strong>$250</strong></p>
+        <p class="condicion-cupon condicion-ahorro">Descuento máximo <strong>$250</strong></p>
       </div>
       <div class="estado-programacion" hidden></div>
       <div class="acciones-bloque">
