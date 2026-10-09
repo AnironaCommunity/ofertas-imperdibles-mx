@@ -2762,3 +2762,22 @@
 #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41:not(:has(> .hc16-detalle)) > .hc16-panel-importes {
   margin-top: auto !important;
 }
+
+/* v5.20.10 — Espaciado de 8px después del descuento (tienda, bancario y exclusivo).
+   El espacio flexible se desplaza antes del bloque de descuento para no
+   separar artificialmente el porcentaje de la descripción o el panel. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-valor {
+  margin-top: auto !important;
+  margin-bottom: 8px !important;
+  flex: 0 0 auto !important;
+}
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-detalle {
+  margin-top: 0 !important;
+  margin-bottom: 8px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  flex: 0 0 auto !important;
+}
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41 > .hc16-panel-importes {
+  margin-top: 0 !important;
+}
