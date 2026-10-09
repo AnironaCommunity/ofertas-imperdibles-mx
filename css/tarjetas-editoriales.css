@@ -1497,9 +1497,9 @@
 /* Móvil: la etiqueta cabe junto al reloj y el descuento inicia debajo. */
 @media (max-width: 759px) {
   #cupones > article.cupon.cupon-editorial-v41 > .hc16-categoria {
-    gap: 4px !important;
-    padding: 6px 7px !important;
-    font-size: clamp(8px, 2.35vw, 10px) !important;
+    gap: 3px !important;
+    padding: 6px 7px 6px 5px !important;
+    font-size: clamp(7.5px, 2.1vw, 10px) !important;
   }
 
   #cupones > article.cupon.cupon-editorial-v41 > .hc16-categoria::before {
@@ -1541,20 +1541,29 @@
 /* Fuente consolidada: css/tarjetas-editoriales-v47.css */
 /* v4.7: reloj único, texto legible, óvalos sutiles y métricas web visibles. */
 
-/* Temporizador horizontal compacto: deja libre el espacio de la categoría. */
+/* Temporizador compacto sin recuadro: texto visible junto a la categoría. */
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-tiempo {
+  position: absolute !important;
+  top: 10px !important;
+  right: 7px !important;
+  z-index: 6 !important;
   display: inline-flex !important;
   flex-direction: row !important;
   align-items: center !important;
-  justify-content: center !important;
-  gap: 3px !important;
+  justify-content: flex-end !important;
+  gap: 2px !important;
   box-sizing: border-box !important;
-  width: 56px !important;
+  width: 45px !important;
   min-width: 0 !important;
-  max-width: 56px !important;
-  height: 30px !important;
-  min-height: 30px !important;
-  padding: 4px 3px !important;
+  max-width: 45px !important;
+  height: 22px !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
   white-space: nowrap !important;
   font-size: 9px !important;
   font-weight: 600 !important;
@@ -1882,17 +1891,17 @@
 
 /* v5.8: etiquetas rectangulares semibold y agotados sin temporizador. */
 #cupones > article.cupon.cupon-editorial-v41 > .hc16-categoria {
-  max-width: calc(100% - 68px) !important;
+  max-width: calc(100% - 54px) !important;
   box-sizing: border-box !important;
-  white-space: normal !important;
+  white-space: nowrap !important;
   overflow-wrap: normal !important;
   border-radius: 3px !important;
   padding: 6px 15px 6px 8px !important;
   clip-path: polygon(0 0, 100% 0, calc(100% - 7px) 100%, 0 100%) !important;
   font-family: "Proxima Nova", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important;
-  font-size: clamp(9px, 2.35vw, 11px) !important;
+  font-size: clamp(7.5px, 2.1vw, 11px) !important;
   font-weight: 600 !important;
-  letter-spacing: 0 !important;
+  letter-spacing: -.015em !important;
   line-height: 1.15 !important;
 }
 
