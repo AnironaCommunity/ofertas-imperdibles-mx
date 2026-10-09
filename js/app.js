@@ -1521,6 +1521,13 @@ function aplicarEstructuraEditorialV41(articulo) {
   const tiempo = acciones.querySelector(":scope > .hc16-tiempo");
   const social = acciones.querySelector(":scope > .hc16-social");
   if (tiempo) articulo.append(tiempo);
+  // Mantener las funciones sociales en el DOM, pero mostrar únicamente
+  // las vistas debajo del temporizador, alineadas a la derecha.
+  const vistas = social?.querySelector(".hc16-vistas");
+  if (vistas) {
+    vistas.classList.add("hc16-vistas-superiores");
+    articulo.append(vistas);
+  }
   if (social) {
     const pie = document.createElement("div");
     pie.className = "v42-pie-tarjeta";
