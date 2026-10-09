@@ -1556,9 +1556,12 @@ function aplicarEstructuraEditorialV41(articulo) {
   const descuento = valor.querySelector(".hc16-descuento");
   const logoBanco = valor.querySelector(".hc25-banco-logo, .banco-logo-fallback");
   const logoTienda = valor.querySelector(".hc16-logo-circular");
+  const imagenExtraBanco = articulo.querySelector(".hc24-imagen-banco-extra");
   if (logoTienda) cuerpo.append(logoTienda);
-  else if (logoBanco) cuerpo.append(logoBanco);
+  else if (imagenExtraBanco) cuerpo.append(imagenExtraBanco);
+  if (logoBanco) cuerpo.append(logoBanco);
   if (descuento) textos.append(descuento);
+  // Orden visual definitivo: descuento, descripción, compra mínima, ahorro.
   for (const nodo of informacionOrdenada) textos.append(nodo);
   if (etiquetas?.children.length) textos.append(etiquetas);
   cuerpo.append(textos);
@@ -1727,6 +1730,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
   articulo.innerHTML = `
     <span class="ticket-notch ticket-notch-top" aria-hidden="true"></span>
     <span class="ticket-notch ticket-notch-bottom" aria-hidden="true"></span>
+    ${cupon.imagen_adicional_url ? `<span class="hc24-imagen-banco-extra hc16-logo-circular"><img class="hc16-logo cupon-logo" src="${escaparHtml(cupon.imagen_adicional_url)}" alt="" loading="lazy" /><span class="hc16-logo-check" aria-hidden="true">✓</span></span>` : ""}
     <div class="hc16-valor hc25-banco-valor">
       ${logoBanco ? `<img class="banco-logo hc25-banco-logo" src="${escaparHtml(logoBanco)}" alt="" loading="lazy" />` : `<span class="banco-logo-fallback">BANCO</span>`}
       <h2 class="hc16-descuento descuento">${escaparHtml(String(cupon.titulo || "Beneficio").replace(/\s*OFF\s*$/i, "").trim())}<span class="hc19-off">OFF</span></h2>

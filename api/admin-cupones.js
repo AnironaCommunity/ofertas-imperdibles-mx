@@ -260,7 +260,7 @@ export default async function handler(request, response) {
 
     if (request.method === "GET") {
       const data = await requestSupabase(
-        "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,detalle_bancario,considerar_compartir,categoria,enlace,activo,agotado,likes,clics,fecha_inicio,fecha_fin,fecha_creacion,fecha_publicacion,imagen_url,marca_agua_url&order=id.desc"
+        "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,detalle_bancario,considerar_compartir,categoria,enlace,activo,agotado,likes,clics,fecha_inicio,fecha_fin,fecha_creacion,fecha_publicacion,imagen_url,imagen_adicional_url,marca_agua_url&order=id.desc"
       );
 
       response.setHeader("Cache-Control", "no-store");
@@ -283,6 +283,7 @@ export default async function handler(request, response) {
         categoria: normalizeCategory(request.body?.categoria),
         enlace: cleanText(request.body?.enlace),
         imagen_url: cleanText(request.body?.imagen_url),
+        imagen_adicional_url: normalizeCategory(request.body?.categoria) === "bancarios" ? cleanText(request.body?.imagen_adicional_url) : "",
         marca_agua_url: normalizeCategory(request.body?.categoria) === "exclusivo"
           ? cleanText(request.body?.marca_agua_url)
           : "",
@@ -331,6 +332,7 @@ export default async function handler(request, response) {
         "detalle_bancario",
         "enlace",
         "imagen_url",
+        "imagen_adicional_url",
         "marca_agua_url",
       ]) {
         if (Object.hasOwn(request.body || {}, field)) {

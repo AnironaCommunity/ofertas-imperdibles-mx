@@ -74,6 +74,13 @@ const couponStart = document.querySelector("#coupon-start");
 const couponEnd = document.querySelector("#coupon-end");
 const couponLink = document.querySelector("#coupon-link");
 const couponImage = document.querySelector("#coupon-image");
+const couponBankExtra = document.querySelector("#coupon-bank-extra");
+const couponBankExtraUrl = document.querySelector("#coupon-bank-extra-url");
+const couponBankExtraPreview = document.querySelector("#coupon-bank-extra-preview");
+const couponBankExtraPreviewWrapper = document.querySelector("#coupon-bank-extra-preview-wrapper");
+const couponBankExtraWrapper = document.querySelector("#coupon-bank-extra-wrapper");
+const couponBankExtraRemove = document.querySelector("#coupon-bank-extra-remove");
+
 const couponImageUrl = document.querySelector("#coupon-image-url");
 const couponImagePreviewWrapper = document.querySelector(
   "#coupon-image-preview-wrapper"
@@ -541,6 +548,10 @@ function resetCouponForm() {
   if (couponBank) couponBank.value = "";
   if (couponBankDetail) couponBankDetail.value = "";
   actualizarSelectorBanco();
+  couponBankExtra.value = "";
+  couponBankExtraUrl.value = "";
+  couponBankExtraPreview.src = "";
+  couponBankExtraPreviewWrapper.hidden = true;
   couponStart.value = "";
   couponEnd.value = "";
   couponActive.checked = true;
@@ -569,6 +580,10 @@ function editCoupon(coupon) {
   couponStart.value = isoToMexicoLocal(coupon.fecha_inicio);
   couponEnd.value = isoToMexicoLocal(coupon.fecha_fin);
   couponLink.value = coupon.enlace || "";
+  couponBankExtra.value = "";
+  couponBankExtraUrl.value = coupon.imagen_adicional_url || "";
+  couponBankExtraPreview.src = coupon.imagen_adicional_url || "";
+  couponBankExtraPreviewWrapper.hidden = !coupon.imagen_adicional_url;
   couponImage.value = "";
   couponImageUrl.value = coupon.imagen_url || (coupon.categoria === "bancarios" ? "" : LOGO_CUPON_TIENDA_PREDETERMINADO);
   couponImagePreview.src = coupon.imagen_url || (coupon.categoria === "bancarios" ? "" : LOGO_CUPON_TIENDA_PREDETERMINADO);
@@ -583,6 +598,7 @@ function editCoupon(coupon) {
     couponBank.value = existe ? imagenBanco : "";
   }
   actualizarSelectorBanco();
+  actualizarImagenAdicionalBanco();
   couponActive.checked = Boolean(coupon.activo);
   if (couponSoldOut) couponSoldOut.checked = coupon.agotado === true;
   couponPublishNew.checked = false;
@@ -1922,6 +1938,17 @@ async function saveCoupon(event) {
     const imageUrl = couponCategory.value === "bancarios" && couponBank?.value
       ? couponBank.value
       : await uploadCouponImage();
+    let bankExtraUrl = couponCategory.value === "bancarios" ? couponBankExtraUrl.value : "";
+    if (couponCategory.value === "bancarios" && couponBankExtra.files[0]) {
+      const file = couponBankExtra.files[0];
+      if (!file.type.startsWith("image/")) throw new Error("La imagen adicional debe ser una imagen válida.");
+      const dataUrl = await optimizeImage(file);
+      const result = await api("/api/admin-publicidad-imagen", {
+        method: "POST",
+        body: JSON.stringify({ data_url: dataUrl, nombre: `banco-extra-${file.name}` })
+      });
+      bankExtraUrl = result.imagen_url;
+    }
     const watermarkUrl = couponCategory.value === "exclusivo"
       ? await uploadCouponWatermark()
       : "";
@@ -1942,6 +1969,7 @@ async function saveCoupon(event) {
       fecha_fin: mexicoLocalToIso(couponEnd.value),
       enlace: couponLink.value.trim(),
       imagen_url: imageUrl || (couponCategory.value === "bancarios" ? "" : LOGO_CUPON_TIENDA_PREDETERMINADO),
+      imagen_adicional_url: bankExtraUrl,
       marca_agua_url: watermarkUrl || "",
       activo: couponActive.checked,
       agotado: Boolean(couponSoldOut?.checked),
@@ -4456,3 +4484,27 @@ $('.evento-admin-tabs')?.addEventListener('click',e=>{const b=e.target.closest('
 $('#evento-nuevo')?.addEventListener('click',resetForm);$('#evento-cancelar')?.addEventListener('click',resetForm);$('#evento-actualizar')?.addEventListener('click',loadEvents);
 
 }
+
+
+// v5.21.1: segunda imagen independiente para cupones bancarios.
+function actualizarImagenAdicionalBanco() {
+  if (couponBankExtraWrapper) couponBankExtraWrapper.hidden = couponCategory.value !== "bancarios";
+}
+couponCategory.addEventListener("change", actualizarImagenAdicionalBanco);
+actualizarImagenAdicionalBanco();
+couponBankExtra?.addEventListener("change", () => {
+  const file = couponBankExtra.files[0];
+  if (!file) return;
+  if (!file.type.startsWith("image/")) {
+    couponBankExtra.value = "";
+    return;
+  }
+  couponBankExtraPreview.src = URL.createObjectURL(file);
+  couponBankExtraPreviewWrapper.hidden = false;
+});
+couponBankExtraRemove?.addEventListener("click", () => {
+  couponBankExtra.value = "";
+  couponBankExtraUrl.value = "";
+  couponBankExtraPreview.removeAttribute("src");
+  couponBankExtraPreviewWrapper.hidden = true;
+});

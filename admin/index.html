@@ -412,6 +412,15 @@ Descuento máximo: $180"
                 <small>Solo aplica a cupones de tipo Exclusivo. Si está desmarcado, no participará en el cálculo automático del mejor cupón.</small>
               </div>
 
+              <div class="campo campo-completo" id="coupon-bank-extra-wrapper" hidden>
+                <label for="coupon-bank-extra">Imagen adicional del cupón bancario (opcional)</label>
+                <input type="file" id="coupon-bank-extra" accept="image/png,image/jpeg,image/webp" />
+                <input type="hidden" id="coupon-bank-extra-url" />
+                <div id="coupon-bank-extra-preview-wrapper" hidden>
+                  <img id="coupon-bank-extra-preview" alt="Vista previa de imagen adicional" style="max-width:90px;max-height:90px;object-fit:contain" />
+                  <button type="button" id="coupon-bank-extra-remove">Quitar imagen adicional</button>
+                </div>
+              </div>
               <div class="campo campo-completo">
                 <label for="coupon-image">Logo o imagen del cupón (opcional)</label>
                 <input
@@ -1324,6 +1333,6 @@ Descuento máximo: $180"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=5.16.9"></script>
+  <script type="module" src="admin.js?v=5.21.1"></script>
 </body>
 </html>
