@@ -1486,6 +1486,30 @@ function aplicarEstructuraEditorialV41(articulo) {
     ahorro.classList.add("hc16-panel-dato", "hc16-panel-ahorro");
     panelImportes.append(ahorro);
   }
+  // Iconos y textos compactos dentro del panel informativo.
+  const iconosImportes = {
+    compra: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 2h2l3.6 13.4a2 2 0 0 0 2 1.6H20l2-11H5"/></svg>',
+    ahorro: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 9c1.2.4 2 1.3 2 2.5V16h-3l-2 3h-3v-2H9v2H6l-1.5-3A6.5 6.5 0 0 1 3 12c0-3.3 3-6 7-6h5c2 0 3.5 1 4 3Z"/><path d="M7 6 6 3c2 0 3.5.5 4 3M15 9h.01"/></svg>'
+  };
+  for (const dato of panelImportes.children) {
+    const esCompra = dato.classList.contains("hc16-panel-compra");
+    const etiqueta = esCompra ? "Compra mínima" : "Ahorra hasta";
+    const importe = dato.querySelector("strong");
+    const importeTexto = importe?.textContent?.trim() || "";
+    dato.replaceChildren();
+    const icono = document.createElement("span");
+    icono.className = `hc16-panel-icono ${esCompra ? "hc16-icono-compra" : "hc16-icono-ahorro"}`;
+    icono.innerHTML = esCompra ? iconosImportes.compra : iconosImportes.ahorro;
+    const textos = document.createElement("span");
+    textos.className = "hc16-panel-textos";
+    const rotulo = document.createElement("span");
+    rotulo.className = "hc16-panel-rotulo";
+    rotulo.textContent = etiqueta;
+    const monto = document.createElement("strong");
+    monto.textContent = importeTexto;
+    textos.append(rotulo, monto);
+    dato.append(icono, textos);
+  }
   if (panelImportes.children.length === 1) panelImportes.classList.add("hc16-panel-unico");
   const informacionOrdenada = [
     ...detalles.filter(n => n.classList.contains("hc16-detalle")),
