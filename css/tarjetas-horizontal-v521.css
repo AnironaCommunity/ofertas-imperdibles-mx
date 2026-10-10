@@ -967,3 +967,36 @@
     margin-left:5px !important;
   }
 }
+
+/* v5.21.19 — importes en una sola línea, con separador vertical.
+   Únicamente tarjetas horizontales del catálogo. */
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal .hc24-textos > .hc16-panel-importes {
+  display:flex !important; flex-direction:row !important; align-items:baseline !important;
+  flex-wrap:nowrap !important; justify-content:flex-start !important;
+  gap:0 !important; width:100% !important; min-width:0 !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal .hc24-textos > .hc16-panel-importes > .hc16-panel-dato {
+  display:inline-flex !important; flex:0 1 auto !important; min-width:0 !important;
+  width:auto !important; white-space:nowrap !important; align-items:baseline !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal .hc24-textos > .hc16-panel-importes > .hc16-panel-dato + .hc16-panel-dato::before {
+  content:"|" !important; display:inline-block !important; flex:0 0 auto !important;
+  color:#b5bec8 !important; font-weight:400 !important;
+  margin:0 7px !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal .hc24-textos > .hc16-panel-importes .hc16-panel-textos {
+  width:auto !important; min-width:0 !important; white-space:nowrap !important;
+  gap:3px !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal .hc24-textos > .hc16-panel-importes .hc16-panel-rotulo {
+  white-space:nowrap !important;
+}
+@media(max-width:759px) {
+  #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal .hc24-textos > .hc16-panel-importes .hc16-panel-rotulo,
+  #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal .hc24-textos > .hc16-panel-importes .hc16-panel-textos strong {
+    font-size:clamp(8px,2.35vw,11px) !important;
+  }
+  #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal .hc24-textos > .hc16-panel-importes > .hc16-panel-dato + .hc16-panel-dato::before {
+    margin:0 4px !important;
+  }
+}
