@@ -934,3 +934,29 @@
   display:block !important; width:13px !important; height:13px !important;
   flex:0 0 13px !important; margin:0 !important; color:inherit !important;
 }
+
+/* v5.21.17 — sólo corregir las esquinas del encabezado.
+   La categoría conserva su posición izquierda y el contador queda a la derecha. */
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-encabezado {
+  position:relative !important;
+  display:flex !important;
+  flex-direction:row !important;
+  justify-content:space-between !important;
+  align-items:center !important;
+  width:100% !important;
+  min-width:0 !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-encabezado > .hc16-categoria {
+  order:0 !important;
+  flex:0 1 auto !important;
+  margin-left:0 !important;
+  margin-right:auto !important;
+  align-self:center !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-encabezado > .hc16-vistas-superiores {
+  order:1 !important;
+  flex:0 0 auto !important;
+  margin-left:auto !important;
+  margin-right:0 !important;
+  align-self:center !important;
+}

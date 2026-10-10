@@ -1553,7 +1553,7 @@ function aplicarEstructuraEditorialV41(articulo) {
   textos.className = "hc24-textos";
   const encabezado = document.createElement("div");
   encabezado.className = "hc24-encabezado";
-  if (categoria) encabezado.append(categoria);
+  if (categoria) encabezado.prepend(categoria);
   const descuento = valor.querySelector(".hc16-descuento");
   const logoBanco = valor.querySelector(".hc25-banco-logo, .banco-logo-fallback");
   const logoTienda = valor.querySelector(".hc16-logo-circular");
