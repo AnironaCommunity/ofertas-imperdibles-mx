@@ -930,3 +930,61 @@
 #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal.cupon-agotado > .hc24-pie button.boton-ofertazo-agotado {
   pointer-events:auto !important;
 }
+
+/* v5.21.12: corregir altura real del pie y agrupación reloj-texto.
+   En v5.21.11 flex-basis:32px competía con height:37px y padding-top:5px. */
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal {
+  box-sizing:border-box !important;
+  height:fit-content !important;
+  min-height:0 !important;
+  padding-bottom:9px !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie {
+  box-sizing:border-box !important;
+  flex:0 0 37px !important;
+  height:37px !important;
+  min-height:37px !important;
+  max-height:37px !important;
+  padding:5px 0 0 !important;
+  margin:0 !important;
+  align-items:flex-start !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie > .hc16-tiempo {
+  display:inline-flex !important;
+  flex:0 1 auto !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  align-self:flex-start !important;
+  column-gap:3px !important;
+  gap:3px !important;
+  width:max-content !important;
+  max-width:calc(100% - 155px) !important;
+  margin:0 !important;
+  padding:0 !important;
+  text-align:left !important;
+  white-space:normal !important;
+  line-height:1.25 !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie > .hc16-tiempo.vigencia-normal::before {
+  display:inline-block !important;
+  flex:0 0 16px !important;
+  width:16px !important;
+  height:16px !important;
+  font-size:16px !important;
+  line-height:16px !important;
+  margin:0 !important;
+  padding:0 !important;
+  vertical-align:middle !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie > .hc16-tiempo.vigencia-urgente::before {
+  display:none !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie > .hc16-acciones {
+  flex:0 0 148px !important;
+  margin-left:auto !important;
+}
+@media (max-width:380px) {
+  #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie > .hc16-tiempo {
+    font-size:9px !important;
+  }
+}
