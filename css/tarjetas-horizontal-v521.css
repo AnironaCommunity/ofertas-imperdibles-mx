@@ -668,165 +668,12 @@
 }
 
 
-/* v5.21.8 — Pie compacto: el aviso empieza a 5px del separador,
-   alineado arriba con el botón. El botón termina a 8px del borde inferior. */
-#cupones > article.cupon.hc24-horizontal {
-  padding-bottom:8px !important;
-}
-#cupones > article.cupon.hc24-horizontal > .hc24-pie,
-#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie {
-  display:flex !important;
-  align-items:flex-start !important;
-  gap:5px !important;
-  padding:5px 0 0 !important;
-  margin-bottom:0 !important;
-  min-height:0 !important;
-}
-#cupones > article.cupon.hc24-horizontal > .hc24-pie > .hc16-tiempo {
-  display:inline-flex !important;
-  align-items:center !important;
-  align-self:flex-start !important;
-  margin:0 !important;
-  padding:0 !important;
-  line-height:1.2 !important;
-  min-height:0 !important;
-  height:auto !important;
-  transform:none !important;
-}
-#cupones > article.cupon.hc24-horizontal > .hc24-pie > .hc16-acciones,
-#cupones > article.cupon.hc24-horizontal .hc24-pie .hc16-cta {
-  align-self:flex-start !important;
-  margin-top:0 !important;
-  margin-bottom:0 !important;
-}
 
-/* v5.21.9 — Pie sin espacio flexible ni estiramiento de tarjetas */
-#cupones.cupones-grid-compacta {
-  align-items:start !important;
-  grid-auto-rows:max-content !important;
-}
-#cupones > article.cupon.hc24-horizontal {
-  align-self:start !important;
-  justify-content:flex-start !important;
-  height:max-content !important;
-  min-height:0 !important;
-  padding-bottom:8px !important;
-}
-#cupones > article.cupon.hc24-horizontal > .hc24-pie {
-  flex:0 0 auto !important;
-  margin-top:0 !important;
-  margin-bottom:0 !important;
-  padding-top:5px !important;
-  padding-bottom:0 !important;
-  align-items:flex-start !important;
-  min-height:0 !important;
-}
-#cupones > article.cupon.hc24-horizontal > .hc24-pie .hc16-acciones,
-#cupones > article.cupon.hc24-horizontal > .hc24-pie .hc16-cta {
-  margin-bottom:0 !important;
-  padding-bottom:0 !important;
-}
-
-
-/* v5.21.10 — Igualar botones y compactar el pie sin alterar contenido */
-#cupones > article.cupon.hc24-horizontal {
-  height:fit-content !important;
-  min-height:0 !important;
-  max-height:none !important;
-  padding-bottom:8px !important;
-  align-self:start !important;
-  justify-content:flex-start !important;
-}
-#cupones > article.cupon.hc24-horizontal > .hc24-pie {
-  display:flex !important;
-  align-items:flex-start !important;
-  margin:0 !important;
-  margin-top:0 !important;
-  padding:5px 0 0 !important;
-  height:auto !important;
-  min-height:0 !important;
-  max-height:none !important;
-  flex:0 0 auto !important;
-}
-#cupones > article.cupon.hc24-horizontal > .hc24-pie > .hc16-acciones,
-#cupones > article.cupon.hc24-horizontal > .hc24-pie .hc16-cta {
-  height:auto !important;
-  min-height:0 !important;
-  max-height:none !important;
-  margin-top:0 !important;
-  margin-bottom:0 !important;
-  padding:0 !important;
-}
-/* Misma geometría para tienda, banco, exclusivo y agotado. */
-#cupones > article.cupon.hc24-horizontal .hc24-pie button.boton-canjear,
-#cupones > article.cupon.hc24-horizontal .hc24-pie button.boton-canjear.boton-ofertazo-agotado {
-  display:inline-flex !important;
-  box-sizing:border-box !important;
-  flex-direction:row !important;
-  align-items:center !important;
-  justify-content:center !important;
-  gap:5px !important;
-  height:32px !important;
-  min-height:32px !important;
-  max-height:32px !important;
-  width:auto !important;
-  min-width:0 !important;
-  padding:0 10px !important;
-  margin:0 !important;
-  border:1px solid #efc900 !important;
-  border-radius:12px !important;
-  background:#fff !important;
-  background-image:none !important;
-  color:#202020 !important;
-  -webkit-text-fill-color:#202020 !important;
-  font-family:inherit !important;
-  font-size:12px !important;
-  font-weight:600 !important;
-  line-height:1 !important;
-  white-space:nowrap !important;
-  box-shadow:none !important;
-  filter:none !important;
-  opacity:1 !important;
-  overflow:hidden !important;
-}
-#cupones > article.cupon.hc24-horizontal .hc24-pie button.boton-canjear :is(span,strong,b,small) {
-  font-size:12px !important;
-  line-height:1 !important;
-  font-weight:600 !important;
-  color:#202020 !important;
-  -webkit-text-fill-color:#202020 !important;
-}
-#cupones > article.cupon.hc24-horizontal .hc24-pie button.boton-canjear img {
-  display:block !important;
-  flex:0 0 20px !important;
-  width:20px !important;
-  height:20px !important;
-  max-width:20px !important;
-  max-height:20px !important;
-  object-fit:contain !important;
-}
-#cupones > article.cupon.hc24-horizontal .hc24-pie button.boton-canjear svg {
-  flex:0 0 14px !important;
-  width:14px !important;
-  height:14px !important;
-  max-width:14px !important;
-  max-height:14px !important;
-}
-/* Reloj de vencimiento legible, sin alterar el texto ni su color. */
-#cupones > article.cupon.hc24-horizontal .hc24-pie > .hc16-tiempo.vigencia-normal::before {
-  font-size:16px !important;
-  line-height:1 !important;
-  margin-right:5px !important;
-  vertical-align:middle !important;
-}
-
-
-/* v5.21.11: geometría única, tarjetas de altura natural y agotados atenuados. */
-#cupones.cupones-grid-compacta {
-  align-items:start !important;
-  grid-auto-rows:max-content !important;
-}
+/* v5.21.13 — Regla consolidada: elimina alturas y márgenes contradictorios
+   de v5.21.8 a v5.21.12. El botón determina el tamaño real del pie. */
+#cupones.cupones-grid-compacta { align-items:start !important; grid-auto-rows:max-content !important; }
 #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal {
+  box-sizing:border-box !important;
   display:flex !important;
   flex-direction:column !important;
   align-self:start !important;
@@ -834,46 +681,47 @@
   height:max-content !important;
   min-height:0 !important;
   max-height:none !important;
-  margin:0 !important;
-  padding-bottom:9px !important; /* 8px visibles más borde inferior de 1px */
+  padding-bottom:8px !important;
   row-gap:5px !important;
 }
 #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie {
-  display:flex !important;
-  flex:0 0 32px !important;
-  height:37px !important;
-  min-height:37px !important;
-  max-height:37px !important;
   box-sizing:border-box !important;
-  align-items:flex-start !important;
-  padding:5px 0 0 !important;
+  display:flex !important;
+  flex:0 0 auto !important;
+  height:auto !important;
+  min-height:0 !important;
+  max-height:none !important;
   margin:0 !important;
+  padding:5px 0 0 !important;
+  border-top:1px dashed #d7dce3 !important;
+  align-items:flex-start !important;
+  justify-content:space-between !important;
+  gap:5px !important;
 }
 #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie > .hc16-acciones,
 #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie .hc16-cta {
+  box-sizing:border-box !important;
   display:flex !important;
-  align-items:flex-start !important;
   flex:0 0 auto !important;
   height:32px !important;
   min-height:32px !important;
   max-height:32px !important;
-  margin-top:0 !important;
-  margin-bottom:0 !important;
+  margin:0 !important;
   padding:0 !important;
+  align-items:flex-start !important;
 }
 #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie > .hc16-acciones {
   margin-left:auto !important;
 }
-/* Incluye expresamente el botón de agotados, sin excluirlo por clase. */
 #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie button.boton-canjear,
 #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie button.boton-canjear.boton-ofertazo-agotado {
   box-sizing:border-box !important;
   appearance:none !important;
   display:inline-flex !important;
-  flex-direction:row !important;
   align-items:center !important;
   justify-content:center !important;
   gap:5px !important;
+  flex:0 0 148px !important;
   width:148px !important;
   min-width:148px !important;
   max-width:148px !important;
@@ -885,7 +733,6 @@
   border:1px solid #efc900 !important;
   border-radius:12px !important;
   background:#fff !important;
-  background-color:#fff !important;
   background-image:none !important;
   color:#202020 !important;
   -webkit-text-fill-color:#202020 !important;
@@ -898,93 +745,62 @@
   filter:none !important;
   box-shadow:none !important;
   transform:none !important;
-  cursor:pointer !important;
 }
 #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie button.boton-canjear :is(span,strong,b,small) {
-  font-size:12px !important;
-  font-weight:600 !important;
   color:#202020 !important;
   -webkit-text-fill-color:#202020 !important;
+  font-size:12px !important;
+  font-weight:600 !important;
 }
-#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie button.boton-canjear :is(img,svg) {
-  display:block !important;
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie button.boton-canjear img {
   flex:0 0 20px !important;
   width:20px !important;
   height:20px !important;
-  min-width:20px !important;
   max-width:20px !important;
   max-height:20px !important;
   object-fit:contain !important;
 }
-/* Solo los datos del cupón agotado se atenúan.
-   Ver ofertas sigue siendo un enlace funcional y plenamente visible. */
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie button.boton-canjear svg {
+  flex:0 0 14px !important;
+  width:14px !important;
+  height:14px !important;
+  max-width:14px !important;
+  max-height:14px !important;
+}
 #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal.cupon-agotado > .hc24-encabezado,
 #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal.cupon-agotado > .hc24-cuerpo {
   opacity:.46 !important;
   filter:grayscale(.35) !important;
 }
-#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal.cupon-agotado > .hc24-pie {
-  opacity:1 !important;
-  filter:none !important;
-}
 #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal.cupon-agotado > .hc24-pie button.boton-ofertazo-agotado {
   pointer-events:auto !important;
 }
-
-/* v5.21.12: corregir altura real del pie y agrupación reloj-texto.
-   En v5.21.11 flex-basis:32px competía con height:37px y padding-top:5px. */
-#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal {
-  box-sizing:border-box !important;
-  height:fit-content !important;
-  min-height:0 !important;
-  padding-bottom:9px !important;
-}
-#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie {
-  box-sizing:border-box !important;
-  flex:0 0 37px !important;
-  height:37px !important;
-  min-height:37px !important;
-  max-height:37px !important;
-  padding:5px 0 0 !important;
-  margin:0 !important;
-  align-items:flex-start !important;
-}
+/* Icono SVG real: el glifo ◷ variaba por sistema y se veía diminuto. */
 #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie > .hc16-tiempo {
   display:inline-flex !important;
-  flex:0 1 auto !important;
   align-items:center !important;
   justify-content:flex-start !important;
-  align-self:flex-start !important;
-  column-gap:3px !important;
+  flex:0 1 auto !important;
   gap:3px !important;
-  width:max-content !important;
-  max-width:calc(100% - 155px) !important;
+  width:auto !important;
+  max-width:calc(100% - 153px) !important;
   margin:0 !important;
   padding:0 !important;
+  line-height:1.35 !important;
   text-align:left !important;
   white-space:normal !important;
-  line-height:1.25 !important;
 }
 #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie > .hc16-tiempo.vigencia-normal::before {
+  content:"" !important;
   display:inline-block !important;
   flex:0 0 16px !important;
   width:16px !important;
   height:16px !important;
-  font-size:16px !important;
-  line-height:16px !important;
   margin:0 !important;
   padding:0 !important;
-  vertical-align:middle !important;
+  background: center / contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2369717d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 7v5l3 2'/%3E%3C/svg%3E") !important;
 }
 #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie > .hc16-tiempo.vigencia-urgente::before {
+  content:none !important;
   display:none !important;
-}
-#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie > .hc16-acciones {
-  flex:0 0 148px !important;
-  margin-left:auto !important;
-}
-@media (max-width:380px) {
-  #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie > .hc16-tiempo {
-    font-size:9px !important;
-  }
 }
