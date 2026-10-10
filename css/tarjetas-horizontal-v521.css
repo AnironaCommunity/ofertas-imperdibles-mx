@@ -960,3 +960,10 @@
   margin-right:0 !important;
   align-self:center !important;
 }
+
+/* v5.21.18: desplazar solo el aviso de vigencia 5px a la derecha en móvil. */
+@media (max-width:759px) {
+  #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie > .hc16-tiempo {
+    margin-left:5px !important;
+  }
+}
