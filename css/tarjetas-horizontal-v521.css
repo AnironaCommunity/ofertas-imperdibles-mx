@@ -994,7 +994,7 @@
 @media(max-width:759px) {
   #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal .hc24-textos > .hc16-panel-importes .hc16-panel-rotulo,
   #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal .hc24-textos > .hc16-panel-importes .hc16-panel-textos strong {
-    font-size:clamp(8px,2.35vw,11px) !important;
+    font-size:10px !important;
   }
   #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal .hc24-textos > .hc16-panel-importes > .hc16-panel-dato + .hc16-panel-dato::before {
     margin:0 4px !important;
