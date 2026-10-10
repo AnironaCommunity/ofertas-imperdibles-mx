@@ -857,3 +857,55 @@
     right:10px !important;
   }
 }
+
+
+/* v5.21.15: escritorio — misma altura por fila, pie pegado al borde inferior.
+   En móvil se conserva el pie anclado de v5.21.14. */
+@media (min-width:760px) {
+  #cupones.cupones-grid-compacta {
+    align-items:stretch !important;
+    grid-auto-rows:auto !important;
+  }
+  #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal {
+    box-sizing:border-box !important;
+    align-self:stretch !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:flex-start !important;
+    height:100% !important;
+    min-height:0 !important;
+    max-height:none !important;
+    padding-bottom:8px !important;
+    row-gap:5px !important;
+  }
+  #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie {
+    box-sizing:border-box !important;
+    position:relative !important;
+    inset:auto !important;
+    display:flex !important;
+    flex:0 0 auto !important;
+    height:38px !important;
+    min-height:38px !important;
+    max-height:38px !important;
+    margin-top:auto !important;
+    margin-bottom:0 !important;
+    padding:5px 0 0 !important;
+    align-items:flex-start !important;
+    border-top:1px dashed #d7dce3 !important;
+  }
+  #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie > .hc16-acciones,
+  #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie .hc16-cta {
+    height:32px !important;
+    min-height:32px !important;
+    max-height:32px !important;
+    margin-bottom:0 !important;
+    padding-bottom:0 !important;
+  }
+  #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-pie button.boton-canjear {
+    box-sizing:border-box !important;
+    height:32px !important;
+    min-height:32px !important;
+    max-height:32px !important;
+    margin:0 !important;
+  }
+}
