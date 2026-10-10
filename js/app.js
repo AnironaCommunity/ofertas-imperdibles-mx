@@ -1585,7 +1585,7 @@ function aplicarEstructuraEditorialV41(articulo) {
   const pieCompacto = document.createElement("div");
   pieCompacto.className = "hc24-pie";
   if (tiempo) pieCompacto.append(tiempo);
-  if (vistas) pieCompacto.append(vistas);
+  if (vistas) encabezado.append(vistas);
   pieCompacto.append(acciones);
   articulo.append(encabezado, cuerpo, pieCompacto);
   valor.remove();

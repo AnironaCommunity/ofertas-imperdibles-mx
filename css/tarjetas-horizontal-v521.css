@@ -909,3 +909,28 @@
     margin:0 !important;
   }
 }
+
+/* v5.21.16 — contador de clics restaurado, esquina superior derecha.
+   Se reutiliza el contador original, sin cambiar la lógica de clics. */
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-encabezado {
+  display:flex !important; align-items:center !important; justify-content:space-between !important; gap:8px !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-encabezado > .hc16-vistas-superiores {
+  display:inline-flex !important; position:static !important; inset:auto !important;
+  visibility:visible !important; opacity:1 !important; transform:none !important;
+  flex:0 0 auto !important; align-items:center !important; justify-content:flex-end !important;
+  gap:3px !important; margin:0 0 0 auto !important; padding:0 !important;
+  width:auto !important; height:auto !important; min-height:0 !important;
+  background:transparent !important; border:0 !important; box-shadow:none !important;
+  color:#596472 !important; -webkit-text-fill-color:#596472 !important;
+  font-family:inherit !important; font-size:11px !important; line-height:1 !important;
+  font-weight:600 !important; white-space:nowrap !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-encabezado > .hc16-vistas-superiores .numero-clics {
+  display:inline !important; color:inherit !important; -webkit-text-fill-color:inherit !important;
+  font:inherit !important; line-height:1 !important;
+}
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal > .hc24-encabezado > .hc16-vistas-superiores svg {
+  display:block !important; width:13px !important; height:13px !important;
+  flex:0 0 13px !important; margin:0 !important; color:inherit !important;
+}
