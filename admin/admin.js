@@ -633,7 +633,7 @@ function renderCoupons() {
 
   if (!visibles.length) {
     couponList.innerHTML =
-      `<tr><td colspan="7">${coupons.length ? "No hay cupones en este estado." : "No hay cupones registrados."}</td></tr>`;
+      `<tr><td colspan="8">${coupons.length ? "No hay cupones en este estado." : "No hay cupones registrados."}</td></tr>`;
     return;
   }
 
@@ -645,6 +645,7 @@ function renderCoupons() {
     row.innerHTML = `
       <td>${escapeHtml(coupon.titulo)}</td>
       <td>${escapeHtml(coupon.codigo)}</td>
+      <td>${escapeHtml(coupon.compra_minima || "—")}</td>
       <td>${
         coupon.categoria === "bancarios"
           ? "💳 Bancarios"
@@ -2137,6 +2138,8 @@ function parseImportBlock(block, options = {}) {
     /compra\s*m[ií]nima|m[ií]nimo/i.test(line)
   );
 
+  const detailLine = lines.find((line) => /^\s*(?:detalle\s*(?:del\s*cup[oó]n)?|descripci[oó]n)\s*:/i.test(line));
+
   const savingLine = lines.find((line) =>
     /ahorra\s*hasta|descuento\s*m[aá]ximo|tope/i.test(line)
   );
@@ -2163,6 +2166,7 @@ function parseImportBlock(block, options = {}) {
   code = code.replace(/\s+/g, "").toUpperCase();
   const compraMinima = minimumLine ? extractMoney(minimumLine) : "";
   const ahorroMaximo = savingLine ? extractMoney(savingLine) : "";
+  const detalleCupon = detailLine ? detailLine.replace(/^\s*[^:]+:\s*/, "").trim().slice(0, 120) : "";
 
   const missing = [];
   if (!title) missing.push("título");
@@ -2175,6 +2179,7 @@ function parseImportBlock(block, options = {}) {
     codigo: code,
     compra_minima: compraMinima,
     ahorro_maximo: ahorroMaximo,
+    detalle_bancario: detalleCupon,
     enlace: link,
     categoria: "tienda",
     fecha_inicio: null,
@@ -2265,6 +2270,7 @@ function analyzeImport() {
       <td>${escapeHtml(coupon.codigo)}</td>
       <td>${escapeHtml(coupon.compra_minima)}</td>
       <td>${escapeHtml(coupon.ahorro_maximo)}</td>
+      <td>${escapeHtml(coupon.detalle_bancario || "—")}</td>
       <td>${escapeHtml(coupon.enlace)}</td>
       <td class="${coupon.valid ? "resultado-ok" : "resultado-error"}">
         ${escapeHtml(coupon.result)}
