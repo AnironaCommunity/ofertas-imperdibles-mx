@@ -140,6 +140,7 @@ const importPreview = document.querySelector("#import-preview");
 const importPublishNew = document.querySelector("#import-publish-new");
 const importList = document.querySelector("#import-list");
 const importGeneralLink = document.querySelector("#import-general-link");
+const importGeneralDetail = document.querySelector("#import-general-detail");
 const importUseGeneralLink = document.querySelector("#import-use-general-link");
 const importSummary = document.querySelector("#import-summary");
 const importCategory = document.querySelector("#import-category");
@@ -2166,7 +2167,7 @@ function parseImportBlock(block, options = {}) {
   code = code.replace(/\s+/g, "").toUpperCase();
   const compraMinima = minimumLine ? extractMoney(minimumLine) : "";
   const ahorroMaximo = savingLine ? extractMoney(savingLine) : "";
-  const detalleCupon = detailLine ? detailLine.replace(/^\s*[^:]+:\s*/, "").trim().slice(0, 120) : "";
+  const detalleCupon = (detailLine ? detailLine.replace(/^\s*[^:]+:\s*/, "").trim() : String(options.generalDetail || "").trim()).slice(0, 120);
 
   const missing = [];
   if (!title) missing.push("título");
@@ -2252,6 +2253,7 @@ function analyzeImport() {
     .map((block) => ({
       ...parseImportBlock(block, {
         generalLink,
+        generalDetail: importGeneralDetail.value,
         useGeneralLink: importUseGeneralLink.checked,
       }),
       categoria: importCategory.value,
@@ -4327,7 +4329,7 @@ importUseGeneralLink.addEventListener("change", () => {
   importGeneralLink.disabled = !importUseGeneralLink.checked;
   scheduleImportPreview();
 });
-[importText, importGeneralLink, importCategory, importExpirationTime, importPublishNew].forEach((control) => {
+[importText, importGeneralLink, importGeneralDetail, importCategory, importExpirationTime, importPublishNew].forEach((control) => {
   control?.addEventListener("input", scheduleImportPreview);
   control?.addEventListener("change", scheduleImportPreview);
 });
@@ -4335,6 +4337,7 @@ importGeneralLink.disabled = true;
 clearImport.addEventListener("click", () => {
   importText.value = "";
   importGeneralLink.value = "";
+  importGeneralDetail.value = "";
   importUseGeneralLink.checked = false;
   importCategory.value = "tienda";
   importExpirationTime.value = "23:59";
