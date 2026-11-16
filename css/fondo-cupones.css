@@ -1,0 +1,12 @@
+/* La capa blanca regula únicamente la imagen; textos y botones conservan su opacidad. */
+html[data-fondo-cupones="activo"] #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41.hc24-horizontal,
+.fondo-temporada-preview[data-activo="true"] {
+  background-image: linear-gradient(var(--fondo-cupon-velo), var(--fondo-cupon-velo)), var(--fondo-cupon-imagen) !important;
+  background-position: center, var(--fondo-cupon-posicion) !important;
+  background-size: 100% 100%, var(--fondo-cupon-tamano) !important;
+  background-repeat: no-repeat !important;
+}
+.fondo-temporada-preview {background-color:#fff; border:1px solid #e8e9ef; border-radius:6px; padding:18px; max-width:420px; color:#293448; box-shadow:0 2px 10px #141e3217;}
+.fondo-temporada-preview strong {font-size:32px;display:block;}
+.fondo-temporada-preview p {margin:8px 0;}
+.fondo-temporada-preview button {background:white;color:#222;border:1px solid #f2be00;border-radius:12px;padding:5px 12px;}

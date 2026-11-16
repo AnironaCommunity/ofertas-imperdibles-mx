@@ -1,3 +1,5 @@
+import { aplicarFondo } from '../js/fondo-cupones.js';
+import { normalizarFondo } from '../lib/fondo-cupones.js';
 const LOGO_CUPON_TIENDA_PREDETERMINADO = "/img/logo-cupon-tienda-predeterminado.jpg";
 const loginPanel = document.querySelector("#login-panel");
 const adminPanel = document.querySelector("#admin-panel");
@@ -4517,3 +4519,66 @@ couponBankExtraRemove?.addEventListener("click", () => {
   couponBankExtraPreview.removeAttribute("src");
   couponBankExtraPreviewWrapper.hidden = true;
 });
+
+/* Fondo de temporada: configuración independiente de la cabecera. */
+{
+  const campo = nombre => document.querySelector('#fondo-temporada-' + nombre);
+  const form = document.querySelector('#fondo-temporada-form');
+  let imagen = '', cargado = false, revision = 0;
+  const mensaje = (texto, error = false) => setMessage(campo('mensaje'), texto, error);
+  function valores() {
+    return normalizarFondo({imagen, activo:campo('activo').checked, intensidad:campo('intensidad').value, posicion:campo('posicion').value, tamano:campo('tamano').value});
+  }
+  function vista() {
+    const config = aplicarFondo(campo('preview'), valores());
+    campo('preview').dataset.activo = String(config.activo);
+    campo('valor').value = config.intensidad + '%';
+  }
+  async function cargar() {
+    campo('guardar').disabled = true;
+    cargado = false;
+    mensaje('Cargando fondo...');
+    try {
+      const config = normalizarFondo(await api('/api/fondo-cupones'));
+      imagen = config.imagen;
+      campo('archivo').value = '';
+      campo('activo').checked = config.activo;
+      campo('intensidad').value = config.intensidad;
+      campo('posicion').value = config.posicion;
+      campo('tamano').value = config.tamano;
+      cargado = true; vista(); mensaje('');
+    } catch(error) { mensaje(error.message, true); }
+    campo('guardar').disabled = !cargado;
+  }
+  tabAppearance?.addEventListener('click', cargar);
+  ['activo','intensidad','posicion','tamano'].forEach(nombre => campo(nombre).addEventListener('input', vista));
+  campo('archivo').addEventListener('change', async () => {
+    const file = campo('archivo').files[0]; if (!file) return;
+    const actual = ++revision;
+    campo('guardar').disabled = true;
+    mensaje('Preparando imagen...');
+    try {
+      if (!['image/png','image/jpeg','image/webp'].includes(file.type) || file.size > 10*1024*1024) throw new Error('Selecciona PNG, JPG o WebP de hasta 10 MB.');
+      const nueva = await optimizeImage(file);
+      normalizarFondo({imagen:nueva});
+      if (actual !== revision) return;
+      imagen = nueva; vista(); mensaje('Imagen lista. Activa el fondo y guarda para publicarlo.');
+    } catch(error) { if (actual === revision) mensaje(error.message, true); }
+    finally { if (actual === revision) campo('guardar').disabled = !cargado; }
+  });
+  campo('quitar').addEventListener('click', () => {
+    ++revision; imagen = ''; campo('archivo').value = ''; campo('activo').checked = false;
+    vista(); campo('guardar').disabled = !cargado; mensaje('Imagen quitada. Guarda para aplicar el cambio.');
+  });
+  form.addEventListener('submit', async event => {
+    event.preventDefault(); if (!cargado || campo('guardar').disabled) return;
+    if (campo('activo').checked && !imagen) { mensaje('Sube una imagen antes de activar el fondo.', true); return; }
+    campo('guardar').disabled = true;
+    mensaje('Guardando fondo...');
+    try {
+      const config = await api('/api/fondo-cupones', {method:'PUT',body:JSON.stringify(valores())});
+      imagen = config.imagen; vista(); mensaje('Fondo guardado. Se verá al abrir o volver a la página de cupones.');
+    } catch(error) { mensaje(error.message, true); }
+    finally { campo('guardar').disabled = false; }
+  });
+}

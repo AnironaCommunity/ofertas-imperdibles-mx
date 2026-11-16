@@ -12,6 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/fondo-cupones.css?v=5.22.0" />
 </head>
 
 <body>
@@ -1174,6 +1175,25 @@ Descuento máximo: $180"
         </div>
 
         <section class="panel">
+          <form id="fondo-temporada-form" class="formulario">
+            <h3 class="campo-completo">Fondo de temporada para cupones</h3>
+            <p class="campo-completo">Sube una imagen y ajusta su marca de agua. Se aplica a todos los cupones, en escritorio y móvil, al guardar. Puedes desactivarla sin perderla.</p>
+            <label class="campo-completo">Imagen de temporada (PNG, JPG o WebP, máximo 10 MB)
+              <input id="fondo-temporada-archivo" type="file" accept="image/png,image/jpeg,image/webp" />
+            </label>
+            <label><input id="fondo-temporada-activo" type="checkbox" /> Activar fondo en todos los cupones</label>
+            <label>Intensidad: <output id="fondo-temporada-valor">8%</output>
+              <input id="fondo-temporada-intensidad" type="range" min="0" max="30" value="8" />
+            </label>
+            <label>Posición<select id="fondo-temporada-posicion"><option value="right center">Derecha</option><option value="center center">Centro</option><option value="left center">Izquierda</option></select></label>
+            <label>Tamaño<select id="fondo-temporada-tamano"><option value="contain">Imagen completa</option><option value="cover">Cubrir tarjeta (puede recortar)</option><option value="55% auto">Decoración lateral (55%)</option></select></label>
+            <div class="campo-completo"><button id="fondo-temporada-quitar" type="button">Quitar imagen</button></div>
+            <div id="fondo-temporada-preview" class="fondo-temporada-preview campo-completo" data-activo="false">
+              <span>CUPÓN DE TIENDA · VISTA PREVIA</span><strong>15% OFF</strong><p>En productos seleccionados</p><p>Compra mínima $1,000 | Descuento máximo $200</p><button type="button" tabindex="-1">Copiar cupón →</button>
+            </div>
+            <div class="acciones campo-completo"><button id="fondo-temporada-guardar" class="boton-principal" type="submit" disabled>Guardar fondo de temporada</button></div>
+            <p id="fondo-temporada-mensaje" class="mensaje campo-completo" aria-live="polite"></p>
+          </form>
           <form id="hero-config-form" class="formulario">
             <div class="campo campo-completo">
               <h3>Cabecera principal</h3>
@@ -1342,6 +1362,6 @@ Descuento máximo: $180"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=5.21.1"></script>
+  <script type="module" src="admin.js?v=5.22.0"></script>
 </body>
 </html>
