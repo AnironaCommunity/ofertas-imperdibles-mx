@@ -6,7 +6,7 @@
 #cupones > article.cupon.hc24-horizontal {
   display:flex !important; flex-direction:column !important; gap:8px !important;
   min-height:0 !important; height:auto !important; max-height:none !important;
-  padding:12px 14px !important; margin:0 !important; border-radius:12px !important;
+  padding:12px 14px !important; margin:0 !important; border-radius:6px !important;
   overflow:hidden !important; align-self:start !important; position:relative !important;
   background:#fff !important; box-shadow:0 2px 10px rgba(20,30,50,.09) !important;
 }
