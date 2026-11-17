@@ -100,6 +100,7 @@ const couponWatermarkPreviewWrapper = document.querySelector("#coupon-watermark-
 const couponWatermarkPreview = document.querySelector("#coupon-watermark-preview");
 const couponWatermarkRemove = document.querySelector("#coupon-watermark-remove");
 const couponActive = document.querySelector("#coupon-active");
+const couponMeliPlus = document.querySelector("#coupon-meli-plus");
 const couponSoldOut = document.querySelector("#coupon-sold-out");
 const couponPublishNew = document.querySelector("#coupon-publish-new");
 const couponFormTitle = document.querySelector("#coupon-form-title");
@@ -558,6 +559,7 @@ function resetCouponForm() {
   couponStart.value = "";
   couponEnd.value = "";
   couponActive.checked = true;
+  if (couponMeliPlus) couponMeliPlus.checked = false;
   if (couponSoldOut) couponSoldOut.checked = false;
   couponPublishNew.checked = true;
   if (couponWatermark) couponWatermark.value = "";
@@ -603,6 +605,7 @@ function editCoupon(coupon) {
   actualizarSelectorBanco();
   actualizarImagenAdicionalBanco();
   couponActive.checked = Boolean(coupon.activo);
+  if (couponMeliPlus) couponMeliPlus.checked = coupon.solo_meli_plus === true;
   if (couponSoldOut) couponSoldOut.checked = coupon.agotado === true;
   couponPublishNew.checked = false;
 
@@ -1977,6 +1980,7 @@ async function saveCoupon(event) {
       marca_agua_url: watermarkUrl || "",
       activo: couponActive.checked,
       agotado: Boolean(couponSoldOut?.checked),
+      solo_meli_plus: Boolean(couponMeliPlus?.checked),
       publicar_como_nuevo: couponPublishNew.checked,
     };
 

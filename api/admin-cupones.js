@@ -260,7 +260,7 @@ export default async function handler(request, response) {
 
     if (request.method === "GET") {
       const data = await requestSupabase(
-        "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,detalle_bancario,considerar_compartir,categoria,enlace,activo,agotado,likes,clics,fecha_inicio,fecha_fin,fecha_creacion,fecha_publicacion,imagen_url,imagen_adicional_url,marca_agua_url&order=id.desc"
+        "cupones?select=id,titulo,codigo,compra_minima,ahorro_maximo,detalle_bancario,considerar_compartir,categoria,enlace,activo,agotado,solo_meli_plus,likes,clics,fecha_inicio,fecha_fin,fecha_creacion,fecha_publicacion,imagen_url,imagen_adicional_url,marca_agua_url&order=id.desc"
       );
 
       response.setHeader("Cache-Control", "no-store");
@@ -289,6 +289,7 @@ export default async function handler(request, response) {
           : "",
         activo: request.body?.activo !== false,
         agotado: request.body?.agotado === true,
+        solo_meli_plus: request.body?.solo_meli_plus === true,
         fecha_inicio: request.body?.fecha_inicio || null,
         fecha_fin: request.body?.fecha_fin || null,
         fecha_publicacion: publicarComoNuevo
@@ -353,6 +354,10 @@ export default async function handler(request, response) {
 
       if (Object.hasOwn(request.body || {}, "activo")) {
         payload.activo = Boolean(request.body.activo);
+      }
+
+      if (Object.hasOwn(request.body || {}, "solo_meli_plus")) {
+        payload.solo_meli_plus = request.body.solo_meli_plus === true;
       }
 
       if (Object.hasOwn(request.body || {}, "agotado")) {

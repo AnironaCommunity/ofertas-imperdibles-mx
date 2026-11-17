@@ -1,0 +1,28 @@
+/* Espacio bajo las vistas: solo las tarjetas con la casilla activada. */
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal.cupon-solo-meli-plus > .cupon-meli-plus-logo {
+  display:block !important;
+  position:absolute !important;
+  top:32px !important;
+  right:14px !important;
+  width:54px !important;
+  height:20px !important;
+  max-width:54px !important;
+  min-width:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  object-fit:contain !important;
+  background:transparent !important;
+  opacity:1 !important;
+  z-index:2;
+  pointer-events:auto;
+}
+/* El logo queda fuera del flujo; esta reserva evita tapar el contenido. */
+#cupones > article.cupon.cupon-editorial-v41.hc24-horizontal.cupon-solo-meli-plus > .hc24-cuerpo {
+  box-sizing:border-box !important;
+  padding-right:62px !important;
+}
+@media(max-width:380px) {
+  #cupones > article.cupon.cupon-editorial-v41.hc24-horizontal.cupon-solo-meli-plus > .cupon-meli-plus-logo {right:10px !important;}
+}

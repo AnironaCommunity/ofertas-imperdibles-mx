@@ -1,3 +1,4 @@
+import { aplicarInsigniaMeliPlus } from './cupon-meli-plus.js';
 const cuponesContainer = document.querySelector("#cupones");
 const todosWrapper = document.querySelector("#todos-wrapper");
 const sinCupones = document.querySelector("#sin-cupones");
@@ -1658,6 +1659,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
   `;
 
   aplicarEstructuraEditorialV41(articulo);
+  aplicarInsigniaMeliPlus(articulo, cupon);
 
   const initialTimeState = couponTimeState(cupon);
   const redeemButton = articulo.querySelector(".boton-canjear");
@@ -1777,6 +1779,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
     </div>`;
 
   aplicarEstructuraEditorialV41(articulo);
+  aplicarInsigniaMeliPlus(articulo, cupon);
 
   const boton = articulo.querySelector(".boton-canjear");
   const estadoInicial = couponTimeState(cupon);
