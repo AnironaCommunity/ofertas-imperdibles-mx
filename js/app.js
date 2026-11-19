@@ -1,3 +1,4 @@
+import { aplicarMarcaAguaCupon } from './marca-agua-cupon.js';
 import { aplicarInsigniaMeliPlus } from './cupon-meli-plus.js';
 const cuponesContainer = document.querySelector("#cupones");
 const todosWrapper = document.querySelector("#todos-wrapper");
@@ -1660,6 +1661,7 @@ function crearTarjeta(cupon, estadosDestacados = [], indice = 0) {
 
   aplicarEstructuraEditorialV41(articulo);
   aplicarInsigniaMeliPlus(articulo, cupon);
+  aplicarMarcaAguaCupon(articulo, cupon);
 
   const initialTimeState = couponTimeState(cupon);
   const redeemButton = articulo.querySelector(".boton-canjear");
@@ -1780,6 +1782,7 @@ function crearTarjetaBancaria(cupon, estadosDestacados = []) {
 
   aplicarEstructuraEditorialV41(articulo);
   aplicarInsigniaMeliPlus(articulo, cupon);
+  aplicarMarcaAguaCupon(articulo, cupon);
 
   const boton = articulo.querySelector(".boton-canjear");
   const estadoInicial = couponTimeState(cupon);

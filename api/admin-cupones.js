@@ -284,9 +284,7 @@ export default async function handler(request, response) {
         enlace: cleanText(request.body?.enlace),
         imagen_url: cleanText(request.body?.imagen_url),
         imagen_adicional_url: normalizeCategory(request.body?.categoria) === "bancarios" ? cleanText(request.body?.imagen_adicional_url) : "",
-        marca_agua_url: normalizeCategory(request.body?.categoria) === "exclusivo"
-          ? cleanText(request.body?.marca_agua_url)
-          : "",
+        marca_agua_url: cleanText(request.body?.marca_agua_url),
         activo: request.body?.activo !== false,
         agotado: request.body?.agotado === true,
         solo_meli_plus: request.body?.solo_meli_plus === true,

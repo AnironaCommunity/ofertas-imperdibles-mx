@@ -1,5 +1,5 @@
 /* La capa blanca regula únicamente la imagen; textos y botones conservan su opacidad. */
-html[data-fondo-cupones="activo"] #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41.hc24-horizontal,
+html[data-fondo-cupones="activo"] #cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41.hc24-horizontal:not([data-marca-agua-propia="true"]),
 .fondo-temporada-preview[data-activo="true"] {
   background-image: linear-gradient(var(--fondo-cupon-velo), var(--fondo-cupon-velo)), var(--fondo-cupon-imagen) !important;
   background-position: center, var(--fondo-cupon-posicion) !important;
@@ -10,3 +10,12 @@ html[data-fondo-cupones="activo"] #cupones > article.cupon.cupon-horizontal-v16.
 .fondo-temporada-preview strong {font-size:32px;display:block;}
 .fondo-temporada-preview p {margin:8px 0;}
 .fondo-temporada-preview button {background:white;color:#222;border:1px solid #f2be00;border-radius:12px;padding:5px 12px;}
+
+/* Marca propia: independiente de la activación y de la imagen generales.
+   El antiguo span hc16-marca-agua sigue oculto para no duplicarla. */
+#cupones > article.cupon.cupon-horizontal-v16.cupon-editorial-v41.hc24-horizontal[data-marca-agua-propia="true"] {
+  background-image:linear-gradient(rgba(255,255,255,.92),rgba(255,255,255,.92)),var(--marca-agua-cupon-imagen) !important;
+  background-position:center,right center !important;
+  background-size:100% 100%,contain !important;
+  background-repeat:no-repeat !important;
+}

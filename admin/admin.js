@@ -1956,9 +1956,7 @@ async function saveCoupon(event) {
       });
       bankExtraUrl = result.imagen_url;
     }
-    const watermarkUrl = couponCategory.value === "exclusivo"
-      ? await uploadCouponWatermark()
-      : "";
+    const watermarkUrl = await uploadCouponWatermark();
 
     const payload = {
       titulo: couponTitle.value.trim(),
@@ -4212,8 +4210,7 @@ function actualizarSelectorBanco() {
   if (couponBankWrapper) couponBankWrapper.hidden = !esBancario;
   if (couponBankDetailWrapper) couponBankDetailWrapper.hidden = !usaDetalle;
   if (couponShareEligibleWrapper) couponShareEligibleWrapper.hidden = !esExclusivo;
-  if (couponWatermarkWrapper) couponWatermarkWrapper.hidden = !esExclusivo;
-  if (couponWatermarkPreviewWrapper && !esExclusivo) couponWatermarkPreviewWrapper.hidden = true;
+  if (couponWatermarkWrapper) couponWatermarkWrapper.hidden = false;
 
   if (couponBankDetailLabel) {
     couponBankDetailLabel.textContent = esBancario

@@ -465,6 +465,7 @@ Descuento máximo: $180"
 
               <div class="campo campo-completo" id="coupon-watermark-wrapper" hidden>
                 <label for="coupon-watermark">Imagen de marca de agua (opcional)</label>
+                <small>Esta imagen tiene prioridad sobre el fondo general. Si la quitas, el cupón usará el fondo general cuando esté activo.</small>
                 <input
                   id="coupon-watermark"
                   type="file"
@@ -1182,7 +1183,7 @@ Descuento máximo: $180"
         <section class="panel">
           <form id="fondo-temporada-form" class="formulario">
             <h3 class="campo-completo">Fondo de temporada para cupones</h3>
-            <p class="campo-completo">Sube una imagen y ajusta su marca de agua. Se aplica a todos los cupones, en escritorio y móvil, al guardar. Puedes desactivarla sin perderla.</p>
+            <p class="campo-completo">Sube una imagen y ajusta su marca de agua. Se aplica a los cupones sin marca de agua propia, en escritorio y móvil, al guardar. Puedes desactivarla sin perderla.</p>
             <label class="campo-completo">Imagen de temporada (PNG, JPG o WebP, máximo 10 MB)
               <input id="fondo-temporada-archivo" type="file" accept="image/png,image/jpeg,image/webp" />
             </label>
@@ -1367,6 +1368,6 @@ Descuento máximo: $180"
     </section>
   </main>
 
-  <script type="module" src="admin.js?v=5.23.0"></script>
+  <script type="module" src="admin.js?v=5.24.0"></script>
 </body>
 </html>
